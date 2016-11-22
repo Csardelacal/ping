@@ -6,7 +6,12 @@ class Navigation
 	private $entries = Array();
 	
 	public function add($url, $caption, $name = null) {
-		return $this->entries[$name] = new Entry($name, $url, $caption);
+		if ($name) {
+			return $this->entries[$name] = new Entry($name, $url, $caption);
+		}
+		else {
+			return $this->entries[] = new Entry($name, $url, $caption);
+		}
 	}
 	
 	public function __toString() {

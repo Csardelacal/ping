@@ -9,6 +9,11 @@ class NotificationModel extends spitfire\Model
 		$schema->content = new StringField(255);  # A ping can contain up to 255 characters
 		$schema->url     = new StringField(255);  # Source URL for the notification
 		$schema->media   = new StringField(255);  # URL with the content. Media should be cached
+		$schema->created = new IntegerField(true);
+	}
+	
+	public function onbeforesave() {
+		if (!$this->created) { $this->created = time(); }
 	}
 
 }

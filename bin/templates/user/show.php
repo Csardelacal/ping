@@ -10,11 +10,12 @@
 	<div class="span3">
 		<div class="material unpadded">
 			<form method="POST" action="<?= new URL('notification', 'push') ?>">
+				<input type="hidden" name="target" value="<?= $user->getId() ?>">
 				<div class="padded add-ping">
 					<div>
 						<div class="row1">
 							<div class="span1">
-								<textarea name="content" placeholder="Message to broadcast..."></textarea>
+								<textarea name="content" placeholder="Send ping to <?= $user->getUsername() ?>..."></textarea>
 							</div>
 						</div>
 					</div>

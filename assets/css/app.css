@@ -30,12 +30,14 @@ a {
     margin-left: 4px;
     padding-left: 5px; }
   .navigation li.active {
+    margin-left: 0;
     border-left: solid 4px #AAA; }
   .navigation a {
     color: #333;
     text-decoration: none;
     width: 100%;
-    display: block; }
+    display: block;
+    padding: 5px 5px 5px 0; }
   .navigation .navigation {
     font-size: .8em;
     padding-left: 10px; }
@@ -64,6 +66,32 @@ a {
     padding: 0px; }
   .material .padded {
     padding: 15px 10px 10px; }
+
+.add-ping {
+  background: #dae7f0; }
+  .add-ping textarea {
+    width: 100%;
+    padding: 5px 10px;
+    border: solid 1px #c0d9eb;
+    border-radius: 3px;
+    font-size: 10px;
+    max-width: 100%;
+    min-width: 100%; }
+    .add-ping textarea::-webkit-placeholder {
+      color: #1f567d; }
+    .add-ping textarea::-moz-placeholder {
+      color: #1f567d; }
+  .add-ping input[type=submit] {
+    color: #FFF;
+    border-radius: 3px;
+    font-weight: bold;
+    padding: 3px 10px;
+    background: #2f709e;
+    border: solid 1px #1f567d; }
+
+.separator {
+  margin: 10px 0;
+  border-top: solid 1px #c0d9eb; }
 
 @media all and (min-width: 960px) {
   /*

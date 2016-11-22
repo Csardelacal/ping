@@ -14,7 +14,7 @@
 				</div>
 				<div class="span3"></div>
 				<div class="span1">
-					<a href="<?= new URL('feed') ?>">Feed</a>
+					<a href="<?= new URL('feed') ?>">Feed <span data-ping-counter></span></a>
 				</div>
 				<div class="span1">
 					<a href="<?= new URL('feed') ?>">Settings</a>
@@ -31,5 +31,7 @@
 		<div class="spacer" style="height: 18px"></div>
 		
 		<?= $content_for_layout ?>
+		
+		<script type="text/javascript" src="<?= new URL('feed', 'counter.js') ?>"></script>
 	</body>
 </html>

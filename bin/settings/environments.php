@@ -9,6 +9,9 @@ use spitfire\core\Environment;
 $e = new Environment('test');
 
 $e->set('db_table_prefix', 'test_');
+$e->set('db_user', 'root');
+$e->set('db_pass', 'root');
+
 $e->set('sso.endpoint', 'http://localhost/Auth');
 $e->set('sso.appId', '1545751243');
 $e->set('sso.appSec', 'lIvPAQt1dQrc8kVopGcAZCDCUhCUMK0bUmCHS9LduH7iw0');

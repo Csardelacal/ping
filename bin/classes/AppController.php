@@ -23,10 +23,13 @@ abstract class AppController extends Controller
 		
 		#Maintain the user in the view. This way we can draw an interface for them
 		$this->view->set('authUser', $this->user);
+		$this->view->set('sso', $this->sso);
 		
 		#Create a sidebar navigation
 		$this->secondaryNav = new Navigation();
 		$this->view->set('secondary_navigation', $this->secondaryNav);
+		
+		_t(new ping\Locale());
 	}
 	
 }
