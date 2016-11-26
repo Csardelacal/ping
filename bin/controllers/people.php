@@ -74,4 +74,15 @@ class PeopleController extends AppController
 		
 		$following->delete();
 	}
+	
+	public function isFollowing($uid) {
+		if (!$this->user) { throw new Exception('No token / session provided', 401); }
+		
+		$q1 = db()->table('user')->get('authId', $this->user->id);
+		$q2 = db()->table('user')->get('authId', $uid);
+		
+		$following = db()->table('follow')->get('follower', $q1)->addRestriction('prey', $q2)->fetch();
+		
+		$this->view->set('following', $following);
+	}
 }

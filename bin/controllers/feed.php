@@ -21,13 +21,13 @@ class FeedController extends AppController
 		 * Read the notifications for the user and send them to the view
 		 */
 		
-		$dbuser  = db()->table('user')->get('authId', $this->user->id)->fetch();
+		$dbuser  = db()->table('user')->get('authId', $this->user->id)->fetch()? : UserModel::makeFromSSO($this->sso->getUser($this->user->id));
 		$follows = db()->table('follow')->get('follower__id', $dbuser->_id);
 		$users   = db()->table('user')->get('followers', $follows);
 		
 		$query = db()->table('notification')->getAll()
 				->group()
-				  ->addRestriction('target__id', $this->user->id)
+				  ->addRestriction('target__id', $dbuser->_id)
 				  ->group(spitfire\storage\database\RestrictionGroup::TYPE_AND)
 					->addRestriction('src', $users)
 				   ->addRestriction('target', null)

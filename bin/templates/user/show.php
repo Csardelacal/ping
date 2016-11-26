@@ -9,7 +9,7 @@
 	<!-- Main content-->
 	<div class="span3">
 		<div class="material unpadded">
-			<form method="POST" action="<?= new URL('notification', 'push') ?>">
+			<form method="POST" action="<?= new URL('notification', 'push', Array('returnto' => (string)new URL('user', 'show', $user->getUsername()))) ?>">
 				<input type="hidden" name="target" value="<?= $user->getId() ?>">
 				<div class="padded add-ping">
 					<div>
@@ -79,7 +79,15 @@
 	</div>
 	
 	<!-- Contextual menu-->
-	<div class="span1"></div>
+	<div class="span1">
+		<a data-ping-follow="<?= $user->getId() ?>">A</a>
+	</div>
 </div>
 
-<?php print_r(spitfire()->getMessages());
+<script type="text/javascript" src="<?= URL::asset('js/follow_button.js') ?>"></script>
+<script type="text/javascript">
+(function () {
+	window.ping.setBaseURL('<?= new URL(); ?>');
+	window.ping.init();
+}());
+</script>

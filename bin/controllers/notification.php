@@ -7,6 +7,10 @@ class NotificationController extends AppController
 		
 	}
 	
+	/**
+	 * 
+	 * @request-method POST
+	 */
 	public function push() {
 		
 		#Get the applications credentials
@@ -16,46 +20,50 @@ class NotificationController extends AppController
 		#Check the application's credentials
 		
 		#Read POST data
-		$src     = db()->table('user')->get('authId', isset($this->user)? $this->user->id : _def($_POST['src'], null))->fetch();
-		$target  = db()->table('user')->get('authId', $_POST['target'])->fetch();
+		$srcid   = isset($this->user)? $this->user->id : _def($_POST['src'], null);
+		$tgtid   = _def($_POST['target'], null);
+		$email   = new EmailSender($this->sso);
+		
+		#Construct the required data
+		try {
+			$src = db()->table('user')->get('authId', $srcid)->fetch()? : UserModel::makeFromSSO($this->sso->getUser($srcid));
+		} catch (\Exception$e) {
+			$src = null;
+		}
+		
+		try {
+			$target = db()->table('user')->get('authId', $tgtid)->fetch()? : UserModel::makeFromSSO($this->sso->getUser($tgtid));
+		} catch (Exception$e) {
+			$target = null;
+		}
+		
 		$content = $_POST['content'];
 		$url     = $_POST['url'];
 		$media   = $_POST['media'];
 		
-		#Check if the source is valid
-		if (!$src) {
-			$u = $this->sso->getUser(isset($this->user)? $this->user->id : _def($_POST['src'], null));
-			
-			if ($u) { 
-				$src = db()->table('user')->newRecord(); 
-				$src->authId = $u->getId();
-				$src->store();
-			} else {
-				throw new \spitfire\exceptions\PublicException('No user found', 400);
-			}
+		#It could happen that the target is established as an email and therefore
+		#receives notifications directly as emails
+		if (!$target && isset($_POST['target']) && filter_var($_POST['target'], FILTER_VALIDATE_EMAIL)) {
+			# Notify the user via mail.
+			$email->push($_POST['target'], $this->sso->getUser($src->authId), $content, $url, $media);
 		}
-		
-		#Repeat with the target
-		if (!$target && isset($_POST['target'])) {
-			$u = $this->sso->getUser($_POST['target']);
+		else {
+			#Make it a record
+			$notification = db()->table('notification')->newRecord();
+			$notification->src = $src;
+			$notification->target = $target;
+			$notification->content = $content;
+			$notification->url     = $url;
+			$notification->media   = $media;
+			$notification->store();
 			
-			if ($u) { 
-				$target = db()->table('user')->newRecord(); 
-				$target->authId = $u->getId();
-				$target->store();
-			} else {
-				throw new \spitfire\exceptions\PublicException('No user found', 400);
+			#Check the user's preferences and send an email
+			//TODO: Add check to verify the user has chosen to receive notifications
+			if ($target) {
+				$email->push($_POST['target'], $this->sso->getUser($src->authId), $content, $url, $media);
 			}
+			
 		}
-		
-		#Make it a record
-		$notification = db()->table('notification')->newRecord();
-		$notification->src = $src;
-		$notification->target = $target;
-		$notification->content = $content;
-		$notification->url     = $url;
-		$notification->media   = $media;
-		$notification->store();
 		
 	}
 	

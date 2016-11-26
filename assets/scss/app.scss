@@ -129,6 +129,18 @@ a {
 	border-top: solid 1px #c0d9eb;
 }
 
+.badge {
+	background: #F00;
+	color:      #FFF;
+	border-radius: 1em;
+	padding:     0 .5em;
+	font-weight: bold;
+	
+	&[data-ping-counter='0'] {
+		background: #BBB;
+	}
+}
+
 @media all and (min-width: $MobileBreakpoint) {
 	@import '_scaffolding';
 }

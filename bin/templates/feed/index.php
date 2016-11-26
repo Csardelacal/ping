@@ -80,5 +80,3 @@
 	<!-- Contextual menu-->
 	<div class="span1"></div>
 </div>
-
-<?php print_r(spitfire()->getMessages());

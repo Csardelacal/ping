@@ -10,5 +10,19 @@ class UserModel extends spitfire\Model
 		$schema->followers = new ChildrenField('follow', 'prey');
 		$schema->following = new ChildrenField('follow', 'follower');
 	}
+	
+	public static function makeFromSSO($u) {
+		
+		if ($u) { 
+			$target = db()->table('user')->newRecord(); 
+			$target->authId = $u->getId();
+			$target->_id    = $u->getId();
+			$target->store();
+			
+			return $target;
+		}
+		
+		throw new \spitfire\exceptions\PrivateException('Expected user', 1611231500);
+	}
 
 }

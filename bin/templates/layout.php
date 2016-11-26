@@ -14,16 +14,24 @@
 				</div>
 				<div class="span3"></div>
 				<div class="span1">
-					<a href="<?= new URL('feed') ?>">Feed <span data-ping-counter></span></a>
+					<?php if ($authUser): ?>
+					<a href="<?= new URL('feed') ?>">Feed <span class="badge" data-ping-counter></span></a>
+					<?php endif; ?>
 				</div>
 				<div class="span1">
-					<a href="<?= new URL('feed') ?>">Settings</a>
+					<?php if ($authUser): ?>
+					<!--<a href="<?= new URL('settings') ?>">Settings</a>-->
+					<?php endif; ?>
 				</div>
 				<div class="span1">
-					<a href="<?= new URL('feed') ?>">
+					<?php if ($authUser): ?>
+					<a href="<?= new URL('user', 'logout') ?>">
 						<img src="<?= $authUser->avatar ?>" width="17"  style="margin-right: 5px; vertical-align: -3px">
 						Logout
 					</a>
+					<?php else : ?>
+					<a href="<?= new URL('user', 'login') ?>">Login</a>
+					<?php endif; ?>
 				</div>
 			</div>
 		</div>

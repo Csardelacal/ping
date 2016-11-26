@@ -17,6 +17,7 @@
 		 */
 		for (var i = 0; i < elements.length; i++) {
 			elements[i].innerHTML = count;
+			elements[i].setAttribute('data-ping-counter', count);
 		}
 	};
 	
