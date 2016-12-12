@@ -14,7 +14,7 @@
 					<div>
 						<div class="row1">
 							<div class="span1">
-								<textarea name="content" placeholder="Message to broadcast..."></textarea>
+								<textarea name="content" id="new-ping-content" placeholder="Message to broadcast..."></textarea>
 							</div>
 						</div>
 					</div>
@@ -27,6 +27,7 @@
 								
 							</div>
 							<div class="span1" style="text-align: right">
+								<span id="new-ping-character-count">250</span>
 								<input type="submit" value="Ping!">
 							</div>
 						</div>
@@ -80,3 +81,15 @@
 	<!-- Contextual menu-->
 	<div class="span1"></div>
 </div>
+
+<script type="text/javascript">
+(function() {
+	
+	var listener = function() {
+		document.querySelector('#new-ping-character-count').innerHTML = 250 - this.value.length;
+	};
+	
+	document.querySelector('#new-ping-content').addEventListener('keyup', listener, false);
+	
+}());
+</script>

@@ -68,8 +68,9 @@ a {
     padding: 15px 10px 10px; }
 
 .add-ping {
-  background: #dae7f0; }
-  .add-ping textarea {
+  background: #e6ecf0; }
+  .add-ping textarea,
+  .add-ping .textarea {
     width: 100%;
     padding: 5px 10px;
     border: solid 1px #c0d9eb;
@@ -77,9 +78,11 @@ a {
     font-size: 10px;
     max-width: 100%;
     min-width: 100%; }
-    .add-ping textarea::-webkit-placeholder {
+    .add-ping textarea::-webkit-placeholder,
+    .add-ping .textarea::-webkit-placeholder {
       color: #1f567d; }
-    .add-ping textarea::-moz-placeholder {
+    .add-ping textarea::-moz-placeholder,
+    .add-ping .textarea::-moz-placeholder {
       color: #1f567d; }
   .add-ping input[type=submit] {
     color: #FFF;
@@ -99,7 +102,7 @@ a {
   border-radius: 1em;
   padding: 0 .5em;
   font-weight: bold; }
-  .badge[data-ping-counter='0'] {
+  .badge[data-ping-counter='0'], .badge[data-ping-counter=''] {
     background: #BBB; }
 
 @media all and (min-width: 960px) {

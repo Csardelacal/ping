@@ -1,5 +1,7 @@
 <?php
 
+use spitfire\exceptions\PublicException;
+
 class NotificationController extends AppController
 {
 	
@@ -18,6 +20,9 @@ class NotificationController extends AppController
 		$appSec = isset($_GET['appSec'])? $_GET['appSec'] : null;
 		
 		#Check the application's credentials
+		if (!$this->user && !$this->sso->authApp($appId, $appSec)) {
+			throw new PublicException('Aunthentication error', 403);
+		}
 		
 		#Read POST data
 		$srcid   = isset($this->user)? $this->user->id : _def($_POST['src'], null);
@@ -27,7 +32,7 @@ class NotificationController extends AppController
 		#Construct the required data
 		try {
 			$src = db()->table('user')->get('authId', $srcid)->fetch()? : UserModel::makeFromSSO($this->sso->getUser($srcid));
-		} catch (\Exception$e) {
+		} catch (Exception$e) {
 			$src = null;
 		}
 		

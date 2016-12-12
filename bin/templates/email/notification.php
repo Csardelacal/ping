@@ -1,19 +1,26 @@
 <body style="font-family: sans-serif">
-	<div style="padding: 30px">
-		<div style="margin: 0 auto; max-width: 500px; background: #FFF;">
-			<!--Header-->
-			<div style="padding: 10px; font-weight: bold;">
-				<img src="<?= absoluteURL::asset('img/logo.png') ?>">
+	<div>
+		<!--Header-->
+		<div style="padding: 10px; font-weight: bold; color: #FFF; background: #5299cc">
+			<div style="margin: 0 auto; max-width: 500px;">
+				<img src="<?= absoluteURL::asset('img/logo.png') ?>" height="24" style="vertical-align: middle">
 				<?= spitfire\core\Environment::get('site.name')? : 'Ping' ?> - Notification
 			</div>
-			
-			<div style="margin: 10px auto; border-top: solid 1px #CCC"></div>
+		</div>
+		
+		<div style="height: 20px"></div>
+		
+		<div style="margin: 0 auto; max-width: 500px; background: #FFF;">
 			
 			<!--User badge-->
-			<div style="padding: 10px 20px;">
-				<img src="<?= $src->getAvatar(64) ?>" style="border-radius: 50%; width: 16px; height: 16px; vertical-align: middle">
+			<div style="padding: 10px 0px;">
+				<img src="<?= $src->getAvatar(64) ?>" style="border-radius: 50%; width: 24px; height: 24px; vertical-align: middle" width="24">
 				<?= $src->getUsername() ?>
 			</div>
+			
+			<!--Separator-->
+			<div style="margin: 10px auto; border-top: solid 1px #CCC"></div>
+			
 			<!--Content-->
 			<div style="padding: 10px 20px;">
 				<p><?= $content ?></p>
