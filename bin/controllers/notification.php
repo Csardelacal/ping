@@ -11,6 +11,7 @@ class NotificationController extends AppController
 	
 	/**
 	 * 
+	 * @todo This should allow for multiple targets to be defined at once.
 	 * @request-method POST
 	 */
 	public function push() {
@@ -30,10 +31,12 @@ class NotificationController extends AppController
 		$email   = new EmailSender($this->sso);
 		
 		#Construct the required data
-		try {
-			$src = db()->table('user')->get('authId', $srcid)->fetch()? : UserModel::makeFromSSO($this->sso->getUser($srcid));
-		} catch (Exception$e) {
-			$src = null;
+		$src = db()->table('user')->get('authId', $srcid)->fetch()? : UserModel::makeFromSSO($this->sso->getUser($srcid));
+		
+		#If sourceID and target are identical, we skip the sending of the notification
+		#This requires the application to check whether the user is visiting his own profile
+		if ($srcid == $tgtid) { 
+			return; //The user should be aware he did the action that would send himself a notification.
 		}
 		
 		try {
