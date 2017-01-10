@@ -22,6 +22,10 @@ class SSOCache
 		});
 	}
 	
+	public function getSSO() {
+		return $this->sso;
+	}
+	
 	public function __call($name, $arguments) {
 		return call_user_func_array(Array($this->sso, $name), $arguments);
 	}

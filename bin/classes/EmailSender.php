@@ -1,11 +1,20 @@
 <?php
 
+use auth\SSO;
+use auth\SSOCache;
+use spitfire\core\Environment;
+
 class EmailSender
 {
 	
 	private $sso;
 	
-	public function __construct(\auth\SSO$sso) {
+	public function __construct($sso) {
+		
+		if (!$sso instanceof SSO && !$sso instanceof SSOCache) {
+			throw new BadMethodCallException('Invalid arguments', 701101433);
+		}
+		
 		$this->sso = $sso;
 	}
 	
@@ -14,7 +23,7 @@ class EmailSender
 		$v = new _SF_ViewElement('bin/templates/email/notification.php', $a);
 		$t = $v->render();
 		
-		$this->sso->sendEmail($email, sprintf('[%s] %s', spitfire\core\Environment::get('site.name')? : 'Ping', Strings::ellipsis($content, 50)), $t);
+		$this->sso->sendEmail($email, sprintf('[%s] %s', Environment::get('site.name')? : 'Ping', Strings::ellipsis($content, 50)), $t);
 	}
 	
 }

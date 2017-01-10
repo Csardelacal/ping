@@ -110,7 +110,8 @@ a {
   background: #3289c7; }
   .user-card .banner img {
     width: 100%;
-    height: auto; }
+    height: auto;
+    background: #FFF; }
 .user-card .user-info {
   display: inline-block;
   margin-left: 5px; }

@@ -4,7 +4,7 @@
 		<?= $secondary_navigation ?>
 	</div>
 	<div class="span4">
-		<?php $every = new Every(3, '</div><div class="row3">'); ?>
+		<?php $every = new Every(3, '</div><div class=s"pacer" style="height:30px;"></div><div class="row3">'); ?>
 		
 		<div class="row3">
 			<?php foreach ($followers as $follower): ?>

@@ -72,6 +72,23 @@ class SSO
 		return $data;
 	}
 	
+	public function authApp($id, $secret) {		
+		$url = $this->endpoint . '/auth/app.json?' . http_build_query(Array('appId' => $id, 'appSec' => $secret));
+		
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		
+		$response = curl_exec($ch);
+		
+		
+		if ( curl_getinfo($ch, CURLINFO_HTTP_CODE) !== 200) { 
+			throw new Exception('SSO rejected the request' . $response, 1605141533); 
+		}
+		
+		$json = json_decode($response);
+		return $json->authenticated;
+	}
+	
 	public function getEndpoint() {
 		return $this->endpoint;
 	}
