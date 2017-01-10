@@ -143,6 +143,41 @@ a {
 	}
 }
 
+.user-card {
+	.banner {
+		height: 64px;
+		background: #3289c7;
+		
+		img {
+			width: 100%;
+			height: auto;
+		}
+	}
+	
+	.user-info {
+		display: inline-block;
+		margin-left: 5px;
+	}
+	
+	.user-name {
+		display: block;
+		color: #000;
+		font-weight: bold;
+	}
+	
+	.user-bio {
+		font-size: .8em;
+		color: #555;
+	}
+	
+	.avatar {
+		border-radius: 5px;
+		border: solid 2px #FFF;
+		width: 68px;
+		vertical-align: bottom;
+	}
+}
+
 @media all and (min-width: $MobileBreakpoint) {
 	@import '_scaffolding';
 }

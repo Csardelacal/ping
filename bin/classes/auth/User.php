@@ -1,5 +1,7 @@
 <?php namespace auth;
 
+use Exception;
+
 class User
 {
 	
@@ -33,6 +35,18 @@ class User
 	
 	public function getAvatar($size) {
 		return $this->avatar->{$size};
+	}
+	
+	public function getAttribute($name) {
+		if (!isset($this->attributes->{$name})) { throw new Exception("Attribute {$name} is not set"); }
+		if (!is_object($this->attributes->{$name})) { return $this->attributes->{$name}; }
+		
+		$data = $this->attributes->{$name};
+		
+		switch($data->type) {
+			case 'file': return new File($data->preview, $data->download);
+			default: throw new Exception('Invalid data type');
+		}
 	}
 	
 }

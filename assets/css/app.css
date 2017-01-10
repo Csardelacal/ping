@@ -105,6 +105,28 @@ a {
   .badge[data-ping-counter='0'], .badge[data-ping-counter=''] {
     background: #BBB; }
 
+.user-card .banner {
+  height: 64px;
+  background: #3289c7; }
+  .user-card .banner img {
+    width: 100%;
+    height: auto; }
+.user-card .user-info {
+  display: inline-block;
+  margin-left: 5px; }
+.user-card .user-name {
+  display: block;
+  color: #000;
+  font-weight: bold; }
+.user-card .user-bio {
+  font-size: .8em;
+  color: #555; }
+.user-card .avatar {
+  border-radius: 5px;
+  border: solid 2px #FFF;
+  width: 68px;
+  vertical-align: bottom; }
+
 @media all and (min-width: 960px) {
   /*
   This are the functions (mixins) used to generate the basic scaffolding for our

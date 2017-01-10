@@ -33,82 +33,40 @@ class SSO
 
 		if (json_last_error() !== JSON_ERROR_NONE) { throw new Exception('SSO sent invalid json response - ' . json_last_error_msg(), 1608012100); }
 		
-		return new Token($this, $data->token, $data->location);
-	}
-	
-	/**
-	 * Instances a token. As opposed to the createToken method, this token cannot
-	 * be authorized afterwards. 
-	 * 
-	 * @param string $token
-	 * @return \auth\Token
-	 */
-	public function makeToken($token) {
-		return new Token($this, $token, null);
+		return new Token($this, $data->token, $data->expires, $data->location);
 	}
 	
 	public function getUser($username, Token$token = null) {
 		
 		if (!$username) { throw new Exception('Valid user id needed'); }
 		
-		$url = $this->endpoint . '/user/detail/' . $username . '.json';
-		if ($token && $token->isAuthenticated()) { $url.= '?' . http_build_query(Array('token' => $token->getTokenInfo()->token)); }
+		/*
+		 * Assemble the request we need to retrieve the data. Please note that if
+		 * there is no token we pass no parameters.
+		 */
+		$request = new Request(
+			$this->endpoint . '/user/detail/' . $username . '.json',
+			$token && $token->isAuthenticated()? Array('token' => $token->getTokenInfo()->token) : null
+		);
 		
 		/*
 		 * Fetch the JSON message from the endpoint. This should tell us whether 
 		 * the request was a success.
 		 */
-		$ch = curl_init($url);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		
-		$response = curl_exec($ch);
-
-		$http_response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		if ($http_response_code !== 200) {
-			throw new Exception('SSO rejected the request' . $response, 1605141533);
-		}
-		
-		$data = json_decode($response)->payload;
+		$resp = $request->send();
+		$data = json_decode($resp)->payload;
 		
 		return new User($data->id, $data->username, $data->aliases, $data->groups, $data->verified, $data->registered_unix, $data->attributes, $data->avatar);
 	}
 	
-	public function authApp($id, $secret) {
-		
-		$url = $this->endpoint . '/auth/app.json?' . http_build_query(Array('appId' => $id, 'appSec' => $secret));
-		
-		$ch = curl_init($url);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		
-		$response = curl_exec($ch);
-		
-		
-		if ( curl_getinfo($ch, CURLINFO_HTTP_CODE) !== 200) { 
-			throw new Exception('SSO rejected the request' . $response, 1605141533); 
-		}
-		
-		$json = json_decode($response);
-		return $json->authenticated;
-	}
-	
 	public function sendEmail($userid, $subject, $body) {
 		
-		$url = $this->endpoint . '/email/send/' . $userid . '.json';
-		$url.= '?' . http_build_query(Array('appId' => $this->appId, 'appSecret' => $this->appSecret));
+		$request = new Request(
+			$this->endpoint . '/email/send/' . $userid . '.json',
+			Array('appId' => $this->appId, 'appSecret' => $this->appSecret)
+		);
 		
-		/*
-		 * Fetch the JSON message from the endpoint. This should tell us whether 
-		 * the request was a success.
-		 */
-		$ch = curl_init($url);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_POST, true);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, Array('body' => $body, 'subject' => $subject));
-		
-		$response = curl_exec($ch);
-		
-		if ( curl_getinfo($ch, CURLINFO_HTTP_CODE) !== 200) { throw new Exception('SSO rejected the request' . $response, 1605141533); }
-		
+		$response = $request->send(Array('body' => $body, 'subject' => $subject));
 		$data = json_decode($response)->payload;
 		
 		return $data;

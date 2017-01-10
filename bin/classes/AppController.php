@@ -1,6 +1,6 @@
 <?php
 
-use auth\SSO;
+use auth\SSOCache;
 use navigation\Navigation;
 use spitfire\core\Environment;
 use spitfire\io\session\Session;
@@ -17,7 +17,7 @@ abstract class AppController extends Controller
 		$session     = Session::getInstance();
 		
 		#Create a user
-		$this->sso   = new SSO(Environment::get('sso.endpoint'), Environment::get('sso.appId'), Environment::get('sso.appSec'));
+		$this->sso   = new SSOCache(Environment::get('sso.endpoint'), Environment::get('sso.appId'), Environment::get('sso.appSec'));
 		$this->token = isset($_GET['token'])? $this->sso->makeToken($_GET['token']) : $session->getUser();
 		$this->user  = $this->token? $this->token->getTokenInfo()->user : null;
 		
