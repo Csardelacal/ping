@@ -12,7 +12,7 @@ html, body {
   margin: 0;
   padding: 0;
   background: #FAFAFA;
-  font-family: sans-serif; }
+  font-family: 'Nunito Sans', sans-serif; }
 
 * {
   box-sizing: border-box;
@@ -21,6 +21,22 @@ html, body {
 a {
   color: #25A9F8;
   text-decoration: none; }
+
+.button, .add-ping input[type=submit] {
+  background: #3191f1 none repeat scroll 0 0;
+  border: medium none;
+  border-radius: 3px;
+  box-shadow: -2px -2px 1px #3167f1 inset;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-weight: 700;
+  padding: 0.5em 1.2em;
+  text-decoration: none; }
+  .button.follow, .add-ping input.follow[type=submit] {
+    /*Follow button specific styles*/ }
+  .button.unfollow, .add-ping input.unfollow[type=submit] {
+    /*Follow button specific styles*/ }
 
 .navigation {
   list-style-type: none;
@@ -68,29 +84,22 @@ a {
     padding: 15px 10px 10px; }
 
 .add-ping {
-  background: #e6ecf0; }
+  background: #fff; }
   .add-ping textarea,
   .add-ping .textarea {
     width: 100%;
     padding: 5px 10px;
-    border: solid 1px #c0d9eb;
-    border-radius: 3px;
+    border: none;
     font-size: 10px;
     max-width: 100%;
-    min-width: 100%; }
+    min-width: 100%;
+    resize: none; }
     .add-ping textarea::-webkit-placeholder,
     .add-ping .textarea::-webkit-placeholder {
       color: #1f567d; }
     .add-ping textarea::-moz-placeholder,
     .add-ping .textarea::-moz-placeholder {
       color: #1f567d; }
-  .add-ping input[type=submit] {
-    color: #FFF;
-    border-radius: 3px;
-    font-weight: bold;
-    padding: 3px 10px;
-    background: #2f709e;
-    border: solid 1px #1f567d; }
 
 .separator {
   margin: 10px 0;

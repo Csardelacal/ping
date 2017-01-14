@@ -1,6 +1,7 @@
 <!doctype html>
 <html>
 	<head>
+		<link href="https://fonts.googleapis.com/css?family=Nunito+Sans" rel="stylesheet"> 
 		<link type="text/css" rel="stylesheet" href="<?= URL::asset('css/app.css') ?>">
 	</head>
 	<body>

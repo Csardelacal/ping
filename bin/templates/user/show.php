@@ -35,7 +35,7 @@
 				</div>
 			</form>
 			
-			<div class="spacer" style="height: 10px"></div>
+			<div class="separator"></div>
 			
 			<?php foreach($notifications as $notification): ?>
 			<?php $user = $sso->getUser($notification->src->authId); ?>
@@ -80,7 +80,7 @@
 	
 	<!-- Contextual menu-->
 	<div class="span1">
-		<a data-ping-follow="<?= $user->getId() ?>">A</a>
+		<a class="button follow" data-ping-follow="<?= $user->getId() ?>">A</a>
 	</div>
 </div>
 

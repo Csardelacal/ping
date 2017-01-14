@@ -35,7 +35,7 @@
 				</div>
 			</form>
 			
-			<div class="spacer" style="height: 10px"></div>
+			<div class="separator"></div>
 			
 			<?php foreach($notifications as $notification): ?>
 			<?php $user = $sso->getUser($notification->src->authId); ?>
@@ -56,14 +56,14 @@
 						<div class="row1" style="margin-top: 5px">
 							<div class="span1">
 								<p style="margin: 0;">
-									<?php if ($notification->url && !$notification->media): ?><a href="<?= $notification->url ?>"><?php endif; ?>
-									<?= $notification->content ?>
+									<?php if ($notification->url && !$notification->media): ?><a href="<?= $notification->url ?>" style="color: #000;"><?php endif; ?>
+									<?= Mention::idToMentions($notification->content) ?>
 									<?php if ($notification->url && !$notification->media): ?></a><?php endif; ?>
 								</p>
 								
 								<?php if ($notification->media): ?>
 								<div class="spacer" style="height: 20px"></div>
-									<?php if ($notification->url): ?><a href="<?= $notification->url ?>"><?php endif; ?>
+									<?php if ($notification->url): ?><a href="<?= $notification->url ?>" ><?php endif; ?>
 									<img src="<?= $notification->media ?>" style="width: 100%">
 									<?php if ($notification->url): ?></a><?php endif; ?>
 								<?php endif; ?>

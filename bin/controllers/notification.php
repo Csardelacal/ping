@@ -60,7 +60,7 @@ class NotificationController extends AppController
 			$notification = db()->table('notification')->newRecord();
 			$notification->src = $src;
 			$notification->target = $target;
-			$notification->content = $content;
+			$notification->content = Mention::mentionsToId($content);
 			$notification->url     = $url;
 			$notification->media   = $media;
 			$notification->store();

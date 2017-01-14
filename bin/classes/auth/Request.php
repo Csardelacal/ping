@@ -1,5 +1,7 @@
 <?php namespace auth;
 
+use Exception;
+
 /**
  * The request class is in charge of properly establishing HTTP connections with 
  * the remote server, retrieving the data and returning it or an error in the 

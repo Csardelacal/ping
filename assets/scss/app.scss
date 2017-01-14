@@ -15,7 +15,7 @@ html, body{
 	margin: 0;
 	padding: 0;
 	background: #FAFAFA;
-	font-family: sans-serif;
+	font-family: 'Nunito Sans', sans-serif;
 }
 
 * {
@@ -26,6 +26,27 @@ html, body{
 a {
 	color: $LinkColor;
 	text-decoration: none;
+}
+
+.button {
+	background: #3191f1 none repeat scroll 0 0;
+	border: medium none;
+	border-radius: 3px;
+	box-shadow: -2px -2px 1px #3167f1 inset;
+	color: #fff;
+	cursor: pointer;
+	display: inline-block;
+	font-weight: 700;
+	padding: 0.5em 1.2em;
+	text-decoration: none;
+	
+	&.follow {
+		/*Follow button specific styles*/
+	}
+	
+	&.unfollow {
+		/*Follow button specific styles*/
+	}
 }
 
 .navigation {
@@ -94,17 +115,17 @@ a {
 }
 
 .add-ping {
-	background: #e6ecf0;
+	background: #fff;
 	
 	textarea,
 	.textarea {
 		width: 100%;
 		padding: 5px 10px;
-		border: solid 1px #c0d9eb;
-		border-radius: 3px;
+		border: none;
 		font-size: 10px;
 		max-width: 100%;
 		min-width: 100%;
+		resize: none;
 		
 		&::-webkit-placeholder {
 			color: #1f567d;
@@ -116,12 +137,7 @@ a {
 	}
 	
 	input[type=submit] {
-		color: #FFF;
-		border-radius: 3px;
-		font-weight: bold;
-		padding: 3px 10px;
-		background: #2f709e;
-		border: solid 1px #1f567d;
+		@extend .button;
 	}
 }
 
