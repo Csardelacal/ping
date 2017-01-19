@@ -12,7 +12,8 @@ html, body {
   margin: 0;
   padding: 0;
   background: #FAFAFA;
-  font-family: 'Nunito Sans', sans-serif; }
+  font-family: 'Nunito Sans', sans-serif;
+  height: 100%; }
 
 * {
   box-sizing: border-box;
@@ -136,6 +137,19 @@ a {
   border: solid 2px #FFF;
   width: 68px;
   vertical-align: bottom; }
+
+.home-billboard h1, .home-billboard p {
+  display: inline-block;
+  padding: 4px 10px;
+  margin: 0;
+  color: #555;
+  vertical-align: bottom;
+  background: rgba(255, 255, 255, 0.6);
+  box-shadow: 5px -5px 0 #777;
+  z-index: 0; }
+.home-billboard h1 {
+  padding: 4px 30px 4px 10px;
+  z-index: 1; }
 
 @media all and (min-width: 960px) {
   /*

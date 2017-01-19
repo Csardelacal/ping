@@ -16,6 +16,7 @@ html, body{
 	padding: 0;
 	background: #FAFAFA;
 	font-family: 'Nunito Sans', sans-serif;
+	height: 100%;
 }
 
 * {
@@ -192,6 +193,25 @@ a {
 		border: solid 2px #FFF;
 		width: 68px;
 		vertical-align: bottom;
+	}
+}
+
+.home-billboard {
+	
+	h1, p {
+		display: inline-block;
+		padding: 4px 10px;
+		margin: 0;
+		color: #555;
+		vertical-align: bottom;
+		background: rgba(255, 255, 255, .6);
+		box-shadow: 5px -5px 0 #777;
+		z-index: 0;
+	}
+	
+	h1 {
+		padding: 4px 30px 4px 10px;
+		z-index: 1;
 	}
 }
 
