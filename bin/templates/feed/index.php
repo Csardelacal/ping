@@ -1,4 +1,5 @@
 
+<div class="spacer" style="height: 18px"></div>
 		
 <div class="row5">
 	<!--Sidebar (secondary navigation) -->

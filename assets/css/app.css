@@ -151,6 +151,14 @@ a {
   padding: 4px 30px 4px 10px;
   z-index: 1; }
 
+.profile-resume .avatar {
+  width: 100%;
+  border-radius: 10px;
+  border: solid 3px #FFF; }
+.profile-resume .bio {
+  color: #555;
+  font-size: .8em; }
+
 @media all and (min-width: 960px) {
   /*
   This are the functions (mixins) used to generate the basic scaffolding for our

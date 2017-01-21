@@ -37,8 +37,6 @@
 			</div>
 		</div>
 		
-		<div class="spacer" style="height: 18px"></div>
-		
 		<?= $content_for_layout ?>
 		
 		<script type="text/javascript" src="<?= new URL('feed', 'counter.js') ?>"></script>

@@ -215,6 +215,19 @@ a {
 	}
 }
 
+.profile-resume {
+	.avatar {
+		width: 100%;
+		border-radius: 10px;
+		border: solid 3px #FFF;
+	}
+	
+	.bio {
+		color: #555;
+		font-size: .8em;
+	}
+}
+
 @media all and (min-width: $MobileBreakpoint) {
 	@import '_scaffolding';
 }

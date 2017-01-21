@@ -1,4 +1,6 @@
 
+<div class="spacer" style="height: 18px"></div>
+
 <div class="row5">
 	<div class="span1">
 		<?= $secondary_navigation ?>
@@ -20,7 +22,7 @@
 						<img class="avatar" src="<?= $user->getAvatar(128) ?>">
 						<div class="user-info">
 							<span class="user-name"><?= $user->getUsername() ?></span>
-							<span class="user-bio">This is a test bio</span>
+							<span class="user-bio"><?php try { $bio = $user->getAttribute('bio'); ?><?=  __($bio, 30); ?><?php } catch(Exception$e) { ?><em>No bio provided</em><?php } ?></span>
 						</div>
 					</div>
 				</a>
