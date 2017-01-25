@@ -47,9 +47,15 @@
 		};
 		
 		JSRequest('people/isFollowing/' + userid + '.json', function (e) {
+			if (e.error) { return; }
+			
 			html.innerHTML = e.following? actions.unfollow : actions.follow;
 			ctx.following  = e.following;
-			html.addEventListener('click', function () { ctx.toggle(); }, false);
+			
+			html.addEventListener('click', function (e) { 
+				e.preventDefault();
+				ctx.toggle();
+			}, false);
 		});
 	};
 	

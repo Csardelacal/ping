@@ -21,7 +21,11 @@
 	<!-- Main content-->
 	<div class="span3">
 		<div class="material unpadded">
-			<?php if ($user->getId() !== $authUser->id): ?>
+			<?php if (!$authUser): ?>
+			<p style="color: #777; font-size: .8em; text-align: center; padding: 15px 20px">
+				Log in to send <?= $user->getUsername() ?> a ping...
+			</p>
+			<?php elseif ($user->getId() !== $authUser->id): ?>
 			<form method="POST" action="<?= new URL('notification', 'push', Array('returnto' => (string)new URL('user', 'show', $user->getUsername()))) ?>">
 				<input type="hidden" name="target" value="<?= $user->getId() ?>">
 				<div class="padded add-ping">
@@ -101,7 +105,7 @@
 	
 	<!-- Contextual menu-->
 	<div class="span1">
-		<a class="button follow" data-ping-follow="<?= $user->getId() ?>">A</a>
+		<a class="button follow" href="<?= new URL('user', 'login') ?>" data-ping-follow="<?= $user->getId() ?>">Login to follow</a>
 	</div>
 </div>
 

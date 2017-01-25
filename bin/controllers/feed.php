@@ -34,8 +34,12 @@ class FeedController extends AppController
 				  ->endGroup()
 				->endGroup()
 				->addRestriction('created', time() - 720 * 3600, '>')
-				->setResultsPerPage(50)
+				->setResultsPerPage(10)
 				->setOrder('created', 'DESC');
+		
+		if (isset($_GET['until'])) {
+			$query->addRestriction('_id', $_GET['until'], '<');
+		}
 		
 		$notifications = $query->fetchAll();
 		

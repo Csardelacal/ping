@@ -6,7 +6,7 @@ class PeopleController extends AppController
 	public function _onload() {
 		parent::_onload();
 		
-		if (!$this->user) { 
+		if (!$this->user && $this->context->request->getPath()->getAction() !== 'isFollowing') { 
 			$this->response
 				->setBody('Redirecting...')
 				->getHeaders()->redirect(new URL('user', 'login'));
@@ -76,13 +76,17 @@ class PeopleController extends AppController
 	}
 	
 	public function isFollowing($uid) {
-		if (!$this->user) { throw new Exception('No token / session provided', 401); }
-		
-		$q1 = db()->table('user')->get('authId', $this->user->id);
-		$q2 = db()->table('user')->get('authId', $uid);
-		
-		$following = db()->table('follow')->get('follower', $q1)->addRestriction('prey', $q2)->fetch();
-		
-		$this->view->set('following', $following);
+		if (!$this->user) { 
+			$this->view->set('error', true);
+			$this->view->set('errorMsg', 'Not authenticated');
+			$this->view->set('following', false);
+		} else {
+			$q1 = db()->table('user')->get('authId', $this->user->id);
+			$q2 = db()->table('user')->get('authId', $uid);
+
+			$following = db()->table('follow')->get('follower', $q1)->addRestriction('prey', $q2)->fetch();
+
+			$this->view->set('following', $following);
+		}
 	}
 }

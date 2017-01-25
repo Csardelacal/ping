@@ -1,6 +1,7 @@
 <?php
 
 $data = json_encode(Array(
+	 'error'     => isset($error) && $error,
 	 'following' => !!$following
 ));
 

@@ -76,6 +76,42 @@
 			
 			<div class="separator"></div>
 			<?php endforeach; ?>
+			
+			<div data-lysine-view="notification">
+				<div class="padded" style="padding-top: 5px;">
+					<div class="row10 fluid">
+						<div class="span1" style="text-align: center">
+							<img data-lysine-src="{{avatar}}" style="width: 100%; border: solid 1px #777; border-radius: 3px;">
+						</div>
+						<div class="span9">
+							<div class="row4">
+								<div class="span3">
+									<a data-for="userName" data-lysine-href="{{userURL}}" style="color: #000; font-weight: bold; font-size: .8em;"></a>
+								</div>
+								<div class="span1" style="text-align: right; font-size: .8em; color: #777;" data-for="timeRelative">
+									
+								</div>
+							</div>
+							<div class="row1" style="margin-top: 5px">
+								<div class="span1">
+									<p style="margin: 0;">
+										<a data-lysine-href="{{notificationURL}}" style="color: #000;" data-for="notificationContent">
+										</a>
+									</p>
+
+									<div class="spacer" style="height: 20px"></div>
+									
+									<a class="media" data-lysine-href="{{notificationURL}}" >
+										<img data-lysine-src="{{notificationMedia}}" style="width: 100%">
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="separator"></div>
+			</div>
 		</div>
 	</div>
 	
@@ -83,9 +119,87 @@
 	<div class="span1"></div>
 </div>
 
+<script type="text/javascript" src="<?= URL::asset('js/lysine.js') ?>"></script>
+
 <script type="text/javascript">
 (function() {
+	var xhr = null;
+	var current = <?= $notification->_id ?>;
+	var notifications = [];
 	
+	var request = function (callback) {
+		if (xhr !== null)  { return; }
+		if (current === 0) { return; }
+		
+		xhr = new XMLHttpRequest();
+		xhr.open('GET', '<?= new URL('feed.json') ?>?until=' + current);
+		
+		xhr.onreadystatechange = function () {
+			if (xhr.readyState === 4 && xhr.status === 200) {
+				var data = JSON.parse(xhr.responseText);
+				
+				if (data.payload.length === 0 || data.until === null) {
+					current = 0;
+				} else {
+					current = data.until;
+				}
+				
+				for (var i= 0; i < data.payload.length; i++) { 
+					var view =  new Lysine.view('notification');
+					notifications.push(view);
+					
+					view.setData({
+						userName           : data.payload[i].user.username,
+						avatar             : data.payload[i].user.avatar,
+						userURL            : '<?= new URL('user', 'show') ?>/' + data.payload[i].user.username,
+						notificationURL    : data.payload[i].url || '#',
+						notificationContent: data.payload[i].content,
+						notificationMedia  : data.payload[i].media? data.payload[i].media : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
+						timeRelative       : data.payload[i].timeRelative
+					});
+					
+					if (!data.payload[i].media) {
+						var child = view.getHTML().querySelector('.media');
+						child.parentNode.removeChild(child);
+					}
+				}
+				
+				
+				xhr = null;
+				callback();
+			}
+		};
+		
+		xhr.send();
+	};
+	
+	var height = function () {
+		var body = document.body,
+			 html = document.documentElement;
+
+		return Math.max( body.scrollHeight, body.offsetHeight, 
+						html.clientHeight, html.scrollHeight, html.offsetHeight );
+	};
+	
+	//This function listens to the scrolls
+	var listener = function () {
+		var html   = document.documentElement,
+		    scroll = Math.max(html.scrollTop, window.scrollY);
+		
+		if (height() - scroll < html.clientHeight + 700) { request(listener); }
+	};
+	
+	//Attach the listener
+	window.addEventListener('load',   listener, false);
+	document.addEventListener('scroll', listener, false);
+}());
+
+(function () {
+	
+	/**
+	 * This little listener makes sure to display the amount of characters left for
+	 * the user to type in
+	 */
 	var listener = function() {
 		document.querySelector('#new-ping-character-count').innerHTML = 250 - this.value.length;
 	};
