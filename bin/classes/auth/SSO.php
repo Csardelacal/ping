@@ -36,6 +36,17 @@ class SSO
 		return new Token($this, $data->token, $data->expires, $data->location);
 	}
 	
+	/**
+	 * Instances a token. As opposed to the createToken method, this token cannot
+	 * be authorized afterwards. 
+	 * 
+	 * @param string $token
+	 * @return \auth\Token
+	 */
+	public function makeToken($token) {
+		return new Token($this, $token, null);
+	}
+	
 	public function getUser($username, Token$token = null) {
 		
 		if (!$username) { throw new Exception('Valid user id needed'); }
