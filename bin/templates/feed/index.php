@@ -42,15 +42,16 @@
 			<?php $user = $sso->getUser($notification->src->authId); ?>
 			<div class="padded" style="padding-top: 5px;">
 				<div class="row10 fluid">
-					<div class="span1" style="text-align: center">
+					<div class="span1 desktop-only" style="text-align: center">
 						<img src="<?= $user->getAvatar(64) ?>" style="width: 100%; border: solid 1px #777; border-radius: 3px;">
 					</div>
 					<div class="span9">
 						<div class="row4">
 							<div class="span3">
-								<a href="<?= new URL('user', 'show', $user->getUsername()) ?>" style="color: #000; font-weight: bold; font-size: .8em;"><?= $user->getUsername() ?></a>
+								<img class="mobile-only" src="<?= $user->getAvatar(64) ?>" style="width: 16px; border: solid 1px #777; border-radius: 3px; vertical-align: middle">
+								<a href="<?= new URL('user', $user->getUsername()) ?>" style="color: #000; font-weight: bold; font-size: .8em;"><?= $user->getUsername() ?></a>
 							</div>
-							<div class="span1" style="text-align: right; font-size: .8em; color: #777;">
+							<div class="span1 desktop-only" style="text-align: right; font-size: .8em; color: #777;">
 								<?= Time::relative($notification->created) ?>
 							</div>
 						</div>
@@ -80,15 +81,16 @@
 			<div data-lysine-view="notification">
 				<div class="padded" style="padding-top: 5px;">
 					<div class="row10 fluid">
-						<div class="span1" style="text-align: center">
+						<div class="span1 desktop-only" style="text-align: center">
 							<img data-lysine-src="{{avatar}}" style="width: 100%; border: solid 1px #777; border-radius: 3px;">
 						</div>
 						<div class="span9">
 							<div class="row4">
 								<div class="span3">
+									<img class="mobile-only" data-lysine-src="{{avatar}}" style="width: 16px; border: solid 1px #777; border-radius: 3px; vertical-align: middle">
 									<a data-for="userName" data-lysine-href="{{userURL}}" style="color: #000; font-weight: bold; font-size: .8em;"></a>
 								</div>
-								<div class="span1" style="text-align: right; font-size: .8em; color: #777;" data-for="timeRelative">
+								<div class="span1 desktop-only" style="text-align: right; font-size: .8em; color: #777;" data-for="timeRelative">
 									
 								</div>
 							</div>
@@ -151,7 +153,7 @@
 					view.setData({
 						userName           : data.payload[i].user.username,
 						avatar             : data.payload[i].user.avatar,
-						userURL            : '<?= new URL('user', 'show') ?>/' + data.payload[i].user.username,
+						userURL            : '<?= new URL('user') ?>/' + data.payload[i].user.username,
 						notificationURL    : data.payload[i].url || '#',
 						notificationContent: data.payload[i].content,
 						notificationMedia  : data.payload[i].media? data.payload[i].media : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',

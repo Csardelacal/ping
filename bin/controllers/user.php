@@ -26,7 +26,24 @@ class UserController extends AppController
 			->getHeaders()->redirect($token->getRedirect((string)new absoluteURL('user', 'login')));
 	}
 	
-	public function show($username) {
+	public function logout() {
+		
+		#If there is a session for this user, we destroy it
+		Session::getInstance()->destroy();
+		
+		return $this->response->setBody('Redirecting...')
+				  ->getHeaders()->redirect(new URL());
+	}
+	
+	
+	/**
+	 * 
+	 * @template user/show
+	 * @param type $username
+	 * @param type $args
+	 * @throws \spitfire\exceptions\PublicException
+	 */
+	public function __call($username, $args) {
 		$user = $this->sso->getUser($username);
 		$dbu  = db()->table('user')->get('authId', $user->getId())->fetch();
 		
@@ -39,12 +56,15 @@ class UserController extends AppController
 		$feed = db()->table('notifications')
 			->get('src', $dbu)
 			->addRestriction('target', null)
-			->setOrder('created', 'DESC')
-			->fetchAll();
+			->setResultsPerPage(10)
+			->setOrder('created', 'DESC');
 		
+		if (isset($_GET['until'])) {
+			$feed->addRestriction('_id', $_GET['until'], '<');
+		}
 		
 		$this->view->set('user', $user);
-		$this->view->set('notifications', $feed);
+		$this->view->set('notifications', $feed->fetchAll());
 	}
 	
 }

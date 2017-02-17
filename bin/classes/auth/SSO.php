@@ -19,13 +19,16 @@ class SSO
 	 * Creates a new SSO Token. This allows your application to request a single
 	 * user's token and manage it.
 	 */
-	public function createToken() {
+	public function createToken($expires = null) {
 		/*
 		 * Fetch the JSON message from the endpoint. This should tell us whether 
 		 * the request was a success.
 		 */
+		$get = Array('appID' => $this->appId, 'appSecret' => $this->appSecret);
+		if ($expires !== null) { $get['expires'] = $expires; }
+		
 		$response = file_get_contents($this->endpoint . '/token/create.json?' . 
-				  http_build_query(Array('appID' => $this->appId, 'appSecret' => $this->appSecret)));
+				  http_build_query($get));
 		
 		if (!strstr($http_response_header[0], '200')) { throw new Exception('SSO rejected the token with ' . $http_response_header[0], 1605201109); }
 

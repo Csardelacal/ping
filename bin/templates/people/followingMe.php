@@ -12,7 +12,7 @@
 			<?php foreach ($followers as $follower): ?>
 			<?php $user = $sso->getUser($follower->authId); ?>
 			<div class="span1 material unpadded user-card">
-				<a href="<?= new URL('user', 'show', $user->getUsername()) ?>">
+				<a href="<?= new URL('user', $user->getUsername()) ?>">
 					<div class="banner">
 						<?php try { $banner = $user->getAttribute('banner')->getPreviewURL(320, 75) ?>
 						<img src="<?= $banner ?>">

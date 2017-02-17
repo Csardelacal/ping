@@ -15,7 +15,7 @@ class Navigation
 	}
 	
 	public function __toString() {
-		return sprintf('<ul class="navigation">%s</ul>', implode(PHP_EOL, $this->entries));
+		return sprintf('<ul class="secondary navigation">%s</ul>', implode(PHP_EOL, $this->entries));
 	}
 	
 }

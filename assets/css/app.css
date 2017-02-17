@@ -39,41 +39,6 @@ a {
   .button.unfollow, .add-ping input.unfollow[type=submit] {
     /*Follow button specific styles*/ }
 
-.navigation {
-  list-style-type: none;
-  margin-left: 0;
-  padding-left: 10px; }
-  .navigation li {
-    margin-left: 4px;
-    padding-left: 5px; }
-  .navigation li.active {
-    margin-left: 0;
-    border-left: solid 4px #AAA; }
-  .navigation a {
-    color: #333;
-    text-decoration: none;
-    width: 100%;
-    display: block;
-    padding: 5px 5px 5px 0; }
-  .navigation .navigation {
-    font-size: .8em;
-    padding-left: 10px; }
-
-.navbar {
-  background: rgba(255, 255, 255, 0.6);
-  color: #242424;
-  border-bottom: solid 1px #999;
-  box-shadow: 0 1px 0px rgba(0, 0, 0, 0.1); }
-  .navbar a {
-    background: none;
-    color: #242424;
-    padding: 10px;
-    width: 100%;
-    display: inline-block; }
-    .navbar a:hover {
-      background: #EEE;
-      color: #333; }
-
 .material {
   background: #FFF;
   border-radius: 2px;
@@ -299,7 +264,10 @@ a {
     width: 67.91667%; }
 
   div.row10 > div.span9 {
-    width: 87.91667%; } }
+    width: 87.91667%; }
+
+  .mobile-only {
+    display: none !important; } }
 @media all and (max-width: 960px) {
   /*
   This are the functions (mixins) used to generate the basic scaffolding for our
@@ -472,5 +440,73 @@ a {
 
   .desktop-only {
     display: none !important; } }
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Feb 17, 2017, 3:02:00 PM
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+.main.navigation {
+  background: rgba(255, 255, 255, 0.6);
+  color: #242424;
+  border-bottom: solid 1px #999;
+  box-shadow: 0 1px 0px rgba(0, 0, 0, 0.1); }
+  .main.navigation .menu-item {
+    background: none;
+    color: #242424;
+    padding: 10px;
+    width: 100%;
+    display: inline-block; }
+    .main.navigation .menu-item:hover {
+      background: #EEE;
+      color: #333; }
+
+.secondary.navigation {
+  list-style-type: none;
+  margin-left: 0;
+  padding-left: 10px; }
+  .secondary.navigation li {
+    margin-left: 4px;
+    padding-left: 5px; }
+  .secondary.navigation li.active {
+    margin-left: 0;
+    border-left: solid 4px #AAA; }
+  .secondary.navigation a {
+    color: #333;
+    text-decoration: none;
+    width: 100%;
+    display: block;
+    padding: 5px 5px 5px 0; }
+  .secondary.navigation .navigation {
+    font-size: .8em;
+    padding-left: 10px; }
+
+@media all and (max-width: 960px) {
+  .main.navigation {
+    text-align: right;
+    padding: 0;
+    font-size: .8em; }
+    .main.navigation div[class^='row'] div[class^='span'] {
+      display: inline-block;
+      width: auto;
+      float: none; }
+      .main.navigation div[class^='row'] div[class^='span'].logo {
+        display: block;
+        text-align: center;
+        font-size: 1.2em; }
+        .main.navigation div[class^='row'] div[class^='span'].logo img {
+          margin: 0 auto; }
+      .main.navigation div[class^='row'] div[class^='span'].left {
+        float: left; }
+
+  .secondary.navigation li {
+    display: inline-block;
+    border: none; }
+    .secondary.navigation li.active {
+      border-left: none;
+      border-bottom: solid 3px #BBB; } }
 
 /*# sourceMappingURL=app.css.map */
