@@ -124,6 +124,29 @@ a {
   color: #555;
   font-size: .8em; }
 
+.media-cover {
+  background: #EEE;
+  border-radius: 3px;
+  font-size: 12px;
+  text-align: center;
+  padding: 50px 0;
+  font-style: italic;
+  cursor: pointer; }
+
+.pagination {
+  list-style: none;
+  text-align: center; }
+  .pagination li {
+    display: inline-block;
+    font-weight: bold; }
+    .pagination li a {
+      display: inline-block;
+      padding: 10px; }
+    .pagination li.disabled, .pagination li.disabled a {
+      color: #AAA; }
+    .pagination li.active {
+      border-bottom: solid 1px #777; }
+
 @media all and (min-width: 960px) {
   /*
   This are the functions (mixins) used to generate the basic scaffolding for our

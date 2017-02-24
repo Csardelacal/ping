@@ -54,8 +54,17 @@ class UserController extends AppController
 		$this->secondaryNav->add(new URL('people', 'iFollow'), 'Following');
 		
 		$feed = db()->table('notifications')
-			->get('src', $dbu)
-			->addRestriction('target', null)
+			->getAll()
+			->group()
+				->group(spitfire\storage\database\RestrictionGroup::TYPE_AND)
+					->addRestriction('src', $dbu)
+					->addRestriction('target', null)
+				->endGroup()
+				->group(spitfire\storage\database\RestrictionGroup::TYPE_AND)
+					->addRestriction('src', db()->table('user')->get('_id', $this->user->id)->fetch())
+					->addRestriction('target', $dbu)
+				->endGroup()
+			->endGroup()
 			->setResultsPerPage(10)
 			->setOrder('created', 'DESC');
 		
@@ -65,6 +74,7 @@ class UserController extends AppController
 		
 		$this->view->set('user', $user);
 		$this->view->set('notifications', $feed->fetchAll());
+		
 	}
 	
 }

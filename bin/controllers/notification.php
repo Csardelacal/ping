@@ -20,57 +20,81 @@ class NotificationController extends AppController
 		$appId  = isset($_GET['appId']) ? $_GET['appId']  : null;
 		$appSec = isset($_GET['appSec'])? $_GET['appSec'] : null;
 		
-		#Check the application's credentials
-		if (!$this->user && !$this->sso->authApp($appId, $appSec)) {
-			throw new PublicException('Aunthentication error', 403);
-		}
+		#Validate the app
+		$authUtil = new AuthUtil($this->sso);
+		$this->user || $authUtil->checkAppCredentials($appId, $appSec);
+		
 		
 		#Read POST data
-		$srcid   = isset($this->user)? $this->user->id : _def($_POST['src'], null);
-		$tgtid   = _def($_POST['target'], null);
-		$email   = new EmailSender($this->sso);
+		$srcid    = isset($this->user)? $this->user->id : _def($_POST['src'], null);
+		$tgtid    = (array)_def($_POST['target'], null);
+		$content  = _def($_POST['content'], null);
+		$url      = _def($_POST['url'], null);
+		$media    = _def($_POST['media'], null);
+		$explicit = !!_def($_POST['explicit'], false);
 		
-		#Construct the required data
+		#Validation
+		$v = Array();
+		$v['url']   = $url   === null? : validate($url)->asURL('URL needs to be a URL');
+		$v['media'] = $media === null? : validate($media)->asURL('Media needs to be a file or URL');
+		validate($v['url'], $v['media']);
+		
+		#There needs to be a src user. That means that somebody is originating the
+		#notification. There has to be one, and no more than one.
 		$src = db()->table('user')->get('authId', $srcid)->fetch()? : UserModel::makeFromSSO($this->sso->getUser($srcid));
 		
-		#If sourceID and target are identical, we skip the sending of the notification
-		#This requires the application to check whether the user is visiting his own profile
-		if ($srcid == $tgtid) { 
-			return; //The user should be aware he did the action that would send himself a notification.
-		}
+		$targets = array_filter(array_map(function ($tgtid) use ($srcid) {
+			
+			#If sourceID and target are identical, we skip the sending of the notification
+			#This requires the application to check whether the user is visiting his own profile
+			if ($srcid == $tgtid) { return null; }
+			
+			#If there is no user specified we do skip them
+			try { return db()->table('user')->get('authId', $tgtid)->fetch()? : UserModel::makeFromSSO($this->sso->getUser($tgtid)); } 
+			catch (Exception$e) { return $tgtid; }
+			
+		}, $tgtid));
 		
-		try {
-			$target = db()->table('user')->get('authId', $tgtid)->fetch()? : UserModel::makeFromSSO($this->sso->getUser($tgtid));
-		} catch (Exception$e) {
-			$target = null;
-		}
 		
-		$content = $_POST['content'];
-		$url     = $_POST['url'];
-		$media   = $_POST['media'];
+		#Prepare an email sender to push emails to whoever needs them
+		$email   = new EmailSender($this->sso);
 		
 		#It could happen that the target is established as an email and therefore
 		#receives notifications directly as emails
-		if (!$target && isset($_POST['target']) && filter_var($_POST['target'], FILTER_VALIDATE_EMAIL)) {
+		foreach ($targets as $target) {
+			if ($target instanceof UserModel) {
+				
+				#Make it a record
+				$notification = db()->table('notification')->newRecord();
+				$notification->src = $src;
+				$notification->target = $target;
+				$notification->content = Mention::mentionsToId($content);
+				$notification->url     = $url;
+				$notification->media   = $media;
+				$notification->explicit= $explicit;
+				$notification->store();
+
+				#Check the user's preferences and send an email
+				$email->push($_POST['target'], $this->sso->getUser($src->authId), $content, $url, $media);
+			}
 			# Notify the user via mail.
-			$email->push($_POST['target'], $this->sso->getUser($src->authId), $content, $url, $media);
+			elseif (filter_var($_POST['target'], FILTER_VALIDATE_EMAIL)) {
+				$email->push($_POST['target'], $this->sso->getUser($src->authId), $content, $url, $media);
+			}
 		}
-		else {
+		
+		#This happens if the user defined no targets (this would imply that the ping 
+		#they sent out was public.
+		if (empty($targets))  {
 			#Make it a record
 			$notification = db()->table('notification')->newRecord();
 			$notification->src = $src;
-			$notification->target = $target;
+			$notification->target = null;
 			$notification->content = Mention::mentionsToId($content);
 			$notification->url     = $url;
 			$notification->media   = $media;
+			$notification->explicit= $explicit;
 			$notification->store();
-			
-			#Check the user's preferences and send an email
-			//TODO: Add check to verify the user has chosen to receive notifications
-			if ($target) {
-				$email->push($_POST['target'], $this->sso->getUser($src->authId), $content, $url, $media);
-			}
-			
 		}
 		
 	}

@@ -201,6 +201,20 @@
 						var child = view.getHTML().querySelector('.media');
 						child.parentNode.removeChild(child);
 					}
+					
+					if (data.payload[i].media && data.payload[i].explicit) {
+						var media = view.getHTML().querySelector('.media');
+						var cover = media.parentNode.insertBefore(document.createElement('div'), media);
+						
+						cover.className = 'media-cover';
+						cover.appendChild(document.createElement('span')).appendChild(document.createTextNode('Ping may contain sensitive media'));
+						cover.addEventListener('click', function (cover, media) { return function () {
+							cover.style.display = 'none';
+							media.style.display = null;
+						}}(cover, media), false);
+						
+						media.style.display = 'none';
+					}
 				}
 				
 				

@@ -178,6 +178,39 @@ a {
 	}
 }
 
+.media-cover {
+	background: #EEE;
+	border-radius: 3px;
+	font-size: 12px;
+	text-align: center;
+	padding: 50px 0;
+	font-style: italic;
+	cursor: pointer;
+}
+
+.pagination {
+	list-style: none;
+	text-align: center;
+	
+	li {
+		display: inline-block;
+		font-weight: bold;
+		
+		a {
+			display: inline-block;
+			padding: 10px;
+		}
+		
+		&.disabled, &.disabled a {
+			color: #AAA;
+		}
+		
+		&.active {
+			border-bottom: solid 1px #777;
+		}
+	}
+}
+
 @media all and (min-width: $MobileBreakpoint) {
 	@import '_scaffolding';
 	.mobile-only { display: none !important; }
