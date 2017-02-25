@@ -82,6 +82,7 @@ a {
 
 .user-card .banner {
   height: 64px;
+  overflow: hidden;
   background: #3289c7; }
   .user-card .banner img {
     width: 100%;
