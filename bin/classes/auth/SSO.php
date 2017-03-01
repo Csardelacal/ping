@@ -47,7 +47,7 @@ class SSO
 	 * @return \auth\Token
 	 */
 	public function makeToken($token) {
-		return new Token($this, $token, null);
+		return new Token($this, $token, null, null);
 	}
 	
 	public function getUser($username, Token$token = null) {

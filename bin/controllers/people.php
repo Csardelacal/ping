@@ -49,8 +49,8 @@ class PeopleController extends AppController
 		#Check if the user is already being followed
 		$u = $this->sso->getUser($user);
 		
-		$q1 = db()->table('user')->get('authId', $this->user->id)->fetch();
-		$q2 = db()->table('user')->get('authId', $u->getId())->fetch();
+		$q1 = db()->table('user')->get('authId', $this->user->id)->fetch()? : UserModel::makeFromSSO($this->sso->getUser($this->user->id));
+		$q2 = db()->table('user')->get('authId', $u->getId())->fetch()? : UserModel::makeFromSSO($u);
 		
 		$following = db()->table('follow')->get('follower', $q1)->addRestriction('prey', $q2)->fetch();
 		if ($following) { throw new \spitfire\exceptions\PublicException('Already following', 400); }

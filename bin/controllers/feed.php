@@ -53,6 +53,12 @@ class FeedController extends AppController
 	public function counter() {
 		
 		$dbuser = db()->table('user')->get('authId', $this->user->id)->fetch();
+		
+		if (!$dbuser) {
+			$this->view->set('count', 0)->set('samples', []);
+			return;
+		}
+		
 		$query  = db()->table('notification')->get('target__id', $dbuser->_id)->addRestriction('created', $dbuser->lastSeen, '>');
 		$query->setResultsPerPage(10); #For the sample loading
 		

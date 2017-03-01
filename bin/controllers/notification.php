@@ -35,8 +35,8 @@ class NotificationController extends AppController
 		
 		#Validation
 		$v = Array();
-		$v['url']   = $url   === null? : validate($url)->asURL('URL needs to be a URL');
-		$v['media'] = $media === null? : validate($media)->asURL('Media needs to be a file or URL');
+		$v['url']   = $url   === null? null : validate($url)->asURL('URL needs to be a URL');
+		$v['media'] = $media === null? null : validate($media)->asURL('Media needs to be a file or URL');
 		validate($v['url'], $v['media']);
 		
 		#There needs to be a src user. That means that somebody is originating the
@@ -97,6 +97,29 @@ class NotificationController extends AppController
 			$notification->store();
 		}
 		
+	}
+	
+	public function delete($id, $confirm = null) {
+		$notification = db()->table('notification')->get('_id', $id)->fetch();
+		$salt = sha1('somethingrandom' . $id . (int)(time() / 86400));
+		
+		if (!$notification) { throw new PublicException('No notification found', 404); }
+		
+		if ($notification->target === null && $notification->src->_id !== $this->user->id)  
+			{ throw new PublicException('No notification found', 404); }
+		
+		if ($notification->target !== null && $notification->target->_id !== $this->user->id)  
+			{ throw new PublicException('No notification found', 404); }
+		
+		if ($confirm === $salt) {
+			$notification->deleted = time();
+			$notification->store();
+			
+			return $this->response->setBody('OK')->getHeaders()->redirect(new URL('feed'));
+		}
+		
+		$this->view->set('id', $id);
+		$this->view->set('salt', $salt);
 	}
 	
 }

@@ -8,6 +8,10 @@ use spitfire\io\session\Session;
 abstract class AppController extends Controller
 {
 	
+	/**
+	 *
+	 * @var auth\SSO
+	 */
 	protected $sso;
 	protected $user;
 	
@@ -19,7 +23,7 @@ abstract class AppController extends Controller
 		#Create a user
 		$this->sso   = new SSOCache(Environment::get('sso.endpoint'), Environment::get('sso.appId'), Environment::get('sso.appSec'));
 		$this->token = isset($_GET['token'])? $this->sso->makeToken($_GET['token']) : $session->getUser();
-		$this->user  = $this->token? $this->token->getTokenInfo()->user : null;
+		$this->user  = $this->token && $this->token instanceof auth\Token? $this->token->getTokenInfo()->user : null;
 		
 		#Maintain the user in the view. This way we can draw an interface for them
 		$this->view->set('authUser', $this->user);

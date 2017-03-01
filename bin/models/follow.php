@@ -8,5 +8,9 @@ class FollowModel extends spitfire\Model
 		$schema->prey     = new Reference('user');
 		$schema->created  = new IntegerField();
 	}
+	
+	public function onbeforesave() {
+		if ($this->created === null) { $this->created = time(); }
+	}
 
 }

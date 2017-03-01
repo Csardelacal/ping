@@ -134,6 +134,14 @@ a {
   font-style: italic;
   cursor: pointer; }
 
+.profile .delete-link {
+  display: none;
+  font-weight: bold;
+  color: #900;
+  margin-left: 3px; }
+.profile.mine .delete-link {
+  display: inline-block; }
+
 .pagination {
   list-style: none;
   text-align: center; }

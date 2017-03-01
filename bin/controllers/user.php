@@ -26,6 +26,14 @@ class UserController extends AppController
 			->getHeaders()->redirect($token->getRedirect((string)new absoluteURL('user', 'login')));
 	}
 	
+	public function authorize($token) {
+		$t = $this->sso->makeToken($token);
+		Session::getInstance()->lock($t);
+		
+		return $this->response->setBody('Redirecting...')
+				  ->getHeaders()->redirect(new URL('feed'));
+	}
+	
 	public function logout() {
 		
 		#If there is a session for this user, we destroy it
@@ -65,6 +73,7 @@ class UserController extends AppController
 					->addRestriction('target', $dbu)
 				->endGroup()
 			->endGroup()
+			->addRestriction('deleted', null, 'IS')
 			->setResultsPerPage(10)
 			->setOrder('created', 'DESC');
 		

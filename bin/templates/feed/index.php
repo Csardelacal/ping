@@ -4,6 +4,25 @@
 <div class="row5">
 	<!--Sidebar (secondary navigation) -->
 	<div class="span1">
+		<div class="material unpadded user-card">
+			<?php $user = $sso->getUser($authUser->id); ?>
+			<a href="<?= new URL('user', $user->getUsername()) ?>">
+				<div class="banner" style="height: 47px">
+					<?php try { $banner = $user->getAttribute('banner')->getPreviewURL(320, 75) ?>
+					<?php if (!$banner) { throw new Exception(); } ?>
+					<img src="<?= $banner ?>" width="275" height="64">
+					<?php } catch (Exception$e) { } ?>
+				</div>
+				<div class="padded" style="margin-top: -35px;">
+					<img class="avatar" src="<?= $user->getAvatar(128) ?>">
+					<div class="user-info">
+						<span class="user-name"><?= $user->getUsername() ?></span>
+						<span class="user-bio"><?= db()->table('follow')->get('prey__id', $user->getId())->count() ?> followers</span>
+					</div>
+				</div>
+			</a>
+		</div>
+
 		<?= $secondary_navigation ?>
 	</div>
 
@@ -126,7 +145,7 @@
 <script type="text/javascript">
 (function() {
 	var xhr = null;
-	var current = <?= $notification->_id ?>;
+	var current = <?= isset($notification) && $notification? $notification->_id : 0 ?>;
 	var notifications = [];
 	
 	var request = function (callback) {

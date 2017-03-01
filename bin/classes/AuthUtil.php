@@ -12,7 +12,7 @@ class AuthUtil
 	public function checkAppCredentials($appId, $appSec) {
 		
 		#Check the application's credentials
-		if (!$this->user && !$this->sso->authApp($appId, $appSec)) {
+		if (!$this->sso->authApp($appId, $appSec)) {
 			throw new PublicException('Aunthentication error', 403);
 		}
 		
