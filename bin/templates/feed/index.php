@@ -96,6 +96,11 @@
 			
 			<div class="separator"></div>
 			<?php endforeach; ?>
+			<?php if (empty($notifications)): ?>
+			<div style="padding: 50px; text-align: center; color: #777; font-size: .8em; font-style: italic; text-align: center">
+				Nothing here yet. Follow or interact with users to build your feed!
+			</div>
+			<?php endif; ?>
 			
 			<div data-lysine-view="notification">
 				<div class="padded" style="padding-top: 5px;">

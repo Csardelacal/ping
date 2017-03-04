@@ -35,9 +35,10 @@ class NotificationController extends AppController
 		
 		#Validation
 		$v = Array();
+		$v['msg']   = validate($content)->minLength(1, 'Content cannot be empty')->maxLength(250, 'Ping is too long');
 		$v['url']   = $url   === null? null : validate($url)->asURL('URL needs to be a URL');
 		$v['media'] = $media === null? null : validate($media)->asURL('Media needs to be a file or URL');
-		validate($v['url'], $v['media']);
+		validate($v['msg'], $v['url'], $v['media']);
 		
 		#There needs to be a src user. That means that somebody is originating the
 		#notification. There has to be one, and no more than one.
@@ -85,7 +86,7 @@ class NotificationController extends AppController
 		
 		#This happens if the user defined no targets (this would imply that the ping 
 		#they sent out was public.
-		if (empty($targets))  {
+		if (empty($tgtid))  {
 			#Make it a record
 			$notification = db()->table('notification')->newRecord();
 			$notification->src = $src;
