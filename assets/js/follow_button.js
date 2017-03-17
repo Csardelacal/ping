@@ -68,7 +68,8 @@
 	};
 	
 	window.ping = window.ping? window.ping : {};
-	window.ping.setBaseURL = function (baseurl) { baseURL = baseurl; };
+	window.ping.setBaseURL = function (baseurl)  { baseURL = baseurl; };
+	window.ping.setToken   = function (newToken) { token   = newToken; };
 	window.ping.Button     = Button;
 	window.ping.init       = init;
 	

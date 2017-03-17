@@ -26,7 +26,32 @@ class UserController extends AppController
 			->getHeaders()->redirect($token->getRedirect((string)new absoluteURL('user', 'login')));
 	}
 	
-	public function show($username) {
+	public function authorize($token) {
+		$t = $this->sso->makeToken($token);
+		Session::getInstance()->lock($t);
+		
+		return $this->response->setBody('Redirecting...')
+				  ->getHeaders()->redirect(new URL('feed'));
+	}
+	
+	public function logout() {
+		
+		#If there is a session for this user, we destroy it
+		Session::getInstance()->destroy();
+		
+		return $this->response->setBody('Redirecting...')
+				  ->getHeaders()->redirect(new URL());
+	}
+	
+	
+	/**
+	 * 
+	 * @template user/show
+	 * @param type $username
+	 * @param type $args
+	 * @throws \spitfire\exceptions\PublicException
+	 */
+	public function __call($username, $args) {
 		$user = $this->sso->getUser($username);
 		$dbu  = db()->table('user')->get('authId', $user->getId())->fetch();
 		
@@ -37,14 +62,28 @@ class UserController extends AppController
 		$this->secondaryNav->add(new URL('people', 'iFollow'), 'Following');
 		
 		$feed = db()->table('notifications')
-			->get('src', $dbu)
-			->addRestriction('target', null)
-			->setOrder('created', 'DESC')
-			->fetchAll();
+			->getAll()
+			->group()
+				->group(spitfire\storage\database\RestrictionGroup::TYPE_AND)
+					->addRestriction('src', $dbu)
+					->addRestriction('target', null)
+				->endGroup()
+				->group(spitfire\storage\database\RestrictionGroup::TYPE_AND)
+					->addRestriction('src', db()->table('user')->get('_id', $this->user->id)->fetch())
+					->addRestriction('target', $dbu)
+				->endGroup()
+			->endGroup()
+			->addRestriction('deleted', null, 'IS')
+			->setResultsPerPage(10)
+			->setOrder('created', 'DESC');
 		
+		if (isset($_GET['until'])) {
+			$feed->addRestriction('_id', $_GET['until'], '<');
+		}
 		
 		$this->view->set('user', $user);
-		$this->view->set('notifications', $feed);
+		$this->view->set('notifications', $feed->fetchAll());
+		
 	}
 	
 }

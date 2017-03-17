@@ -8,6 +8,8 @@
 class HomeController extends AppController
 {
 	public function index() {
-		$this->view->set('message', $this->user);
+		if ($this->user) {
+			$this->response->setBody('Redirecting...')->getHeaders()->redirect(new URL('feed'));
+		}
 	}
 }

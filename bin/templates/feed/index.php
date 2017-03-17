@@ -4,6 +4,25 @@
 <div class="row5">
 	<!--Sidebar (secondary navigation) -->
 	<div class="span1">
+		<div class="material unpadded user-card">
+			<?php $user = $sso->getUser($authUser->id); ?>
+			<a href="<?= new URL('user', $user->getUsername()) ?>">
+				<div class="banner" style="height: 47px">
+					<?php try { $banner = $user->getAttribute('banner')->getPreviewURL(320, 75) ?>
+					<?php if (!$banner) { throw new Exception(); } ?>
+					<img src="<?= $banner ?>" width="275" height="64">
+					<?php } catch (Exception$e) { } ?>
+				</div>
+				<div class="padded" style="margin-top: -35px;">
+					<img class="avatar" src="<?= $user->getAvatar(128) ?>">
+					<div class="user-info">
+						<span class="user-name"><?= $user->getUsername() ?></span>
+						<span class="user-bio"><?= db()->table('follow')->get('prey__id', $user->getId())->count() ?> followers</span>
+					</div>
+				</div>
+			</a>
+		</div>
+
 		<?= $secondary_navigation ?>
 	</div>
 
@@ -42,15 +61,16 @@
 			<?php $user = $sso->getUser($notification->src->authId); ?>
 			<div class="padded" style="padding-top: 5px;">
 				<div class="row10 fluid">
-					<div class="span1" style="text-align: center">
+					<div class="span1 desktop-only" style="text-align: center">
 						<img src="<?= $user->getAvatar(64) ?>" style="width: 100%; border: solid 1px #777; border-radius: 3px;">
 					</div>
 					<div class="span9">
 						<div class="row4">
 							<div class="span3">
-								<a href="<?= new URL('user', 'show', $user->getUsername()) ?>" style="color: #000; font-weight: bold; font-size: .8em;"><?= $user->getUsername() ?></a>
+								<img class="mobile-only" src="<?= $user->getAvatar(64) ?>" style="width: 16px; border: solid 1px #777; border-radius: 3px; vertical-align: middle">
+								<a href="<?= new URL('user', $user->getUsername()) ?>" style="color: #000; font-weight: bold; font-size: .8em;"><?= $user->getUsername() ?></a>
 							</div>
-							<div class="span1" style="text-align: right; font-size: .8em; color: #777;">
+							<div class="span1 desktop-only" style="text-align: right; font-size: .8em; color: #777;">
 								<?= Time::relative($notification->created) ?>
 							</div>
 						</div>
@@ -76,19 +96,25 @@
 			
 			<div class="separator"></div>
 			<?php endforeach; ?>
+			<?php if (empty($notifications)): ?>
+			<div style="padding: 50px; text-align: center; color: #777; font-size: .8em; font-style: italic; text-align: center">
+				Nothing here yet. Follow or interact with users to build your feed!
+			</div>
+			<?php endif; ?>
 			
 			<div data-lysine-view="notification">
 				<div class="padded" style="padding-top: 5px;">
 					<div class="row10 fluid">
-						<div class="span1" style="text-align: center">
+						<div class="span1 desktop-only" style="text-align: center">
 							<img data-lysine-src="{{avatar}}" style="width: 100%; border: solid 1px #777; border-radius: 3px;">
 						</div>
 						<div class="span9">
 							<div class="row4">
 								<div class="span3">
+									<img class="mobile-only" data-lysine-src="{{avatar}}" style="width: 16px; border: solid 1px #777; border-radius: 3px; vertical-align: middle">
 									<a data-for="userName" data-lysine-href="{{userURL}}" style="color: #000; font-weight: bold; font-size: .8em;"></a>
 								</div>
-								<div class="span1" style="text-align: right; font-size: .8em; color: #777;" data-for="timeRelative">
+								<div class="span1 desktop-only" style="text-align: right; font-size: .8em; color: #777;" data-for="timeRelative">
 									
 								</div>
 							</div>
@@ -124,7 +150,7 @@
 <script type="text/javascript">
 (function() {
 	var xhr = null;
-	var current = <?= $notification->_id ?>;
+	var current = <?= isset($notification) && $notification? $notification->_id : 0 ?>;
 	var notifications = [];
 	
 	var request = function (callback) {
@@ -151,7 +177,7 @@
 					view.setData({
 						userName           : data.payload[i].user.username,
 						avatar             : data.payload[i].user.avatar,
-						userURL            : '<?= new URL('user', 'show') ?>/' + data.payload[i].user.username,
+						userURL            : '<?= new URL('user') ?>/' + data.payload[i].user.username,
 						notificationURL    : data.payload[i].url || '#',
 						notificationContent: data.payload[i].content,
 						notificationMedia  : data.payload[i].media? data.payload[i].media : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
