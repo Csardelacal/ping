@@ -10,7 +10,7 @@ foreach ($notifications as $n) {
 		'id'           => $n->_id,
 		'url'          => $n->url,
 		'media'        => $n->media,
-		'explicit'     => $n->explicit,
+		'explicit'     => !!$n->explicit,
 		'content'      => Mention::idToMentions($n->content),
 		'timestamp'    => $n->created,
 		'timeRelative' => Time::relative($n->created),

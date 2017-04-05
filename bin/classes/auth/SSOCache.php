@@ -17,9 +17,9 @@ class SSOCache
 		
 		if ($token) { return $this->sso->getUser($id, $token); }
 		
-		return $this->cache->get('sso_user_' . $id, function () use ($id) {
-			return $this->sso->getUser($id);
-		});
+		return unserialize($this->cache->get('sso_user_' . $id, function () use ($id) {
+			return serialize($this->sso->getUser($id));
+		}));
 	}
 	
 	public function getSSO() {

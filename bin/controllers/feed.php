@@ -29,6 +29,10 @@ class FeedController extends AppController
 				->group()
 				  ->addRestriction('target__id', $dbuser->_id)
 				  ->group(spitfire\storage\database\RestrictionGroup::TYPE_AND)
+				   ->addRestriction('src__id',    $dbuser->_id)
+				   ->addRestriction('target__id', null)
+				  ->endGroup()
+				  ->group(spitfire\storage\database\RestrictionGroup::TYPE_AND)
 					->addRestriction('src', $users)
 				   ->addRestriction('target', null)
 				  ->endGroup()
@@ -52,24 +56,53 @@ class FeedController extends AppController
 	
 	public function counter() {
 		
+		$memcached = new \spitfire\cache\MemcachedAdapter(); 
+		$memcached->setTimeout(20);
+		
 		$dbuser = db()->table('user')->get('authId', $this->user->id)->fetch();
+		
 		
 		if (!$dbuser) {
 			$this->view->set('count', 0)->set('samples', []);
 			return;
 		}
 		
-		$query  = db()->table('notification')->get('target__id', $dbuser->_id)->addRestriction('created', $dbuser->lastSeen, '>');
+		$follows = db()->table('follow')->get('follower__id', $dbuser->_id);
+		$users   = db()->table('user')->get('followers', $follows);
+		
+		$query = db()->table('notification')->getAll()
+				->group()
+				  ->addRestriction('target__id', $dbuser->_id)
+				  ->group(spitfire\storage\database\RestrictionGroup::TYPE_AND)
+				   ->addRestriction('src__id',    $dbuser->_id)
+				   ->addRestriction('target__id', null)
+				  ->endGroup()
+				  ->group(spitfire\storage\database\RestrictionGroup::TYPE_AND)
+					->addRestriction('src', $users)
+				   ->addRestriction('target', null)
+				  ->endGroup()
+				->endGroup()
+				->addRestriction('created', max($dbuser->lastSeen, time() - 720 * 3600) , '>')
+				->setResultsPerPage(10)
+				->setOrder('created', 'DESC');
 		$query->setResultsPerPage(10); #For the sample loading
 		
-		$samples = array_map(function ($e) {
-			return Array(
-				'msg' => $e->content
-			);
-		}, $query->fetchAll());
+		$samples = array_map(
+			function ($e) {
+				return Array(
+					'msg' => $e->content
+				);
+			}, 
+			db()->table('notification')
+				->get('target__id', $dbuser->_id)
+				->addRestriction('created', $dbuser->lastSeen, '>')
+				->setResultsPerPage(10)
+				->fetchAll()
+		);
 		
-		$this->view->set('count', $query->count());
+		$this->view->set('count', $memcached->get('ping.notifications.' . $dbuser->_id, function () use($query) { return $query->count(); }));
 		$this->view->set('samples', $samples);
 	}
 	
 }
+

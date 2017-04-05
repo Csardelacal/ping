@@ -36,7 +36,7 @@
 						<div>
 							<div class="row1">
 								<div class="span1">
-									<textarea name="content" placeholder="Send ping to <?= $user->getUsername() ?>..."></textarea>
+									<textarea name="content" id="new-ping-content" placeholder="Send ping to <?= $user->getUsername() ?>..."></textarea>
 								</div>
 							</div>
 						</div>
@@ -49,6 +49,7 @@
 
 								</div>
 								<div class="span1" style="text-align: right">
+									<span id="new-ping-character-count">250</span>
 									<input type="submit" value="Ping!">
 								</div>
 							</div>

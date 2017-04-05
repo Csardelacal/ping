@@ -22,7 +22,7 @@ class PeopleController extends AppController
 		
 		
 		$query     = db()->table('follow')->get('prey__id', db()->table('user')->get('authId', $this->user->id)->fetch()->_id);
-		$followers = db()->table('user')->get('following', $query);
+		$followers = db()->table('user')->get('following', $query)->setResultsPerPage(21);
 		
 		$paginator = new Pagination($followers);
 		
@@ -36,7 +36,7 @@ class PeopleController extends AppController
 		$this->secondaryNav->add(new URL('people', 'iFollow'), 'Following')->setActive(true);
 		
 		$query     = db()->table('follow')->get('follower__id', db()->table('user')->get('authId', $this->user->id)->fetch()->_id);
-		$followers = db()->table('user')->get('followers', $query);
+		$followers = db()->table('user')->get('followers', $query)->setResultsPerPage(21);
 		
 		$paginator = new Pagination($followers);
 		
