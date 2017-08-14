@@ -9,7 +9,7 @@ foreach ($notifications as $n) {
 	$payload[] = Array(
 		'id'           => $n->_id,
 		'url'          => $n->url,
-		'media'        => $n->media,
+		'media'        => $n->getMediaURI(),
 		'explicit'     => !!$n->explicit,
 		'content'      => Mention::idToMentions($n->content),
 		'timestamp'    => $n->created,
@@ -24,5 +24,6 @@ foreach ($notifications as $n) {
 
 echo json_encode(Array(
 	 'payload' => $payload,
-	 'until'   => isset($n)? $n->_id : 0
+	 'until'   => isset($n)? $n->_id : 0,
+	 'messages'    => spitfire()->getMessages()
 ));

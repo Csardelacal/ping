@@ -29,7 +29,7 @@
 	<!-- Main content-->
 	<div class="span3">
 		<div class="material unpadded">
-			<form method="POST" action="<?= new URL('notification', 'push') ?>">
+			<form method="POST" action="<?= url('notification', 'push') ?>" enctype="multipart/form-data">
 				<div class="padded add-ping">
 					<div>
 						<div class="row1">
@@ -48,6 +48,8 @@
 							</div>
 							<div class="span1" style="text-align: right">
 								<span id="new-ping-character-count">250</span>
+								<input type="file" name="media" id="ping_media" accept="image/*" style="display: none" onchange="document.getElementById('ping_media_selector').style.opacity = '1'">
+								<img src="<?= spitfire\core\http\URL::asset('img/camera.png') ?>" id="ping_media_selector" onclick="document.getElementById('ping_media').click()" style="vertical-align: middle; height: 24px; opacity: .3; margin: 0 5px;">
 								<input type="submit" value="Ping!">
 							</div>
 						</div>
@@ -85,7 +87,7 @@
 								<?php if ($notification->media): ?>
 								<div class="spacer" style="height: 20px"></div>
 									<?php if ($notification->url): ?><a href="<?= $notification->url ?>" ><?php endif; ?>
-									<img src="<?= $notification->media ?>" style="width: 100%">
+									<img src="<?= $notification->getMediaURI() ?>" style="width: 100%">
 									<?php if ($notification->url): ?></a><?php endif; ?>
 								<?php endif; ?>
 							</div>
@@ -158,7 +160,7 @@
 		if (current === 0) { return; }
 		
 		xhr = new XMLHttpRequest();
-		xhr.open('GET', '<?= new URL('feed.json') ?>?until=' + current);
+		xhr.open('GET', '<?= url('feed')->setExtension('json') ?>?until=' + current);
 		
 		xhr.onreadystatechange = function () {
 			if (xhr.readyState === 4 && xhr.status === 200) {

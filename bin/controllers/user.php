@@ -23,7 +23,7 @@ class UserController extends AppController
 		
 		#Send the user to the login server
 		$this->response->setBody('Redirecting...')
-			->getHeaders()->redirect($token->getRedirect((string)new absoluteURL('user', 'login')));
+			->getHeaders()->redirect($token->getRedirect((string)new \AbsoluteURL('user', 'login')));
 	}
 	
 	public function authorize($token) {

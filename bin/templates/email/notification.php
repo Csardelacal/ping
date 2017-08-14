@@ -3,7 +3,7 @@
 		<!--Header-->
 		<div style="padding: 10px; font-weight: bold; color: #FFF; background: #5299cc">
 			<div style="margin: 0 auto; max-width: 500px;">
-				<img src="<?= absoluteURL::asset('img/logo.png') ?>" height="24" style="vertical-align: middle">
+				<img src="<?= spitfire\core\http\AbsoluteURL::asset('img/logo.png') ?>" height="24" style="vertical-align: middle">
 				<?= spitfire\core\Environment::get('site.name')? : 'Ping' ?> - Notification
 			</div>
 		</div>

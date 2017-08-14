@@ -30,7 +30,7 @@
 					Log in to send <?= $user->getUsername() ?> a ping...
 				</p>
 				<?php elseif ($user->getId() !== $authUser->id): ?>
-				<form method="POST" action="<?= new URL('notification', 'push', Array('returnto' => (string)new URL('user', $user->getUsername()))) ?>">
+				<form method="POST" action="<?= new URL('notification', 'push', Array('returnto' => (string)new URL('user', $user->getUsername()))) ?>" enctype="multipart/form-data">
 					<input type="hidden" name="target" value="<?= $user->getId() ?>">
 					<div class="padded add-ping">
 						<div>
@@ -50,6 +50,8 @@
 								</div>
 								<div class="span1" style="text-align: right">
 									<span id="new-ping-character-count">250</span>
+									<input type="file" name="media" id="ping_media" accept="image/*" style="display: none" onchange="document.getElementById('ping_media_selector').style.opacity = '1'">
+									<img src="<?= spitfire\core\http\URL::asset('img/camera.png') ?>" id="ping_media_selector" onclick="document.getElementById('ping_media').click()" style="vertical-align: middle; height: 24px; opacity: .3; margin: 0 5px;">
 									<input type="submit" value="Ping!">
 								</div>
 							</div>
@@ -68,7 +70,7 @@
 				<div class="separator"></div>
 
 				<?php foreach($notifications as $notification): ?>
-				<?php $user = $sso->getUser($notification->src->authId); ?>
+				<?php $u = $sso->getUser($notification->src->authId); ?>
 				<div class="padded" style="padding-top: 5px;">
 					<div class="row10 fluid">
 						<div class="span1 desktop-only" style="text-align: center">
@@ -77,7 +79,7 @@
 						<div class="span9">
 							<div class="row4">
 								<div class="span3">
-									<a href="<?= new URL('user', $user->getUsername()) ?>" style="color: #000; font-weight: bold; font-size: .8em;"><?= $user->getUsername() ?></a>
+									<a href="<?= new URL('user', $u->getUsername()) ?>" style="color: #000; font-weight: bold; font-size: .8em;"><?= $u->getUsername() ?></a>
 								</div>
 								<div class="span1 desktop-only" style="text-align: right; font-size: .8em; color: #777;">
 									<?= Time::relative($notification->created) ?>
@@ -95,7 +97,7 @@
 									<?php if ($notification->media): ?>
 									<div class="spacer" style="height: 20px"></div>
 										<?php if ($notification->url): ?><a href="<?= $notification->url ?>"><?php endif; ?>
-										<img src="<?= $notification->media ?>" style="width: 100%">
+										<img src="<?= $notification->getMediaURI() ?>" style="width: 100%">
 										<?php if ($notification->url): ?></a><?php endif; ?>
 									<?php endif; ?>
 								</div>
@@ -158,7 +160,7 @@
 <script type="text/javascript" src="<?= URL::asset('js/follow_button.js') ?>"></script>
 <script type="text/javascript">
 (function () {
-	window.ping.setBaseURL('<?= new URL(); ?>');
+	window.ping.setBaseURL('<?= url(); ?>');
 	window.ping.init();
 }());
 </script>
@@ -168,7 +170,7 @@
 <script type="text/javascript">
 (function() {
 	var xhr = null;
-	var current = <?= isset($notification) && $notification? $notification->_id : null ?>;
+	var current = <?= json_encode(isset($notification) && $notification? $notification->_id : null) ?>;
 	var notifications = [];
 	
 	var request = function (callback) {

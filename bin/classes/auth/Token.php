@@ -17,6 +17,10 @@ class Token
 		$this->redirect = $redirect;
 	}
 	
+	public function getId() {
+		return $this->token;
+	}
+	
 	public function getRedirect($successURI, $failureURI = null) {
 		return $this->redirect . '?' . http_build_query(Array('returnurl' => $successURI));
 	}
