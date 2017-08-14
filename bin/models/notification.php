@@ -17,5 +17,9 @@ class NotificationModel extends spitfire\Model
 	public function onbeforesave() {
 		if (!$this->created) { $this->created = time(); }
 	}
+	
+	public function getMediaURI() {
+		return parse_url($this->media, PHP_URL_SCHEME) === 'file'? strval(url('image', 'preview', $this->_id)->absolute()) : $this->media; 
+	}
 
 }

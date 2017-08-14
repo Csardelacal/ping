@@ -25,29 +25,29 @@
 		<div class="main navigation">
 			<div class="row7">
 				<div class="span1 logo">
-					<a class="menu-item" href="<?= new URL() ?>">
-						<img src="<?= URL::asset('img/logo.png') ?>" width="17" style="margin-right: 5px; vertical-align: -3px"> Ping
+					<a class="menu-item" href="<?= url() ?>">
+						<img src="<?= spitfire\core\http\URL::asset('img/logo.png') ?>" width="17" style="margin-right: 5px; vertical-align: -3px"> Ping
 					</a>
 				</div>
 				<div class="span3 desktop-only"></div>
 				<div class="span1">
 					<?php if ($authUser): ?>
-					<a class="menu-item" href="<?= new URL('feed') ?>">Feed <span class="badge" data-ping-counter></span></a>
+					<a class="menu-item" href="<?= url('feed') ?>">Feed <span class="badge" data-ping-counter></span></a>
 					<?php endif; ?>
 				</div>
 				<div class="span1">
 					<?php if ($authUser): ?>
-					<!--<a href="<?= new URL('settings') ?>">Settings</a>-->
+					<!--<a href="<?= url('settings') ?>">Settings</a>-->
 					<?php endif; ?>
 				</div>
 				<div class="span1">
 					<?php if ($authUser): ?>
-					<a class="menu-item" href="<?= new URL('user', 'logout') ?>">
+					<a class="menu-item" href="<?= url('user', 'logout') ?>">
 						<img src="<?= $authUser->avatar ?>" width="17"  style="margin-right: 5px; vertical-align: -3px">
 						Logout
 					</a>
 					<?php else : ?>
-					<a class="menu-item" href="<?= new URL('user', 'login') ?>">Login</a>
+					<a class="menu-item" href="<?= url('user', 'login') ?>">Login</a>
 					<?php endif; ?>
 				</div>
 			</div>
@@ -55,6 +55,6 @@
 		
 		<?= $content_for_layout ?>
 		
-		<script type="text/javascript" src="<?= new URL('feed', 'counter.js') ?>"></script>
+		<script type="text/javascript" src="<?= url('feed', 'counter')->setExtension('js') ?>"></script>
 	</body>
 </html>

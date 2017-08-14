@@ -28,10 +28,15 @@ class NotificationController extends AppController
 		#Read POST data
 		$srcid    = isset($this->user)? $this->user->id : _def($_POST['src'], null);
 		$tgtid    = (array)_def($_POST['target'], null);
-		$content  = _def($_POST['content'], null);
+		$content  = str_replace("\r", '',_def($_POST['content'], null));
 		$url      = _def($_POST['url'], null);
 		$media    = _def($_POST['media'], null);
 		$explicit = !!_def($_POST['explicit'], false);
+		
+		#If the media is a file, we will store it
+		if ($media instanceof spitfire\io\Upload) {
+			$media = 'file:' . $media->store();
+		}
 		
 		#Validation
 		$v = Array();

@@ -30,7 +30,7 @@ class FeedController extends AppController
 				  ->addRestriction('target__id', $dbuser->_id)
 				  ->group(spitfire\storage\database\RestrictionGroup::TYPE_AND)
 				   ->addRestriction('src__id',    $dbuser->_id)
-				   ->addRestriction('target__id', null)
+				   ->addRestriction('target__id', null, 'IS')
 				  ->endGroup()
 				  ->group(spitfire\storage\database\RestrictionGroup::TYPE_AND)
 					->addRestriction('src', $users)
@@ -38,6 +38,7 @@ class FeedController extends AppController
 				  ->endGroup()
 				->endGroup()
 				->addRestriction('created', time() - 720 * 3600, '>')
+				->addRestriction('deleted', null, 'IS')
 				->setResultsPerPage(10)
 				->setOrder('created', 'DESC');
 		
