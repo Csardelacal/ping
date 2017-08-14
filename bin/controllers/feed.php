@@ -10,12 +10,12 @@ class FeedController extends AppController
 		 * there is no point in having a public feed that displays contents 
 		 */
 		if (!$this->user) { 
-			return $this->response->getHeaders()->redirect(new URL('user', 'login')); 
+			return $this->response->getHeaders()->redirect(url('user', 'login')); 
 		}
 		
-		$this->secondaryNav->add(new URL('feed'), 'Feed')->setActive(true);
-		$this->secondaryNav->add(new URL('people', 'followingMe'), 'Followers');
-		$this->secondaryNav->add(new URL('people', 'iFollow'), 'Following');
+		$this->secondaryNav->add(url('feed'), 'Feed')->setActive(true);
+		$this->secondaryNav->add(url('people', 'followingMe'), 'Followers');
+		$this->secondaryNav->add(url('people', 'iFollow'), 'Following');
 		
 		/*
 		 * Read the notifications for the user and send them to the view

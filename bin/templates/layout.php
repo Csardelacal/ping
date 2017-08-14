@@ -55,6 +55,6 @@
 		
 		<?= $content_for_layout ?>
 		
-		<script type="text/javascript" src="<?= new URL('feed', 'counter.js') ?>"></script>
+		<script type="text/javascript" src="<?= url('feed', 'counter')->setExtension('js') ?>"></script>
 	</body>
 </html>

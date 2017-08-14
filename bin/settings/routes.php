@@ -12,3 +12,7 @@
  * of the following rules. So add them wisely.
  * It's really easy and fun!
  */
+
+$router = \spitfire\core\router\Router::getInstance();
+
+$router->addRoute('/followers/', ['controller' => 'people', 'action' => 'followingMe']);
