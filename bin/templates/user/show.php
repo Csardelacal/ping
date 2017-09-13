@@ -30,7 +30,7 @@
 					Log in to send <?= $user->getUsername() ?> a ping...
 				</p>
 				<?php elseif ($user->getId() !== $authUser->id): ?>
-				<form method="POST" action="<?= new URL('notification', 'push', Array('returnto' => (string)new URL('user', $user->getUsername()))) ?>" enctype="multipart/form-data">
+				<form method="POST" action="<?= url('ping', 'push', Array('returnto' => (string)url('user', $user->getUsername()))) ?>" enctype="multipart/form-data">
 					<input type="hidden" name="target" value="<?= $user->getId() ?>">
 					<div class="padded add-ping">
 						<div>
@@ -83,7 +83,7 @@
 								</div>
 								<div class="span1 desktop-only" style="text-align: right; font-size: .8em; color: #777;">
 									<?= Time::relative($notification->created) ?>
-									<a class="delete-link" href="<?= new URL('notification', 'delete', $notification->_id) ?>" title="Delete this post">&times;</a>
+									<a class="delete-link" href="<?= url('ping', 'delete', $notification->_id) ?>" title="Delete this post">&times;</a>
 								</div>
 							</div>
 							<div class="row1" style="margin-top: 5px">
@@ -109,7 +109,7 @@
 				<div class="separator"></div>
 				<?php endforeach; ?>
 
-				<div data-lysine-view="notification">
+				<div data-lysine-view="ping">
 					<div class="padded" style="padding-top: 5px;">
 						<div class="row10 fluid">
 							<div class="span1 desktop-only" style="text-align: center">
@@ -123,7 +123,7 @@
 									</div>
 									<div class="span1 desktop-only" style="text-align: right; font-size: .8em; color: #777;">
 										<span data-for="timeRelative"></span>
-										<a class="delete-link" data-lysine-href="<?= new URL('notification', 'delete', '{{id}}') ?>" title="Delete this post">&times;</a>
+										<a class="delete-link" data-lysine-href="<?= url('ping', 'delete', '{{id}}') ?>" title="Delete this post">&times;</a>
 									</div>
 								</div>
 								<div class="row1" style="margin-top: 5px">
@@ -156,8 +156,8 @@
 	</div>
 </div>
 
-<script type="text/javascript" src="<?= URL::asset('js/banner.js') ?>"></script>
-<script type="text/javascript" src="<?= URL::asset('js/follow_button.js') ?>"></script>
+<script type="text/javascript" src="<?= \spitfire\core\http\URL::asset('js/banner.js') ?>"></script>
+<script type="text/javascript" src="<?= \spitfire\core\http\URL::asset('js/follow_button.js') ?>"></script>
 <script type="text/javascript">
 (function () {
 	window.ping.setBaseURL('<?= url(); ?>');
@@ -165,7 +165,7 @@
 }());
 </script>
 
-<script type="text/javascript" src="<?= URL::asset('js/lysine.js') ?>"></script>
+<script type="text/javascript" src="<?= \spitfire\core\http\URL::asset('js/lysine.js') ?>"></script>
 
 <script type="text/javascript">
 (function() {
@@ -178,7 +178,7 @@
 		if (current === 0) { return; }
 		
 		xhr = new XMLHttpRequest();
-		xhr.open('GET', '<?= new URL('user', $user->getUsername() . '.json') ?>?until=' + current);
+		xhr.open('GET', '<?= url('user', $user->getUsername())->setExtension('json') ?>?until=' + current);
 		
 		xhr.onreadystatechange = function () {
 			if (xhr.readyState === 4 && xhr.status === 200) {
@@ -191,14 +191,14 @@
 				}
 				
 				for (var i= 0; i < data.payload.length; i++) { 
-					var view =  new Lysine.view('notification');
+					var view =  new Lysine.view('ping');
 					notifications.push(view);
 					
 					view.setData({
 						id                 : data.payload[i].id,
 						userName           : data.payload[i].user.username,
 						avatar             : data.payload[i].user.avatar,
-						userURL            : '<?= new URL('user') ?>/' + data.payload[i].user.username,
+						userURL            : '<?= url('user') ?>' + data.payload[i].user.username,
 						notificationURL    : data.payload[i].url || '#',
 						notificationContent: data.payload[i].content,
 						notificationMedia  : data.payload[i].media? data.payload[i].media : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',

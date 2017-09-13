@@ -2,7 +2,7 @@
 
 use spitfire\exceptions\PublicException;
 
-class NotificationController extends AppController
+class PingController extends AppController
 {
 	
 	public function index() {
@@ -71,7 +71,7 @@ class NotificationController extends AppController
 			if ($target instanceof UserModel) {
 				
 				#Make it a record
-				$notification = db()->table('notification')->newRecord();
+				$notification = db()->table('ping')->newRecord();
 				$notification->src = $src;
 				$notification->target = $target;
 				$notification->content = Mention::mentionsToId($content);
@@ -93,7 +93,7 @@ class NotificationController extends AppController
 		#they sent out was public.
 		if (empty($tgtid))  {
 			#Make it a record
-			$notification = db()->table('notification')->newRecord();
+			$notification = db()->table('ping')->newRecord();
 			$notification->src = $src;
 			$notification->target = null;
 			$notification->content = Mention::mentionsToId($content);
@@ -101,12 +101,21 @@ class NotificationController extends AppController
 			$notification->media   = $media;
 			$notification->explicit= $explicit;
 			$notification->store();
+			
+			$mentioned = Mention::getMentionedUsers($notification->content);
+			foreach ($mentioned as $u) {
+				$n = db()->table('notification')->newRecord();
+				$n->src     = $src;
+				$n->target  = $u;
+				$n->content = 'Mentioned you';
+				$n->store();
+			}
 		}
 		
 	}
 	
 	public function delete($id, $confirm = null) {
-		$notification = db()->table('notification')->get('_id', $id)->fetch();
+		$notification = db()->table('ping')->get('_id', $id)->fetch();
 		$salt = sha1('somethingrandom' . $id . (int)(time() / 86400));
 		
 		if (!$notification) { throw new PublicException('No notification found', 404); }
@@ -121,7 +130,7 @@ class NotificationController extends AppController
 			$notification->deleted = time();
 			$notification->store();
 			
-			return $this->response->setBody('OK')->getHeaders()->redirect(new URL('feed'));
+			return $this->response->setBody('OK')->getHeaders()->redirect(url('feed'));
 		}
 		
 		$this->view->set('id', $id);

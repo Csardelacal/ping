@@ -29,7 +29,7 @@
 	<!-- Main content-->
 	<div class="span3">
 		<div class="material unpadded">
-			<form method="POST" action="<?= url('notification', 'push') ?>" enctype="multipart/form-data">
+			<form method="POST" action="<?= url('ping', 'push') ?>" enctype="multipart/form-data">
 				<div class="padded add-ping">
 					<div>
 						<div class="row1">
@@ -104,7 +104,7 @@
 			</div>
 			<?php endif; ?>
 			
-			<div data-lysine-view="notification">
+			<div data-lysine-view="ping">
 				<div class="padded" style="padding-top: 5px;">
 					<div class="row10 fluid">
 						<div class="span1 desktop-only" style="text-align: center">
@@ -173,13 +173,13 @@
 				}
 				
 				for (var i= 0; i < data.payload.length; i++) { 
-					var view =  new Lysine.view('notification');
+					var view =  new Lysine.view('ping');
 					notifications.push(view);
 					
 					view.setData({
 						userName           : data.payload[i].user.username,
 						avatar             : data.payload[i].user.avatar,
-						userURL            : '<?= new URL('user') ?>/' + data.payload[i].user.username,
+						userURL            : '<?= url('user') ?>/' + data.payload[i].user.username,
 						notificationURL    : data.payload[i].url || '#',
 						notificationContent: data.payload[i].content,
 						notificationMedia  : data.payload[i].media? data.payload[i].media : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',

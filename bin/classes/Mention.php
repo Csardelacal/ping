@@ -23,5 +23,16 @@ class Mention
 		}, $inText);
 	}
 	
+	public static function getMentionedUsers($inText) {
+		preg_match_all('/\@([0-9]+)/i', $inText, $matches);
+		$matches = $matches[0];
+		
+		foreach ($matches as &$match) {
+			$match = db()->table('user')->get('_id', trim($match, '@'))->fetch();
+		}
+		
+		return array_filter($matches);
+	}
+	
 }
 

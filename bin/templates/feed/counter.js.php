@@ -7,17 +7,25 @@
 
 	var init = function () {
 		
-		var elements = document.querySelectorAll('*[data-ping-counter]');
-		var count    = <?= json_encode($count) ?>;
-		var samples  = <?= json_encode($samples) ?>;
+		var all      = document.querySelectorAll('*[data-ping-counter]');
+		var feed     = document.querySelectorAll('*[data-ping-feed]');
+		var activity = document.querySelectorAll('*[data-ping-activity]');
+		
+		var count     = <?= json_encode($count + $activity) ?>;
+		var feedC     = <?= json_encode($count) ?>;
+		var activityC = <?= json_encode($activity) ?>;
 		
 		/*
 		 * Attach the number to the elements that do display the counter. This 
 		 * should make it easy to provide a notification counter on external sites.
 		 */
-		for (var i = 0; i < elements.length; i++) {
-			elements[i].innerHTML = count;
-			elements[i].setAttribute('data-ping-counter', count);
+		for (var j = 0; j < 3; j++) {
+			var current = [all, feed, activity][j];
+			
+			for (var i = 0; i < current.length; i++) {
+				current[i].innerHTML = [count, feedC, activityC][j];
+				current[i].setAttribute('data-ping-amt', [count, feedC, activityC][j]);
+			}
 		}
 	};
 	

@@ -61,12 +61,12 @@ class UserController extends AppController
 		$this->secondaryNav->add(new URL('people', 'followingMe'), 'Followers');
 		$this->secondaryNav->add(new URL('people', 'iFollow'), 'Following');
 		
-		$feed = db()->table('notifications')
+		$feed = db()->table('ping')
 			->getAll()
 			->group()
 				->group(spitfire\storage\database\RestrictionGroup::TYPE_AND)
 					->addRestriction('src', $dbu)
-					->addRestriction('target', null)
+					->addRestriction('target', null, 'IS')
 				->endGroup()
 				->group(spitfire\storage\database\RestrictionGroup::TYPE_AND)
 					->addRestriction('src', db()->table('user')->get('_id', $this->user->id)->fetch())

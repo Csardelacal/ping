@@ -16,9 +16,9 @@ class PeopleController extends AppController
 	public function followingMe() {
 		
 		
-		$this->secondaryNav->add(new URL('feed'), 'Feed');
-		$this->secondaryNav->add(new URL('people', 'followingMe'), 'Followers')->setActive(true);
-		$this->secondaryNav->add(new URL('people', 'iFollow'), 'Following');
+		$this->secondaryNav->add(url('feed'), 'Feed');
+		$this->secondaryNav->add(url('people', 'followingMe'), 'Followers')->setActive(true);
+		$this->secondaryNav->add(url('people', 'iFollow'), 'Following');
 		
 		
 		$query     = db()->table('follow')->get('prey__id', db()->table('user')->get('authId', $this->user->id)->fetch()->_id);
@@ -31,9 +31,9 @@ class PeopleController extends AppController
 	}
 	
 	public function iFollow() {
-		$this->secondaryNav->add(new URL('feed'), 'Feed');
-		$this->secondaryNav->add(new URL('people', 'followingMe'), 'Followers');
-		$this->secondaryNav->add(new URL('people', 'iFollow'), 'Following')->setActive(true);
+		$this->secondaryNav->add(url('feed'), 'Feed');
+		$this->secondaryNav->add(url('people', 'followingMe'), 'Followers');
+		$this->secondaryNav->add(url('people', 'iFollow'), 'Following')->setActive(true);
 		
 		$query     = db()->table('follow')->get('follower__id', db()->table('user')->get('authId', $this->user->id)->fetch()->_id);
 		$followers = db()->table('user')->get('followers', $query)->setResultsPerPage(21);
@@ -59,6 +59,12 @@ class PeopleController extends AppController
 		$follow->follower = $q1;
 		$follow->prey     = $q2;
 		$follow->store();
+		
+		$notification = db()->table('notification')->newRecord();
+		$notification->src     = $q1;
+		$notification->target  = $q2;
+		$notification->content = "Started following you";
+		$notification->store();
 	}
 	
 	public function unfollow($user) {

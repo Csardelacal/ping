@@ -13,9 +13,10 @@ class FeedController extends AppController
 			return $this->response->getHeaders()->redirect(new URL('user', 'login')); 
 		}
 		
-		$this->secondaryNav->add(new URL('feed'), 'Feed')->setActive(true);
-		$this->secondaryNav->add(new URL('people', 'followingMe'), 'Followers');
-		$this->secondaryNav->add(new URL('people', 'iFollow'), 'Following');
+		$this->secondaryNav->add(url('feed'), 'Feed')->setActive(true);
+		$this->secondaryNav->add(url('activity'), 'Activity <span class="badge" data-ping-activity></span>');
+		$this->secondaryNav->add(url('people', 'followingMe'), 'Followers');
+		$this->secondaryNav->add(url('people', 'iFollow'), 'Following');
 		
 		/*
 		 * Read the notifications for the user and send them to the view
@@ -25,7 +26,7 @@ class FeedController extends AppController
 		$follows = db()->table('follow')->get('follower__id', $dbuser->_id);
 		$users   = db()->table('user')->get('followers', $follows);
 		
-		$query = db()->table('notification')->getAll()
+		$query = db()->table('ping')->getAll()
 				->group()
 				  ->addRestriction('target__id', $dbuser->_id)
 				  ->group(spitfire\storage\database\RestrictionGroup::TYPE_AND)
@@ -34,7 +35,7 @@ class FeedController extends AppController
 				  ->endGroup()
 				  ->group(spitfire\storage\database\RestrictionGroup::TYPE_AND)
 					->addRestriction('src', $users)
-				   ->addRestriction('target', null)
+				   ->addRestriction('target', null, 'IS')
 				  ->endGroup()
 				->endGroup()
 				->addRestriction('created', time() - 720 * 3600, '>')
@@ -71,7 +72,7 @@ class FeedController extends AppController
 		$follows = db()->table('follow')->get('follower__id', $dbuser->_id);
 		$users   = db()->table('user')->get('followers', $follows);
 		
-		$query = db()->table('notification')->getAll()
+		$query = db()->table('ping')->getAll()
 				->group()
 				  ->addRestriction('target__id', $dbuser->_id)
 				  ->group(spitfire\storage\database\RestrictionGroup::TYPE_AND)
@@ -86,23 +87,18 @@ class FeedController extends AppController
 				->addRestriction('created', max($dbuser->lastSeen, time() - 720 * 3600) , '>')
 				->setResultsPerPage(10)
 				->setOrder('created', 'DESC');
-		$query->setResultsPerPage(10); #For the sample loading
 		
-		$samples = array_map(
-			function ($e) {
-				return Array(
-					'msg' => $e->content
-				);
-			}, 
-			db()->table('notification')
-				->get('target__id', $dbuser->_id)
-				->addRestriction('created', $dbuser->lastSeen, '>')
+		$activity = db()->table('notification')->getAll()
+				->group()
+				  ->addRestriction('target__id', $dbuser->_id)
+				->endGroup()
+				->addRestriction('created', max($dbuser->lastSeenActivity, time() - 720 * 3600) , '>')
 				->setResultsPerPage(10)
-				->fetchAll()
-		);
+				->setOrder('created', 'DESC');
+		
 		
 		$this->view->set('count', $memcached->get('ping.notifications.' . $dbuser->_id, function () use($query) { return $query->count(); }));
-		$this->view->set('samples', $samples);
+		$this->view->set('activity', $memcached->get('ping.activity.' . $dbuser->_id, function () use($activity) { return $activity->count(); }));
 	}
 	
 }

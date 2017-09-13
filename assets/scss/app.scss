@@ -104,8 +104,8 @@ a {
 	padding:     0 .5em;
 	font-weight: bold;
 	
-	&[data-ping-counter='0'],
-	&[data-ping-counter=''] {
+	&[data-ping-amt='0'],
+	&[data-ping-amt=''] {
 		background: #BBB;
 	}
 }
