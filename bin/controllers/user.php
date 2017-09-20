@@ -40,7 +40,38 @@ class UserController extends AppController
 		Session::getInstance()->destroy();
 		
 		return $this->response->setBody('Redirecting...')
-				  ->getHeaders()->redirect(new URL());
+				  ->getHeaders()->redirect(url());
+	}
+	
+	public function follows($username) {
+		$user = $this->sso->getUser($username);
+		
+		$query     = db()->table('follow')->get('follower__id', db()->table('user')->get('authId', $user->getId())->fetch()->_id);
+		$followers = db()->table('user')->get('followers', $query)->setResultsPerPage(21);
+		
+		$paginator = new Pagination($followers);
+		
+		$this->view->set('user', $user);
+		$this->view->set('pagination', $paginator);
+		$this->view->set('followers',  $followers->fetchAll());
+	}
+	
+	/**
+	 * 
+	 * @template user/follows
+	 * @param type $username
+	 */
+	public function following($username) {
+		$user = $this->sso->getUser($username);
+		
+		$query     = db()->table('follow')->get('prey__id', db()->table('user')->get('authId', $user->getId())->fetch()->_id);
+		$followers = db()->table('user')->get('following', $query)->setResultsPerPage(21);
+		
+		$paginator = new Pagination($followers);
+		
+		$this->view->set('user', $user);
+		$this->view->set('pagination', $paginator);
+		$this->view->set('followers',  $followers->fetchAll());
 	}
 	
 	

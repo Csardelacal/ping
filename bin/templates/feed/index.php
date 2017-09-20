@@ -6,7 +6,7 @@
 	<div class="span1">
 		<div class="material unpadded user-card">
 			<?php $user = $sso->getUser($authUser->id); ?>
-			<a href="<?= new URL('user', $user->getUsername()) ?>">
+			<a href="<?= url('user', $user->getUsername()) ?>">
 				<div class="banner" style="height: 47px">
 					<?php try { $banner = $user->getAttribute('banner')->getPreviewURL(320, 75) ?>
 					<?php if (!$banner) { throw new Exception(); } ?>
@@ -70,7 +70,7 @@
 						<div class="row4">
 							<div class="span3">
 								<img class="mobile-only" src="<?= $user->getAvatar(64) ?>" style="width: 16px; border: solid 1px #777; border-radius: 3px; vertical-align: middle">
-								<a href="<?= new URL('user', $user->getUsername()) ?>" style="color: #000; font-weight: bold; font-size: .8em;"><?= $user->getUsername() ?></a>
+								<a href="<?= url('user', $user->getUsername()) ?>" style="color: #000; font-weight: bold; font-size: .8em;"><?= $user->getUsername() ?></a>
 							</div>
 							<div class="span1 desktop-only" style="text-align: right; font-size: .8em; color: #777;">
 								<?= Time::relative($notification->created) ?>
@@ -147,7 +147,7 @@
 	<div class="span1"></div>
 </div>
 
-<script type="text/javascript" src="<?= URL::asset('js/lysine.js') ?>"></script>
+<script type="text/javascript" src="<?= spitfire\core\http\URL::asset('js/lysine.js') ?>"></script>
 
 <script type="text/javascript">
 (function() {

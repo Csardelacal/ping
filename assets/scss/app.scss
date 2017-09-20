@@ -173,10 +173,27 @@ a {
 		border: solid 3px #FFF;
 	}
 	
-	.bio {
+	.bio,
+	.follow-count,
+	.follower-count,
+	.ping-count {
+		display: block;
 		color: #555;
 		font-size: .8em;
 	}
+	
+	.follow-count,
+	.follower-count,
+	.ping-count  {
+		text-align: right;
+	}
+	
+	.user-name {
+		display: block;
+		color: #000;
+		font-weight: bold;
+	}
+	
 }
 
 .media-cover {

@@ -121,9 +121,21 @@ a {
   width: 100%;
   border-radius: 10px;
   border: solid 3px #FFF; }
-.profile-resume .bio {
+.profile-resume .bio,
+.profile-resume .follow-count,
+.profile-resume .follower-count,
+.profile-resume .ping-count {
+  display: block;
   color: #555;
   font-size: .8em; }
+.profile-resume .follow-count,
+.profile-resume .follower-count,
+.profile-resume .ping-count {
+  text-align: right; }
+.profile-resume .user-name {
+  display: block;
+  color: #000;
+  font-weight: bold; }
 
 .media-cover {
   background: #EEE;
