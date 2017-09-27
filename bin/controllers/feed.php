@@ -84,7 +84,7 @@ class FeedController extends AppController
 				   ->addRestriction('target', null, 'IS')
 				  ->endGroup()
 				->endGroup()
-				->addRestriction('created', max($dbuser->lastSeen, time() - 720 * 3600) , '>')
+				->addRestriction('created', max($dbuser->lastSeen, time() - 168 * 3600) , '>')
 				->setResultsPerPage(10)
 				->setOrder('created', 'DESC');
 		

@@ -23,7 +23,7 @@ class EmailSender
 		$v = new _SF_ViewElement('bin/templates/email/notification.php', $a);
 		$t = $v->render();
 		
-		$this->sso->sendEmail($email, sprintf('[%s] %s', Environment::get('site.name')? : 'Ping', Strings::ellipsis($content, 50)), $t);
+		$this->sso->sendEmail($email, sprintf('[%s] %s: %s', Environment::get('site.name')? : 'Ping', $src->getUsername(), Strings::ellipsis($content, 50)), $t);
 	}
 	
 }
