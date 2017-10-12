@@ -81,6 +81,28 @@ class PeopleController extends AppController
 		$following->delete();
 	}
 	
+	public function whoToFollow() {
+		
+		try {
+		$u = $this->user;
+		$following   = db()->table('follow')->get('follower__id', $u->id);
+		$exclude     = db()->table('follow')->get('follower__id', $u->id);
+		
+		$suggestions = db()->table('follow')->get('follower', db()->table('user')->get('followers', $following));
+		$users       = db()->table('user')->get('followers', $suggestions)->addRestriction('followers', $exclude, '!=');
+		
+		$users->setResultsPerPage(100);
+		$users->fetchAll()->each(function ($e) { echo $this->sso->getUser($e->_id)->getUsername(), ', ';});
+		
+		} catch (\Exception$e) {
+			echo $e->getMessage();
+			echo $e->getTraceAsString();
+		}
+		
+		var_dump(spitfire()->getMessages());
+		die();
+	}
+	
 	public function isFollowing($uid) {
 		if (!$this->user) { 
 			$this->view->set('error', true);

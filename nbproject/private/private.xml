@@ -2,19 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/home/cesar/NetBeansProjects/ping/bin/templates/user/follows.php</file>
-            <file>file:/home/cesar/NetBeansProjects/ping/assets/scss/app.scss</file>
-            <file>file:/home/cesar/NetBeansProjects/ping/bin/controllers/user.php</file>
-            <file>file:/home/cesar/NetBeansProjects/ping/bin/templates/user/show.php</file>
-            <file>file:/home/cesar/NetBeansProjects/ping/bin/templates/feed/index.php</file>
-            <file>file:/home/cesar/NetBeansProjects/ping/bin/classes/AppController.php</file>
-            <file>file:/home/cesar/NetBeansProjects/ping/bin/controllers/people.php</file>
-            <file>file:/home/cesar/NetBeansProjects/ping/bin/classes/auth/User.php</file>
-            <file>file:/home/cesar/NetBeansProjects/ping/bin/classes/auth/Token.php</file>
-            <file>file:/home/cesar/NetBeansProjects/ping/bin/templates/people/iFollow.php</file>
-            <file>file:/home/cesar/NetBeansProjects/ping/bin/classes/auth/SSO.php</file>
-            <file>file:/home/cesar/NetBeansProjects/ping/bin/controllers/feed.php</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

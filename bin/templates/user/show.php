@@ -49,7 +49,7 @@
 		<!-- Main content-->
 		<div class="span3">
 			<div class="mobile-only" style="padding: 20px 0; text-align: right">
-				<a class="button follow" href="<?= new URL('user', 'login') ?>" data-ping-follow="<?= $user->getId() ?>">Login to follow</a>
+				<a class="button follow" href="<?= url('user', 'login') ?>" data-ping-follow="<?= $user->getId() ?>">Login to follow</a>
 			</div>
 			<div class="material unpadded">
 				<?php if (!$authUser): ?>
@@ -101,7 +101,7 @@
 				<div class="padded" style="padding-top: 5px;">
 					<div class="row10 fluid">
 						<div class="span1 desktop-only" style="text-align: center">
-							<img src="<?= $user->getAvatar(64) ?>" style="width: 100%; border: solid 1px #777; border-radius: 3px;">
+							<img src="<?= $u->getAvatar(64) ?>" style="width: 100%; border: solid 1px #777; border-radius: 3px;">
 						</div>
 						<div class="span9">
 							<div class="row4">
