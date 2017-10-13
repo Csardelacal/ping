@@ -64,6 +64,7 @@ class PeopleController extends AppController
 		$notification->src     = $q1;
 		$notification->target  = $q2;
 		$notification->content = "Started following you";
+		$notification->type    = NotificationModel::TYPE_FOLLOW;
 		$notification->store();
 	}
 	

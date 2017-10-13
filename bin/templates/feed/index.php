@@ -62,6 +62,8 @@
 			<?php foreach($notifications as $notification): ?>
 			<?php $user = $sso->getUser($notification->src->authId); ?>
 			<div class="padded" style="padding-top: 5px;">
+						
+				
 				<div class="row10 fluid">
 					<div class="span1 desktop-only" style="text-align: center">
 						<img src="<?= $user->getAvatar(64) ?>" style="width: 100%; border: solid 1px #777; border-radius: 3px;">
@@ -76,6 +78,30 @@
 								<?= Time::relative($notification->created) ?>
 							</div>
 						</div>
+						
+						<?php if ($notification->irt): ?>
+						<div class="spacer" style="height: 10px"></div>
+						
+						<div class="source-ping">
+							<div class="row10 fluid">
+								<div class="span1 desktop-only" style="text-align: center;">
+									<img src="<?= $sso->getUser($notification->irt->src->authId)->getAvatar(64) ?>" style="width: 32px; border: solid 1px #777; border-radius: 3px;">
+								</div>
+								<div class="span9">
+									<a href="<?= url('user', $sso->getUser($notification->irt->src->authId)->getUsername()) ?>"  style="color: #000; font-weight: bold; font-size: .8em;">
+										<?= $sso->getUser($notification->irt->src->authId)->getUsername() ?>
+									</a>
+
+									<p style="margin: 0;">
+										<?= Mention::idToMentions($notification->irt->content) ?>
+									</p>
+								</div>
+							</div>
+						</div>
+
+						<div class="spacer" style="height: 10px"></div>
+						<?php endif; ?>
+						
 						<div class="row1" style="margin-top: 5px">
 							<div class="span1">
 								<p style="margin: 0;">

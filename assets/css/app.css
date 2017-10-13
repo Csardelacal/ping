@@ -137,6 +137,13 @@ a {
   color: #000;
   font-weight: bold; }
 
+.source-ping {
+  padding: 10px 0px;
+  border: solid 1px #DDD;
+  border-radius: 5px;
+  background: #F6F6F6;
+  color: #444; }
+
 .media-cover {
   background: #EEE;
   border-radius: 3px;

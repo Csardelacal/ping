@@ -32,7 +32,7 @@
 				<div class="span3 desktop-only"></div>
 				<div class="span1">
 					<?php if ($authUser): ?>
-					<a class="menu-item" href="<?= url('feed') ?>">Feed <span class="badge" data-ping-counter></span></a>
+					<a class="menu-item" href="<?= url('feed') ?>">Feed <span class="badge" data-ping-counter data-ping-amt="0">?</span></a>
 					<?php endif; ?>
 				</div>
 				<div class="span1">

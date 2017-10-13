@@ -1,6 +1,8 @@
 <?php
 
 use spitfire\exceptions\PublicException;
+use spitfire\io\Upload;
+use spitfire\validation\PositiveNumberValidationRule;
 
 class PingController extends AppController
 {
@@ -31,10 +33,11 @@ class PingController extends AppController
 		$content  = str_replace("\r", '',_def($_POST['content'], null));
 		$url      = _def($_POST['url'], null);
 		$media    = _def($_POST['media'], null);
+		$irt      = _def($_POST['irt'], null);
 		$explicit = !!_def($_POST['explicit'], false);
 		
 		#If the media is a file, we will store it
-		if ($media instanceof spitfire\io\Upload) {
+		if ($media instanceof Upload) {
 			$media = 'file:' . $media->store();
 		}
 		
@@ -43,7 +46,8 @@ class PingController extends AppController
 		$v['msg']   = validate($content)->minLength(1, 'Content cannot be empty')->maxLength(250, 'Ping is too long');
 		$v['url']   = $url   === null? null : validate($url)->asURL('URL needs to be a URL');
 		$v['media'] = $media === null? null : validate($media)->asURL('Media needs to be a file or URL');
-		validate($v['msg'], $v['url'], $v['media']);
+		$v['irt']   = $irt   === null? null : validate($irt)->addRule(new PositiveNumberValidationRule('IRT id is invalid'))->addRule(new ClosureValidationRule(function ($e) { return db()->table('ping')->get('_id', $e)->fetch()? false : 'Invalid ping ID'; }));
+		validate($v['msg'], $v['url'], $v['media'], $v['irt']);
 		
 		#There needs to be a src user. That means that somebody is originating the
 		#notification. There has to be one, and no more than one.
@@ -78,6 +82,7 @@ class PingController extends AppController
 				$notification->url     = $url;
 				$notification->media   = $media;
 				$notification->explicit= $explicit;
+				$notification->irt     = $irt? db()->table('ping')->get('_id', $irt)->fetch() : null;
 				$notification->store();
 
 				#Check the user's preferences and send an email
@@ -108,6 +113,7 @@ class PingController extends AppController
 				$n->src     = $src;
 				$n->target  = $u;
 				$n->content = 'Mentioned you';
+				$n->type    = NotificationModel::TYPE_MENTION;
 				$n->store();
 			}
 		}

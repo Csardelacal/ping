@@ -46,6 +46,7 @@ class ActivityController extends AppController
 		$tgtid    = (array)_def($_POST['target'], null);
 		$content  = str_replace("\r", '',_def($_POST['content'], null));
 		$url      = _def($_POST['url'], null);
+		$type     = _def($_POST['type'], 0);
 		
 		
 		#Validation
@@ -85,6 +86,7 @@ class ActivityController extends AppController
 				$notification->target = $target;
 				$notification->content = Mention::mentionsToId($content);
 				$notification->url     = $url;
+				$notification->type    = $type;
 				$notification->store();
 
 				#Check the user's preferences and send an email

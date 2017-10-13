@@ -14,7 +14,7 @@ class FeedController extends AppController
 		}
 		
 		$this->secondaryNav->add(url('feed'), 'Feed')->setActive(true);
-		$this->secondaryNav->add(url('activity'), 'Activity <span class="badge" data-ping-activity></span>');
+		$this->secondaryNav->add(url('activity'), 'Activity <span class="badge" data-ping-activity data-ping-amt="0">?</span>');
 		$this->secondaryNav->add(url('people', 'followingMe'), 'Followers');
 		$this->secondaryNav->add(url('people', 'iFollow'), 'Following');
 		
