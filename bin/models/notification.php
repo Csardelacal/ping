@@ -30,15 +30,15 @@ class NotificationModel extends spitfire\Model
 	
 	public static function getTypesAvailable() {
 		return [
-			 'other'   => self::TYPE_OTHER,
-			 'follow'  => self::TYPE_FOLLOW,
-			 'like'    => self::TYPE_LIKE,
-			 'share'   => self::TYPE_SHARE,
-			 'comment' => self::TYPE_COMMENT,
-			 'alert'   => self::TYPE_ALERT,
-			 'payment' => self::TYPE_PAYMENT,
-			 'mention' => self::TYPE_MENTION,
-			 'message' => self::TYPE_MESSAGE
+			'other'   => self::TYPE_OTHER,
+			'follow'  => self::TYPE_FOLLOW,
+			'like'    => self::TYPE_LIKE,
+			'share'   => self::TYPE_SHARE,
+			'comment' => self::TYPE_COMMENT,
+			'alert'   => self::TYPE_ALERT,
+			'payment' => self::TYPE_PAYMENT,
+			'mention' => self::TYPE_MENTION,
+			'message' => self::TYPE_MESSAGE
 		];
 	}
 

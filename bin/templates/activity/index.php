@@ -6,7 +6,7 @@
 	<div class="span1">
 		<div class="material unpadded user-card">
 			<?php $user = $sso->getUser($authUser->id); ?>
-			<a href="<?= new URL('user', $user->getUsername()) ?>">
+			<a href="<?= url('user', $user->getUsername()) ?>">
 				<div class="banner" style="height: 47px">
 					<?php try { $banner = $user->getAttribute('banner')->getPreviewURL(320, 75) ?>
 					<?php if (!$banner) { throw new Exception(); } ?>
@@ -37,8 +37,11 @@
 			<div class="padded">
 				<div class="row10 fluid">
 					<div class="span8">
-						<img src="<?= $user->getAvatar(64) ?>" style="width: 24px; border: solid 1px #777; border-radius: 50%; vertical-align: middle">
-						<a href="<?= new URL('user', $user->getUsername()) ?>" style="color: #000; font-weight: bold;"><?= ucfirst($user->getUsername()) ?></a>
+						<span class="notification-avatar">
+							<img src="<?= $user->getAvatar(64) ?>" style="width: 24px; border: solid 1px #777; border-radius: 50%; vertical-align: middle">
+							<span class="activity-type <?= array_search($notification->type, NotificationModel::getTypesAvailable()) ?>"></span>
+						</span>
+						<a href="<?= url('user', $user->getUsername()) ?>" style="color: #000; font-weight: bold;"><?= ucfirst($user->getUsername()) ?></a>
 						<?php if ($notification->url): ?><a href="<?= $notification->url ?>" style="color: #000;"><?php endif; ?>
 						<?= Mention::idToMentions($notification->content) ?>
 						<?php if ($notification->url): ?></a><?php endif; ?>
@@ -78,7 +81,7 @@
 	<div class="span1"></div>
 </div>
 
-<script type="text/javascript" src="<?= URL::asset('js/lysine.js') ?>"></script>
+<script type="text/javascript" src="<?= spitfire\core\http\URL::asset('js/lysine.js') ?>"></script>
 
 <script type="text/javascript">
 (function() {
