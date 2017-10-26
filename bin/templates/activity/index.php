@@ -64,9 +64,12 @@
 				<div class="padded">
 					<div class="row10 fluid">
 						<div class="span8">
-							<img data-lysine-src="{{avatar}}" style="width: 24px; border: solid 1px #777; border-radius: 50%; vertical-align: middle">
+							<span class="notification-avatar">
+								<img data-lysine-src="{{avatar}}" style="width: 24px; border: solid 1px #777; border-radius: 50%; vertical-align: middle">
+								<span class="activity-type other" data-lysine-class="activity-type {{type}}"></span>
+							</span>
 							<a data-for="userName" data-lysine-href="{{userURL}}" style="color: #000; font-weight: bold;"></a>
-							<a data-lysine-href="{{notificationURL}}" style="color: #000;" data-for="notificationContent">
+							<a data-lysine-href="{{notificationURL}}" style="color: #000;" data-for="notificationContent"></a>
 						</div>
 						<div class="span2 desktop-only" style="color: #666; font-size: .8em; text-align: right" data-for="timeRelative"></div>
 					</div>
@@ -75,6 +78,8 @@
 				<div class="separator"></div>
 			</div>
 		</div>
+		
+		<div class="spacer" style="height: 50px;"></div>
 	</div>
 	
 	<!-- Contextual menu-->
@@ -148,20 +153,6 @@
 	//Attach the listener
 	window.addEventListener('load',   listener, false);
 	document.addEventListener('scroll', listener, false);
-}());
-
-(function () {
-	
-	/**
-	 * This little listener makes sure to display the amount of characters left for
-	 * the user to type in
-	 */
-	var listener = function() {
-		document.querySelector('#new-ping-character-count').innerHTML = 250 - this.value.length;
-	};
-	
-	document.querySelector('#new-ping-content').addEventListener('keyup', listener, false);
-	
 }());
 </script>
 

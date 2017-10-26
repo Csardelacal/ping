@@ -102,7 +102,7 @@
 						<div class="spacer" style="height: 10px"></div>
 						<?php endif; ?>
 						
-						<div class="row1" style="margin-top: 5px">
+						<div class="row1 fluid" style="margin-top: 5px">
 							<div class="span1">
 								<p style="margin: 0;">
 									<?php if ($notification->url && !$notification->media): ?><a href="<?= $notification->url ?>" style="color: #000;"><?php endif; ?>
@@ -116,6 +116,15 @@
 									<img src="<?= $notification->getMediaURI() ?>" style="width: 100%">
 									<?php if ($notification->url): ?></a><?php endif; ?>
 								<?php endif; ?>
+							</div>
+						</div>
+						
+						<div class="spacer" style="height: 20px;"></div>
+					
+						<div class="row1 fluid">
+							<div class="span1" style="text-align: right">
+								<a href="<?= url('ping', 'detail', $notification->_id) ?>#replies" class="reply-link"><?= $notification->replies->getQuery()->count()? : 'Reply' ?></a>
+								<a href="<?= url('ping', 'share', $notification->_id); ?>" class="share-link">Share</a>
 							</div>
 						</div>
 					</div>
@@ -158,6 +167,16 @@
 									<a class="media" data-lysine-href="{{notificationURL}}" >
 										<img data-lysine-src="{{notificationMedia}}" style="width: 100%">
 									</a>
+								</div>
+							</div>
+							
+						
+							<div class="spacer" style="height: 20px;"></div>
+
+							<div class="row1 fluid">
+								<div class="span1" style="text-align: right">
+									<a data-lysine-href="<?= url('ping', 'detail') ?>{{id}}#replies" class="reply-link"><?= $notification->replies->getQuery()->count()? : 'Reply' ?></a>
+									<a data-lysine-href="<?= url('ping', 'share'); ?>{{id}}" class="share-link">Share</a>
 								</div>
 							</div>
 						</div>
@@ -203,6 +222,7 @@
 					notifications.push(view);
 					
 					view.setData({
+						id                 : data.payload[i].id,
 						userName           : data.payload[i].user.username,
 						avatar             : data.payload[i].user.avatar,
 						userURL            : '<?= url('user') ?>/' + data.payload[i].user.username,

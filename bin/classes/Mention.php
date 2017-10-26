@@ -19,7 +19,7 @@ class Mention
 			$user = $sso->getUser($e[1]);
 			
 			if (!$user) { return '@' . $e[1]; }
-			return sprintf('<a href="%s">@%s</a>', new URL('user', $user->getUsername()) , $user->getUsername());
+			return sprintf('<a href="%s">@%s</a>', url('user', $user->getUsername()) , $user->getUsername());
 		}, $inText);
 	}
 	

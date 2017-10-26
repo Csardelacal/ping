@@ -251,6 +251,53 @@ a {
 	}
 }
 
+.reply-link {
+	color: #333;
+	font-weight: bold;
+	margin: 0 10px;
+	line-height: 14px;
+	font-size: 12px;
+	
+	&:before {
+		content: '';
+		display: inline-block;
+		width: 12px;
+		height: 12px;
+		background: url('../img/reply.png');
+		background-size: 12px 12px;
+		margin: 0 5px;
+		vertical-align: middle;
+	}
+}
+
+.share-link {
+	color: #333;
+	font-weight: bold;
+	margin: 0 10px;
+	line-height: 14px;
+	font-size: 12px;
+	
+	&:before {
+		content: '';
+		display: inline-block;
+		width: 12px;
+		height: 12px;
+		background: url('../img/share.png');
+		background-size: 12px 12px;
+		margin: 0 5px;
+		vertical-align: middle;
+	}
+}
+
+.share-link, .reply-link {
+	opacity: .6;
+	
+	&:hover {
+		opacity: 1;
+	}
+}
+
+
 @media all and (min-width: $MobileBreakpoint) {
 	@import '_scaffolding';
 	.mobile-only { display: none !important; }
@@ -264,3 +311,4 @@ a {
 
 @import '_navigation';
 @import '_activity';
+@import '_styledSelect';

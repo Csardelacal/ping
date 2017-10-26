@@ -9,7 +9,7 @@ foreach ($notifications as $n) {
 	$payload[] = Array(
 		'id'           => $n->_id,
 		'url'          => $n->url,
-		'media'        => $n->getMediaURI(),
+		'type'         => $n->type,
 		'content'      => Mention::idToMentions($n->content),
 		'timestamp'    => $n->created,
 		'timeRelative' => Time::relative($n->created),

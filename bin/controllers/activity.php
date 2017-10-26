@@ -1,6 +1,7 @@
 <?php
 
 use spitfire\exceptions\PublicException;
+use settings\NotificationModel as NotificationSetting;
 
 class ActivityController extends AppController
 {
@@ -90,7 +91,12 @@ class ActivityController extends AppController
 				$notification->store();
 
 				#Check the user's preferences and send an email
-				$email->push($_POST['target'], $this->sso->getUser($src->authId), $content, $url);
+				if ($target->notify($notification->type, NotificationSetting::NOTIFY_EMAIL)) {
+					$email->push($notification->target->_id, $this->sso->getUser($src->authId), $content, $url);
+				}
+				elseif ($target->notify($notification->type, NotificationSetting::NOTIFY_DIGEST)) {
+					$email->queue($notification->target->_id);
+				}
 			}
 			# Notify the user via mail.
 			elseif (filter_var($_POST['target'], FILTER_VALIDATE_EMAIL)) {

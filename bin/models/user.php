@@ -12,6 +12,16 @@ class UserModel extends spitfire\Model
 		$schema->following = new ChildrenField('follow', 'follower');
 	}
 	
+	public function notify($type, $interval) {
+		$db = $this->getTable()->getDb();
+		$setting  = $db->table('settings\notification')->get('user', $this)->addRestriction('type', $type)->fetch();
+		
+		if (!$setting) { $notify = settings\NotificationModel::NOTIFY_DEFAULT; }
+		else           { $notify = $setting->setting; }
+		
+		return (int)$notify === (int)$interval;
+	}
+	
 	public static function makeFromSSO($u) {
 		
 		if ($u) { 

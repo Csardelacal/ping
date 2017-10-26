@@ -37,7 +37,7 @@
 				</div>
 				<div class="span1">
 					<?php if ($authUser): ?>
-					<!--<a href="<?= url('settings') ?>">Settings</a>-->
+					<a class="menu-item" href="<?= url('settings') ?>">Settings</a>
 					<?php endif; ?>
 				</div>
 				<div class="span1">
