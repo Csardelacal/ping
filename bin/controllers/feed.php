@@ -24,15 +24,11 @@ class FeedController extends AppController
 		
 		$dbuser  = db()->table('user')->get('authId', $this->user->id)->fetch()? : UserModel::makeFromSSO($this->sso->getUser($this->user->id));
 		$follows = db()->table('follow')->get('follower__id', $dbuser->_id);
-		$users   = db()->table('user')->get('followers', $follows);
+		$users   = db()->table('user')->getAll()->group(\spitfire\storage\database\RestrictionGroup::TYPE_OR)->where('followers', $follows)->where('_id', $dbuser->_id)->endGroup();
 		
 		$query = db()->table('ping')->getAll()
 				->group()
 				  ->addRestriction('target__id', $dbuser->_id)
-				  ->group(spitfire\storage\database\RestrictionGroup::TYPE_AND)
-				   ->addRestriction('src__id',    $dbuser->_id)
-				   ->addRestriction('target__id', null, 'IS')
-				  ->endGroup()
 				  ->group(spitfire\storage\database\RestrictionGroup::TYPE_AND)
 					->addRestriction('src', $users)
 				   ->addRestriction('target', null, 'IS')
