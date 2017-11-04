@@ -7,7 +7,7 @@
 	var w      = 1280;
 	var h      =  300;
 	
-	var imgLoad = function () {	
+	var imgResize = function () {
 		var sw     = banner.clientWidth;
 		var ratio  = sw / w;
 
@@ -26,9 +26,19 @@
 		img.style.left     = 0;
 	};
 	
+	var imgLoad = function () {
+		/*
+		 * Get the actual sizes for the image, this prevents the image from popping.
+		 */
+		w = img.naturalWidth || w;
+		h = img.naturalHeight || h;
+		
+		imgResize();
+	};
+	
 	
 	img.addEventListener('load', imgLoad);
-	window.addEventListener('resize', imgLoad);
+	window.addEventListener('resize', imgResize);
 	
 	if (img.complete) { imgLoad(); }
 	
@@ -41,4 +51,11 @@
 		if (top < 0) { top = 0; }
 		img.style.top = ( top / 2) + 'px';
 	});
+	
+	/*
+	 * By default we use the standard size to approximate the banner while loading.
+	 * Since these dimensions are better than anything we might get from the
+	 * user agent while loading.
+	 */
+	imgResize();
 }());

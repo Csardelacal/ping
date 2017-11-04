@@ -104,8 +104,8 @@ a {
 	padding:     0 .5em;
 	font-weight: bold;
 	
-	&[data-ping-counter='0'],
-	&[data-ping-counter=''] {
+	&[data-ping-amt='0'],
+	&[data-ping-amt=''] {
 		background: #BBB;
 	}
 }
@@ -173,10 +173,35 @@ a {
 		border: solid 3px #FFF;
 	}
 	
-	.bio {
+	.bio,
+	.follow-count,
+	.follower-count,
+	.ping-count {
+		display: block;
 		color: #555;
 		font-size: .8em;
 	}
+	
+	.follow-count,
+	.follower-count,
+	.ping-count  {
+		text-align: right;
+	}
+	
+	.user-name {
+		display: block;
+		color: #000;
+		font-weight: bold;
+	}
+	
+}
+
+.source-ping {
+	padding: 10px 0px;
+	border: solid 1px #DDD;
+	border-radius: 5px;
+	background: #F6F6F6;
+	color: #444;
 }
 
 .media-cover {
@@ -226,6 +251,53 @@ a {
 	}
 }
 
+.reply-link {
+	color: #333;
+	font-weight: bold;
+	margin: 0 10px;
+	line-height: 14px;
+	font-size: 12px;
+	
+	&:before {
+		content: '';
+		display: inline-block;
+		width: 12px;
+		height: 12px;
+		background: url('../img/reply.png');
+		background-size: 12px 12px;
+		margin: 0 5px;
+		vertical-align: middle;
+	}
+}
+
+.share-link {
+	color: #333;
+	font-weight: bold;
+	margin: 0 10px;
+	line-height: 14px;
+	font-size: 12px;
+	
+	&:before {
+		content: '';
+		display: inline-block;
+		width: 12px;
+		height: 12px;
+		background: url('../img/share.png');
+		background-size: 12px 12px;
+		margin: 0 5px;
+		vertical-align: middle;
+	}
+}
+
+.share-link, .reply-link {
+	opacity: .6;
+	
+	&:hover {
+		opacity: 1;
+	}
+}
+
+
 @media all and (min-width: $MobileBreakpoint) {
 	@import '_scaffolding';
 	.mobile-only { display: none !important; }
@@ -238,3 +310,5 @@ a {
 }
 
 @import '_navigation';
+@import '_activity';
+@import '_styledSelect';

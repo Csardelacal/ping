@@ -14,6 +14,7 @@ class FeedController extends AppController
 		}
 		
 		$this->secondaryNav->add(url('feed'), 'Feed')->setActive(true);
+		$this->secondaryNav->add(url('activity'), 'Activity <span class="badge" data-ping-activity data-ping-amt="0">?</span>');
 		$this->secondaryNav->add(url('people', 'followingMe'), 'Followers');
 		$this->secondaryNav->add(url('people', 'iFollow'), 'Following');
 		
@@ -23,18 +24,14 @@ class FeedController extends AppController
 		
 		$dbuser  = db()->table('user')->get('authId', $this->user->id)->fetch()? : UserModel::makeFromSSO($this->sso->getUser($this->user->id));
 		$follows = db()->table('follow')->get('follower__id', $dbuser->_id);
-		$users   = db()->table('user')->get('followers', $follows);
+		$users   = db()->table('user')->getAll()->group(\spitfire\storage\database\RestrictionGroup::TYPE_OR)->where('followers', $follows)->where('_id', $dbuser->_id)->endGroup();
 		
-		$query = db()->table('notification')->getAll()
+		$query = db()->table('ping')->getAll()
 				->group()
 				  ->addRestriction('target__id', $dbuser->_id)
 				  ->group(spitfire\storage\database\RestrictionGroup::TYPE_AND)
-				   ->addRestriction('src__id',    $dbuser->_id)
-				   ->addRestriction('target__id', null, 'IS')
-				  ->endGroup()
-				  ->group(spitfire\storage\database\RestrictionGroup::TYPE_AND)
 					->addRestriction('src', $users)
-				   ->addRestriction('target', null)
+				   ->addRestriction('target', null, 'IS')
 				  ->endGroup()
 				->endGroup()
 				->addRestriction('created', time() - 720 * 3600, '>')
@@ -71,38 +68,33 @@ class FeedController extends AppController
 		$follows = db()->table('follow')->get('follower__id', $dbuser->_id);
 		$users   = db()->table('user')->get('followers', $follows);
 		
-		$query = db()->table('notification')->getAll()
+		$query = db()->table('ping')->getAll()
 				->group()
 				  ->addRestriction('target__id', $dbuser->_id)
 				  ->group(spitfire\storage\database\RestrictionGroup::TYPE_AND)
 				   ->addRestriction('src__id',    $dbuser->_id)
-				   ->addRestriction('target__id', null)
+				   ->addRestriction('target__id', null, 'IS')
 				  ->endGroup()
 				  ->group(spitfire\storage\database\RestrictionGroup::TYPE_AND)
 					->addRestriction('src', $users)
-				   ->addRestriction('target', null)
+				   ->addRestriction('target', null, 'IS')
 				  ->endGroup()
 				->endGroup()
-				->addRestriction('created', max($dbuser->lastSeen, time() - 720 * 3600) , '>')
+				->addRestriction('created', max($dbuser->lastSeen, time() - 168 * 3600) , '>')
 				->setResultsPerPage(10)
 				->setOrder('created', 'DESC');
-		$query->setResultsPerPage(10); #For the sample loading
 		
-		$samples = array_map(
-			function ($e) {
-				return Array(
-					'msg' => $e->content
-				);
-			}, 
-			db()->table('notification')
-				->get('target__id', $dbuser->_id)
-				->addRestriction('created', $dbuser->lastSeen, '>')
+		$activity = db()->table('notification')->getAll()
+				->group()
+				  ->addRestriction('target__id', $dbuser->_id)
+				->endGroup()
+				->addRestriction('created', max($dbuser->lastSeenActivity, time() - 720 * 3600) , '>')
 				->setResultsPerPage(10)
-				->fetchAll()
-		);
+				->setOrder('created', 'DESC');
+		
 		
 		$this->view->set('count', $memcached->get('ping.notifications.' . $dbuser->_id, function () use($query) { return $query->count(); }));
-		$this->view->set('samples', $samples);
+		$this->view->set('activity', $memcached->get('ping.activity.' . $dbuser->_id, function () use($activity) { return $activity->count(); }));
 	}
 	
 }

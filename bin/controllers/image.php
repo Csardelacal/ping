@@ -19,7 +19,7 @@ class ImageController extends AppController
 	
 	public function preview($id, $size = 700) {
 		
-		$upload = db()->table('notification')->get('_id', $id)->fetch();
+		$upload = db()->table('ping')->get('_id', $id)->fetch();
 		
 		if (!in_array($size, self::$acceptablePreviewSizes)) { throw new PublicException('Invalid dimensions', 400); }
 		

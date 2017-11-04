@@ -40,7 +40,38 @@ class UserController extends AppController
 		Session::getInstance()->destroy();
 		
 		return $this->response->setBody('Redirecting...')
-				  ->getHeaders()->redirect(new URL());
+				  ->getHeaders()->redirect(url());
+	}
+	
+	public function follows($username) {
+		$user = $this->sso->getUser($username);
+		
+		$query     = db()->table('follow')->get('follower__id', db()->table('user')->get('authId', $user->getId())->fetch()->_id);
+		$followers = db()->table('user')->get('followers', $query)->setResultsPerPage(21);
+		
+		$paginator = new Pagination($followers);
+		
+		$this->view->set('user', $user);
+		$this->view->set('pagination', $paginator);
+		$this->view->set('followers',  $followers->fetchAll());
+	}
+	
+	/**
+	 * 
+	 * @template user/follows
+	 * @param type $username
+	 */
+	public function following($username) {
+		$user = $this->sso->getUser($username);
+		
+		$query     = db()->table('follow')->get('prey__id', db()->table('user')->get('authId', $user->getId())->fetch()->_id);
+		$followers = db()->table('user')->get('following', $query)->setResultsPerPage(21);
+		
+		$paginator = new Pagination($followers);
+		
+		$this->view->set('user', $user);
+		$this->view->set('pagination', $paginator);
+		$this->view->set('followers',  $followers->fetchAll());
 	}
 	
 	
@@ -61,12 +92,12 @@ class UserController extends AppController
 		$this->secondaryNav->add(new URL('people', 'followingMe'), 'Followers');
 		$this->secondaryNav->add(new URL('people', 'iFollow'), 'Following');
 		
-		$feed = db()->table('notifications')
+		$feed = db()->table('ping')
 			->getAll()
 			->group()
 				->group(spitfire\storage\database\RestrictionGroup::TYPE_AND)
 					->addRestriction('src', $dbu)
-					->addRestriction('target', null)
+					->addRestriction('target', null, 'IS')
 				->endGroup()
 				->group(spitfire\storage\database\RestrictionGroup::TYPE_AND)
 					->addRestriction('src', db()->table('user')->get('_id', $this->user->id)->fetch())

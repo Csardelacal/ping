@@ -1,0 +1,37 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Oct 15, 2017, 12:35:45 PM
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+
+.notification-avatar
+{
+	position: relative;
+	margin-right: 3px;
+}
+
+.activity-type
+{
+	position: absolute;
+	bottom: 0;
+	right:  0;
+	width:   12px;
+	height:  12px;
+	background-size: 12px 12px;
+	
+	&.other {
+		
+	}
+	
+	&.follow {
+		background-image: url('../img/follow.png');
+	}
+	
+	&.like {
+		background-image: url('../img/like.png');
+	}
+}

@@ -6,7 +6,7 @@
 	<div class="span1">
 		<div class="material unpadded user-card">
 			<?php $user = $sso->getUser($authUser->id); ?>
-			<a href="<?= new URL('user', $user->getUsername()) ?>">
+			<a href="<?= url('user', $user->getUsername()) ?>">
 				<div class="banner" style="height: 47px">
 					<?php try { $banner = $user->getAttribute('banner')->getPreviewURL(320, 75) ?>
 					<?php if (!$banner) { throw new Exception(); } ?>
@@ -29,7 +29,7 @@
 	<!-- Main content-->
 	<div class="span3">
 		<div class="material unpadded">
-			<form method="POST" action="<?= url('notification', 'push') ?>" enctype="multipart/form-data">
+			<form method="POST" action="<?= url('ping', 'push') ?>" enctype="multipart/form-data">
 				<div class="padded add-ping">
 					<div>
 						<div class="row1">
@@ -62,6 +62,8 @@
 			<?php foreach($notifications as $notification): ?>
 			<?php $user = $sso->getUser($notification->src->authId); ?>
 			<div class="padded" style="padding-top: 5px;">
+						
+				
 				<div class="row10 fluid">
 					<div class="span1 desktop-only" style="text-align: center">
 						<img src="<?= $user->getAvatar(64) ?>" style="width: 100%; border: solid 1px #777; border-radius: 3px;">
@@ -70,13 +72,37 @@
 						<div class="row4">
 							<div class="span3">
 								<img class="mobile-only" src="<?= $user->getAvatar(64) ?>" style="width: 16px; border: solid 1px #777; border-radius: 3px; vertical-align: middle">
-								<a href="<?= new URL('user', $user->getUsername()) ?>" style="color: #000; font-weight: bold; font-size: .8em;"><?= $user->getUsername() ?></a>
+								<a href="<?= url('user', $user->getUsername()) ?>" style="color: #000; font-weight: bold; font-size: .8em;"><?= $user->getUsername() ?></a>
 							</div>
 							<div class="span1 desktop-only" style="text-align: right; font-size: .8em; color: #777;">
 								<?= Time::relative($notification->created) ?>
 							</div>
 						</div>
-						<div class="row1" style="margin-top: 5px">
+						
+						<?php if ($notification->irt): ?>
+						<div class="spacer" style="height: 10px"></div>
+						
+						<div class="source-ping">
+							<div class="row10 fluid">
+								<div class="span1 desktop-only" style="text-align: center;">
+									<img src="<?= $sso->getUser($notification->irt->src->authId)->getAvatar(64) ?>" style="width: 32px; border: solid 1px #777; border-radius: 3px;">
+								</div>
+								<div class="span9">
+									<a href="<?= url('user', $sso->getUser($notification->irt->src->authId)->getUsername()) ?>"  style="color: #000; font-weight: bold; font-size: .8em;">
+										<?= $sso->getUser($notification->irt->src->authId)->getUsername() ?>
+									</a>
+
+									<p style="margin: 0;">
+										<?= Mention::idToMentions($notification->irt->content) ?>
+									</p>
+								</div>
+							</div>
+						</div>
+
+						<div class="spacer" style="height: 10px"></div>
+						<?php endif; ?>
+						
+						<div class="row1 fluid" style="margin-top: 5px">
 							<div class="span1">
 								<p style="margin: 0;">
 									<?php if ($notification->url && !$notification->media): ?><a href="<?= $notification->url ?>" style="color: #000;"><?php endif; ?>
@@ -92,6 +118,15 @@
 								<?php endif; ?>
 							</div>
 						</div>
+						
+						<div class="spacer" style="height: 20px;"></div>
+					
+						<div class="row1 fluid">
+							<div class="span1" style="text-align: right">
+								<a href="<?= url('ping', 'detail', $notification->_id) ?>#replies" class="reply-link"><?= $notification->replies->getQuery()->count()? : 'Reply' ?></a>
+								<a href="<?= url('ping', 'share', $notification->_id); ?>" class="share-link">Share</a>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -104,7 +139,7 @@
 			</div>
 			<?php endif; ?>
 			
-			<div data-lysine-view="notification">
+			<div data-lysine-view="ping">
 				<div class="padded" style="padding-top: 5px;">
 					<div class="row10 fluid">
 						<div class="span1 desktop-only" style="text-align: center">
@@ -134,6 +169,16 @@
 									</a>
 								</div>
 							</div>
+							
+						
+							<div class="spacer" style="height: 20px;"></div>
+
+							<div class="row1 fluid">
+								<div class="span1" style="text-align: right">
+									<a data-lysine-href="<?= url('ping', 'detail') ?>{{id}}#replies" class="reply-link"><?= $notification->replies->getQuery()->count()? : 'Reply' ?></a>
+									<a data-lysine-href="<?= url('ping', 'share'); ?>{{id}}" class="share-link">Share</a>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -147,7 +192,7 @@
 	<div class="span1"></div>
 </div>
 
-<script type="text/javascript" src="<?= URL::asset('js/lysine.js') ?>"></script>
+<script type="text/javascript" src="<?= spitfire\core\http\URL::asset('js/lysine.js') ?>"></script>
 
 <script type="text/javascript">
 (function() {
@@ -173,13 +218,14 @@
 				}
 				
 				for (var i= 0; i < data.payload.length; i++) { 
-					var view =  new Lysine.view('notification');
+					var view =  new Lysine.view('ping');
 					notifications.push(view);
 					
 					view.setData({
+						id                 : data.payload[i].id,
 						userName           : data.payload[i].user.username,
 						avatar             : data.payload[i].user.avatar,
-						userURL            : '<?= new URL('user') ?>/' + data.payload[i].user.username,
+						userURL            : '<?= url('user') ?>/' + data.payload[i].user.username,
 						notificationURL    : data.payload[i].url || '#',
 						notificationContent: data.payload[i].content,
 						notificationMedia  : data.payload[i].media? data.payload[i].media : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',

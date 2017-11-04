@@ -5,7 +5,7 @@
 	<div class="span1">
 		<div class="material unpadded user-card">
 			<?php $user = $sso->getUser($authUser->id); ?>
-			<a href="<?= new URL('user', $user->getUsername()) ?>">
+			<a href="<?= url('user', $user->getUsername()) ?>">
 				<div class="banner" style="height: 47px">
 					<?php try { $banner = $user->getAttribute('banner')->getPreviewURL(320, 75) ?>
 					<?php if (!$banner) { throw new Exception(); } ?>
@@ -30,7 +30,7 @@
 			<?php foreach ($followers as $follower): ?>
 			<?php $user = $sso->getUser($follower->authId); ?>
 			<div class="span1 material unpadded user-card">
-				<a href="<?= new URL('user', $user->getUsername()) ?>">
+				<a href="<?= url('user', $user->getUsername()) ?>">
 					<div class="banner">
 						<?php try { $banner = $user->getAttribute('banner')->getPreviewURL(320, 75) ?>
 						<?php if (!$banner) { throw new Exception(); } ?>

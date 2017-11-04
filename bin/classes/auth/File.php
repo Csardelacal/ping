@@ -12,7 +12,8 @@ class File
 	}
 	
 	public function getPreviewURL($w = null, $h = null) {
-		return implode('/', Array(trim($this->previewURL, '/'), $w, $h)) . '/';
+		list($url, $qstring) = explode('?', $this->previewURL, 2);
+		return implode('/', Array(trim($url, '/'), $w, $h)) . '/?' . $qstring;
 	}
 
 	

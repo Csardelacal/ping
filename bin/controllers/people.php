@@ -16,9 +16,9 @@ class PeopleController extends AppController
 	public function followingMe() {
 		
 		
-		$this->secondaryNav->add(new URL('feed'), 'Feed');
-		$this->secondaryNav->add(new URL('people', 'followingMe'), 'Followers')->setActive(true);
-		$this->secondaryNav->add(new URL('people', 'iFollow'), 'Following');
+		$this->secondaryNav->add(url('feed'), 'Feed');
+		$this->secondaryNav->add(url('people', 'followingMe'), 'Followers')->setActive(true);
+		$this->secondaryNav->add(url('people', 'iFollow'), 'Following');
 		
 		
 		$query     = db()->table('follow')->get('prey__id', db()->table('user')->get('authId', $this->user->id)->fetch()->_id);
@@ -31,9 +31,9 @@ class PeopleController extends AppController
 	}
 	
 	public function iFollow() {
-		$this->secondaryNav->add(new URL('feed'), 'Feed');
-		$this->secondaryNav->add(new URL('people', 'followingMe'), 'Followers');
-		$this->secondaryNav->add(new URL('people', 'iFollow'), 'Following')->setActive(true);
+		$this->secondaryNav->add(url('feed'), 'Feed');
+		$this->secondaryNav->add(url('people', 'followingMe'), 'Followers');
+		$this->secondaryNav->add(url('people', 'iFollow'), 'Following')->setActive(true);
 		
 		$query     = db()->table('follow')->get('follower__id', db()->table('user')->get('authId', $this->user->id)->fetch()->_id);
 		$followers = db()->table('user')->get('followers', $query)->setResultsPerPage(21);
@@ -59,6 +59,13 @@ class PeopleController extends AppController
 		$follow->follower = $q1;
 		$follow->prey     = $q2;
 		$follow->store();
+		
+		$notification = db()->table('notification')->newRecord();
+		$notification->src     = $q1;
+		$notification->target  = $q2;
+		$notification->content = "Started following you";
+		$notification->type    = NotificationModel::TYPE_FOLLOW;
+		$notification->store();
 	}
 	
 	public function unfollow($user) {
@@ -73,6 +80,28 @@ class PeopleController extends AppController
 		if (!$following) { throw new \spitfire\exceptions\PublicException('Not yet following', 400); }
 		
 		$following->delete();
+	}
+	
+	public function whoToFollow() {
+		
+		try {
+		$u = $this->user;
+		$following   = db()->table('follow')->get('follower__id', $u->id);
+		$exclude     = db()->table('follow')->get('follower__id', $u->id);
+		
+		$suggestions = db()->table('follow')->get('follower', db()->table('user')->get('followers', $following));
+		$users       = db()->table('user')->get('followers', $suggestions)->addRestriction('followers', $exclude, '!=');
+		
+		$users->setResultsPerPage(100);
+		$users->fetchAll()->each(function ($e) { echo $this->sso->getUser($e->_id)->getUsername(), ', ';});
+		
+		} catch (\Exception$e) {
+			echo $e->getMessage();
+			echo $e->getTraceAsString();
+		}
+		
+		var_dump(spitfire()->getMessages());
+		die();
 	}
 	
 	public function isFollowing($uid) {

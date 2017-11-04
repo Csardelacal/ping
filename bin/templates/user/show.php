@@ -13,16 +13,43 @@
 		<!--Sidebar (secondary navigation) -->
 		<div class="span1">
 			<div class="profile-resume desktop-only">
-				<img class="avatar" src="<?= $user->getAvatar(256) ?>">
+				<a href="<?= url('user', $user->getUsername()) ?>"><img class="avatar" src="<?= $user->getAvatar(256) ?>"></a>
+				<div class="spacer" style="height: 10px"></div>
+				<a href="<?= url('user', $user->getUsername()) ?>"><span class="user-name"><?= $user->getUsername() ?></span></a>
 				<div class="spacer" style="height: 10px"></div>
 				<div class="bio"><?php try { $bio = $user->getAttribute('bio'); ?><?=  nl2br(__($bio)); ?><?php } catch(Exception$e) { ?><em>No bio provided</em><?php } ?></div>
+				
+				<div class="spacer" style="height: 50px"></div>
+				
+				<span class="follower-count"><a href="<?= url('user', 'following', $user->getUsername()) ?>"><strong><?= db()->table('follow')->get('prey__id', $user->getId())->count() ?></strong> followers</a></span>
+				<span class="follow-count"><a href="<?= url('user', 'follows', $user->getUsername()) ?>"><strong><?= db()->table('follow')->get('follower__id', $user->getId())->count() ?></strong> follows</a></span>
+				<span class="ping-count"><strong><?= db()->table('ping')->get('src__id', $user->getId())->addRestriction('target__id', null, 'IS')->count() ?></strong> posts</span>
+			</div>
+			
+			<div class="material unpadded user-card mobile-only">
+				<div class="banner" style="height: 47px">
+					<?php try { $banner = $user->getAttribute('banner')->getPreviewURL(320, 75) ?>
+					<?php if (!$banner) { throw new Exception(); } ?>
+					<img src="<?= $banner ?>" width="275" height="64">
+					<?php } catch (Exception$e) { } ?>
+				</div>
+				<div class="padded" style="margin-top: -35px;">
+					<img class="avatar" src="<?= $user->getAvatar(128) ?>">
+					<div class="user-info">
+						<a href="<?= url('user', $user->getUsername()) ?>"><span class="user-name"><?= $user->getUsername() ?></span></a>
+						<div class="user-bio">
+							<a href="<?= url('user', 'following', $user->getUsername()) ?>"><?= db()->table('follow')->get('prey__id', $user->getId())->count() ?></a> followers
+							<a href="<?= url('user', 'follows', $user->getUsername()) ?>"><?= db()->table('follow')->get('follower__id', $user->getId())->count() ?></a> follows
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 
 		<!-- Main content-->
 		<div class="span3">
 			<div class="mobile-only" style="padding: 20px 0; text-align: right">
-				<a class="button follow" href="<?= new URL('user', 'login') ?>" data-ping-follow="<?= $user->getId() ?>">Login to follow</a>
+				<a class="button follow" href="<?= url('user', 'login') ?>" data-ping-follow="<?= $user->getId() ?>">Login to follow</a>
 			</div>
 			<div class="material unpadded">
 				<?php if (!$authUser): ?>
@@ -30,7 +57,7 @@
 					Log in to send <?= $user->getUsername() ?> a ping...
 				</p>
 				<?php elseif ($user->getId() !== $authUser->id): ?>
-				<form method="POST" action="<?= new URL('notification', 'push', Array('returnto' => (string)new URL('user', $user->getUsername()))) ?>" enctype="multipart/form-data">
+				<form method="POST" action="<?= url('ping', 'push', Array('returnto' => (string)url('user', $user->getUsername()))) ?>" enctype="multipart/form-data">
 					<input type="hidden" name="target" value="<?= $user->getId() ?>">
 					<div class="padded add-ping">
 						<div>
@@ -74,16 +101,16 @@
 				<div class="padded" style="padding-top: 5px;">
 					<div class="row10 fluid">
 						<div class="span1 desktop-only" style="text-align: center">
-							<img src="<?= $user->getAvatar(64) ?>" style="width: 100%; border: solid 1px #777; border-radius: 3px;">
+							<img src="<?= $u->getAvatar(64) ?>" style="width: 100%; border: solid 1px #777; border-radius: 3px;">
 						</div>
 						<div class="span9">
 							<div class="row4">
 								<div class="span3">
-									<a href="<?= new URL('user', $u->getUsername()) ?>" style="color: #000; font-weight: bold; font-size: .8em;"><?= $u->getUsername() ?></a>
+									<a href="<?= url('user', $u->getUsername()) ?>" style="color: #000; font-weight: bold; font-size: .8em;"><?= $u->getUsername() ?></a>
 								</div>
 								<div class="span1 desktop-only" style="text-align: right; font-size: .8em; color: #777;">
 									<?= Time::relative($notification->created) ?>
-									<a class="delete-link" href="<?= new URL('notification', 'delete', $notification->_id) ?>" title="Delete this post">&times;</a>
+									<a class="delete-link" href="<?= url('ping', 'delete', $notification->_id) ?>" title="Delete this post">&times;</a>
 								</div>
 							</div>
 							<div class="row1" style="margin-top: 5px">
@@ -109,7 +136,7 @@
 				<div class="separator"></div>
 				<?php endforeach; ?>
 
-				<div data-lysine-view="notification">
+				<div data-lysine-view="ping">
 					<div class="padded" style="padding-top: 5px;">
 						<div class="row10 fluid">
 							<div class="span1 desktop-only" style="text-align: center">
@@ -123,7 +150,7 @@
 									</div>
 									<div class="span1 desktop-only" style="text-align: right; font-size: .8em; color: #777;">
 										<span data-for="timeRelative"></span>
-										<a class="delete-link" data-lysine-href="<?= new URL('notification', 'delete', '{{id}}') ?>" title="Delete this post">&times;</a>
+										<a class="delete-link" data-lysine-href="<?= url('ping', 'delete', '{{id}}') ?>" title="Delete this post">&times;</a>
 									</div>
 								</div>
 								<div class="row1" style="margin-top: 5px">
@@ -156,8 +183,8 @@
 	</div>
 </div>
 
-<script type="text/javascript" src="<?= URL::asset('js/banner.js') ?>"></script>
-<script type="text/javascript" src="<?= URL::asset('js/follow_button.js') ?>"></script>
+<script type="text/javascript" src="<?= \spitfire\core\http\URL::asset('js/banner.js') ?>"></script>
+<script type="text/javascript" src="<?= \spitfire\core\http\URL::asset('js/follow_button.js') ?>"></script>
 <script type="text/javascript">
 (function () {
 	window.ping.setBaseURL('<?= url(); ?>');
@@ -165,7 +192,7 @@
 }());
 </script>
 
-<script type="text/javascript" src="<?= URL::asset('js/lysine.js') ?>"></script>
+<script type="text/javascript" src="<?= \spitfire\core\http\URL::asset('js/lysine.js') ?>"></script>
 
 <script type="text/javascript">
 (function() {
@@ -178,7 +205,7 @@
 		if (current === 0) { return; }
 		
 		xhr = new XMLHttpRequest();
-		xhr.open('GET', '<?= new URL('user', $user->getUsername() . '.json') ?>?until=' + current);
+		xhr.open('GET', '<?= url('user', $user->getUsername())->setExtension('json') ?>?until=' + current);
 		
 		xhr.onreadystatechange = function () {
 			if (xhr.readyState === 4 && xhr.status === 200) {
@@ -191,14 +218,14 @@
 				}
 				
 				for (var i= 0; i < data.payload.length; i++) { 
-					var view =  new Lysine.view('notification');
+					var view =  new Lysine.view('ping');
 					notifications.push(view);
 					
 					view.setData({
 						id                 : data.payload[i].id,
 						userName           : data.payload[i].user.username,
 						avatar             : data.payload[i].user.avatar,
-						userURL            : '<?= new URL('user') ?>/' + data.payload[i].user.username,
+						userURL            : '<?= url('user') ?>' + data.payload[i].user.username,
 						notificationURL    : data.payload[i].url || '#',
 						notificationContent: data.payload[i].content,
 						notificationMedia  : data.payload[i].media? data.payload[i].media : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',

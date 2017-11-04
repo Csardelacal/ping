@@ -11,7 +11,7 @@
 		</p>
 		
 		<p style="text-align: right">
-		<a class="button" href="<?= new URL('notification', 'delete', $id, $salt) ?>">Delete</a>
+		<a class="button" href="<?= url('ping', 'delete', $id, $salt) ?>">Delete</a>
 		</p>
 	</div>
 </div>

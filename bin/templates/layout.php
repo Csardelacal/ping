@@ -4,7 +4,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title><?= isset(${'page.title'}) && ${'page.title'}? ${'page.title'} : 'Ping - Notifications' ?></title>
 		<link href="https://fonts.googleapis.com/css?family=Nunito+Sans" rel="stylesheet"> 
-		<link type="text/css" rel="stylesheet" href="<?= URL::asset('css/app.css') ?>">
+		<link type="text/css" rel="stylesheet" href="<?= \spitfire\core\http\URL::asset('css/app.css') ?>">
 		
 		<?php if (\spitfire\core\Environment::get('analytics.id')): ?>
 		<script>
@@ -32,12 +32,12 @@
 				<div class="span3 desktop-only"></div>
 				<div class="span1">
 					<?php if ($authUser): ?>
-					<a class="menu-item" href="<?= url('feed') ?>">Feed <span class="badge" data-ping-counter></span></a>
+					<a class="menu-item" href="<?= url('feed') ?>">Feed <span class="badge" data-ping-counter data-ping-amt="0">?</span></a>
 					<?php endif; ?>
 				</div>
 				<div class="span1">
 					<?php if ($authUser): ?>
-					<!--<a href="<?= url('settings') ?>">Settings</a>-->
+					<a class="menu-item" href="<?= url('settings') ?>">Settings</a>
 					<?php endif; ?>
 				</div>
 				<div class="span1">
