@@ -143,4 +143,12 @@ class PingController extends AppController
 		$this->view->set('salt', $salt);
 	}
 	
+	public function detail($pingid) {
+		$ping = db()->table('ping')->get('_id', $pingid)->fetch();
+		
+		if (!$ping || $ping->deleted) { throw new PublicException('Ping does not exist', 404);}
+		
+		$this->view->set('user', $this->sso->getUser($ping->src->_id));
+		$this->view->set('ping', $ping);
+	}
 }

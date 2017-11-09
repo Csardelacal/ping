@@ -13,6 +13,9 @@ foreach ($notifications as $n) {
 	 */
 	$irt   = $n->irt? [
 		'id'           => $n->irt->_id,
+		'username'     => $sso->getUser($n->irt->src->authId)->getUsername(),
+		'userURL'      => strval(url('user', $sso->getUser($n->irt->src->authId)->getUsername())->absolute()),
+		'avatar'       => $sso->getUser($n->irt->src->authId)->getAvatar(32),
 		'url'          => $n->irt->deleted? null : $n->irt->url,
 		'media'        => $n->irt->deleted? null : $n->irt->getMediaURI(),
 		'content'      => $n->irt->deleted? '[Deleted]' : Mention::idToMentions($n->irt->content),
@@ -20,8 +23,9 @@ foreach ($notifications as $n) {
 		'timeRelative' => Time::relative($n->irt->created),
 		'user'         => Array(
 			'id'        => $n->irt->src->authId,
+			'url'       => strval(url('user', $sso->getUser($n->irt->src->authId)->getUsername())->absolute()),
 			'username'  => $sso->getUser($n->irt->src->authId)->getUsername(),
-			'avatar'    => $sso->getUser($n->irt->src->authId)->getAvatar(128),
+			'avatar'    => $sso->getUser($n->irt->src->authId)->getAvatar(32)
 		)
 	] : null;
 	
@@ -44,6 +48,5 @@ foreach ($notifications as $n) {
 
 echo json_encode(Array(
 	 'payload' => $payload,
-	 'until'   => isset($n)? $n->_id : 0,
-	 'messages'    => spitfire()->getMessages()
+	 'until'   => isset($n)? $n->_id : 0
 ));

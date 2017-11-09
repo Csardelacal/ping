@@ -52,51 +52,10 @@
 				<a class="button follow" href="<?= url('user', 'login') ?>" data-ping-follow="<?= $user->getId() ?>">Login to follow</a>
 			</div>
 			<div class="material unpadded">
-				<?php if (!$authUser): ?>
-				<p style="color: #777; font-size: .8em; text-align: center; padding: 15px 20px">
-					Log in to send <?= $user->getUsername() ?> a ping...
-				</p>
-				<?php elseif ($user->getId() !== $authUser->id): ?>
-				<form method="POST" action="<?= url('ping', 'push', Array('returnto' => (string)url('user', $user->getUsername()))) ?>" enctype="multipart/form-data">
-					<input type="hidden" name="target" value="<?= $user->getId() ?>">
-					<div class="padded add-ping">
-						<div>
-							<div class="row1">
-								<div class="span1">
-									<textarea name="content" id="new-ping-content" placeholder="Send ping to <?= $user->getUsername() ?>..."></textarea>
-								</div>
-							</div>
-						</div>
 
-						<div class="spacer" style="height: 10px"></div>
+				<div class="spacer" style="height: 10px"></div>
 
-						<div>
-							<div class="row2">
-								<div class="span1">
-
-								</div>
-								<div class="span1" style="text-align: right">
-									<span id="new-ping-character-count">250</span>
-									<input type="file" name="media" id="ping_media" accept="image/*" style="display: none" onchange="document.getElementById('ping_media_selector').style.opacity = '1'">
-									<img src="<?= spitfire\core\http\URL::asset('img/camera.png') ?>" id="ping_media_selector" onclick="document.getElementById('ping_media').click()" style="vertical-align: middle; height: 24px; opacity: .3; margin: 0 5px;">
-									<input type="submit" value="Ping!">
-								</div>
-							</div>
-						</div>
-					</div>
-				</form>
-
-				<?php else: ?>
-
-				<p style="color: #777; font-size: .8em; text-align: center; padding: 15px 20px">
-					This is your own profile. You cannot send notifications to yourself.
-				</p>
-
-				<?php endif; ?>
-
-				<div class="separator"></div>
-
-				<?php foreach($notifications as $notification): ?>
+				<?php $notification = $ping ?>
 				<?php $u = $sso->getUser($notification->src->authId); ?>
 				<div class="padded" style="padding-top: 5px;">
 					<div class="row10 fluid">
@@ -143,7 +102,49 @@
 				</div>
 
 				<div class="separator"></div>
-				<?php endforeach; ?>
+				
+				<?php if (!$authUser): ?>
+				<p style="color: #777; font-size: .8em; text-align: center; padding: 15px 20px">
+					Log in to send <?= $user->getUsername() ?> a ping...
+				</p>
+				<?php else: ?>
+				<form method="POST" action="<?= url('ping', 'push', Array('returnto' => (string)url('user', $user->getUsername()))) ?>" enctype="multipart/form-data">
+					<input type="hidden" name="irt" value="<?= $ping->_id ?>">
+					
+					<?php if ($ping->target): ?>
+					<input type="hidden" name="target" value="<?= $ping->src->_id ?>">
+					<?php endif; ?>
+					
+					<div class="padded add-ping">
+						<div>
+							<div class="row1">
+								<div class="span1">
+									<textarea name="content" id="new-ping-content" placeholder="Reply to <?= $user->getUsername() ?>..."></textarea>
+								</div>
+							</div>
+						</div>
+
+						<div class="spacer" style="height: 10px"></div>
+
+						<div>
+							<div class="row2">
+								<div class="span1">
+
+								</div>
+								<div class="span1" style="text-align: right">
+									<span id="new-ping-character-count">250</span>
+									<input type="file" name="media" id="ping_media" accept="image/*" style="display: none" onchange="document.getElementById('ping_media_selector').style.opacity = '1'">
+									<img src="<?= spitfire\core\http\URL::asset('img/camera.png') ?>" id="ping_media_selector" onclick="document.getElementById('ping_media').click()" style="vertical-align: middle; height: 24px; opacity: .3; margin: 0 5px;">
+									<input type="submit" value="Ping!">
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+				<?php endif; ?>
+			</div>
+			
+			<div class="material unpadded">
 
 				<div data-lysine-view="ping">
 					
@@ -159,26 +160,6 @@
 										<a data-for="userName" data-lysine-href="{{userURL}}" style="color: #000; font-weight: bold; font-size: .8em;"></a>
 									</div>
 									<div class="span1 desktop-only" style="text-align: right; font-size: .8em; color: #777;" data-for="timeRelative"></div>
-								</div>
-
-
-								<div class="irt" data-lysine-view data-for="irt">
-									<div class="spacer" style="height: 10px"></div>
-
-									<div class="source-ping">
-										<div class="row10 fluid">
-											<div class="span1 desktop-only" style="text-align: center;">
-												<img data-lysine-src="{{avatar}}" style="width: 32px; border: solid 1px #777; border-radius: 3px;">
-											</div>
-											<div class="span9">
-												<a  data-for="username" data-lysine-href="{{userURL}}"  style="color: #000; font-weight: bold; font-size: .8em;"></a>
-
-												<p style="margin: 0;"><a  data-for="content" data-lysine-href="<?= url('ping', 'detail'); ?>{{id}}"></a></p>
-											</div>
-										</div>
-									</div>
-
-									<div class="spacer" style="height: 10px"></div>
 								</div>
 
 								<div class="row1" style="margin-top: 5px">
@@ -234,8 +215,8 @@
 
 <script type="text/javascript">
 (function() {
-	var xhr = null;
-	var current = <?= json_encode(isset($notification) && $notification? $notification->_id : null) ?>;
+	var xhr     = null;
+	var current = null;
 	var notifications = [];
 	
 	var request = function (callback) {
@@ -243,7 +224,7 @@
 		if (current === 0) { return; }
 		
 		xhr = new XMLHttpRequest();
-		xhr.open('GET', '<?= url('user', $user->getUsername())->setExtension('json') ?>?until=' + current);
+		xhr.open('GET', '<?= url('ping', 'replies', $ping->_id)->setExtension('json') ?>?until=' + current);
 		
 		xhr.onreadystatechange = function () {
 			if (xhr.readyState === 4 && xhr.status === 200) {

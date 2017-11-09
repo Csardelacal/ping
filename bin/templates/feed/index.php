@@ -151,10 +151,29 @@
 									<img class="mobile-only" data-lysine-src="{{avatar}}" style="width: 16px; border: solid 1px #777; border-radius: 3px; vertical-align: middle">
 									<a data-for="userName" data-lysine-href="{{userURL}}" style="color: #000; font-weight: bold; font-size: .8em;"></a>
 								</div>
-								<div class="span1 desktop-only" style="text-align: right; font-size: .8em; color: #777;" data-for="timeRelative">
-									
-								</div>
+								<div class="span1 desktop-only" style="text-align: right; font-size: .8em; color: #777;" data-for="timeRelative"></div>
 							</div>
+							
+							
+							<div class="irt" data-lysine-view data-for="irt">
+								<div class="spacer" style="height: 10px"></div>
+
+								<div class="source-ping">
+									<div class="row10 fluid">
+										<div class="span1 desktop-only" style="text-align: center;">
+											<img data-lysine-src="{{avatar}}" style="width: 32px; border: solid 1px #777; border-radius: 3px;">
+										</div>
+										<div class="span9">
+											<a  data-for="username" data-lysine-href="{{userURL}}"  style="color: #000; font-weight: bold; font-size: .8em;"></a>
+
+											<p style="margin: 0;" data-for="content"></p>
+										</div>
+									</div>
+								</div>
+
+								<div class="spacer" style="height: 10px"></div>
+							</div>
+							
 							<div class="row1" style="margin-top: 5px">
 								<div class="span1">
 									<p style="margin: 0;">
@@ -175,8 +194,8 @@
 
 							<div class="row1 fluid">
 								<div class="span1" style="text-align: right">
-									<a data-lysine-href="<?= url('ping', 'detail') ?>{{id}}#replies" class="reply-link"><?= $notification->replies->getQuery()->count()? : 'Reply' ?></a>
-									<a data-lysine-href="<?= url('ping', 'share'); ?>{{id}}" class="share-link">Share</a>
+									<a data-lysine-href="<?= url('ping', 'detail') ?>{{id}}#replies" class="reply-link" data-for="replyCount"></a>
+									<a data-lysine-href="<?= url('ping', 'share'); ?>{{id}}" class="share-link" data-for="shareCount"></a>
 								</div>
 							</div>
 						</div>
@@ -225,15 +244,23 @@
 						id                 : data.payload[i].id,
 						userName           : data.payload[i].user.username,
 						avatar             : data.payload[i].user.avatar,
-						userURL            : '<?= url('user') ?>/' + data.payload[i].user.username,
+						userURL            : data.payload[i].user.url,
 						notificationURL    : data.payload[i].url || '#',
 						notificationContent: data.payload[i].content,
 						notificationMedia  : data.payload[i].media? data.payload[i].media : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
-						timeRelative       : data.payload[i].timeRelative
+						timeRelative       : data.payload[i].timeRelative,
+						replyCount         : data.payload[i].replies || 'Reply',
+						shareCount         : data.payload[i].shares  || 'Share',
+						irt                : data.payload[i].irt? [data.payload[i].irt] : []
 					});
 					
 					if (!data.payload[i].media) {
 						var child = view.getHTML().querySelector('.media');
+						child.parentNode.removeChild(child);
+					}
+					
+					if (!data.payload[i].irt) {
+						var child = view.getHTML().querySelector('.irt');
 						child.parentNode.removeChild(child);
 					}
 				}
