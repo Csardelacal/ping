@@ -33,6 +33,14 @@
 					</div>
 				</div>
 				<?php endforeach; ?>
+				
+				<div class="spacer" style="height: 30px"></div>
+				
+				<div class="row1">
+					<div class="span1" style="text-align: right">
+						<input type="submit" value="Store" class="button">
+					</div>
+				</div>
 			</form>
 		</div>
 	</div>

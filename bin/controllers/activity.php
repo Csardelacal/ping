@@ -95,7 +95,7 @@ class ActivityController extends AppController
 					$email->push($notification->target->_id, $this->sso->getUser($src->authId), $content, $url);
 				}
 				elseif ($target->notify($notification->type, NotificationSetting::NOTIFY_DIGEST)) {
-					$email->queue($notification->target->_id);
+					$email->queue($notification);
 				}
 			}
 			# Notify the user via mail.

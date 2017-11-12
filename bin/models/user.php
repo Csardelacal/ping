@@ -7,6 +7,7 @@ class UserModel extends spitfire\Model
 		$schema->authId           = new IntegerField(); # The ID the user has assigned on the auth server
 		$schema->lastSeen         = new IntegerField(); # We use this to see how many unread pings the user has
 		$schema->lastSeenActivity = new IntegerField(); # We use this to see how many unread notifications the user has
+		$schema->digested         = new IntegerField();
 		
 		$schema->followers = new ChildrenField('follow', 'prey');
 		$schema->following = new ChildrenField('follow', 'follower');
@@ -19,7 +20,7 @@ class UserModel extends spitfire\Model
 		if (!$setting) { $notify = settings\NotificationModel::NOTIFY_DEFAULT; }
 		else           { $notify = $setting->setting; }
 		
-		return (int)$notify === (int)$interval;
+		return ((int)$notify) === ((int)$interval);
 	}
 	
 	public static function makeFromSSO($u) {

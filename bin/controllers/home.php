@@ -12,4 +12,9 @@ class HomeController extends AppController
 			$this->response->setBody('Redirecting...')->getHeaders()->redirect(new URL('feed'));
 		}
 	}
+	
+	public function test() {
+		$es = new EmailSender($this->sso);
+		$es->sendDigest($this->sso->getUser(1));
+	}
 }
