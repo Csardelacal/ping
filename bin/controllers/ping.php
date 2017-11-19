@@ -87,6 +87,16 @@ class PingController extends AppController
 
 				#Check the user's preferences and send an email
 				$email->push($_POST['target'], $this->sso->getUser($src->authId), $content, $url, $media);
+				
+				if ($irt) {
+					$tgt = db()->table('ping')->get('_id', $irt)->fetch()->src;
+					$n = db()->table('notification')->newRecord();
+					$n->src     = $src;
+					$n->target  = $tgt;
+					$n->content = 'Replied to your comment';
+					$n->type    = NotificationModel::TYPE_COMMENT;
+					$n->store();
+				}
 			}
 			# Notify the user via mail.
 			elseif (filter_var($_POST['target'], FILTER_VALIDATE_EMAIL)) {
@@ -105,6 +115,7 @@ class PingController extends AppController
 			$notification->url     = $url;
 			$notification->media   = $media;
 			$notification->explicit= $explicit;
+			$notification->irt     = $irt? db()->table('ping')->get('_id', $irt)->fetch() : null;
 			$notification->store();
 			
 			$mentioned = Mention::getMentionedUsers($notification->content);
@@ -114,6 +125,17 @@ class PingController extends AppController
 				$n->target  = $u;
 				$n->content = 'Mentioned you';
 				$n->type    = NotificationModel::TYPE_MENTION;
+				$n->store();
+			}
+			
+			
+			if ($irt) {
+				$tgt = db()->table('ping')->get('_id', $irt)->fetch()->src;
+				$n = db()->table('notification')->newRecord();
+				$n->src     = $src;
+				$n->target  = $tgt;
+				$n->content = 'Replied to your ping';
+				$n->type    = NotificationModel::TYPE_COMMENT;
 				$n->store();
 			}
 		}
@@ -150,5 +172,23 @@ class PingController extends AppController
 		
 		$this->view->set('user', $this->sso->getUser($ping->src->_id));
 		$this->view->set('ping', $ping);
+	}
+	
+	public function replies($pingid) {
+		$ping = db()->table('ping')->get('_id', $pingid)->fetch();
+		
+		if (!$ping || $ping->deleted) { throw new PublicException('Ping does not exist', 404);}
+		
+		$query = $ping->replies->getQuery();
+		$query->setResultsPerPage(20);
+		$query->setOrder('_id', 'desc');
+		
+		if (isset($_GET['until'])) { $query->addRestriction('_id', $_GET['until'], '<'); }
+		
+		$replies = $query->fetchAll();
+		
+		//$this->view->set('user',          $this->sso->getUser($ping->src->_id));
+		//$this->view->set('ping',          $ping);
+		$this->view->set('notifications', $replies);
 	}
 }

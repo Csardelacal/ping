@@ -56,5 +56,6 @@
 		<?= $content_for_layout ?>
 		
 		<script type="text/javascript" src="<?= url('feed', 'counter')->setExtension('js') ?>"></script>
+		<script type="text/javascript" src="<?= url('cron')->setExtension('js') ?>"></script>
 	</body>
 </html>

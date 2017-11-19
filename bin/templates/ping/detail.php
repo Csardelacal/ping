@@ -108,7 +108,7 @@
 					Log in to send <?= $user->getUsername() ?> a ping...
 				</p>
 				<?php else: ?>
-				<form method="POST" action="<?= url('ping', 'push', Array('returnto' => (string)url('user', $user->getUsername()))) ?>" enctype="multipart/form-data">
+				<form method="POST" action="<?= url('ping', 'push', Array('returnto' => (string)url('ping', 'detail', $notification->_id))) ?>" enctype="multipart/form-data">
 					<input type="hidden" name="irt" value="<?= $ping->_id ?>">
 					
 					<?php if ($ping->target): ?>
@@ -144,7 +144,9 @@
 				<?php endif; ?>
 			</div>
 			
-			<div class="material unpadded">
+			<div class="spacer" style="height: 30px"></div>
+			
+			<div class="material unpadded" id="replies">
 
 				<div data-lysine-view="ping">
 					
@@ -197,7 +199,7 @@
 
 		<!-- Contextual menu-->
 		<div class="span1 desktop-only">
-			<a class="button follow" href="<?= new URL('user', 'login') ?>" data-ping-follow="<?= $user->getId() ?>">Login to follow</a>
+			<a class="button follow" href="<?= url('user', 'login') ?>" data-ping-follow="<?= $user->getId() ?>">Login to follow</a>
 		</div>
 	</div>
 </div>
@@ -224,7 +226,7 @@
 		if (current === 0) { return; }
 		
 		xhr = new XMLHttpRequest();
-		xhr.open('GET', '<?= url('ping', 'replies', $ping->_id)->setExtension('json') ?>?until=' + current);
+		xhr.open('GET', '<?= url('ping', 'replies', $ping->_id)->setExtension('json') ?>' + (current? '?until=' + current : ''));
 		
 		xhr.onreadystatechange = function () {
 			if (xhr.readyState === 4 && xhr.status === 200) {

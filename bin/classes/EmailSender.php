@@ -37,7 +37,9 @@ class EmailSender
 		$v = new _SF_ViewElement('bin/templates/email/digest.php', $a);
 		$t = $v->render();
 		
-		$this->sso->sendEmail($tgt->getUsername(), sprintf('[%s] %s', Environment::get('site.name')? : 'Ping', 'Your daily digest'), $t);
+		echo strval($tgt->getId());
+		ob_flush();
+		$this->sso->sendEmail(strval($tgt->getId()), sprintf('[%s] %s', Environment::get('site.name')? : 'Ping', 'Your daily digest'), $t);
 	}
 	
 }
