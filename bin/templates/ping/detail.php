@@ -54,8 +54,9 @@
 			<div class="material unpadded">
 
 				<div class="spacer" style="height: 10px"></div>
-
-				<?php $notification = $ping ?>
+				
+				<?php $notifications = array_filter([$ping->irt, $ping]); ?>
+				<?php foreach ($notifications as $notification): ?>
 				<?php $u = $sso->getUser($notification->src->authId); ?>
 				<div class="padded" style="padding-top: 5px;">
 					<div class="row10 fluid">
@@ -102,6 +103,7 @@
 				</div>
 
 				<div class="separator"></div>
+				<?php endforeach; ?>
 				
 				<?php if (!$authUser): ?>
 				<p style="color: #777; font-size: .8em; text-align: center; padding: 15px 20px">
@@ -147,7 +149,9 @@
 			<div class="spacer" style="height: 30px"></div>
 			
 			<div class="material unpadded" id="replies">
-
+				
+				<div class="spacer" style="height: 10px"></div>
+				
 				<div data-lysine-view="ping">
 					
 					<div class="padded" style="padding-top: 5px;">
@@ -263,7 +267,7 @@
 					
 					if (!data.payload[i].irt) {
 						var child = view.getHTML().querySelector('.irt');
-						child.parentNode.removeChild(child);
+						child && child.parentNode.removeChild(child);
 					}
 					
 					if (data.payload[i].media && data.payload[i].explicit) {

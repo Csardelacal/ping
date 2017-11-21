@@ -93,8 +93,9 @@ class PingController extends AppController
 					$n = db()->table('notification')->newRecord();
 					$n->src     = $src;
 					$n->target  = $tgt;
-					$n->content = 'Replied to your comment';
+					$n->content = 'Replied to your ping';
 					$n->type    = NotificationModel::TYPE_COMMENT;
+					$n->url     = strval(url('ping', 'detail', $notification->_id)->absolute());
 					$n->store();
 				}
 			}
@@ -136,6 +137,7 @@ class PingController extends AppController
 				$n->target  = $tgt;
 				$n->content = 'Replied to your ping';
 				$n->type    = NotificationModel::TYPE_COMMENT;
+				$n->url     = strval(url('ping', 'detail', $notification->_id)->absolute());
 				$n->store();
 			}
 		}
@@ -177,9 +179,15 @@ class PingController extends AppController
 	public function replies($pingid) {
 		$ping = db()->table('ping')->get('_id', $pingid)->fetch();
 		
-		if (!$ping || $ping->deleted) { throw new PublicException('Ping does not exist', 404);}
+		if (!$ping || $ping->deleted) { throw new PublicException('Ping does not exist', 404); }
+		if ($ping->target && $ping->src->authId !== $this->user->id && $ping->target->authId !== $this->user->id) { throw new PublicException('Ping does not exist', 404); }
 		
 		$query = $ping->replies->getQuery();
+		$g = $query->group();
+		$g->addRestriction('target', null, 'IS');
+		$g->addRestriction('target', db()->table('user')->get('authId', $this->user->id));
+		$g->addRestriction('src', db()->table('user')->get('authId', $this->user->id));
+		
 		$query->setResultsPerPage(20);
 		$query->setOrder('_id', 'desc');
 		
