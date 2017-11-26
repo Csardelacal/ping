@@ -7,8 +7,8 @@ class SSOCache
 	
 	private $cache;
 	
-	public function __construct($endpoint, $appId, $appSecret) {
-		$this->sso   = new SSO($endpoint, $appId, $appSecret);
+	public function __construct($credentials) {
+		$this->sso   = new SSO($credentials);
 		$this->cache = new \spitfire\cache\MemcachedAdapter();
 		$this->cache->setTimeout(3600*24);
 	}

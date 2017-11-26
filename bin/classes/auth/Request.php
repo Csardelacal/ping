@@ -53,6 +53,8 @@ class Request
 	/**
 	 * 
 	 * @param string[] $data MAy contain postdata
+	 *
+	 * @return mixed
 	 */
 	public function send($data = null) {
 		#Find the appropriate data
@@ -79,7 +81,7 @@ class Request
 		$http_response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		
 		if ($http_response_code !== 200) {
-			throw new Exception('SSO rejected the request' . $response, 1605141533);
+			throw new Exception('SSO rejected the request (' . curl_error($ch) . ')', 1605141533);
 		}
 		
 		#Return the response we received

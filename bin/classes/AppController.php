@@ -31,7 +31,7 @@ abstract class AppController extends Controller
 		$cache->setTimeout(120);
 		
 		#Create a user
-		$this->sso   = new SSOCache(Environment::get('sso.endpoint'), Environment::get('sso.appId'), Environment::get('sso.appSec'));
+		$this->sso   = new SSOCache(Environment::get('SSO'));
 		$this->token = isset($_GET['token'])? $this->sso->makeToken($_GET['token']) : $session->getUser();
 		
 		#Fetch the user from the cache if necessary

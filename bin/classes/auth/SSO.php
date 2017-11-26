@@ -9,10 +9,13 @@ class SSO
 	private $appId;
 	private $appSecret;
 	
-	public function __construct($endpoint, $appId, $appSecret) {
-		$this->endpoint  = rtrim($endpoint, '/');
-		$this->appId     = $appId;
-		$this->appSecret = $appSecret;
+	public function __construct($credentials) {
+		$reflection = URLReflection::fromURL($credentials);
+		
+		$this->endpoint  = rtrim($reflection->getProtocol() . '://' . $reflection->getServer() . ':' . $reflection->getPort() . $reflection->getPath(), '/');
+		$this->appId     = $reflection->getUser();
+		$this->appSecret = $reflection->getPassword();
+		
 	}
 	
 	/**
@@ -73,6 +76,47 @@ class SSO
 		return new User($data->id, $data->username, $data->aliases, $data->groups, $data->verified, $data->registered_unix, $data->attributes, $data->avatar);
 	}
 	
+	/**
+	 * 
+	 * @param string $signature
+	 * @param string $token
+	 * @param string $context
+	 * @return \auth\AppAuthentication
+	 */
+	public function authApp($signature, $token = null, $context = null) {		
+		if ($token instanceof Token) {
+			$token = $token->getId();
+		}
+		
+		$request = new Request(
+			$this->endpoint . '/auth/app.json',
+			array_filter(Array('token' => $token, 'signature' => $signature, 'context' => $context))
+		);
+		
+		$response = $request->send();
+		
+		$json = json_decode($response);
+		
+		if ($json->app) {
+			$app = new App($json->remote->id, null, $json->remote->name);
+		}
+		else {
+			$app = null;
+		}
+		
+		if ($json->context) {
+			$ctx = new Context($app, $json->context->name);
+			$ctx->setExists($json->context->undefined);
+		}
+		else {
+			$ctx = null;
+		}
+		
+		$res  = new AppAuthentication($json->authenticated, $json->grant, $app, $ctx, $json->redirect);
+		
+		return $res;
+	}
+	
 	public function sendEmail($userid, $subject, $body) {
 		
 		$request = new Request(
@@ -86,23 +130,6 @@ class SSO
 		return $data;
 	}
 	
-	public function authApp($id, $secret) {		
-		$url = $this->endpoint . '/auth/app.json?' . http_build_query(Array('appId' => $id, 'appSec' => $secret));
-		
-		$ch = curl_init($url);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		
-		$response = curl_exec($ch);
-		
-		
-		if ( curl_getinfo($ch, CURLINFO_HTTP_CODE) !== 200) { 
-			throw new Exception('SSO rejected the request' . $response, 1605141533); 
-		}
-		
-		$json = json_decode($response);
-		return $json->authenticated;
-	}
-	
 	public function getEndpoint() {
 		return $this->endpoint;
 	}
@@ -111,8 +138,35 @@ class SSO
 		return $this->appId;
 	}
 	
-	public function getAppSecret() {
-		return $this->appSecret;
+	public function makeSignature($target = null) {
+		$salt = str_replace(['+', '/'], '', base64_encode(random_bytes(30)));
+		$hash = hash('sha512', implode('.', array_filter([$this->appId, $target, $this->appSecret, $salt])));
+		
+		return implode(':', array_filter(['sha512', $this->appId, $target, $salt, $hash]));
+	}
+	
+	public function getGroupList() {
+		$url  = $this->endpoint . '/group/index.json';
+		$resp = file_get_contents($url);
+		
+		if (!strstr($http_response_header[0], '200')) { 
+			throw new Exception('SSO rejected the request with ' . $http_response_header[0], 201605201109);
+		}
+		
+		$data = json_decode($resp);
+		return $data->payload;
+	}
+	
+	public function getGroup($id) {
+		$url  = $this->endpoint . '/group/detail/' . $id . '.json';
+		$resp = file_get_contents($url);
+		
+		if (!strstr($http_response_header[0], '200')) { 
+			throw new Exception('SSO rejected the request with ' . $http_response_header[0], 201605201109);
+		}
+		
+		$data = json_decode($resp);
+		return $data->payload;
 	}
 	
 }
