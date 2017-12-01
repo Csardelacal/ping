@@ -22,8 +22,7 @@ class CronController extends AppController
 				$emailsender->sendDigest($this->sso->getUser($user->authId));
 
 				#Delete the digest queue
-				$q2 = db()->table('notification')->get('target', $user)->addRestriction('created', time() - 86400 * 20, '>');
-				$q  = db()->table('email\digestqueue')->get('notification', $q2)->setResultsPerPage('6');
+				$q  = db()->table('email\digestqueue')->get('user', $user);
 
 				$res = $q->fetchAll();
 				foreach ($res as $record) { $record->delete(); }

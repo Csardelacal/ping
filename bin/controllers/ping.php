@@ -3,6 +3,7 @@
 use spitfire\exceptions\PublicException;
 use spitfire\io\Upload;
 use spitfire\validation\PositiveNumberValidationRule;
+use settings\NotificationModel as NotificationSetting;
 
 class PingController extends AppController
 {
@@ -127,6 +128,14 @@ class PingController extends AppController
 				$n->content = 'Mentioned you';
 				$n->type    = NotificationModel::TYPE_MENTION;
 				$n->store();
+				
+				#Check the user's preferences and send an email
+				if ($u->notify($n->type, NotificationSetting::NOTIFY_EMAIL)) {
+					$email->push($n->target->_id, $this->sso->getUser($src->authId), 'Mentioned you', null);
+				}
+				elseif ($u->notify($n->type, NotificationSetting::NOTIFY_DIGEST)) {
+					$email->queue($n);
+				}
 			}
 			
 			
@@ -198,5 +207,39 @@ class PingController extends AppController
 		//$this->view->set('user',          $this->sso->getUser($ping->src->_id));
 		//$this->view->set('ping',          $ping);
 		$this->view->set('notifications', $replies);
+	}
+	
+	public function share($pingid) {
+		$original = db()->table('ping')->get('_id', $pingid)->fetch();
+		$dispatcher = new NotificationDispatcher($this->sso, db());
+		
+		if (!$this->user)                    { throw new PublicException('Log in required', 403); }
+		if (!$original || $original->target) { throw new PublicException('Ping cannot be shared', 403); }
+		
+		$src = db()->table('user')->get('authId', $this->user->id)->fetch();
+		$count = 0;
+		
+		do {
+			$dispatcher->push($src, $original->src, 'Shared your ping', strval(url('ping', 'detail', $original->_id)->absolute()), NotificationModel::TYPE_SHARE);
+			$original = $original->share? : $original;
+			$count++;
+		} 
+		while ($count < 10 && $original->share);
+		
+		$shared = db()->table('ping')->newRecord();
+		$shared->_id     = null;
+		$shared->src     = $src;
+		$shared->target  = null;
+		$shared->content = $original->content;
+		$shared->url     = $original->url;
+		$shared->media   = $original->media;
+		$shared->explicit= $original->explicit;
+		$shared->deleted = $original->deleted;
+		$shared->created = time();
+		$shared->irt     = $original->irt;
+		$shared->share   = $original;
+		$shared->store();
+		
+		$this->view->set('shared', $shared);
 	}
 }

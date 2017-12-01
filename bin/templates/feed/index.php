@@ -73,6 +73,9 @@
 							<div class="span3">
 								<img class="mobile-only" src="<?= $user->getAvatar(64) ?>" style="width: 16px; border: solid 1px #777; border-radius: 3px; vertical-align: middle">
 								<a href="<?= url('user', $user->getUsername()) ?>" style="color: #000; font-weight: bold; font-size: .8em;"><?= $user->getUsername() ?></a>
+								<?php if ($notification->share): ?>
+								<a href="<?= url('ping', 'detail', $notification->share->_id) ?>" style="font-size: .8em; color: #777;"> from <?= $sso->getUser($notification->share->src->_id)->getUsername() ?></a>
+								<?php endif; ?>
 							</div>
 							<div class="span1 desktop-only" style="text-align: right; font-size: .8em; color: #777;">
 								<?= Time::relative($notification->created) ?>
@@ -124,7 +127,7 @@
 						<div class="row1 fluid">
 							<div class="span1" style="text-align: right">
 								<a href="<?= url('ping', 'detail', $notification->_id) ?>#replies" class="reply-link"><?= $notification->replies->getQuery()->count()? : 'Reply' ?></a>
-								<a href="<?= url('ping', 'share', $notification->_id); ?>" class="share-link">Share</a>
+								<a href="<?= url('ping', 'share', $notification->_id); ?>" class="share-link"><?= $notification->original()->shared->getQuery()->count()? : 'Share' ?></a>
 							</div>
 						</div>
 					</div>

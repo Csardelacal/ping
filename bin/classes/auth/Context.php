@@ -27,26 +27,30 @@
 class Context
 {
 	
+	private $sso;
 	private $app;
-	private $name;
+	private $id;
 	private $exists = null;
+	private $granted = null;
 	
 	/**
 	 * 
-	 * @param string $app
-	 * @param string $name
+	 * @param SSO    $sso
+	 * @param App    $app
+	 * @param string $id
 	 */
-	public function __construct($app, $name) {
+	public function __construct($sso, $app, $id) {
+		$this->sso = $sso;
 		$this->app = $app;
-		$this->name = $name;
+		$this->id = $id;
 	}
 	
 	public function getApp() {
 		return $this->app;
 	}
 	
-	public function getName() {
-		return $this->name;
+	public function getId() {
+		return $this->id;
 	}
 	
 	public function exists() {
@@ -58,8 +62,8 @@ class Context
 		return $this;
 	}
 	
-	public function setName($name) {
-		$this->name = $name;
+	public function setId($name) {
+		$this->id = $name;
 		return $this;
 	}
 	
@@ -68,9 +72,24 @@ class Context
 		return $this;
 	}
 	
+	public function setGranted($granted) {
+		$this->granted = $granted;
+	}
+	
+	public function isGranted() {
+		return $this->granted;
+	}
+
 	public function create($name, $description) {
-		//TODO Implement
+		$request = new Request(
+			$this->sso->getEndpoint() . '/context/create', 
+			['context' => $this->id, 'signature' => $this->sso->makeSignature()]
+		);
+		
+		$request->send(['name' => $name, 'description' => $description]);
+		
 		$this->exists = true;
+		return true;
 	}
 
 }

@@ -97,7 +97,7 @@ class SSO
 		
 		$json = json_decode($response);
 		
-		if ($json->app) {
+		if (isset($json->remote)) {
 			$app = new App($json->remote->id, null, $json->remote->name);
 		}
 		else {
@@ -105,14 +105,20 @@ class SSO
 		}
 		
 		if ($json->context) {
-			$ctx = new Context($app, $json->context->name);
-			$ctx->setExists($json->context->undefined);
+			$contexts = [];
+			foreach ($json->context as $jsctx) {
+				$ctx = new Context($this, $app, $jsctx->id);
+				$ctx->setExists(!$jsctx->undefined);
+				$ctx->setGranted($jsctx->granted);
+				$contexts[$jsctx->id] = $ctx;
+			}
 		}
 		else {
-			$ctx = null;
+			$contexts = [];
 		}
 		
-		$res  = new AppAuthentication($json->authenticated, $json->grant, $app, $ctx, $json->redirect);
+		$src  = new App($json->src->id, null, $json->src->name);
+		$res  = new AppAuthentication($this, $json->authenticated, $json->grant, $src, $app, $contexts, $json->redirect);
 		
 		return $res;
 	}
@@ -138,11 +144,13 @@ class SSO
 		return $this->appId;
 	}
 	
-	public function makeSignature($target = null) {
-		$salt = str_replace(['+', '/'], '', base64_encode(random_bytes(30)));
-		$hash = hash('sha512', implode('.', array_filter([$this->appId, $target, $this->appSecret, $salt])));
+	public function makeSignature($target = null, $contexts = []) {
+		$contextstr = implode(',', $contexts);
 		
-		return implode(':', array_filter(['sha512', $this->appId, $target, $salt, $hash]));
+		$salt = str_replace(['+', '/'], '', base64_encode(random_bytes(30)));
+		$hash = hash('sha512', implode('.', array_filter([$this->appId, $target, $this->appSecret, $contextstr, $salt])));
+		
+		return implode(':', array_filter(['sha512', $this->appId, $target, $contextstr, $salt, $hash]));
 	}
 	
 	public function getGroupList() {

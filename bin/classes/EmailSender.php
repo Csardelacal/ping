@@ -28,6 +28,8 @@ class EmailSender
 	
 	public function queue($notification) {
 		$r = db()->table('email\digestqueue')->newRecord();
+		$r->user         = $notification->target;
+		$r->type         = $notification->type;
 		$r->notification = $notification;
 		$r->store();
 	}
@@ -37,8 +39,6 @@ class EmailSender
 		$v = new _SF_ViewElement('bin/templates/email/digest.php', $a);
 		$t = $v->render();
 		
-		echo strval($tgt->getId());
-		ob_flush();
 		$this->sso->sendEmail(strval($tgt->getId()), sprintf('[%s] %s', Environment::get('site.name')? : 'Ping', 'Your daily digest'), $t);
 	}
 	

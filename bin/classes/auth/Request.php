@@ -81,6 +81,9 @@ class Request
 		$http_response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		
 		if ($http_response_code !== 200) {
+			echo $url;
+			var_dump($data);
+			echo __($response); die();
 			throw new Exception('SSO rejected the request (' . curl_error($ch) . ')', 1605141533);
 		}
 		

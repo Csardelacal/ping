@@ -4,7 +4,7 @@
 		<div style="padding: 10px; font-weight: bold; color: #FFF; background: #5299cc">
 			<div style="margin: 0 auto; max-width: 500px;">
 				<img src="<?= spitfire\core\http\AbsoluteURL::asset('img/logo.png') ?>" height="24" style="vertical-align: middle">
-				<?= spitfire\core\Environment::get('site.name')? : 'Ping' ?> - Notification
+				<?= spitfire\core\Environment::get('site.name')? : 'Ping' ?> - Notification digest
 			</div>
 		</div>
 		
@@ -27,15 +27,14 @@
 				<p>&nbsp;</p>
 				
 				<?php foreach (NotificationModel::getTypesAvailable() as $name => $type): ?>
-				<?php $q3 = db()->table('user')->get('_id', $tgt->getId()); ?>
-				<?php $q2 = db()->table('notification')->get('target', $q3)->addRestriction('created', time() - 86400 * 20, '>')->addRestriction('type', $type) ?>
-				<?php $q  = db()->table('email\digestqueue')->get('notification', $q2)->setResultsPerPage('6') ?>
+				<?php $u = db()->table('user')->get('_id', $tgt->getId()); ?>
+				<?php $q = db()->table('email\digestqueue')->get('user', $u)->addRestriction('type', $type)->setResultsPerPage('6') ?>
 				<?php if ($q->count() === 0) { continue; } ?>
 				<div>
 					<p><?= $q->count() ?> <?= $name ?>s</p>
 					<div>
 						<?php foreach($q->fetchAll() as $f): ?>
-						<img src="<?= $sso->getUser($f->notification->src->_id)->getAvatar(64) ?>" width="32">
+						<a href="<?= $f->notification->url? : '#' ?>"><img src="<?= $sso->getUser($f->notification->src->_id)->getAvatar(64) ?>" width="32"></a>
 						<?php endforeach; ?>
 					</div>
 				</div>

@@ -26,5 +26,9 @@ class PingModel extends spitfire\Model
 	public function getMediaURI() {
 		return parse_url($this->media, PHP_URL_SCHEME) === 'file'? strval(url('image', 'preview', $this->_id)->absolute()) : $this->media; 
 	}
+	
+	public function original() {
+		return $this->share? $this->share->original() : $this;
+	}
 
 }
