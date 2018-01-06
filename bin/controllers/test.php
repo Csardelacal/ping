@@ -4,7 +4,7 @@ class TestController extends AppController
 {
 	
 	public function test() {
-		die($this->sso->makeSignature('1211271296'));
+		die($this->sso->makeSignature('1885365713'));
 	}
 	
 }

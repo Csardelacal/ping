@@ -1,4 +1,9 @@
 Documentation/*
+nbproject/private
+
+bin/settings/environments.php
+
+
 *.*~
 *.DS_STORE
 *.sublime-project

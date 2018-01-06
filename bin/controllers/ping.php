@@ -24,8 +24,13 @@ class PingController extends AppController
 		$appSec = isset($_GET['appSec'])? $_GET['appSec'] : null;
 		
 		#Validate the app
-		$authUtil = new AuthUtil($this->sso);
-		$this->user || $authUtil->checkAppCredentials($appId, $appSec);
+		if (isset($_GET['signature'])) {
+			$this->user || $this->sso->authApp($_GET['signature']);
+		}
+		else {
+			$authUtil = new AuthUtil($this->sso);
+			$this->user || $authUtil->checkAppCredentials($appId, $appSec);
+		}
 		
 		
 		#Read POST data
