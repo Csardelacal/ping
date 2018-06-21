@@ -1,6 +1,8 @@
 <?php namespace auth;
 
 use Exception;
+use signature\Hash;
+use signature\Signature;
 
 class SSO
 {
@@ -47,7 +49,7 @@ class SSO
 	 * be authorized afterwards. 
 	 * 
 	 * @param string $token
-	 * @return \auth\Token
+	 * @return Token
 	 */
 	public function makeToken($token) {
 		return new Token($this, $token, null, null);
@@ -81,7 +83,7 @@ class SSO
 	 * @param string $signature
 	 * @param string $token
 	 * @param string $context
-	 * @return \auth\AppAuthentication
+	 * @return AppAuthentication
 	 */
 	public function authApp($signature, $token = null, $context = null) {		
 		if ($token instanceof Token) {
@@ -145,12 +147,8 @@ class SSO
 	}
 	
 	public function makeSignature($target = null, $contexts = []) {
-		$contextstr = implode(',', $contexts);
-		
-		$salt = str_replace(['+', '/'], '', base64_encode(random_bytes(30)));
-		$hash = hash('sha512', implode('.', array_filter([$this->appId, $target, $this->appSecret, $contextstr, $salt])));
-		
-		return implode(':', array_filter(['sha512', $this->appId, $target, $contextstr, $salt, $hash]));
+		$signature = new Signature(Hash::ALGO_DEFAULT, $this->appId, $this->appSecret, $target, $contexts);
+		return $signature;
 	}
 	
 	public function getGroupList() {

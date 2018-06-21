@@ -92,7 +92,7 @@ class PingController extends AppController
 				$notification->store();
 
 				#Check the user's preferences and send an email
-				$email->push($_POST['target'], $this->sso->getUser($src->authId), $content, $url, $media);
+				$email->push($_POST['target'], $this->sso->getUser($src->authId), $content, $url, null);
 				
 				if ($irt) {
 					$tgt = db()->table('ping')->get('_id', $irt)->fetch()->src;

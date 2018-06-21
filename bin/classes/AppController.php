@@ -35,7 +35,7 @@ abstract class AppController extends Controller
 		$this->token = isset($_GET['token'])? $this->sso->makeToken($_GET['token']) : $session->getUser();
 		
 		#Fetch the user from the cache if necessary
-		$this->user  = $this->token && $this->token instanceof auth\Token? $cache->get('token_' . $this->token->getId(), function () { 
+		$this->user  = $this->token && $this->token instanceof auth\Token? $cache->get('ping_token_' . $this->token->getId(), function () { 
 			return $this->token->getTokenInfo()->user; 
 		}) : null;
 		

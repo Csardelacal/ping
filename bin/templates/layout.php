@@ -53,7 +53,7 @@
 			</div>
 		</div>
 		
-		<?= $content_for_layout ?>
+		<?= $this->content() ?>
 		
 		<script type="text/javascript" src="<?= url('feed', 'counter')->setExtension('js') ?>"></script>
 		<script type="text/javascript" src="<?= url('cron')->setExtension('js') ?>"></script>

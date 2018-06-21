@@ -16,7 +16,6 @@ html, body{
 	padding: 0;
 	background: #FAFAFA;
 	font-family: 'Nunito Sans', sans-serif;
-	height: 100%;
 }
 
 * {
@@ -299,16 +298,14 @@ a {
 
 
 @media all and (min-width: $MobileBreakpoint) {
-	@import '_scaffolding';
 	.mobile-only { display: none !important; }
 }
 
 @media all and (max-width: $MobileBreakpoint) {
-	@import '_scaffolding_mobile';
-	
 	.desktop-only { display: none !important; }
 }
 
+@import "scaffolding/_scaffolding.scss";
 @import '_navigation';
 @import '_activity';
 @import '_styledSelect';

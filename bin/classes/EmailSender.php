@@ -18,10 +18,10 @@ class EmailSender
 		$this->sso = $sso;
 	}
 	
-	public function push($email, $src, $content, $url, $media, $type) {
+	public function push($email, $src, $content, $url, $media) {
 		$a = Array('src' => $src, 'content' => $content, 'url' => $url, 'media' => $media);
-		$v = new _SF_ViewElement('bin/templates/email/notification.php', $a);
-		$t = $v->render();
+		$v = new spitfire\io\template\Template('bin/templates/email/notification.php');
+		$t = $v->render($a);
 		
 		$this->sso->sendEmail($email, sprintf('[%s] %s: %s', Environment::get('site.name')? : 'Ping', $src->getUsername(), Strings::ellipsis($content, 50)), $t);
 	}
@@ -36,8 +36,8 @@ class EmailSender
 	
 	public function sendDigest($tgt) {
 		$a = Array('tgt' => $tgt, 'sso' => $this->sso);
-		$v = new _SF_ViewElement('bin/templates/email/digest.php', $a);
-		$t = $v->render();
+		$v = new spitfire\io\template\Template('bin/templates/email/digest.php');
+		$t = $v->render($a);
 		
 		$this->sso->sendEmail(strval($tgt->getId()), sprintf('[%s] %s', Environment::get('site.name')? : 'Ping', 'Your daily digest'), $t);
 	}
