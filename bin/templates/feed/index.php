@@ -1,9 +1,9 @@
 
 <div class="spacer" style="height: 18px"></div>
 		
-<div class="row5">
+<div class="row d5">
 	<!--Sidebar (secondary navigation) -->
-	<div class="span1">
+	<div class="span d1">
 		<div class="material unpadded user-card">
 			<?php $user = $sso->getUser($authUser->id); ?>
 			<a href="<?= url('user', $user->getUsername()) ?>">
@@ -27,7 +27,7 @@
 	</div>
 
 	<!-- Main content-->
-	<div class="span3">
+	<div class="span d3">
 		<div class="material unpadded">
 			<form method="POST" action="<?= url('ping', 'push') ?>" enctype="multipart/form-data">
 				<div class="padded add-ping">
@@ -64,11 +64,11 @@
 			<div class="padded" style="padding-top: 5px;">
 						
 				
-				<div class="row10 fluid">
-					<div class="span1 desktop-only" style="text-align: center">
+				<div class="row d10 m5 fluid">
+					<div class="span1 m-span-1" style="text-align: center">
 						<img src="<?= $user->getAvatar(64) ?>" style="width: 100%; border: solid 1px #777; border-radius: 3px;">
 					</div>
-					<div class="span9">
+					<div class="span d9 m4">
 						<div class="row4">
 							<div class="span3">
 								<img class="mobile-only" src="<?= $user->getAvatar(64) ?>" style="width: 16px; border: solid 1px #777; border-radius: 3px; vertical-align: middle">

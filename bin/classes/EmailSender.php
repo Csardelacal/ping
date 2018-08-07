@@ -18,7 +18,7 @@ class EmailSender
 		$this->sso = $sso;
 	}
 	
-	public function push($email, $src, $content, $url, $media, $type) {
+	public function push($email, $src, $content, $url, $media) {
 		$a = Array('src' => $src, 'content' => $content, 'url' => $url, 'media' => $media);
 		$v = new \spitfire\io\template\Template('bin/templates/email/notification.php');
 		$t = $v->render($a);

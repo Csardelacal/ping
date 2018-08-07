@@ -114,7 +114,7 @@
 					<input type="hidden" name="irt" value="<?= $ping->_id ?>">
 					
 					<?php if ($ping->target): ?>
-					<input type="hidden" name="target" value="<?= $ping->src->_id ?>">
+					<input type="hidden" name="target" value="<?= $ping->src->_id === $authUser->id? $ping->target->_id : $ping->src->_id ?>">
 					<?php endif; ?>
 					
 					<div class="padded add-ping">

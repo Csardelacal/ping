@@ -113,6 +113,31 @@
 									<a class="delete-link" href="<?= url('ping', 'delete', $notification->_id) ?>" title="Delete this post">&times;</a>
 								</div>
 							</div>
+							
+							
+
+							<?php if($notification->irt): ?>
+							<?php $irtUser = $sso->getUser($notification->irt->src->authId); ?>
+							<div class="irt">
+								<div class="spacer" style="height: 10px"></div>
+
+								<div class="source-ping">
+									<div class="row10 fluid">
+										<div class="span1 desktop-only" style="text-align: center;">
+											<img src="<?= $irtUser->getAvatar(64) ?>" style="width: 32px; border: solid 1px #777; border-radius: 3px;">
+										</div>
+										<div class="span9">
+											<a  href="<?= url('user', $irtUser->getUsername()) ?>"  style="color: #000; font-weight: bold; font-size: .8em;"><?= $irtUser->getUsername() ?></a>
+
+											<p style="margin: 0;"><a href="<?= url('ping', 'detail', $notification->irt->_id); ?>"><?= __($notification->irt->content) ?></a></p>
+										</div>
+									</div>
+								</div>
+
+								<div class="spacer" style="height: 10px"></div>
+							</div>
+							<?php endif; ?>
+							
 							<div class="row1" style="margin-top: 5px">
 								<div class="span1">
 									<p style="margin: 0;">
