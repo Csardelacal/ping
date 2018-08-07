@@ -83,7 +83,7 @@ class Request
 		if ($http_response_code !== 200) {
 			echo $url;
 			var_dump($data);
-			echo __($response); die();
+			echo $response; die();
 			throw new Exception('SSO rejected the request (' . curl_error($ch) . ')', 1605141533);
 		}
 		

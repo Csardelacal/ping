@@ -36,14 +36,13 @@ class FeedController extends AppController
 				->endGroup()
 				->addRestriction('created', time() - 720 * 3600, '>')
 				->addRestriction('deleted', null, 'IS')
-				->setResultsPerPage(10)
 				->setOrder('created', 'DESC');
 		
 		if (isset($_GET['until'])) {
 			$query->addRestriction('_id', $_GET['until'], '<');
 		}
 		
-		$notifications = $query->fetchAll();
+		$notifications = $query->range(0, 10);
 		
 		#Set the notifications that were unseen as seen
 		$dbuser->lastSeen = time();
@@ -81,7 +80,6 @@ class FeedController extends AppController
 				  ->endGroup()
 				->endGroup()
 				->addRestriction('created', max($dbuser->lastSeen, time() - 168 * 3600) , '>')
-				->setResultsPerPage(10)
 				->setOrder('created', 'DESC');
 		
 		$activity = db()->table('notification')->getAll()
@@ -89,7 +87,6 @@ class FeedController extends AppController
 				  ->addRestriction('target__id', $dbuser->_id)
 				->endGroup()
 				->addRestriction('created', max($dbuser->lastSeenActivity, time() - 720 * 3600) , '>')
-				->setResultsPerPage(10)
 				->setOrder('created', 'DESC');
 		
 		

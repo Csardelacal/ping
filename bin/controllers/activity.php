@@ -15,9 +15,9 @@ class ActivityController extends AppController
 		$this->secondaryNav->add(url('people', 'iFollow'), 'Following');
 		
 		if (isset($_GET['until'])) {
-			$notifications = db()->table('notification')->get('target__id', $this->user->id)->addRestriction('_id', $_GET['until'], '<')->setResultsPerPage(50)->setOrder('_id', 'DESC')->fetchAll();
+			$notifications = db()->table('notification')->get('target__id', $this->user->id)->addRestriction('_id', $_GET['until'], '<')->setOrder('_id', 'DESC')->range(0, 50);
 		} else {
-			$notifications = db()->table('notification')->get('target__id', $this->user->id)->setResultsPerPage(50)->setOrder('_id', 'DESC')->fetchAll();
+			$notifications = db()->table('notification')->get('target__id', $this->user->id)->setOrder('_id', 'DESC')->range(0, 50);
 		}
 		
 		$user = db()->table('user')->get('_id', $this->user->id)->fetch();
@@ -38,8 +38,15 @@ class ActivityController extends AppController
 		$appSec = isset($_GET['appSec'])? $_GET['appSec'] : null;
 		
 		#Validate the app
-		$authUtil = new AuthUtil($this->sso);
-		$authUtil->checkAppCredentials($appId, $appSec);
+		if (isset($_GET['signature'])) {
+			if(!$this->sso->authApp($_GET['signature'])->getAuthenticated()) {
+				throw new PublicException('Invalid signature', 403);
+			}
+		}
+		else {
+			$authUtil = new AuthUtil($this->sso);
+			$authUtil->checkAppCredentials($appId, $appSec);
+		}
 		
 		
 		#Read POST data

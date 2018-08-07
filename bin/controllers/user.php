@@ -47,13 +47,14 @@ class UserController extends AppController
 		$user = $this->sso->getUser($username);
 		
 		$query     = db()->table('follow')->get('follower__id', db()->table('user')->get('authId', $user->getId())->fetch()->_id);
-		$followers = db()->table('user')->get('followers', $query)->setResultsPerPage(21);
+		$followers = db()->table('user')->get('followers', $query);
 		
-		$paginator = new Pagination($followers);
+		$paginator = new \spitfire\storage\database\pagination\Paginator($followers);
+		
+		$this->view->set('pagination', $paginator);
+		$this->view->set('followers',  $paginator->records());
 		
 		$this->view->set('user', $user);
-		$this->view->set('pagination', $paginator);
-		$this->view->set('followers',  $followers->fetchAll());
 	}
 	
 	/**
@@ -65,13 +66,14 @@ class UserController extends AppController
 		$user = $this->sso->getUser($username);
 		
 		$query     = db()->table('follow')->get('prey__id', db()->table('user')->get('authId', $user->getId())->fetch()->_id);
-		$followers = db()->table('user')->get('following', $query)->setResultsPerPage(21);
+		$followers = db()->table('user')->get('following', $query);
 		
-		$paginator = new Pagination($followers);
+		$paginator = new \spitfire\storage\database\pagination\Paginator($followers);
+		
+		$this->view->set('pagination', $paginator);
+		$this->view->set('followers',  $paginator->records());
 		
 		$this->view->set('user', $user);
-		$this->view->set('pagination', $paginator);
-		$this->view->set('followers',  $followers->fetchAll());
 	}
 	
 	
@@ -105,15 +107,15 @@ class UserController extends AppController
 				->endGroup()
 			->endGroup()
 			->addRestriction('deleted', null, 'IS')
-			->setResultsPerPage(10)
 			->setOrder('created', 'DESC');
 		
 		if (isset($_GET['until'])) {
 			$feed->addRestriction('_id', $_GET['until'], '<');
 		}
 		
+		$this->view->setFile('user/show');
 		$this->view->set('user', $user);
-		$this->view->set('notifications', $feed->fetchAll());
+		$this->view->set('notifications', $feed->range(0, 10));
 		
 	}
 	

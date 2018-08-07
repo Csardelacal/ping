@@ -25,7 +25,9 @@ class PingController extends AppController
 		
 		#Validate the app
 		if (isset($_GET['signature'])) {
-			$this->user || $this->sso->authApp($_GET['signature']);
+			if(!$this->user || $this->sso->authApp($_GET['signature'])->getAuthenticated()) {
+				throw new PublicException('Not authenticated', 403);
+			}
 		}
 		else {
 			$authUtil = new AuthUtil($this->sso);
@@ -202,12 +204,11 @@ class PingController extends AppController
 		$g->addRestriction('target', db()->table('user')->get('authId', $this->user->id));
 		$g->addRestriction('src', db()->table('user')->get('authId', $this->user->id));
 		
-		$query->setResultsPerPage(20);
 		$query->setOrder('_id', 'desc');
 		
 		if (isset($_GET['until'])) { $query->addRestriction('_id', $_GET['until'], '<'); }
 		
-		$replies = $query->fetchAll();
+		$replies = $query->range(0, 20);
 		
 		//$this->view->set('user',          $this->sso->getUser($ping->src->_id));
 		//$this->view->set('ping',          $ping);
