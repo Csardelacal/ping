@@ -14,7 +14,7 @@ class UserController extends AppController
 		#If the user is already logged in we do not re-login him.
 		if ($this->user) {
 			return $this->response->setBody('Redirecting...')
-					  ->getHeaders()->redirect(new URL('feed'));
+					  ->getHeaders()->redirect(url('feed'));
 		}
 		
 		#Create and keep the token that we'll need to maintain for the app to work
@@ -31,7 +31,7 @@ class UserController extends AppController
 		Session::getInstance()->lock($t);
 		
 		return $this->response->setBody('Redirecting...')
-				  ->getHeaders()->redirect(new URL('feed'));
+				  ->getHeaders()->redirect(url('feed'));
 	}
 	
 	public function logout() {
@@ -90,9 +90,9 @@ class UserController extends AppController
 		
 		if (!$dbu || !$user) { throw new \spitfire\exceptions\PublicException('No user found', 404); }
 		
-		$this->secondaryNav->add(new URL('feed'), 'Feed');
-		$this->secondaryNav->add(new URL('people', 'followingMe'), 'Followers');
-		$this->secondaryNav->add(new URL('people', 'iFollow'), 'Following');
+		$this->secondaryNav->add(url('feed'), 'Feed');
+		$this->secondaryNav->add(url('people', 'followingMe'), 'Followers');
+		$this->secondaryNav->add(url('people', 'iFollow'), 'Following');
 		
 		$feed = db()->table('ping')
 			->getAll()
@@ -102,7 +102,7 @@ class UserController extends AppController
 					->addRestriction('target', null, 'IS')
 				->endGroup()
 				->group(spitfire\storage\database\RestrictionGroup::TYPE_AND)
-					->addRestriction('src', db()->table('user')->get('_id', $this->user->id)->fetch())
+					->addRestriction('src', db()->table('user')->get('_id', $this->user? $this->user->id : null)->fetch())
 					->addRestriction('target', $dbu)
 				->endGroup()
 			->endGroup()

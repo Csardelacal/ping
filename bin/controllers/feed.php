@@ -56,11 +56,12 @@ class FeedController extends AppController
 		$memcached = new \spitfire\cache\MemcachedAdapter(); 
 		$memcached->setTimeout(20);
 		
-		$dbuser = db()->table('user')->get('authId', $this->user->id)->fetch();
+		$dbuser = db()->table('user')->get('authId', $this->user? $this->user->id : 0)->fetch();
 		
 		
 		if (!$dbuser) {
-			$this->view->set('count', 0)->set('samples', []);
+			$this->view->set('count', 0);
+			$this->view->set('activity', 0);
 			return;
 		}
 		
@@ -70,15 +71,11 @@ class FeedController extends AppController
 		$query = db()->table('ping')->getAll()
 				->where('src', $users)
 				->where('target', null)
-				->where('created', '>', max($dbuser->lastSeen, time() - 168 * 3600))
-				->setOrder('created', 'DESC');
+				->where('created', '>', max($dbuser->lastSeen, time() - 168 * 3600));
 		
 		$activity = db()->table('notification')->getAll()
-				->group()
-				  ->addRestriction('target__id', $dbuser->_id)
-				->endGroup()
-				->addRestriction('created', max($dbuser->lastSeenActivity, time() - 720 * 3600) , '>')
-				->setOrder('created', 'DESC');
+				->addRestriction('target__id', $dbuser->_id)
+				->addRestriction('created', max($dbuser->lastSeenActivity, time() - 720 * 3600) , '>');
 		
 		
 		$this->view->set('count', (int)$memcached->get('ping.notifications.' . $dbuser->_id, function () use($query) { return $query->count(); }));

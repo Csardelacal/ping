@@ -241,7 +241,7 @@
 
 		<!-- Contextual menu-->
 		<div class="span1 desktop-only">
-			<a class="button follow" href="<?= new URL('user', 'login') ?>" data-ping-follow="<?= $user->getId() ?>">Login to follow</a>
+			<a class="button follow" href="<?= url('user', 'login') ?>" data-ping-follow="<?= $user->getId() ?>">Login to follow</a>
 		</div>
 	</div>
 </div>

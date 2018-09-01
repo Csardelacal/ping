@@ -9,7 +9,7 @@ class PeopleController extends AppController
 		if (!$this->user && $this->context->request->getPath()->getAction() !== 'isFollowing') { 
 			$this->response
 				->setBody('Redirecting...')
-				->getHeaders()->redirect(new URL('user', 'login'));
+				->getHeaders()->redirect(url('user', 'login'));
 		}
 	}
 	

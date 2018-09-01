@@ -55,7 +55,7 @@
 		
 		<?= $this->content() ?>
 		
-		<script type="text/javascript" src="<?= url('feed', 'counter')->setExtension('js') ?>"></script>
+		<script type="text/javascript" src="<?= url('feed', 'counter')->setExtension('js')->setParam('nonce', 60 * (int)(time() / 60)) ?>"></script>
 		<script type="text/javascript" src="<?= url('cron')->setExtension('js') ?>"></script>
 	</body>
 </html>

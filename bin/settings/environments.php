@@ -8,8 +8,8 @@ use spitfire\core\Environment;
  */
 $e = new Environment('test');
 
-$e->set('db', 'mysqlpdo://root:@localhost/ping?encoding=utf8&prefix=p_');
-$e->set('SSO',  'http://1638362706:sAGJBqe342XawmQBuaaNDo7ybKUj257CtWQRMwYbm2bMq9I@localhost/PHPAuthServer/');
+$e->set('db', 'mysqlpdo://root:root@localhost/ping?encoding=utf8&prefix=p_');
+$e->set('SSO',  'http://1545751243:lIvPAQt1dQrc8kVopGcAZCDCUhCUMK0bUmCHS9LduH7iw0@localhost/Auth/');
 
 $e->set('analytics.id', '');
 $e->set('debug_mode', 1);

@@ -2,7 +2,7 @@
 
 use spitfire\exceptions\PublicException;
 use spitfire\io\Upload;
-use spitfire\validation\PositiveNumberValidationRule;
+use spitfire\validation\rules\PositiveNumberValidationRule;
 use settings\NotificationModel as NotificationSetting;
 
 class PingController extends AppController
@@ -25,13 +25,16 @@ class PingController extends AppController
 		
 		#Validate the app
 		if (isset($_GET['signature'])) {
-			if(!$this->user || $this->sso->authApp($_GET['signature'])->getAuthenticated()) {
+			if($this->user || !$this->sso->authApp($_GET['signature'])->isAuthenticated()) {
 				throw new PublicException('Not authenticated', 403);
 			}
 		}
-		else {
+		elseif(isset($_GET['appId'])) {
 			$authUtil = new AuthUtil($this->sso);
-			$this->user || $authUtil->checkAppCredentials($appId, $appSec);
+			$authUtil->checkAppCredentials($appId, $appSec);
+		}
+		elseif(!$this->user) {
+			throw new PublicException('Login required', 403);
 		}
 		
 		
@@ -166,6 +169,10 @@ class PingController extends AppController
 		
 		if (!$notification) { throw new PublicException('No notification found', 404); }
 		
+		if (!$this->user) {
+			throw new PublicException('Login required', 403);
+		}
+		
 		if ($notification->target === null && $notification->src->_id !== $this->user->id)  
 			{ throw new PublicException('No notification found', 404); }
 		
@@ -201,7 +208,7 @@ class PingController extends AppController
 		$query = $ping->replies->getQuery();
 		$g = $query->group();
 		$g->addRestriction('target', null, 'IS');
-		$g->addRestriction('target', db()->table('user')->get('authId', $this->user->id));
+		$g->addRestriction('target', db()->table('user')->get('authId', $this->user? $this->user->id : null));
 		$g->addRestriction('src', db()->table('user')->get('authId', $this->user->id));
 		
 		$query->setOrder('_id', 'desc');

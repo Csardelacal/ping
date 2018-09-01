@@ -9,12 +9,13 @@ class HomeController extends AppController
 {
 	public function index() {
 		if ($this->user) {
-			$this->response->setBody('Redirecting...')->getHeaders()->redirect(new URL('feed'));
+			$this->response->setBody('Redirecting...')->getHeaders()->redirect(url('feed'));
 		}
 	}
 	
 	public function test() {
-		$es = new EmailSender($this->sso);
-		$es->sendDigest($this->sso->getUser(1));
+		$r = request('http://localhost/cloudy/pool1/bucket/read/1.json');
+		$r->get('signature', (string)$this->sso->makeSignature('1488571465'));
+		die($r->send()->html());
 	}
 }

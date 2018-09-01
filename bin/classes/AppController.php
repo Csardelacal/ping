@@ -36,7 +36,7 @@ abstract class AppController extends Controller
 		
 		#Fetch the user from the cache if necessary
 		$this->user  = $this->token && $this->token instanceof auth\Token? $cache->get('ping_token_' . $this->token->getId(), function () { 
-			return $this->token->getTokenInfo()->user; 
+			return $this->token->isAuthenticated()? $this->token->getTokenInfo()->user : null; 
 		}) : null;
 		
 		#Maintain the user in the view. This way we can draw an interface for them

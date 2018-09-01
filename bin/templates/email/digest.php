@@ -28,12 +28,12 @@
 				
 				<?php foreach (NotificationModel::getTypesAvailable() as $name => $type): ?>
 				<?php $u = db()->table('user')->get('_id', $tgt->getId()); ?>
-				<?php $q = db()->table('email\digestqueue')->get('user', $u)->addRestriction('type', $type)->setResultsPerPage('6') ?>
+				<?php $q = db()->table('email\digestqueue')->get('user', $u)->addRestriction('type', $type) ?>
 				<?php if ($q->count() === 0) { continue; } ?>
 				<div>
 					<p><?= $q->count() ?> <?= $name ?>s</p>
 					<div>
-						<?php foreach($q->fetchAll() as $f): ?>
+						<?php foreach($q->range(0, 6) as $f): ?>
 						<a href="<?= $f->notification->url? : '#' ?>"><img src="<?= $sso->getUser($f->notification->src->_id)->getAvatar(64) ?>" width="32"></a>
 						<?php endforeach; ?>
 					</div>
