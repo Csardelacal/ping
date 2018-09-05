@@ -24,7 +24,27 @@ class PingModel extends spitfire\Model
 	}
 	
 	public function getMediaURI() {
-		return parse_url($this->media, PHP_URL_SCHEME) === 'file'? strval(url('image', 'preview', $this->_id)->absolute()) : $this->media; 
+		return in_array(parse_url($this->media, PHP_URL_SCHEME), ['file', 'app'])? strval(url('image', 'preview', $this->_id)->absolute()) : $this->media; 
+	}
+	
+	public function getMediaEmbed() {
+		try {
+			if (empty($this->media)) { throw new spitfire\exceptions\PrivateException(); }
+			
+			$file = storage($this->media);
+			
+			switch($file->mime()) {
+				case 'video/mp4':
+				case 'image/gif':
+					return sprintf('<video muted autoPlay loop src="%s" style="width: 100%%"></video>', $this->getMediaURI());
+				default:
+					return sprintf('<img src="%s"  style="width: 100%%">', $this->getMediaURI());
+			}
+		} 
+		catch (Exception $ex) {
+			return sprintf('<img src="%s"  style="width: 100%%">', $this->getMediaURI());
+		}
+		return in_array(parse_url($this->media, PHP_URL_SCHEME), ['file', 'app'])? strval(url('image', 'preview', $this->_id)->absolute()) : $this->media; 
 	}
 	
 	public function original() {

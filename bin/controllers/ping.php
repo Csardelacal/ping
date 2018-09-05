@@ -49,7 +49,7 @@ class PingController extends AppController
 		
 		#If the media is a file, we will store it
 		if ($media instanceof Upload) {
-			$media = 'file:' . $media->store();
+			$media = $media->store()->uri();
 		}
 		
 		#Validation

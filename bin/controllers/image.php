@@ -29,31 +29,33 @@ class ImageController extends AppController
 		#Check if the file is locally stored
 		$info = parse_url($upload->media);
 		
-		if ($info['scheme'] !== 'file') { throw new Exception('Auction not found', 404); }
-		
-		$targetfile = realpath(pathinfo($info['path'], PATHINFO_DIRNAME)) . '/resized_' . $size . '_' . pathinfo($info['path'], PATHINFO_FILENAME) . '.png';
+		if ($info['scheme'] === 'file') { $storage = storage('app' . substr($upload->media, 4)); }
+		else                            { $storage = storage($upload->media); }
 		
 		if ($upload->deleted) {
 			$targetfile = realpath('assets/img/deleted.png');
 			$this->response->getHeaders()->status(404);
 		}
 		
-		if (!file_exists($targetfile)) {
-			$img = new Image($info['path']);
-			$img->resize($size);
-			$img->setCompression(5);
-			PNGQuant::compress($img->store($targetfile));
+		try {
+			$targetfile = storage(\spitfire\core\Environment::get('uploads.directory'))->open('resized_' . $size . '_' . $storage->basename() . '.png');
+		}
+		catch (\Exception$ex) {
+			$img = media()->load($storage);
+			$img->scale($size);
+			$targetfile = $img->store(storage(\spitfire\core\Environment::get('uploads.directory'))->make('resized_' . $size . '_' . $storage->basename() . '.png'));
+			
+			PNGQuant::compress($targetfile->getPath());
 		}
 		
 		if (ob_get_length()) {
 			die();
 		}
 		
-		header('Content-type: image/png');
-		header('Cache-Control: no-transform,public,max-age=3600');
-		header('Expires: ' . date('r', time() + 3600));
+		$this->response->getHeaders()->set('Content-type', $targetfile->mime());
+		$this->response->getHeaders()->set('Cache-Control', 'no-transform,public,max-age=3600');
+		$this->response->getHeaders()->set('Expires', date('r', time() + 3600));
 		
-		readfile($targetfile);
-		die();
+		$this->response->setBody($targetfile->read());
 	}
 }

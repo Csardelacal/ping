@@ -66,6 +66,16 @@ class PeopleController extends AppController
 		$notification->content = "Started following you";
 		$notification->type    = NotificationModel::TYPE_FOLLOW;
 		$notification->store();
+		
+		$email   = new EmailSender($this->sso);
+		
+		#Check the user's preferences and send an email
+		if ($q2->notify($notification->type, NotificationSetting::NOTIFY_EMAIL)) {
+			$email->push($notification->target->_id, $this->sso->getUser($q1->authId), $notification->content, url('user', $q1->authId)->absolute());
+		}
+		elseif ($q2->notify($notification->type, NotificationSetting::NOTIFY_DIGEST)) {
+			$email->queue($notification);
+		}
 	}
 	
 	public function unfollow($user) {
@@ -89,13 +99,10 @@ class PeopleController extends AppController
 		$exclude     = db()->table('follow')->get('follower__id', $u->id);
 		
 		$suggestions = db()->table('follow')->getAll()->where('follower', db()->table('user')->get('followers', $following));
-		$users       = db()->table('user')->get('followers', $suggestions)->where('followers', '!=', $exclude);
+		$users       = db()->table('user')->get('followers', $suggestions)->where('followers', '!=', $exclude)->where('_id', '!=', $u->id);
 		
-		$users->setResultsPerPage(10);
 		
-		$this->view->set('users', $users->fetchAll());
-		var_dump(spitfire()->getMessages());
-		die();
+		$this->view->set('users', $users->range(0, 5));
 		
 	}
 	

@@ -116,7 +116,8 @@
 								<?php if ($notification->media): ?>
 								<div class="spacer" style="height: 20px"></div>
 									<?php if ($notification->url): ?><a href="<?= $notification->url ?>" ><?php endif; ?>
-									<img src="<?= $notification->getMediaURI() ?>" style="width: 100%">
+										<?= $notification->getMediaEmbed() ?>
+									<!--<img src="<?= $notification->getMediaURI() ?>" style="width: 100%">-->
 									<?php if ($notification->url): ?></a><?php endif; ?>
 								<?php endif; ?>
 							</div>
@@ -186,8 +187,8 @@
 
 									<div class="spacer" style="height: 20px"></div>
 									
-									<a class="media" data-lysine-href="{{notificationURL}}" >
-										<img data-lysine-src="{{notificationMedia}}" style="width: 100%">
+									<a class="media" data-lysine-href="{{notificationURL}}" data-for="notificationMediaEmbed">
+										<!--<img data-lysine-src="{{notificationMedia}}" style="width: 100%">-->
 									</a>
 								</div>
 							</div>
@@ -211,7 +212,30 @@
 	</div>
 	
 	<!-- Contextual menu-->
-	<div class="span1"></div>
+	<div class="span1">
+		<div class="spacer" style="height: 70px;"></div>
+		<div style="color: #888; font-size: .8em">Users you may like to follow:</div>
+		<div class="spacer" style="height: 10px;"></div>
+		
+		<div data-lysine-view="whotofollow">
+			<div class="material unpadded user-card">
+				<a data-lysine-href="<?= url('user', '{{username}}') ?>?ref=whotofollow">
+					<div class="banner" style="height: 47px">
+						<img src="about:blank" data-lysine-src="{{banner}}" width="275" height="64">
+					</div>
+					<div class="padded" style="margin-top: -35px;">
+						<img class="avatar" data-lysine-src="{{avatar}}">
+						<div class="user-info">
+							<span class="user-name" data-for="username"></span>
+							<span class="user-bio"><span data-for="followers"></span> followers</span>
+						</div>
+					</div>
+				</a>
+			</div>
+			
+			<div class="spacer" style="height: 10px;"></div>
+		</div>
+	</div>
 </div>
 
 <script type="text/javascript" src="<?= spitfire\core\http\URL::asset('js/lysine.js') ?>"></script>
@@ -251,6 +275,7 @@
 						notificationURL    : data.payload[i].url || '#',
 						notificationContent: data.payload[i].content,
 						notificationMedia  : data.payload[i].media? data.payload[i].media : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
+						notificationMediaEmbed  : data.payload[i].media? data.payload[i].mediaEmbed : '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==">',
 						timeRelative       : data.payload[i].timeRelative,
 						replyCount         : data.payload[i].replies || 'Reply',
 						shareCount         : data.payload[i].shares  || 'Share',
@@ -310,6 +335,27 @@
 	
 	document.querySelector('#new-ping-content').addEventListener('keyup', listener, false);
 	
+}());
+
+(function () {
+	
+	var xhr = new XMLHttpRequest();
+	xhr.open('GET', '<?= url('people', 'whoToFollow')->setExtension('json') ?>');
+	
+	xhr.onreadystatechange = function () {
+		if (xhr.readyState === 4 && xhr.status === 200) {
+			var json = JSON.parse(xhr.responseText).payload;
+			
+			for (var i in json) {
+				if (!json.hasOwnProperty(i)) { continue; }
+				
+				var view = new Lysine.view('whotofollow');
+				view.setData(json[i]);
+			}
+		}
+	};
+	
+	xhr.send();
 }());
 </script>
 
