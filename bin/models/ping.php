@@ -32,13 +32,15 @@ class PingModel extends spitfire\Model
 			if (empty($this->media)) { throw new spitfire\exceptions\PrivateException(); }
 			
 			$file = storage($this->media);
-			
+			$uri  = $file instanceof \spitfire\storage\objectStorage\EmbedInterface? $file->publicURI() : $this->getMediaURI();
+
+
 			switch($file->mime()) {
 				case 'video/mp4':
 				case 'image/gif':
-					return sprintf('<video muted autoPlay loop src="%s" style="width: 100%%"></video>', $this->getMediaURI());
+					return sprintf('<video muted autoPlay loop src="%s" style="width: 100%%"></video>', $uri);
 				default:
-					return sprintf('<img src="%s"  style="width: 100%%">', $this->getMediaURI());
+					return sprintf('<img src="%s"  style="width: 100%%">', $uri);
 			}
 		} 
 		catch (Exception $ex) {
@@ -49,6 +51,26 @@ class PingModel extends spitfire\Model
 	
 	public function original() {
 		return $this->share? $this->share->original() : $this;
+	}
+	
+	public function preview($size = 700) {
+		$file = $this->getTable()->getDb()->table('media\thumb')->get('ping', $this)->where('width', $size)->first();
+		
+		if (!$file) {
+			$original = storage($this->media);
+			$target   = storage(spitfire\core\Environment::get('uploads.thumbs')?: 'app://bin/usr/thumbs/');
+			
+			$media    = media()->load($original)->scale($size)->store($target->make($size . '_' . $original->basename()));
+			
+			$file = $this->getTable()->getDb()->table('media\thumb')->newRecord();
+			$file->ping  = $this;
+			$file->width = $size;
+			$file->mime  = storage($this->media)->mime();
+			$file->file  = $media->uri();
+			$file->store();
+		}
+		
+		return $file;
 	}
 
 }

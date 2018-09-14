@@ -1,9 +1,9 @@
 
 <div class="spacer" style="height: 18px"></div>
 		
-<div class="row5">
+<div class="row l5">
 	<!--Sidebar (secondary navigation) -->
-	<div class="span1">
+	<div class="span l1">
 		<div class="material unpadded user-card">
 			<?php $user = $sso->getUser($authUser->id); ?>
 			<a href="<?= url('user', $user->getUsername()) ?>">
@@ -27,13 +27,13 @@
 	</div>
 
 	<!-- Main content-->
-	<div class="span3">
+	<div class="span l3">
 		<div class="material unpadded">
 			<form method="POST" action="<?= url('ping', 'push') ?>" enctype="multipart/form-data">
 				<div class="padded add-ping">
 					<div>
-						<div class="row1">
-							<div class="span1">
+						<div class="row l1">
+							<div class="span l1">
 								<textarea name="content" id="new-ping-content" placeholder="Message to broadcast..."></textarea>
 							</div>
 						</div>
@@ -42,8 +42,8 @@
 					<div class="spacer" style="height: 10px"></div>
 					
 					<div>
-						<div class="row2">
-							<div class="span1">
+						<div class="row l2">
+							<div class="span l1">
 								
 							</div>
 							<div class="span1" style="text-align: right">
@@ -64,11 +64,11 @@
 			<div class="padded" style="padding-top: 5px;">
 						
 				
-				<div class="row10 fluid">
-					<div class="span1 desktop-only" style="text-align: center">
+				<div class="row l10 fluid">
+					<div class="span l1 desktop-only" style="text-align: center">
 						<img src="<?= $user->getAvatar(64) ?>" style="width: 100%; border: solid 1px #777; border-radius: 3px;">
 					</div>
-					<div class="span9">
+					<div class="span l9">
 						<div class="row4">
 							<div class="span3">
 								<img class="mobile-only" src="<?= $user->getAvatar(64) ?>" style="width: 16px; border: solid 1px #777; border-radius: 3px; vertical-align: middle">
@@ -116,7 +116,7 @@
 								<?php if ($notification->media): ?>
 								<div class="spacer" style="height: 20px"></div>
 									<?php if ($notification->url): ?><a href="<?= $notification->url ?>" ><?php endif; ?>
-										<?= $notification->getMediaEmbed() ?>
+										<?= $notification->preview(700)->getMediaEmbed() ?>
 									<!--<img src="<?= $notification->getMediaURI() ?>" style="width: 100%">-->
 									<?php if ($notification->url): ?></a><?php endif; ?>
 								<?php endif; ?>

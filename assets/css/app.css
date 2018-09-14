@@ -235,19 +235,6 @@ and open the template in the editor.
     Created on : 20.04.2018, 14:51:25
     Author     : César de la Cal Bretschneider <cesar@magic3w.com>
 */
-/**
- * This function creates fractions. It takes two parameters (the current row's fragmentation
- * and the most fragmented row's) and calculates the different percentual widths.
- * 
- * For the parameters 3 and 10 it will create the following
- * - %span-fr-1-3 -> 33% width
- * - %span-fr-2-6 -> @extends %span-fr-1-3
- * - %span-fr-3-9 -> @extends %span-fr-1-3
- * - %span-fr-2-3 -> 66% width
- * - %span-fr-4-6 -> @extends %span-fr-2-3
- * - %span-fr-8-9 -> @extends %span-fr-2-3
- * [...]
- */
 .span {
   display: inline-block;
   vertical-align: top;
@@ -297,103 +284,307 @@ make them more usable.
   .span.m5:first-child {
     margin-left: 1.0416666667%; }
 
-.row.m2 > .m2, .row.m3 > .m3, .row.m4 > .m4, .row.m5 > .m5, .row.m6 > .m6, .row.m7 > .m7, .row.m8 > .m8, .row.m9 > .m9, .row.m10 > .m10, .row.m1 > .m1 {
+._fs1-s1, .row.s2 > .span.s2, .row.s3 > .span.s3, .row.s4 > .span.s4, .row.s5 > .span.s5, .row.s6 > .span.s6, .row.s7 > .span.s7, .row.s8 > .span.s8, .row.s9 > .span.s9, .row.s10 > .span.s10,
+.row.s1 > .span.s1 {
   width: 97.9166666667%; }
 
-.row.m4 > .m2, .row.m6 > .m3, .row.m8 > .m4, .row.m10 > .m5, .row.m2 > .m1 {
+._fs2-s1, .row.s4 > .span.s2, .row.s6 > .span.s3, .row.s8 > .span.s4, .row.s10 > .span.s5,
+.row.s2 > .span.s1 {
   width: 47.9166666667%; }
 
-.row.m6 > .m2, .row.m9 > .m3, .row.m3 > .m1 {
+._fs3-s1, .row.s6 > .span.s2, .row.s9 > .span.s3,
+.row.s3 > .span.s1 {
   width: 31.25%; }
 
-.row.m6 > .m4, .row.m9 > .m6, .row.m3 > .m2 {
+._fs3-s2, .row.s6 > .span.s4, .row.s9 > .span.s6,
+.row.s3 > .span.s2 {
   width: 64.5833333333%; }
 
-.row.m8 > .m2, .row.m4 > .m1 {
+._fs4-s1, .row.s8 > .span.s2,
+.row.s4 > .span.s1 {
   width: 22.9166666667%; }
 
-.row.m8 > .m6, .row.m4 > .m3 {
+._fs4-s3, .row.s8 > .span.s6,
+.row.s4 > .span.s3 {
   width: 72.9166666667%; }
 
-.row.m10 > .m2, .row.m5 > .m1 {
+._fs5-s1, .row.s10 > .span.s2,
+.row.s5 > .span.s1 {
   width: 17.9166666667%; }
 
-.row.m10 > .m4, .row.m5 > .m2 {
+._fs5-s2, .row.s10 > .span.s4,
+.row.s5 > .span.s2 {
   width: 37.9166666667%; }
 
-.row.m10 > .m6, .row.m5 > .m3 {
+._fs5-s3, .row.s10 > .span.s6,
+.row.s5 > .span.s3 {
   width: 57.9166666667%; }
 
-.row.m10 > .m8, .row.m5 > .m4 {
+._fs5-s4, .row.s10 > .span.s8,
+.row.s5 > .span.s4 {
   width: 77.9166666667%; }
 
-.row.m6 > .m1 {
+._fs6-s1,
+.row.s6 > .span.s1 {
   width: 14.5833333333%; }
 
-.row.m6 > .m5 {
+._fs6-s5,
+.row.s6 > .span.s5 {
   width: 81.25%; }
 
-.row.m7 > .m1 {
+._fs7-s1,
+.row.s7 > .span.s1 {
   width: 12.2023809524%; }
 
-.row.m7 > .m2 {
+._fs7-s2,
+.row.s7 > .span.s2 {
   width: 26.4880952381%; }
 
-.row.m7 > .m3 {
+._fs7-s3,
+.row.s7 > .span.s3 {
   width: 40.7738095238%; }
 
-.row.m7 > .m4 {
+._fs7-s4,
+.row.s7 > .span.s4 {
   width: 55.0595238095%; }
 
-.row.m7 > .m5 {
+._fs7-s5,
+.row.s7 > .span.s5 {
   width: 69.3452380952%; }
 
-.row.m7 > .m6 {
+._fs7-s6,
+.row.s7 > .span.s6 {
   width: 83.630952381%; }
 
-.row.m8 > .m1 {
+._fs8-s1,
+.row.s8 > .span.s1 {
   width: 10.4166666667%; }
 
-.row.m8 > .m3 {
+._fs8-s3,
+.row.s8 > .span.s3 {
   width: 35.4166666667%; }
 
-.row.m8 > .m5 {
+._fs8-s5,
+.row.s8 > .span.s5 {
   width: 60.4166666667%; }
 
-.row.m8 > .m7 {
+._fs8-s7,
+.row.s8 > .span.s7 {
   width: 85.4166666667%; }
 
-.row.m9 > .m1 {
+._fs9-s1,
+.row.s9 > .span.s1 {
   width: 9.0277777778%; }
 
-.row.m9 > .m2 {
+._fs9-s2,
+.row.s9 > .span.s2 {
   width: 20.1388888889%; }
 
-.row.m9 > .m4 {
+._fs9-s4,
+.row.s9 > .span.s4 {
   width: 42.3611111111%; }
 
-.row.m9 > .m5 {
+._fs9-s5,
+.row.s9 > .span.s5 {
   width: 53.4722222222%; }
 
-.row.m9 > .m7 {
+._fs9-s7,
+.row.s9 > .span.s7 {
   width: 75.6944444444%; }
 
-.row.m9 > .m8 {
+._fs9-s8,
+.row.s9 > .span.s8 {
   width: 86.8055555556%; }
 
-.row.m10 > .m1 {
+._fs10-s1,
+.row.s10 > .span.s1 {
   width: 7.9166666667%; }
 
-.row.m10 > .m3 {
+._fs10-s3,
+.row.s10 > .span.s3 {
   width: 27.9166666667%; }
 
-.row.m10 > .m7 {
+._fs10-s7,
+.row.s10 > .span.s7 {
   width: 67.9166666667%; }
 
-.row.m10 > .m9 {
+._fs10-s9,
+.row.s10 > .span.s9 {
   width: 87.9166666667%; }
 
+@media all and (max-width: 960px) and (min-width: 480px) {
+  .desktop-only {
+    display: none !important; }
+
+  .mobile-only {
+    display: none; }
+
+  .not-tablet {
+    display: none; }
+
+  /*
+  This are the functions (mixins) used to generate the basic scaffolding for our
+  website. Due to the inverted functionality of the grid we rewrote big parts to 
+  make them more usable.
+  */
+  /*!
+      Created on : Oct 26, 2013, 7:18:16 PM
+      Author     : cesar
+  */
+  .span.m1,
+  .span.m2,
+  .span.m3,
+  .span.m4,
+  .span.m5,
+  .span.m6,
+  .span.m7 {
+    margin-left: 1.0416666667%; }
+    .span.m1:first-child,
+    .span.m2:first-child,
+    .span.m3:first-child,
+    .span.m4:first-child,
+    .span.m5:first-child,
+    .span.m6:first-child,
+    .span.m7:first-child {
+      margin-left: 1.0416666667%; }
+
+  ._fm1-m1, .row.m2 > .span.m2, .row.m3 > .span.m3, .row.m4 > .span.m4, .row.m5 > .span.m5, .row.m6 > .span.m6, .row.m7 > .span.m7, .row.m8 > .span.m8, .row.m9 > .span.m9, .row.m10 > .span.m10,
+  .row.m1 > .span.m1 {
+    width: 97.9166666667%; }
+
+  ._fm2-m1, .row.m4 > .span.m2, .row.m6 > .span.m3, .row.m8 > .span.m4, .row.m10 > .span.m5,
+  .row.m2 > .span.m1 {
+    width: 47.9166666667%; }
+
+  ._fm3-m1, .row.m6 > .span.m2, .row.m9 > .span.m3,
+  .row.m3 > .span.m1 {
+    width: 31.25%; }
+
+  ._fm3-m2, .row.m6 > .span.m4, .row.m9 > .span.m6,
+  .row.m3 > .span.m2 {
+    width: 64.5833333333%; }
+
+  ._fm4-m1, .row.m8 > .span.m2,
+  .row.m4 > .span.m1 {
+    width: 22.9166666667%; }
+
+  ._fm4-m3, .row.m8 > .span.m6,
+  .row.m4 > .span.m3 {
+    width: 72.9166666667%; }
+
+  ._fm5-m1, .row.m10 > .span.m2,
+  .row.m5 > .span.m1 {
+    width: 17.9166666667%; }
+
+  ._fm5-m2, .row.m10 > .span.m4,
+  .row.m5 > .span.m2 {
+    width: 37.9166666667%; }
+
+  ._fm5-m3, .row.m10 > .span.m6,
+  .row.m5 > .span.m3 {
+    width: 57.9166666667%; }
+
+  ._fm5-m4, .row.m10 > .span.m8,
+  .row.m5 > .span.m4 {
+    width: 77.9166666667%; }
+
+  ._fm6-m1,
+  .row.m6 > .span.m1 {
+    width: 14.5833333333%; }
+
+  ._fm6-m5,
+  .row.m6 > .span.m5 {
+    width: 81.25%; }
+
+  ._fm7-m1,
+  .row.m7 > .span.m1 {
+    width: 12.2023809524%; }
+
+  ._fm7-m2,
+  .row.m7 > .span.m2 {
+    width: 26.4880952381%; }
+
+  ._fm7-m3,
+  .row.m7 > .span.m3 {
+    width: 40.7738095238%; }
+
+  ._fm7-m4,
+  .row.m7 > .span.m4 {
+    width: 55.0595238095%; }
+
+  ._fm7-m5,
+  .row.m7 > .span.m5 {
+    width: 69.3452380952%; }
+
+  ._fm7-m6,
+  .row.m7 > .span.m6 {
+    width: 83.630952381%; }
+
+  ._fm8-m1,
+  .row.m8 > .span.m1 {
+    width: 10.4166666667%; }
+
+  ._fm8-m3,
+  .row.m8 > .span.m3 {
+    width: 35.4166666667%; }
+
+  ._fm8-m5,
+  .row.m8 > .span.m5 {
+    width: 60.4166666667%; }
+
+  ._fm8-m7,
+  .row.m8 > .span.m7 {
+    width: 85.4166666667%; }
+
+  ._fm9-m1,
+  .row.m9 > .span.m1 {
+    width: 9.0277777778%; }
+
+  ._fm9-m2,
+  .row.m9 > .span.m2 {
+    width: 20.1388888889%; }
+
+  ._fm9-m4,
+  .row.m9 > .span.m4 {
+    width: 42.3611111111%; }
+
+  ._fm9-m5,
+  .row.m9 > .span.m5 {
+    width: 53.4722222222%; }
+
+  ._fm9-m7,
+  .row.m9 > .span.m7 {
+    width: 75.6944444444%; }
+
+  ._fm9-m8,
+  .row.m9 > .span.m8 {
+    width: 86.8055555556%; }
+
+  ._fm10-m1,
+  .row.m10 > .span.m1 {
+    width: 7.9166666667%; }
+
+  ._fm10-m3,
+  .row.m10 > .span.m3 {
+    width: 27.9166666667%; }
+
+  ._fm10-m7,
+  .row.m10 > .span.m7 {
+    width: 67.9166666667%; }
+
+  ._fm10-m9,
+  .row.m10 > .span.m9 {
+    width: 87.9166666667%; } }
 @media all and (min-width: 960px) {
+  .mobile-only {
+    display: none; }
+
+  .tablet-only {
+    display: none; }
+
+  .not-desktop {
+    display: none; }
+
   /*
   This are the functions (mixins) used to generate the basic scaffolding for our
   website. Due to the inverted functionality of the grid we rewrote big parts to 
@@ -412,101 +603,142 @@ make them more usable.
     .span:first-child {
       margin-left: 1.0416666667%; }
 
-  .row.d2 > .d2, .row.d3 > .d3, .row.d4 > .d4, .row.d5 > .d5, .row.d6 > .d6, .row.d7 > .d7, .row.d8 > .d8, .row.d9 > .d9, .row.d10 > .d10, .row.d1 > .d1 {
+  ._fl1-l1, .row.l2 > .span.l2, .row.l3 > .span.l3, .row.l4 > .span.l4, .row.l5 > .span.l5, .row.l6 > .span.l6, .row.l7 > .span.l7, .row.l8 > .span.l8, .row.l9 > .span.l9, .row.l10 > .span.l10,
+  .row.l1 > .span.l1 {
     width: 97.9166666667%; }
 
-  .row.d4 > .d2, .row.d6 > .d3, .row.d8 > .d4, .row.d10 > .d5, .row.d2 > .d1 {
+  ._fl2-l1, .row.l4 > .span.l2, .row.l6 > .span.l3, .row.l8 > .span.l4, .row.l10 > .span.l5,
+  .row.l2 > .span.l1 {
     width: 47.9166666667%; }
 
-  .row.d6 > .d2, .row.d9 > .d3, .row.d3 > .d1 {
+  ._fl3-l1, .row.l6 > .span.l2, .row.l9 > .span.l3,
+  .row.l3 > .span.l1 {
     width: 31.25%; }
 
-  .row.d6 > .d4, .row.d9 > .d6, .row.d3 > .d2 {
+  ._fl3-l2, .row.l6 > .span.l4, .row.l9 > .span.l6,
+  .row.l3 > .span.l2 {
     width: 64.5833333333%; }
 
-  .row.d8 > .d2, .row.d4 > .d1 {
+  ._fl4-l1, .row.l8 > .span.l2,
+  .row.l4 > .span.l1 {
     width: 22.9166666667%; }
 
-  .row.d8 > .d6, .row.d4 > .d3 {
+  ._fl4-l3, .row.l8 > .span.l6,
+  .row.l4 > .span.l3 {
     width: 72.9166666667%; }
 
-  .row.d10 > .d2, .row.d5 > .d1 {
+  ._fl5-l1, .row.l10 > .span.l2,
+  .row.l5 > .span.l1 {
     width: 17.9166666667%; }
 
-  .row.d10 > .d4, .row.d5 > .d2 {
+  ._fl5-l2, .row.l10 > .span.l4,
+  .row.l5 > .span.l2 {
     width: 37.9166666667%; }
 
-  .row.d10 > .d6, .row.d5 > .d3 {
+  ._fl5-l3, .row.l10 > .span.l6,
+  .row.l5 > .span.l3 {
     width: 57.9166666667%; }
 
-  .row.d10 > .d8, .row.d5 > .d4 {
+  ._fl5-l4, .row.l10 > .span.l8,
+  .row.l5 > .span.l4 {
     width: 77.9166666667%; }
 
-  .row.d6 > .d1 {
+  ._fl6-l1,
+  .row.l6 > .span.l1 {
     width: 14.5833333333%; }
 
-  .row.d6 > .d5 {
+  ._fl6-l5,
+  .row.l6 > .span.l5 {
     width: 81.25%; }
 
-  .row.d7 > .d1 {
+  ._fl7-l1,
+  .row.l7 > .span.l1 {
     width: 12.2023809524%; }
 
-  .row.d7 > .d2 {
+  ._fl7-l2,
+  .row.l7 > .span.l2 {
     width: 26.4880952381%; }
 
-  .row.d7 > .d3 {
+  ._fl7-l3,
+  .row.l7 > .span.l3 {
     width: 40.7738095238%; }
 
-  .row.d7 > .d4 {
+  ._fl7-l4,
+  .row.l7 > .span.l4 {
     width: 55.0595238095%; }
 
-  .row.d7 > .d5 {
+  ._fl7-l5,
+  .row.l7 > .span.l5 {
     width: 69.3452380952%; }
 
-  .row.d7 > .d6 {
+  ._fl7-l6,
+  .row.l7 > .span.l6 {
     width: 83.630952381%; }
 
-  .row.d8 > .d1 {
+  ._fl8-l1,
+  .row.l8 > .span.l1 {
     width: 10.4166666667%; }
 
-  .row.d8 > .d3 {
+  ._fl8-l3,
+  .row.l8 > .span.l3 {
     width: 35.4166666667%; }
 
-  .row.d8 > .d5 {
+  ._fl8-l5,
+  .row.l8 > .span.l5 {
     width: 60.4166666667%; }
 
-  .row.d8 > .d7 {
+  ._fl8-l7,
+  .row.l8 > .span.l7 {
     width: 85.4166666667%; }
 
-  .row.d9 > .d1 {
+  ._fl9-l1,
+  .row.l9 > .span.l1 {
     width: 9.0277777778%; }
 
-  .row.d9 > .d2 {
+  ._fl9-l2,
+  .row.l9 > .span.l2 {
     width: 20.1388888889%; }
 
-  .row.d9 > .d4 {
+  ._fl9-l4,
+  .row.l9 > .span.l4 {
     width: 42.3611111111%; }
 
-  .row.d9 > .d5 {
+  ._fl9-l5,
+  .row.l9 > .span.l5 {
     width: 53.4722222222%; }
 
-  .row.d9 > .d7 {
+  ._fl9-l7,
+  .row.l9 > .span.l7 {
     width: 75.6944444444%; }
 
-  .row.d9 > .d8 {
+  ._fl9-l8,
+  .row.l9 > .span.l8 {
     width: 86.8055555556%; }
 
-  .row.d10 > .d1 {
+  ._fl10-l1,
+  .row.l10 > .span.l1 {
     width: 7.9166666667%; }
 
-  .row.d10 > .d3 {
+  ._fl10-l3,
+  .row.l10 > .span.l3 {
     width: 27.9166666667%; }
 
-  .row.d10 > .d7 {
+  ._fl10-l7,
+  .row.l10 > .span.l7 {
     width: 67.9166666667%; }
 
-  .row.d10 > .d9 {
+  ._fl10-l9,
+  .row.l10 > .span.l9 {
     width: 87.9166666667%; } }
+@media all and (max-width: 480px) {
+  .desktop-only {
+    display: none !important; }
+
+  .tablet-only {
+    display: none; }
+
+  .not-mobile {
+    display: none; } }
 /*
 To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates

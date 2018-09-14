@@ -159,7 +159,7 @@ class PingController extends AppController
 				$n->url     = strval(url('ping', 'detail', $notification->_id)->absolute());
 				$n->store();
 			}
-		}
+		}die();
 		
 	}
 	
