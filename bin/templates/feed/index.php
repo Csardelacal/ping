@@ -32,8 +32,11 @@
 			<form method="POST" action="<?= url('ping', 'push') ?>" enctype="multipart/form-data">
 				<div class="padded add-ping">
 					<div>
-						<div class="row l1">
-							<div class="span l1">
+						<div class="row l10">
+							<div class="span l1 desktop-only" style="text-align: center">
+								<img src="<?= $sso->getUser($authUser->id)->getAvatar(64) ?>" style="width: 100%; border: solid 1px #777; border-radius: 3px;">
+							</div>
+							<div class="span l9">
 								<textarea name="content" id="new-ping-content" placeholder="Message to broadcast..."></textarea>
 							</div>
 						</div>
@@ -42,17 +45,42 @@
 					<div class="spacer" style="height: 10px"></div>
 					
 					<div>
-						<div class="row l2">
-							<div class="span l1">
-								
-							</div>
-							<div class="span1" style="text-align: right">
-								<span id="new-ping-character-count">250</span>
-								<input type="file" name="media" id="ping_media" accept="image/*" style="display: none" onchange="document.getElementById('ping_media_selector').style.opacity = '1'">
-								<img src="<?= spitfire\core\http\URL::asset('img/camera.png') ?>" id="ping_media_selector" onclick="document.getElementById('ping_media').click()" style="vertical-align: middle; height: 24px; opacity: .3; margin: 0 5px;">
-								<input type="submit" value="Ping!">
+						<div class="row l10">
+							<div class="span l1"></div>
+							<div class="span l9">
+								<div class="row l5 m4 s4 fluid">
+									<div class="span l1 m1 s1" data-lysine-view="file-upload-preview" >
+										<div style="line-height: 100px; text-align: center; overflow: hidden; border-radius: 8px; height: 100px">
+											<img data-lysine-src="{{source}}" style="vertical-align: middle; " onload="if (this.width > this.height) {
+													this.style.width  = 100 * (this.width / this.height) + 'px';
+													this.style.height = 100 + 'px';
+												}
+												else {
+													this.style.height = 100 * (this.height / this.width) + 'px';
+													this.style.width  = 100 + 'px';
+												}">
+										</div>
+										<input type="hidden" name="media[]" value="" data-for="id">
+									</div>
+								</div>
 							</div>
 						</div>
+					</div>
+					
+					<div>
+						<div class="row l10"><!--
+							--><div class="span l1">
+								<!--Just a spacer-->
+							</div><!--
+							--><div class="span l4">
+								<input type="file" name="media" id="ping_media" accept="image/*" style="display: none" onchange="document.getElementById('ping_media_selector').style.opacity = '1'">
+								<img src="<?= spitfire\core\http\URL::asset('img/camera.png') ?>" id="ping_media_selector" onclick="document.getElementById('ping_media').click()" style="vertical-align: middle; height: 24px; opacity: .3; margin: 0 5px;">
+							</div><!--
+							--><div class="span l5" style="text-align: right">
+								<span id="new-ping-character-count">250</span>
+								<input type="submit" value="Ping!">
+							</div><!--
+						--></div>
 					</div>
 				</div>
 			</form>
@@ -69,15 +97,15 @@
 						<img src="<?= $user->getAvatar(64) ?>" style="width: 100%; border: solid 1px #777; border-radius: 3px;">
 					</div>
 					<div class="span l9">
-						<div class="row4">
-							<div class="span3">
+						<div class="row l4">
+							<div class="span l3">
 								<img class="mobile-only" src="<?= $user->getAvatar(64) ?>" style="width: 16px; border: solid 1px #777; border-radius: 3px; vertical-align: middle">
 								<a href="<?= url('user', $user->getUsername()) ?>" style="color: #000; font-weight: bold; font-size: .8em;"><?= $user->getUsername() ?></a>
 								<?php if ($notification->share): ?>
 								<a href="<?= url('ping', 'detail', $notification->share->_id) ?>" style="font-size: .8em; color: #777;"> from <?= $sso->getUser($notification->share->src->_id)->getUsername() ?></a>
 								<?php endif; ?>
 							</div>
-							<div class="span1 desktop-only" style="text-align: right; font-size: .8em; color: #777;">
+							<div class="span l1 desktop-only" style="text-align: right; font-size: .8em; color: #777;">
 								<?= Time::relative($notification->created) ?>
 							</div>
 						</div>
@@ -105,8 +133,8 @@
 						<div class="spacer" style="height: 10px"></div>
 						<?php endif; ?>
 						
-						<div class="row1 fluid" style="margin-top: 5px">
-							<div class="span1">
+						<div class="row l1 fluid" style="margin-top: 5px">
+							<div class="span l1">
 								<p style="margin: 0;">
 									<?php if ($notification->url && !$notification->media): ?><a href="<?= $notification->url ?>" style="color: #000;"><?php endif; ?>
 									<?= Mention::idToMentions($notification->content) ?>
@@ -125,8 +153,8 @@
 						
 						<div class="spacer" style="height: 20px;"></div>
 					
-						<div class="row1 fluid">
-							<div class="span1" style="text-align: right">
+						<div class="row l1 fluid">
+							<div class="span l1" style="text-align: right">
 								<a href="<?= url('ping', 'detail', $notification->_id) ?>#replies" class="reply-link"><?= $notification->replies->getQuery()->count()? : 'Reply' ?></a>
 								<a href="<?= url('ping', 'share', $notification->_id); ?>" class="share-link"><?= $notification->original()->shared->getQuery()->count()? : 'Share' ?></a>
 							</div>
@@ -239,6 +267,7 @@
 </div>
 
 <script type="text/javascript" src="<?= spitfire\core\http\URL::asset('js/lysine.js') ?>"></script>
+<script type="text/javascript" src="<?= spitfire\core\http\URL::asset('js/queue.js') ?>"></script>
 
 <script type="text/javascript">
 (function() {
@@ -330,10 +359,21 @@
 	 * the user to type in
 	 */
 	var listener = function() {
-		document.querySelector('#new-ping-character-count').innerHTML = 250 - this.value.length;
+		
+		var self = this;
+		
+		setTimeout(function() { 
+			var height = self.scrollHeight;
+			var length = self.value.length;
+			
+		  self.style.height = height + 'px';
+			document.querySelector('#new-ping-character-count').innerHTML = 250 - length;
+		}, 1);
+		
 	};
 	
-	document.querySelector('#new-ping-content').addEventListener('keyup', listener, false);
+	document.querySelector('#new-ping-content').addEventListener('keypress', listener, false);
+	document.querySelector('.add-ping').addEventListener('click', function() { document.querySelector('#new-ping-content').focus(); }, false);
 	
 }());
 
@@ -357,5 +397,82 @@
 	
 	xhr.send();
 }());
+</script>
+
+<script type="text/javascript">
+	(function() {
+		var input = document.getElementById('ping_media');
+		var ui    = document.getElementById('ping_media_selector');
+		var queue = new Queue();
+		
+		ui.addEventListener('click', function () {
+			input.click();
+		});
+		
+		input.addEventListener('change', function (e) {
+			var files = e.target.nodeName.toLowerCase() === 'input'? e.target.files : null;
+
+			for (var i = 0; i < files.length; i++) {
+				var job = queue.job();
+
+				if (files[i].size > 5 * 1024 * 1024) {
+					//Needs a better error
+					alert('Files must be smaller than 5MB');
+					job.complete();
+					continue;
+				}
+
+				var reader = new FileReader();
+
+				reader.onload = function (e) {
+					
+					var v = new Lysine.view('file-upload-preview');
+					v.setData({
+						source: e.target.result,
+						id: null
+					});
+					
+				};
+
+				reader.readAsDataURL(files[i]);
+
+				var upload = new XMLHttpRequest();
+				upload.onreadystatechange = function(job, img) { return function () {
+					if (this.readyState === 4){
+						const status = this.status;
+						if (status === 200) {
+							var json  = JSON.parse(this.responseText);
+							var input = ctx.html.appendChild(document.createElement('input'));
+							input.type  = 'hidden';
+							input.name  = ctx.name + '[]';
+							input.value = json.file.id + ':' + json.file.sec;
+							img.style.opacity = '1';
+
+							job.complete();
+						}
+						else {
+							img.style.borderColor = 'red';
+							img.style.backgroundColor = 'rgba(255,0,0,.1)';
+							img.title = (function(html){
+								try {
+									let div = document.createElement('div');
+									div.innerHTML = html;
+									return div.querySelector('.errormsg .wrapper p').innerHTML
+								}
+								catch(e){ return `Image upload failed (HTTP ${status})` }
+							})(this.responseText);
+						}
+					}
+				}; }(job, img);
+
+				var fd = new FormData();
+				fd.append('upload', files[i]);
+
+				upload.open('POST', '<?= url('media', 'upload')->setExtension('json') ?>');
+				//upload.send(fd);
+
+			}
+		});
+	}());
 </script>
 

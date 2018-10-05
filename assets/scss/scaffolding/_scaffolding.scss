@@ -30,19 +30,13 @@ $max_column_count: 10;
 }
 
 div.row {
-	display: block;
+	display: flex;
+	flex-wrap: wrap;
 	margin: 0 auto;
 	width: 100%;
 	
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
-	
-	&:after {
-		content:    "";
-		clear:    both;
-		display: table;
-		width:    100%;
-	}
 	
 	&.fluid {
 		width: 100%;

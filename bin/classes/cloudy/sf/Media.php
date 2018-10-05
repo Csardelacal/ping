@@ -47,6 +47,11 @@ class Media implements EmbedInterface
 
 	public function read(): string {
 		$servers = $this->media->getServers();
+		
+		if (!count($servers)) {
+			throw new \spitfire\exceptions\PrivateException('No servers for ' . $this->media->getName());
+		}
+		
 		$server  = $servers[rand(0, count($servers) - 1)]->getEndpoint();
 		$links   = $this->media->getLinks();
 		
@@ -80,6 +85,10 @@ class Media implements EmbedInterface
 	public function publicURI() {
 		$servers = $this->media->getServers();
 		$links   = $this->media->getLinks();
+		
+		if (!count($servers)) {
+			throw new \spitfire\exceptions\PrivateException('No servers for ' . $this->media->getName());
+		}
 		
 		return $servers[rand(0, count($servers) - 1)]->getEndpoint() . '/file/retrieve/link/' . reset($links);
 	}

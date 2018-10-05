@@ -2,7 +2,6 @@
 
 use spitfire\exceptions\PublicException;
 use spitfire\io\Upload;
-use spitfire\validation\rules\PositiveNumberValidationRule;
 use settings\NotificationModel as NotificationSetting;
 
 class PingController extends AppController
@@ -14,7 +13,12 @@ class PingController extends AppController
 	
 	/**
 	 * 
-	 * @todo This should allow for multiple targets to be defined at once.
+	 * @validate >> POST#src (positive number)
+	 * @validate >> POST#target (positive number)
+	 * @validate >> POST#msg (required string length[0, 250])
+	 * @validate >> POST#url (string url)
+	 * @validate >> POST#irt (positive number)
+	 * 
 	 * @request-method POST
 	 */
 	public function push() {
@@ -23,143 +27,105 @@ class PingController extends AppController
 		$appId  = isset($_GET['appId']) ? $_GET['appId']  : null;
 		$appSec = isset($_GET['appSec'])? $_GET['appSec'] : null;
 		
-		#Validate the app
-		if (isset($_GET['signature'])) {
-			if($this->user || !$this->sso->authApp($_GET['signature'])->isAuthenticated()) {
-				throw new PublicException('Not authenticated', 403);
-			}
+		if ($this->user) {
+			$srcid = $this->user->id;
 		}
+		#Validate the app
+		elseif (isset($_GET['signature']) && $this->sso->authApp($_GET['signature'])->isAuthenticated()) {
+			$srcid = $_POST['src']?? null;
+		}
+		/**
+		 * This block refers to the old mechanism of authenticating apps against
+		 * PHPAS. It would require the app to send both the secret and the id to 
+		 * identify itself.
+		 * 
+		 * @deprecated since version 20181003
+		 */
 		elseif(isset($_GET['appId'])) {
+			trigger_error('Authenticating apps with plaintext secrets is deprecated. Offending app is ' . $_GET['appId'], E_USER_DEPRECATED);
 			$authUtil = new AuthUtil($this->sso);
 			$authUtil->checkAppCredentials($appId, $appSec);
 		}
-		elseif(!$this->user) {
-			throw new PublicException('Login required', 403);
+		else {
+			throw new PublicException('Authentication required', 403);
 		}
 		
 		
 		#Read POST data
-		$srcid    = isset($this->user)? $this->user->id : _def($_POST['src'], null);
-		$tgtid    = (array)_def($_POST['target'], null);
-		$content  = str_replace("\r", '',_def($_POST['content'], null));
-		$url      = _def($_POST['url'], null);
-		$media    = _def($_POST['media'], null);
-		$irt      = _def($_POST['irt'], null);
-		$explicit = !!_def($_POST['explicit'], false);
+		$tgtid    = $_POST['target']?? null;
+		$content  = str_replace("\r", '', $_POST['content']);
+		$url      = $_POST['url']?? null;
+		$media    = $_POST['media']?? null;
+		$irt      = $_POST['irt']?? null;
+		$explicit = !!($_POST['explicit']?? false);
 		
 		#If the media is a file, we will store it
+		/**
+		 * @todo This method should be deprecated in favor of batch processing the
+		 * files
+		 */
 		if ($media instanceof Upload) {
 			$media = $media->store()->uri();
 		}
 		
-		#Validation
-		$v = Array();
-		$v['msg']   = validate($content)->minLength(1, 'Content cannot be empty')->maxLength(250, 'Ping is too long');
-		$v['url']   = $url   === null? null : validate($url)->asURL('URL needs to be a URL');
-		$v['media'] = $media === null? null : validate($media)->asURL('Media needs to be a file or URL');
-		$v['irt']   = $irt   === null? null : validate($irt)->addRule(new PositiveNumberValidationRule('IRT id is invalid'))->addRule(new ClosureValidationRule(function ($e) { return db()->table('ping')->get('_id', $e)->fetch()? false : 'Invalid ping ID'; }));
-		validate($v['msg'], $v['url'], $v['media'], $v['irt']);
-		
 		#There needs to be a src user. That means that somebody is originating the
 		#notification. There has to be one, and no more than one.
-		$src = db()->table('user')->get('authId', $srcid)->fetch()? : UserModel::makeFromSSO($this->sso->getUser($srcid));
+		$src = db()->table('user')->get('authId', $srcid)->first()? : UserModel::makeFromSSO($this->sso->getUser($srcid));
 		
-		$targets = array_filter(array_map(function ($tgtid) use ($srcid) {
-			
-			#If sourceID and target are identical, we skip the sending of the notification
-			#This requires the application to check whether the user is visiting his own profile
-			if ($srcid == $tgtid) { return null; }
-			
-			#If there is no user specified we do skip them
-			try { return db()->table('user')->get('authId', $tgtid)->fetch()? : UserModel::makeFromSSO($this->sso->getUser($tgtid)); } 
-			catch (Exception$e) { return $tgtid; }
-			
-		}, $tgtid));
-		
+		#If a source is sent
+		$target = $tgtid === null? null : (db()->table('user')->get('authId', $tgtid)->fetch()? : UserModel::makeFromSSO($this->sso->getUser($tgtid)));
 		
 		#Prepare an email sender to push emails to whoever needs them
 		$email   = new EmailSender($this->sso);
 		
 		#It could happen that the target is established as an email and therefore
 		#receives notifications directly as emails
-		foreach ($targets as $target) {
-			if ($target instanceof UserModel) {
-				
-				#Make it a record
-				$notification = db()->table('ping')->newRecord();
-				$notification->src = $src;
-				$notification->target = $target;
-				$notification->content = Mention::mentionsToId($content);
-				$notification->url     = $url;
-				$notification->media   = $media;
-				$notification->explicit= $explicit;
-				$notification->irt     = $irt? db()->table('ping')->get('_id', $irt)->fetch() : null;
-				$notification->store();
+		if (!($target instanceof UserModel || $target === null)) {
+			throw new PublicException('Invalid target', 400);
+		}
 
-				#Check the user's preferences and send an email
-				$email->push($_POST['target'], $this->sso->getUser($src->authId), $content, $url, null);
-				
-				if ($irt) {
-					$tgt = db()->table('ping')->get('_id', $irt)->fetch()->src;
-					$n = db()->table('notification')->newRecord();
-					$n->src     = $src;
-					$n->target  = $tgt;
-					$n->content = 'Replied to your ping';
-					$n->type    = NotificationModel::TYPE_COMMENT;
-					$n->url     = strval(url('ping', 'detail', $notification->_id)->absolute());
-					$n->store();
-				}
+		#Make it a record
+		$notification = db()->table('ping')->newRecord();
+		$notification->src = $src;
+		$notification->target = $target;
+		$notification->content = Mention::mentionsToId($content);
+		$notification->url     = $url;
+		$notification->media   = $media;
+		$notification->explicit= $explicit;
+		$notification->irt     = $irt? db()->table('ping')->get('_id', $irt)->first(true) : null;
+		$notification->store();
+
+		#Check the user's preferences and send an email
+		$email->push($_POST['target'], $this->sso->getUser($src->authId), $content, $url, null);
+
+		if ($irt) {
+			$tgt = db()->table('ping')->get('_id', $irt)->fetch()->src;
+			$n = db()->table('notification')->newRecord();
+			$n->src     = $src;
+			$n->target  = $tgt;
+			$n->content = 'Replied to your ping';
+			$n->type    = NotificationModel::TYPE_COMMENT;
+			$n->url     = strval(url('ping', 'detail', $notification->_id)->absolute());
+			$n->store();
+		}
+
+		$mentioned = Mention::getMentionedUsers($notification->content);
+		foreach ($mentioned as $u) {
+			$n = db()->table('notification')->newRecord();
+			$n->src     = $src;
+			$n->target  = $u;
+			$n->content = 'Mentioned you';
+			$n->type    = NotificationModel::TYPE_MENTION;
+			$n->store();
+
+			#Check the user's preferences and send an email
+			if ($u->notify($n->type, NotificationSetting::NOTIFY_EMAIL)) {
+				$email->push($n->target->_id, $this->sso->getUser($src->authId), 'Mentioned you', null);
 			}
-			# Notify the user via mail.
-			elseif (filter_var($_POST['target'], FILTER_VALIDATE_EMAIL)) {
-				$email->push($_POST['target'], $this->sso->getUser($src->authId), $content, $url, $media);
+			elseif ($u->notify($n->type, NotificationSetting::NOTIFY_DIGEST)) {
+				$email->queue($n);
 			}
 		}
-		
-		#This happens if the user defined no targets (this would imply that the ping 
-		#they sent out was public.
-		if (empty($tgtid))  {
-			#Make it a record
-			$notification = db()->table('ping')->newRecord();
-			$notification->src = $src;
-			$notification->target = null;
-			$notification->content = Mention::mentionsToId($content);
-			$notification->url     = $url;
-			$notification->media   = $media;
-			$notification->explicit= $explicit;
-			$notification->irt     = $irt? db()->table('ping')->get('_id', $irt)->fetch() : null;
-			$notification->store();
-			
-			$mentioned = Mention::getMentionedUsers($notification->content);
-			foreach ($mentioned as $u) {
-				$n = db()->table('notification')->newRecord();
-				$n->src     = $src;
-				$n->target  = $u;
-				$n->content = 'Mentioned you';
-				$n->type    = NotificationModel::TYPE_MENTION;
-				$n->store();
-				
-				#Check the user's preferences and send an email
-				if ($u->notify($n->type, NotificationSetting::NOTIFY_EMAIL)) {
-					$email->push($n->target->_id, $this->sso->getUser($src->authId), 'Mentioned you', null);
-				}
-				elseif ($u->notify($n->type, NotificationSetting::NOTIFY_DIGEST)) {
-					$email->queue($n);
-				}
-			}
-			
-			
-			if ($irt) {
-				$tgt = db()->table('ping')->get('_id', $irt)->fetch()->src;
-				$n = db()->table('notification')->newRecord();
-				$n->src     = $src;
-				$n->target  = $tgt;
-				$n->content = 'Replied to your ping';
-				$n->type    = NotificationModel::TYPE_COMMENT;
-				$n->url     = strval(url('ping', 'detail', $notification->_id)->absolute());
-				$n->store();
-			}
-		}die();
 		
 	}
 	

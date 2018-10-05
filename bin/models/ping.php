@@ -8,7 +8,7 @@ class PingModel extends spitfire\Model
 		$schema->target  = new Reference('user'); # If a notification is not a broadcast
 		$schema->content = new StringField(300);  # A ping can contain up to 255 characters - but user id's get expanded
 		$schema->url     = new StringField(255);  # Source URL for the notification
-		$schema->media   = new StringField(255);  # URL with the content. Media should be cached
+		$schema->media   = new StringField(255);  # URL with the content. Media should be cached. @deprecated
 		$schema->explicit= new BooleanField();    # Indicates whether the user should have to opt in to see the content
 		$schema->deleted = new IntegerField(true);# Null if it was not deleted, timestamp of deletion
 		$schema->created = new IntegerField(true);
@@ -54,19 +54,26 @@ class PingModel extends spitfire\Model
 	}
 	
 	public function preview($size = 700) {
+		if (!$this->media) {
+			return null;
+		}
+		
 		$file = $this->getTable()->getDb()->table('media\thumb')->get('ping', $this)->where('width', $size)->first();
 		
 		if (!$file) {
 			$original = storage($this->media);
 			$target   = storage(spitfire\core\Environment::get('uploads.thumbs')?: 'app://bin/usr/thumbs/');
 			
-			$media    = media()->load($original)->scale($size)->store($target->make($size . '_' . $original->basename()));
+			$media    = media()->load($original)->scale($size);
+			$poster   = $media->poster();
+			$stored   = $media->store($target->make($size . '_' . $original->basename()));
 			
 			$file = $this->getTable()->getDb()->table('media\thumb')->newRecord();
 			$file->ping  = $this;
 			$file->width = $size;
 			$file->mime  = storage($this->media)->mime();
-			$file->file  = $media->uri();
+			$file->file  = $stored->uri();
+			$file->poster = $media !== $poster? $poster->store($target->make($size . '_p_' . $original->basename()))->uri() : null;
 			$file->store();
 		}
 		

@@ -211,6 +211,16 @@ a {
   .share-link:hover, .reply-link:hover {
     opacity: 1; }
 
+#new-ping-content {
+  font-size: 1.05em;
+  color: #3b7080;
+  font-family: inherit;
+  padding: 0;
+  min-height: 50px;
+  max-height: 300px; }
+  #new-ping-content::placeholder {
+    font-size: .8em; }
+
 @media all and (min-width: 960px) {
   .mobile-only {
     display: none !important; } }
@@ -248,16 +258,12 @@ and open the template in the editor.
   width: 97.9166666667%; }
 
 div.row {
-  display: block;
+  display: flex;
+  flex-wrap: wrap;
   margin: 0 auto;
   width: 100%;
   box-sizing: border-box;
   -moz-box-sizing: border-box; }
-  div.row:after {
-    content: "";
-    clear: both;
-    display: table;
-    width: 100%; }
   div.row.fluid {
     width: 100%;
     max-width: 100%; }
@@ -599,7 +605,7 @@ make them more usable.
     max-width: 71em; }
 
   .span {
-    margin-left: 1.0416666667%; }
+    margin-left: 2.0833333333%; }
     .span:first-child {
       margin-left: 1.0416666667%; }
 

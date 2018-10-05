@@ -47,7 +47,7 @@ class HomeController extends AppController
 	
 	public function testDelete($uniqid) {
 		
-		$r = request('http://localhost/cloudy/pool1/bucket/read/1.json');
+		$r = request('http://localhost/cloudy/pool1/bucket/read/i353k45j.json');
 		$r->get('signature', (string)$this->sso->makeSignature('1488571465'));
 		
 		$response = $r->send()->json();

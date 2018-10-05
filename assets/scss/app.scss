@@ -296,6 +296,19 @@ a {
 	}
 }
 
+#new-ping-content {
+	font-size: 1.05em;
+	color: #3b7080;
+	font-family: inherit;
+	padding: 0;
+	min-height: 50px;
+	max-height: 300px;
+	
+	&::placeholder {
+		font-size: .8em;
+	}
+}
+
 
 @media all and (min-width: $MobileBreakpoint) {
 	.mobile-only { display: none !important; }
