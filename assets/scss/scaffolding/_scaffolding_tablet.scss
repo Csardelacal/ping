@@ -8,19 +8,5 @@ make them more usable.
     Author     : cesar
 */
 
-.span.m1,
-.span.m2,
-.span.m3,
-.span.m4,
-.span.m5,
-.span.m6,
-.span.m7 {
-	margin-left: $spacer-width / 2;
-		
-	&:first-child {
-		margin-left: $spacer-width / 2;
-	}
-}
-
 
 @include grid('m', 7);

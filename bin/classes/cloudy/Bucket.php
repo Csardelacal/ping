@@ -31,6 +31,7 @@ class Bucket
 		try {
 			$response = $r->send()->expect(200)->json();
 		} catch (\Exception $ex) {
+			var_dump($ex->getTraceAsString());
 			die($r->send()->html());
 		}
 		

@@ -15,6 +15,13 @@ class PingModel extends spitfire\Model
 		$schema->irt     = new Reference('ping');
 		$schema->share   = new Reference('ping');
 		
+		/*
+		 * This should be the actual media field, but since the old media field is
+		 * still out there in the wild we'll have to deprecate it first.
+		 */
+		$schema->attached= new ChildrenField('media\media', 'ping');
+		$schema->processed = new BooleanField();
+		
 		$schema->replies = new ChildrenField('ping', 'irt');
 		$schema->shared  = new ChildrenField('ping', 'share');
 	}
@@ -23,10 +30,21 @@ class PingModel extends spitfire\Model
 		if (!$this->created) { $this->created = time(); }
 	}
 	
+	/**
+	 * 
+	 * @return type
+	 * @deprecated since version 20181008
+	 */
 	public function getMediaURI() {
 		return in_array(parse_url($this->media, PHP_URL_SCHEME), ['file', 'app'])? strval(url('image', 'preview', $this->_id)->absolute()) : $this->media; 
 	}
 	
+	/**
+	 * 
+	 * @return type
+	 * @throws spitfire\exceptions\PrivateException
+	 * @deprecated since version 20181008
+	 */
 	public function getMediaEmbed() {
 		try {
 			if (empty($this->media)) { throw new spitfire\exceptions\PrivateException(); }
@@ -53,6 +71,12 @@ class PingModel extends spitfire\Model
 		return $this->share? $this->share->original() : $this;
 	}
 	
+	/**
+	 * 
+	 * @param type $size
+	 * @return type
+	 * @deprecated since version 20181008
+	 */
 	public function preview($size = 700) {
 		if (!$this->media) {
 			return null;

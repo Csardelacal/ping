@@ -14,12 +14,4 @@ div.row {
 	max-width: 71em;
 }
 
-.span {
-	margin-left: $spacer-width;
-		
-	&:first-child {
-		margin-left: $spacer-width / 2;
-	}
-}
-
 @include grid('l', 10);

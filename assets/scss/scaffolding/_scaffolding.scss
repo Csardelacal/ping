@@ -18,20 +18,17 @@ $max_column_count: 10;
 .span {
 	display: inline-block;
 	vertical-align: top;
-	overflow-x: hidden;
-	margin-left: $spacer-width / 2;
 	min-height: 1px;
 	
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
-	padding: 3px;
 	width: 100% - $spacer_width;
 }
 
 div.row {
 	display: flex;
-	flex-wrap: wrap;
+	flex-wrap: nowrap;
 	margin: 0 auto;
 	width: 100%;
 	

@@ -10,6 +10,7 @@ and open the template in the editor.
 
 
 @import '_vars';
+$disbled-darken-amount: 30;
 
 html, body{
 	margin: 0;
@@ -218,6 +219,7 @@ a {
 		font-weight: bold;
 		color: #900;
 		margin-left: 3px;
+		font-size: 12px;
 	}
 	
 	&.mine {
@@ -309,6 +311,18 @@ a {
 	}
 }
 
+.media-preview {
+	overflow: hidden;
+	border-radius: 10px;
+	
+	img {
+		vertical-align: top;
+		border-bottom: solid 1px #FFF;
+		border-right: solid 1px #FFF;
+		
+	}
+}
+
 
 @media all and (min-width: $MobileBreakpoint) {
 	.mobile-only { display: none !important; }
@@ -322,3 +336,7 @@ a {
 @import '_navigation';
 @import '_activity';
 @import '_styledSelect';
+@import '_navbar';
+@import '_vars';
+@import 'ui-layout';
+@import 'ui/_ui.scss';

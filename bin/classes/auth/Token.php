@@ -22,7 +22,7 @@ class Token
 	}
 	
 	public function getRedirect($successURI, $failureURI = null) {
-		return $this->redirect . '?' . http_build_query(Array('returnurl' => strval($successURI)));
+		return $this->redirect . '?' . http_build_query(Array('returnurl' => strval($successURI), 'cancelurl' => strval($failureURI)));
 	}
 	
 	public function getTokenInfo() {

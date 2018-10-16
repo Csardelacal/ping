@@ -31,6 +31,17 @@ and open the template in the editor.
 			._f#{$prefix}#{$row_size}-#{$prefix}#{$j}, 
 			.row.#{$prefix}#{$row_size}>.span.#{$prefix}#{$j} {
 				width: $j * 100% / $row_size - $spacer_width;
+				margin-left: $spacer_width;
+				
+				&:first-child {
+					margin-left: $spacer_width / 2;
+				}
+			}
+			
+			._fng#{$prefix}#{$row_size}-#{$prefix}#{$j}, 
+			.row.#{$prefix}#{$row_size}>.span.#{$prefix}#{$j}.ng {
+				width: $j * 100% / $row_size;
+				margin-left: 0;
 			}
 			
 			$factor : 2;
@@ -40,6 +51,12 @@ and open the template in the editor.
 					$parent: '._f#{$prefix}#{$row_size}-#{$prefix}#{$j}';
 					@extend #{$parent};
 				}
+				
+				.row.#{$prefix}#{$row_size * $factor}>.span.#{$prefix}#{$j * $factor}.ng {
+					$parent: '._fng#{$prefix}#{$row_size}-#{$prefix}#{$j}';
+					@extend #{$parent};
+				}
+				
 				$factor: $factor + 1;
 			}
 		}

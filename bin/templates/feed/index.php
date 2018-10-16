@@ -1,9 +1,8 @@
 
-<div class="spacer" style="height: 18px"></div>
-		
-<div class="row l5">
-	<!--Sidebar (secondary navigation) -->
-	<div class="span l1">
+<!--Sidebar (secondary navigation) -->
+<div class="contains-sidebar">
+	<div class="sidebar">
+		<div class="spacer" style="height: 10px"></div> 
 		<div class="material unpadded user-card">
 			<?php $user = $sso->getUser($authUser->id); ?>
 			<a href="<?= url('user', $user->getUsername()) ?>">
@@ -25,209 +24,155 @@
 
 		<?= $secondary_navigation ?>
 	</div>
-
-	<!-- Main content-->
-	<div class="span l3">
-		<div class="material unpadded">
-			<form method="POST" action="<?= url('ping', 'push') ?>" enctype="multipart/form-data">
-				<div class="padded add-ping">
-					<div>
-						<div class="row l10">
-							<div class="span l1 desktop-only" style="text-align: center">
-								<img src="<?= $sso->getUser($authUser->id)->getAvatar(64) ?>" style="width: 100%; border: solid 1px #777; border-radius: 3px;">
-							</div>
-							<div class="span l9">
-								<textarea name="content" id="new-ping-content" placeholder="Message to broadcast..."></textarea>
+</div>
+	
+<div class="content">
+	<div class="spacer" style="height: 10px"></div> 
+	
+	<div class="row l4 fluid">
+		<!-- Main content-->
+		<div class="span l3">
+			<div class="material unpadded">
+				<form method="POST" action="<?= url('ping', 'push') ?>" enctype="multipart/form-data">
+					<div class="padded add-ping">
+						<div>
+							<div class="row l10">
+								<div class="span l1 desktop-only" style="text-align: center">
+									<img src="<?= $sso->getUser($authUser->id)->getAvatar(64) ?>" style="width: 100%; border: solid 1px #777; border-radius: 3px;">
+								</div>
+								<div class="span l9">
+									<textarea name="content" id="new-ping-content" placeholder="Message to broadcast..."></textarea>
+								</div>
 							</div>
 						</div>
-					</div>
-					
-					<div class="spacer" style="height: 10px"></div>
-					
-					<div>
-						<div class="row l10">
-							<div class="span l1"></div>
-							<div class="span l9">
-								<div class="row l5 m4 s4 fluid">
-									<div class="span l1 m1 s1" data-lysine-view="file-upload-preview" >
-										<div style="line-height: 100px; text-align: center; overflow: hidden; border-radius: 8px; height: 100px">
-											<img data-lysine-src="{{source}}" style="vertical-align: middle; " onload="if (this.width > this.height) {
-													this.style.width  = 100 * (this.width / this.height) + 'px';
-													this.style.height = 100 + 'px';
-												}
-												else {
-													this.style.height = 100 * (this.height / this.width) + 'px';
-													this.style.width  = 100 + 'px';
-												}">
+
+						<div class="spacer" style="height: 10px"></div>
+
+						<div>
+							<div class="row l10">
+								<div class="span l1"></div>
+								<div class="span l9">
+									<div class="row l5 m4 s4 fluid">
+										<div class="span l1 m1 s1" data-lysine-view="file-upload-preview" >
+											<div style="line-height: 100px; text-align: center; overflow: hidden; border-radius: 8px; height: 100px">
+												<img data-lysine-src="{{source}}" style="vertical-align: middle; " onload="if (this.width > this.height) {
+														this.style.width  = 100 * (this.width / this.height) + 'px';
+														this.style.height = 100 + 'px';
+													}
+													else {
+														this.style.height = 100 * (this.height / this.width) + 'px';
+														this.style.width  = 100 + 'px';
+													}">
+											</div>
+											<input type="hidden" name="media[]" value="" data-for="id">
 										</div>
-										<input type="hidden" name="media[]" value="" data-for="id">
+									</div>
+									<div class="row l1 m1 s1 fluid">
+										<div class="span l1 m1 s1" data-lysine-view="video-upload-preview" >
+											<video data-lysine-src="{{source}}" style="vertical-align: middle; width: 100px; ">
+											<input type="hidden" name="media[]" value="" data-for="id">
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-					
-					<div>
-						<div class="row l10"><!--
-							--><div class="span l1">
-								<!--Just a spacer-->
-							</div><!--
-							--><div class="span l4">
-								<input type="file" name="media" id="ping_media" accept="image/*" style="display: none" onchange="document.getElementById('ping_media_selector').style.opacity = '1'">
-								<img src="<?= spitfire\core\http\URL::asset('img/camera.png') ?>" id="ping_media_selector" onclick="document.getElementById('ping_media').click()" style="vertical-align: middle; height: 24px; opacity: .3; margin: 0 5px;">
-							</div><!--
-							--><div class="span l5" style="text-align: right">
-								<span id="new-ping-character-count">250</span>
-								<input type="submit" value="Ping!">
-							</div><!--
-						--></div>
-					</div>
-				</div>
-			</form>
-			
-			<div class="separator"></div>
-			
-			<?php foreach($notifications as $notification): ?>
-			<?php $user = $sso->getUser($notification->src->authId); ?>
-			<div class="padded" style="padding-top: 5px;">
-						
-				
-				<div class="row l10 fluid">
-					<div class="span l1 desktop-only" style="text-align: center">
-						<img src="<?= $user->getAvatar(64) ?>" style="width: 100%; border: solid 1px #777; border-radius: 3px;">
-					</div>
-					<div class="span l9">
-						<div class="row l4">
-							<div class="span l3">
-								<img class="mobile-only" src="<?= $user->getAvatar(64) ?>" style="width: 16px; border: solid 1px #777; border-radius: 3px; vertical-align: middle">
-								<a href="<?= url('user', $user->getUsername()) ?>" style="color: #000; font-weight: bold; font-size: .8em;"><?= $user->getUsername() ?></a>
-								<?php if ($notification->share): ?>
-								<a href="<?= url('ping', 'detail', $notification->share->_id) ?>" style="font-size: .8em; color: #777;"> from <?= $sso->getUser($notification->share->src->_id)->getUsername() ?></a>
-								<?php endif; ?>
-							</div>
-							<div class="span l1 desktop-only" style="text-align: right; font-size: .8em; color: #777;">
-								<?= Time::relative($notification->created) ?>
-							</div>
-						</div>
-						
-						<?php if ($notification->irt): ?>
-						<div class="spacer" style="height: 10px"></div>
-						
-						<div class="source-ping">
-							<div class="row10 fluid">
-								<div class="span1 desktop-only" style="text-align: center;">
-									<img src="<?= $sso->getUser($notification->irt->src->authId)->getAvatar(64) ?>" style="width: 32px; border: solid 1px #777; border-radius: 3px;">
-								</div>
-								<div class="span9">
-									<a href="<?= url('user', $sso->getUser($notification->irt->src->authId)->getUsername()) ?>"  style="color: #000; font-weight: bold; font-size: .8em;">
-										<?= $sso->getUser($notification->irt->src->authId)->getUsername() ?>
-									</a>
 
-									<p style="margin: 0;">
-										<?= Mention::idToMentions($notification->irt->content) ?>
-									</p>
-								</div>
-							</div>
-						</div>
+						<div>
+							<div class="row l10"><!--
+								--><div class="span l1">
+									<!--Just a spacer-->
+								</div><!--
+								--><div class="span l4">
+									<input type="file" id="ping_media" accept="image/*" style="display: none">
+									<img src="<?= spitfire\core\http\URL::asset('img/camera.png') ?>" id="ping_media_selector" style="vertical-align: middle; height: 24px; opacity: .5; margin: 0 5px;">
 
-						<div class="spacer" style="height: 10px"></div>
-						<?php endif; ?>
-						
-						<div class="row l1 fluid" style="margin-top: 5px">
-							<div class="span l1">
-								<p style="margin: 0;">
-									<?php if ($notification->url && !$notification->media): ?><a href="<?= $notification->url ?>" style="color: #000;"><?php endif; ?>
-									<?= Mention::idToMentions($notification->content) ?>
-									<?php if ($notification->url && !$notification->media): ?></a><?php endif; ?>
-								</p>
-								
-								<?php if ($notification->media): ?>
-								<div class="spacer" style="height: 20px"></div>
-									<?php if ($notification->url): ?><a href="<?= $notification->url ?>" ><?php endif; ?>
-										<?= $notification->preview(700)->getMediaEmbed() ?>
-									<!--<img src="<?= $notification->getMediaURI() ?>" style="width: 100%">-->
-									<?php if ($notification->url): ?></a><?php endif; ?>
-								<?php endif; ?>
-							</div>
-						</div>
-						
-						<div class="spacer" style="height: 20px;"></div>
-					
-						<div class="row l1 fluid">
-							<div class="span l1" style="text-align: right">
-								<a href="<?= url('ping', 'detail', $notification->_id) ?>#replies" class="reply-link"><?= $notification->replies->getQuery()->count()? : 'Reply' ?></a>
-								<a href="<?= url('ping', 'share', $notification->_id); ?>" class="share-link"><?= $notification->original()->shared->getQuery()->count()? : 'Share' ?></a>
-							</div>
+									<input type="file" id="ping_video" accept="video/*" style="display: none">
+									<img src="<?= spitfire\core\http\URL::asset('img/video.png') ?>" id="ping_video_selector" style="vertical-align: middle; height: 24px; opacity: .5; margin: 0 5px;">
+								</div><!--
+								--><div class="span l5" style="text-align: right">
+									<span id="new-ping-character-count">250</span>
+									<input type="submit" value="Ping!">
+								</div><!--
+							--></div>
 						</div>
 					</div>
-				</div>
-			</div>
-			
-			<div class="separator"></div>
-			<?php endforeach; ?>
-			<?php if (empty($notifications)): ?>
-			<div style="padding: 50px; text-align: center; color: #777; font-size: .8em; font-style: italic; text-align: center">
-				Nothing here yet. Follow or interact with users to build your feed!
-			</div>
-			<?php endif; ?>
-			
-			<div data-lysine-view="ping">
+				</form>
+
+				<div class="separator"></div>
+
+				<?php foreach($notifications as $notification): ?>
+				<?php $user = $sso->getUser($notification->src->authId); ?>
 				<div class="padded" style="padding-top: 5px;">
-					<div class="row10 fluid">
-						<div class="span1 desktop-only" style="text-align: center">
-							<img data-lysine-src="{{avatar}}" style="width: 100%; border: solid 1px #777; border-radius: 3px;">
+
+
+					<div class="row l10 fluid">
+						<div class="span l1 desktop-only" style="text-align: center">
+							<img src="<?= $user->getAvatar(64) ?>" style="width: 100%; border: solid 1px #777; border-radius: 3px;">
 						</div>
-						<div class="span9">
-							<div class="row4">
-								<div class="span3">
-									<img class="mobile-only" data-lysine-src="{{avatar}}" style="width: 16px; border: solid 1px #777; border-radius: 3px; vertical-align: middle">
-									<a data-for="userName" data-lysine-href="{{userURL}}" style="color: #000; font-weight: bold; font-size: .8em;"></a>
+						<div class="span l9">
+							<div class="row l4">
+								<div class="span l3">
+									<img class="mobile-only" src="<?= $user->getAvatar(64) ?>" style="width: 16px; border: solid 1px #777; border-radius: 3px; vertical-align: middle">
+									<a href="<?= url('user', $user->getUsername()) ?>" style="color: #000; font-weight: bold; font-size: .8em;"><?= $user->getUsername() ?></a>
+									<?php if ($notification->share): ?>
+									<a href="<?= url('ping', 'detail', $notification->share->_id) ?>" style="font-size: .8em; color: #777;"> from <?= $sso->getUser($notification->share->src->_id)->getUsername() ?></a>
+									<?php endif; ?>
 								</div>
-								<div class="span1 desktop-only" style="text-align: right; font-size: .8em; color: #777;" data-for="timeRelative"></div>
+								<div class="span l1 desktop-only" style="text-align: right; font-size: .8em; color: #777;">
+									<?= Time::relative($notification->created) ?>
+								</div>
 							</div>
-							
-							
-							<div class="irt" data-lysine-view data-for="irt">
-								<div class="spacer" style="height: 10px"></div>
 
-								<div class="source-ping">
-									<div class="row10 fluid">
-										<div class="span1 desktop-only" style="text-align: center;">
-											<img data-lysine-src="{{avatar}}" style="width: 32px; border: solid 1px #777; border-radius: 3px;">
-										</div>
-										<div class="span9">
-											<a  data-for="username" data-lysine-href="{{userURL}}"  style="color: #000; font-weight: bold; font-size: .8em;"></a>
+							<?php if ($notification->irt): ?>
+							<div class="spacer" style="height: 10px"></div>
 
-											<p style="margin: 0;" data-for="content"></p>
-										</div>
+							<div class="source-ping">
+								<div class="row10 fluid">
+									<div class="span1 desktop-only" style="text-align: center;">
+										<img src="<?= $sso->getUser($notification->irt->src->authId)->getAvatar(64) ?>" style="width: 32px; border: solid 1px #777; border-radius: 3px;">
+									</div>
+									<div class="span9">
+										<a href="<?= url('user', $sso->getUser($notification->irt->src->authId)->getUsername()) ?>"  style="color: #000; font-weight: bold; font-size: .8em;">
+											<?= $sso->getUser($notification->irt->src->authId)->getUsername() ?>
+										</a>
+
+										<p style="margin: 0;">
+											<?= Mention::idToMentions($notification->irt->content) ?>
+										</p>
 									</div>
 								</div>
-
-								<div class="spacer" style="height: 10px"></div>
 							</div>
-							
-							<div class="row1" style="margin-top: 5px">
-								<div class="span1">
+
+							<div class="spacer" style="height: 10px"></div>
+							<?php endif; ?>
+
+							<div class="row l1 fluid" style="margin-top: 5px">
+								<div class="span l1">
 									<p style="margin: 0;">
-										<a data-lysine-href="{{notificationURL}}" style="color: #000;" data-for="notificationContent">
-										</a>
+										<?= Mention::idToMentions($notification->content) ?>
 									</p>
 
-									<div class="spacer" style="height: 20px"></div>
-									
-									<a class="media" data-lysine-href="{{notificationURL}}" data-for="notificationMediaEmbed">
-										<!--<img data-lysine-src="{{notificationMedia}}" style="width: 100%">-->
-									</a>
+									<div class="spacer" style="height: 10px"></div>
+
+									<?php $media = $notification->original()->attached; ?>
+									<?= current_context()->view->element('media/preview')->set('media', collect($media->toArray()))->render() ?>
+
 								</div>
 							</div>
-							
-						
+
 							<div class="spacer" style="height: 20px;"></div>
 
-							<div class="row1 fluid">
-								<div class="span1" style="text-align: right">
-									<a data-lysine-href="<?= url('ping', 'detail') ?>{{id}}#replies" class="reply-link" data-for="replyCount"></a>
-									<a data-lysine-href="<?= url('ping', 'share'); ?>{{id}}" class="share-link" data-for="shareCount"></a>
+							<div class="row l2 fluid">
+								<div class="span l1">
+									<p style="margin: 0;">
+										<?php if ($notification->url): ?>
+										<a href="<?= $notification->url ?>" style="font-weight: bold;"><?=  __($notification->url, 50) ?></a>
+										<?php endif; ?>
+									</p>
+								</div>
+								<div class="span l1" style="text-align: right">
+									<a href="<?= url('ping', 'detail', $notification->_id) ?>#replies" class="reply-link"><?= $notification->replies->getQuery()->count()? : 'Reply' ?></a>
+									<a href="<?= url('ping', 'share', $notification->_id); ?>" class="share-link"><?= $notification->original()->shared->getQuery()->count()? : 'Share' ?></a>
 								</div>
 							</div>
 						</div>
@@ -235,33 +180,105 @@
 				</div>
 
 				<div class="separator"></div>
-			</div>
-		</div>
-	</div>
-	
-	<!-- Contextual menu-->
-	<div class="span1">
-		<div class="spacer" style="height: 70px;"></div>
-		<div style="color: #888; font-size: .8em">Users you may like to follow:</div>
-		<div class="spacer" style="height: 10px;"></div>
-		
-		<div data-lysine-view="whotofollow">
-			<div class="material unpadded user-card">
-				<a data-lysine-href="<?= url('user', '{{username}}') ?>?ref=whotofollow">
-					<div class="banner" style="height: 47px">
-						<img src="about:blank" data-lysine-src="{{banner}}" width="275" height="64">
-					</div>
-					<div class="padded" style="margin-top: -35px;">
-						<img class="avatar" data-lysine-src="{{avatar}}">
-						<div class="user-info">
-							<span class="user-name" data-for="username"></span>
-							<span class="user-bio"><span data-for="followers"></span> followers</span>
+				<?php endforeach; ?>
+				<?php if (empty($notifications)): ?>
+				<div style="padding: 50px; text-align: center; color: #777; font-size: .8em; font-style: italic; text-align: center">
+					Nothing here yet. Follow or interact with users to build your feed!
+				</div>
+				<?php endif; ?>
+
+				<div data-lysine-view="ping">
+					<div class="padded" style="padding-top: 5px;">
+						<div class="row10 fluid">
+							<div class="span1 desktop-only" style="text-align: center">
+								<img data-lysine-src="{{avatar}}" style="width: 100%; border: solid 1px #777; border-radius: 3px;">
+							</div>
+							<div class="span9">
+								<div class="row4">
+									<div class="span3">
+										<img class="mobile-only" data-lysine-src="{{avatar}}" style="width: 16px; border: solid 1px #777; border-radius: 3px; vertical-align: middle">
+										<a data-for="userName" data-lysine-href="{{userURL}}" style="color: #000; font-weight: bold; font-size: .8em;"></a>
+									</div>
+									<div class="span1 desktop-only" style="text-align: right; font-size: .8em; color: #777;" data-for="timeRelative"></div>
+								</div>
+
+
+								<div class="irt" data-lysine-view data-for="irt">
+									<div class="spacer" style="height: 10px"></div>
+
+									<div class="source-ping">
+										<div class="row10 fluid">
+											<div class="span1 desktop-only" style="text-align: center;">
+												<img data-lysine-src="{{avatar}}" style="width: 32px; border: solid 1px #777; border-radius: 3px;">
+											</div>
+											<div class="span9">
+												<a  data-for="username" data-lysine-href="{{userURL}}"  style="color: #000; font-weight: bold; font-size: .8em;"></a>
+
+												<p style="margin: 0;" data-for="content"></p>
+											</div>
+										</div>
+									</div>
+
+									<div class="spacer" style="height: 10px"></div>
+								</div>
+
+								<div class="row1" style="margin-top: 5px">
+									<div class="span1">
+										<p style="margin: 0;">
+											<a data-lysine-href="{{notificationURL}}" style="color: #000;" data-for="notificationContent">
+											</a>
+										</p>
+
+										<div class="spacer" style="height: 20px"></div>
+
+										<a class="media" data-lysine-href="{{notificationURL}}" data-for="notificationMediaEmbed">
+											<!--<img data-lysine-src="{{notificationMedia}}" style="width: 100%">-->
+										</a>
+									</div>
+								</div>
+
+
+								<div class="spacer" style="height: 20px;"></div>
+
+								<div class="row1 fluid">
+									<div class="span1" style="text-align: right">
+										<a data-lysine-href="<?= url('ping', 'detail') ?>{{id}}#replies" class="reply-link" data-for="replyCount"></a>
+										<a data-lysine-href="<?= url('ping', 'share'); ?>{{id}}" class="share-link" data-for="shareCount"></a>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
-				</a>
+
+					<div class="separator"></div>
+				</div>
 			</div>
-			
+		</div>
+
+		<!-- Contextual menu-->
+		<div class="span l1">
+			<div class="spacer" style="height: 70px;"></div>
+			<div style="color: #888; font-size: .8em">Users you may like to follow:</div>
 			<div class="spacer" style="height: 10px;"></div>
+
+			<div data-lysine-view="whotofollow">
+				<div class="material unpadded user-card">
+					<a data-lysine-href="<?= url('user', '{{username}}') ?>?ref=whotofollow">
+						<div class="banner" style="height: 47px">
+							<img src="about:blank" data-lysine-src="{{banner}}" width="275" height="64">
+						</div>
+						<div class="padded" style="margin-top: -35px;">
+							<img class="avatar" data-lysine-src="{{avatar}}">
+							<div class="user-info">
+								<span class="user-name" data-for="username"></span>
+								<span class="user-bio"><span data-for="followers"></span> followers</span>
+							</div>
+						</div>
+					</a>
+				</div>
+
+				<div class="spacer" style="height: 10px;"></div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -415,18 +432,18 @@
 			for (var i = 0; i < files.length; i++) {
 				var job = queue.job();
 
-				if (files[i].size > 5 * 1024 * 1024) {
+				if (files[i].size > 25 * 1024 * 1024) {
 					//Needs a better error
-					alert('Files must be smaller than 5MB');
+					alert('Files must be smaller than 25MB');
 					job.complete();
 					continue;
 				}
 
 				var reader = new FileReader();
+				var v = new Lysine.view('file-upload-preview');
 
 				reader.onload = function (e) {
 					
-					var v = new Lysine.view('file-upload-preview');
 					v.setData({
 						source: e.target.result,
 						id: null
@@ -437,16 +454,12 @@
 				reader.readAsDataURL(files[i]);
 
 				var upload = new XMLHttpRequest();
-				upload.onreadystatechange = function(job, img) { return function () {
+				upload.onreadystatechange = function(job) { return function () {
 					if (this.readyState === 4){
 						const status = this.status;
 						if (status === 200) {
 							var json  = JSON.parse(this.responseText);
-							var input = ctx.html.appendChild(document.createElement('input'));
-							input.type  = 'hidden';
-							input.name  = ctx.name + '[]';
-							input.value = json.file.id + ':' + json.file.sec;
-							img.style.opacity = '1';
+							v.id = json.id + ':' + json.secret;
 
 							job.complete();
 						}
@@ -463,13 +476,78 @@
 							})(this.responseText);
 						}
 					}
-				}; }(job, img);
+				}; }(job);
 
 				var fd = new FormData();
-				fd.append('upload', files[i]);
+				fd.append('file', files[i]);
+				fd.append('type', 'image');
 
 				upload.open('POST', '<?= url('media', 'upload')->setExtension('json') ?>');
-				//upload.send(fd);
+				upload.send(fd);
+
+			}
+		});
+	}());
+</script>
+
+
+<script type="text/javascript">
+	//VIDEO UPLOAD
+	(function() {
+		var input = document.getElementById('ping_video');
+		var ui    = document.getElementById('ping_video_selector');
+		var queue = new Queue();
+		
+		ui.addEventListener('click', function () {
+			input.click();
+		});
+		
+		input.addEventListener('change', function (e) {
+			var files = e.target.nodeName.toLowerCase() === 'input'? e.target.files : null;
+
+			for (var i = 0; i < files.length; i++) {
+				var job = queue.job();
+
+				if (files[i].size > 25 * 1024 * 1024) {
+					//Needs a better error
+					alert('Files must be smaller than 25MB');
+					job.complete();
+					continue;
+				}
+
+				var reader = new FileReader();
+				var v = new Lysine.view('video-upload-preview');
+
+				reader.onload = function (e) {
+					
+					v.setData({
+						source: e.target.result,
+						id: null
+					});
+					
+				};
+
+				reader.readAsDataURL(files[i]);
+
+				var upload = new XMLHttpRequest();
+				upload.onreadystatechange = function(job) { return function () {
+					if (this.readyState === 4){
+						const status = this.status;
+						if (status === 200) {
+							var json  = JSON.parse(this.responseText);
+							v.id = json.id + ':' + json.secret;
+
+							job.complete();
+						}
+					}
+				}; }(job);
+
+				var fd = new FormData();
+				fd.append('file', files[i]);
+				fd.append('type', 'video');
+
+				upload.open('POST', '<?= url('media', 'upload')->setExtension('json') ?>');
+				upload.send(fd);
 
 			}
 		});

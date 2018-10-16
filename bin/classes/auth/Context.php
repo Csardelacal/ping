@@ -77,13 +77,17 @@ class Context
 	}
 	
 	public function isGranted() {
-		return $this->granted;
+		return ((int)$this->granted) === 2;
+	}
+	
+	public function isDenied() {
+		return ((int)$this->granted) === 1;
 	}
 
 	public function create($name, $description) {
 		$request = new Request(
-			$this->sso->getEndpoint() . '/context/create', 
-			['context' => $this->id, 'signature' => $this->sso->makeSignature()]
+			$this->sso->getEndpoint() . '/context/create.json', 
+			['context' => $this->id, 'signature' => (string)$this->sso->makeSignature()]
 		);
 		
 		$request->send(['name' => $name, 'description' => $description]);

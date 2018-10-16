@@ -62,9 +62,13 @@ class SSO
 		
 		if (!$username) { throw new Exception('Valid user id needed'); }
 		
+		/*
+		 * Assemble the request we need to retrieve the data. Please note that if
+		 * there is no token we pass no parameters.
+		 */
 		$request = new Request(
 			$this->endpoint . '/user/detail/' . $username . '.json',
-			['signature' => (string)$this->makeSignature()]
+			$token && $token->isAuthenticated()? Array('token' => $token->getTokenInfo()->token, 'signature' => (string)$this->makeSignature()) : Array('signature' => (string)$this->makeSignature())
 		);
 		
 		/*
@@ -160,6 +164,20 @@ class SSO
 		return $data;
 	}
 	
+	public function getAppDrawer() {
+		$url = $this->endpoint . '/appdrawer/index.json';
+		$request  = new Request($url, []);
+		
+		$response = $request->send();
+		$data     = JSON::decode($response);
+		
+		return $data;
+	}
+	
+	public function getAppDrawerJS() {
+		return $this->endpoint . '/appdrawer/index.js';
+	}
+	
 	public function getGroupList() {
 		$url  = $this->endpoint . '/group/index.json';
 		$resp = file_get_contents($url);
@@ -182,10 +200,6 @@ class SSO
 		
 		$data = json_decode($resp);
 		return $data->payload;
-	}
-	
-	public function getBaseURL() {
-		return $this->endpoint;
 	}
 	
 }

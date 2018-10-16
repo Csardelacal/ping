@@ -8,13 +8,42 @@ class ThumbModel extends Model
 {
 	
 	public function definitions(Schema $schema) {
-		$schema->ping  = new \Reference('ping');
-		$schema->width = new \IntegerField(true);
-		$schema->mime  = new \StringField(20);
-		$schema->file  = new \FileField();
-		$schema->poster= new \FileField();
+		$schema->ping   = new \Reference('ping');
+		$schema->media  = new \Reference('media\media');
+		$schema->width  = new \IntegerField(true);
+		$schema->aspect = new \EnumField('original', 'square', 'double');
+		$schema->mime   = new \StringField(20);
+		$schema->file   = new \FileField();
+		$schema->poster = new \FileField();
 	}
 	
+	public function getEmbed() {
+		if (!$this->media) {
+			return null;
+		}
+		
+		
+		$file = storage($this->file);
+		$post = $this->poster? storage()->get($this->poster) : null;
+
+		$uri  = $file instanceof \spitfire\storage\objectStorage\EmbedInterface? $file->publicURI() : url('image', 'preview', $this->_id);
+		$mime = $file instanceof \spitfire\storage\objectStorage\NodeInterface? $file->mime() : 'image/png';
+		
+		if ($this->media->type === 'video') {
+			return sprintf('<video controls preload="none" src="%s" poster="%s" style="width: 100%%"></video>', $uri, $post instanceof \spitfire\storage\objectStorage\EmbedInterface? $post->publicURI() : $post);
+		}
+		else {
+			
+			switch($mime) {
+				case 'video/mp4':
+				case 'video/quicktime':
+				case 'image/gif':
+					return sprintf('<video muted playsinline preload="none" loop src="%s" poster="%s" style="width: 100%%" onmouseover="this.play()" onmouseout="this.pause()"></video>', $uri, $post instanceof \spitfire\storage\objectStorage\EmbedInterface? $post->publicURI() : $post);
+				default:
+					return sprintf('<img src="%s"  style="width: 100%%">', $uri);
+			}
+		}
+	}
 	
 	public function getMediaEmbed() {
 		try {

@@ -9,9 +9,9 @@
 
 	<div class="spacer" style="height: 18px"></div>
 
-	<div class="row5">
+	<div class="row l5">
 		<!--Sidebar (secondary navigation) -->
-		<div class="span1">
+		<div class="span l1">
 			<div class="profile-resume desktop-only">
 				<a href="<?= url('user', $user->getUsername()) ?>"><img class="avatar" src="<?= $user->getAvatar(256) ?>"></a>
 				<div class="spacer" style="height: 10px"></div>
@@ -47,7 +47,7 @@
 		</div>
 
 		<!-- Main content-->
-		<div class="span3">
+		<div class="span l3">
 			<div class="mobile-only" style="padding: 20px 0; text-align: right">
 				<a class="button follow" href="<?= url('user', 'login') ?>" data-ping-follow="<?= $user->getId() ?>">Login to follow</a>
 			</div>
@@ -55,47 +55,61 @@
 
 				<div class="spacer" style="height: 10px"></div>
 				
-				<?php $notifications = array_filter([$ping->irt, $ping]); ?>
+				<?php $parent = $ping->irt; ?>
+				<?php $count  = 0; ?>
+				<?php $notifications = []; ?>
+				<?php while ($parent && $count < 10) { array_unshift($notifications, $parent); $parent = $parent->irt; $count++; } ?>
+				<?php $notifications[] = $ping; ?>
+				
+				
 				<?php foreach ($notifications as $notification): ?>
 				<?php $u = $sso->getUser($notification->src->authId); ?>
 				<div class="padded" style="padding-top: 5px;">
-					<div class="row10 fluid">
-						<div class="span1 desktop-only" style="text-align: center">
-							<img src="<?= $u->getAvatar(64) ?>" style="width: 100%; border: solid 1px #777; border-radius: 3px;">
+					<div class="row l10 fluid">
+						<div class="span l1 desktop-only" style="text-align: center">
+							<img src="<?= $user->getAvatar(64) ?>" style="width: 100%; border: solid 1px #777; border-radius: 3px;">
 						</div>
-						<div class="span9">
-							<div class="row4">
-								<div class="span3">
-									<a href="<?= url('user', $u->getUsername()) ?>" style="color: #000; font-weight: bold; font-size: .8em;"><?= $u->getUsername() ?></a>
-								</div>
-								<div class="span1 desktop-only" style="text-align: right; font-size: .8em; color: #777;">
-									<?= Time::relative($notification->created) ?>
-									<a class="delete-link" href="<?= url('ping', 'delete', $notification->_id) ?>" title="Delete this post">&times;</a>
-								</div>
-							</div>
-							<div class="row1" style="margin-top: 5px">
-								<div class="span1">
-									<p style="margin: 0;">
-										<?php if ($notification->url && !$notification->media): ?><a href="<?= $notification->url ?>"><?php endif; ?>
-										<?= Mention::idToMentions(Strings::strToHTML($notification->content)) ?>
-										<?php if ($notification->url && !$notification->media): ?></a><?php endif; ?>
-									</p>
-
-									<?php if ($notification->media): ?>
-									<div class="spacer" style="height: 20px"></div>
-										<?php if ($notification->url): ?><a href="<?= $notification->url ?>"><?php endif; ?>
-										<img src="<?= $notification->getMediaURI() ?>" style="width: 100%">
-										<?php if ($notification->url): ?></a><?php endif; ?>
+						<div class="span l9">
+							<div class="row l4">
+								<div class="span l3">
+									<img class="mobile-only" src="<?= $user->getAvatar(64) ?>" style="width: 16px; border: solid 1px #777; border-radius: 3px; vertical-align: middle">
+									<a href="<?= url('user', $user->getUsername()) ?>" style="color: #000; font-weight: bold; font-size: .8em;"><?= $user->getUsername() ?></a>
+									<?php if ($notification->share): ?>
+									<a href="<?= url('ping', 'detail', $notification->share->_id) ?>" style="font-size: .8em; color: #777;"> from <?= $sso->getUser($notification->share->src->_id)->getUsername() ?></a>
 									<?php endif; ?>
 								</div>
+								<div class="span l1 desktop-only" style="text-align: right; font-size: .8em; color: #777;">
+									<?= Time::relative($notification->created) ?>
+								</div>
 							</div>
-							
+
+							<div class="row l1 fluid" style="margin-top: 5px">
+								<div class="span l1">
+									<p style="margin: 0;">
+										<?= Mention::idToMentions($notification->content) ?>
+									</p>
+
+									<div class="spacer" style="height: 10px"></div>
+
+									<?php $media = $notification->original()->attached; ?>
+									<?= current_context()->view->element('media/preview')->set('media', collect($media->toArray()))->render() ?>
+
+								</div>
+							</div>
+
 							<div class="spacer" style="height: 20px;"></div>
 
-							<div class="row1 fluid">
-								<div class="span1" style="text-align: right">
+							<div class="row l2 fluid">
+								<div class="span l1">
+									<p style="margin: 0;">
+										<?php if ($notification->url): ?>
+										<a href="<?= $notification->url ?>" style="font-weight: bold;"><?=  __($notification->url, 50) ?></a>
+										<?php endif; ?>
+									</p>
+								</div>
+								<div class="span l1" style="text-align: right">
 									<a href="<?= url('ping', 'detail', $notification->_id) ?>#replies" class="reply-link"><?= $notification->replies->getQuery()->count()? : 'Reply' ?></a>
-									<a href="<?= url('ping', 'share', $notification->_id); ?>" class="share-link">Share</a>
+									<a href="<?= url('ping', 'share', $notification->_id); ?>" class="share-link"><?= $notification->original()->shared->getQuery()->count()? : 'Share' ?></a>
 								</div>
 							</div>
 						</div>
@@ -202,7 +216,7 @@
 		</div>
 
 		<!-- Contextual menu-->
-		<div class="span1 desktop-only">
+		<div class="span l1 desktop-only">
 			<a class="button follow" href="<?= url('user', 'login') ?>" data-ping-follow="<?= $user->getId() ?>">Login to follow</a>
 		</div>
 	</div>

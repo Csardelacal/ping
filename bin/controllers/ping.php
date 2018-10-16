@@ -67,6 +67,9 @@ class PingController extends AppController
 		if ($media instanceof Upload) {
 			$media = $media->store()->uri();
 		}
+		elseif (is_string($media)) {
+			$media = null;
+		}
 		
 		#There needs to be a src user. That means that somebody is originating the
 		#notification. There has to be one, and no more than one.
@@ -90,10 +93,17 @@ class PingController extends AppController
 		$notification->target = $target;
 		$notification->content = Mention::mentionsToId($content);
 		$notification->url     = $url;
-		$notification->media   = $media;
 		$notification->explicit= $explicit;
 		$notification->irt     = $irt? db()->table('ping')->get('_id', $irt)->first(true) : null;
 		$notification->store();
+		
+		#Attach the media
+		foreach (array_filter($media) as $file) {
+			list($id, $secret) = explode(':', $file);
+			$record = db()->table('media\media')->get('_id', $id)->where('secret', $secret)->first(true);
+			$record->ping = $notification;
+			$record->store();
+		}
 
 		#Check the user's preferences and send an email
 		$email->push($_POST['target'], $this->sso->getUser($src->authId), $content, $url, null);
