@@ -93,4 +93,21 @@ class Media implements EmbedInterface
 		return $servers[rand(0, count($servers) - 1)]->getEndpoint() . '/file/retrieve/link/' . reset($links);
 	}
 
+	public function filename(): string {
+		
+		$_ret = $this->media instanceof ParentClass? $this->media->getName() : $this->media;
+		
+		if ($_ret === null) {
+			throw new \spitfire\exceptions\PrivateException('Bug detected', 1809141314);
+		}
+		
+		$pieces = explode('.', $_ret);
+		
+		if (count($pieces) > 1) {
+			array_pop($pieces);
+		}
+		
+		return implode('.', $pieces);
+	}
+
 }
