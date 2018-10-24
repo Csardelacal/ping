@@ -74,7 +74,9 @@ a {
   background: #F00;
   color: #FFF;
   border-radius: 1em;
-  padding: 0 .5em;
+  font-size: .9em;
+  line-height: 1em;
+  padding: 0 .4em;
   font-weight: bold; }
   .badge[data-ping-amt='0'], .badge[data-ping-amt=''] {
     background: #BBB; }
@@ -254,6 +256,16 @@ and open the template in the editor.
     Created on : 20.04.2018, 14:51:25
     Author     : César de la Cal Bretschneider <cesar@magic3w.com>
 */
+/*
+ * Define the breakpoints where the UI should switch between large, medium and 
+ * small scaffolding. For the sake of convenience, we call these desktop, tablet
+ * and mobile since they usually fit in these categories.
+ * 
+ * Please note that a big phone may be considered tablet and that a big tablet
+ * may fall under the desktop category. Also, old computers with small monitors
+ * may be considered tablets. So, it's not safe to assume that a device in the 
+ * tablet category is indeed a handheld or touch based device.
+ */
 .span {
   display: inline-block;
   vertical-align: top;
@@ -265,7 +277,7 @@ and open the template in the editor.
 
 div.row {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   margin: 0 auto;
   width: 100%;
   box-sizing: border-box;
@@ -1736,6 +1748,8 @@ and open the template in the editor.
     .navbar .logo img {
       height: 20px;
       margin-right: 5px; }
+  .navbar * {
+    vertical-align: middle; }
   .navbar:after {
     clear: both; }
 

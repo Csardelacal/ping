@@ -37,7 +37,6 @@
 		 * reflow once the layout is ready
 		 */
 		(function() {
-			return;
 			document.body.style.display = 'none';
 			document.addEventListener('DOMContentLoaded', function () { document.body.style.display = null; }, false);
 			setTimeout(function () { document.body.style.display = null; }, 500);
@@ -56,12 +55,12 @@
 					</div>
 					<div class="right">
 						<?php if(isset($authUser)): ?>
-							<a class="menu-item" href="<?= url('feed') ?>">Feed <span class="badge" data-ping-counter data-ping-amt="0">?</span></a>
-							<span class="h-spacer" style="display: inline-block; width: 10px;"></span>
 							<a class="menu-item" href="<?= url('settings') ?>">
 								<img src="<?= $authUser->avatar ?>" width="17"  style="margin-right: 5px; vertical-align: -3px">
 								Settings
 							</a>
+							<span class="h-spacer" style="display: inline-block; width: 10px;"></span>
+							<a class="menu-item" href="<?= url('activity') ?>"><span class="badge" data-ping-activity data-ping-amt="0">?</span></a>
 							<span class="h-spacer" style="display: inline-block; width: 10px;"></span>
 							<div class="has-dropdown" style="display: inline-block">
 								<span class="app-switcher toggle" data-toggle="app-drawer"></span>
@@ -127,7 +126,7 @@
 			});
 		</script>
 		
-		<script type="text/javascript" src="<?= url('feed', 'counter')->setExtension('js')->setParam('nonce', 60 * (int)(time() / 60)) ?>"></script>
-		<script type="text/javascript" src="<?= url('cron')->setExtension('js') ?>"></script>
+		<script type="text/javascript" src="<?= url('feed', 'counter')->setExtension('js')->setParam('nonce', 60 * (int)(time() / 60)) ?>" async="true"></script>
+		<script type="text/javascript" src="<?= url('cron')->setExtension('js') ?>" async="true"></script>
 	</body>
 </html>

@@ -101,7 +101,9 @@ a {
 	background: #F00;
 	color:      #FFF;
 	border-radius: 1em;
-	padding:     0 .5em;
+	font-size: .9em;
+	line-height: 1em;
+	padding:     0 .4em;
 	font-weight: bold;
 	
 	&[data-ping-amt='0'],

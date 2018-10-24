@@ -11,8 +11,20 @@ and open the template in the editor.
 
 @import "../mixins/_grid.scss";
 
+/*
+ * Define the breakpoints where the UI should switch between large, medium and 
+ * small scaffolding. For the sake of convenience, we call these desktop, tablet
+ * and mobile since they usually fit in these categories.
+ * 
+ * Please note that a big phone may be considered tablet and that a big tablet
+ * may fall under the desktop category. Also, old computers with small monitors
+ * may be considered tablets. So, it's not safe to assume that a device in the 
+ * tablet category is indeed a handheld or touch based device.
+ */
+$desktopBreakPoint: 960px;
+$tabletBreakpoint : 480px;
 
-$spacer_width: 20px / $MobileBreakpoint * 100%;
+$spacer_width: 20px / $desktopBreakPoint * 100%;
 $max_column_count: 10;
 
 .span {
@@ -28,7 +40,7 @@ $max_column_count: 10;
 
 div.row {
 	display: flex;
-	flex-wrap: nowrap;
+	flex-wrap: wrap;
 	margin: 0 auto;
 	width: 100%;
 	
@@ -44,7 +56,7 @@ div.row {
 
 @import '_scaffolding_mobile';
 
-@media all and (max-width: $MobileBreakpoint) and (min-width: 480px){
+@media all and (max-width: $desktopBreakPoint) and (min-width: 480px){
 	.desktop-only {
 		display: none !important;
 	}
@@ -60,7 +72,7 @@ div.row {
 	@import '_scaffolding_tablet.scss';
 }
 
-@media all and (min-width: $MobileBreakpoint) {
+@media all and (min-width: $desktopBreakPoint) {
 	.mobile-only {
 		display: none;
 	}
@@ -77,7 +89,7 @@ div.row {
 	@import '_scaffolding_desktop.scss';
 }
 
-@media all and (max-width: 480px) {
+@media all and (max-width: $tabletBreakpoint) {
 	.desktop-only {
 		display: none !important;
 	}

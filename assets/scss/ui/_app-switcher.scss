@@ -28,9 +28,10 @@ THE SOFTWARE.
 
 $app-switcher-fg-color  : #777;
 $app-switcher-bg-color  : #EAEAEA;
-$app-switcher-tile-size :  4px;
+$app-switcher-tile-size :  5px;
 
-.app-switcher.toggle {
+.app-switcher.toggle 
+{
 	vertical-align: middle;
 	background-color: $app-switcher-fg-color;
 	display: inline-block;
