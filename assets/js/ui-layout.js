@@ -22,8 +22,16 @@
 	
 	var sidebar = {
 		toggle : function () {
-			containerHTML.classList.toggle('collapsed');
-			scrollListener();
+			//containerHTML.classList.toggle('collapsed');
+			//scrollListener();
+			
+			var from = parseInt(sidebarHTML.style.width);
+			
+			transition(from, from !== 0? 0 : 200, function(progress) {
+				console.log(progress);
+				sidebarHTML.style.width    = progress;
+				contentHTML.style.width    = pixels(constraints.width - progress);
+			}, 500);
 		},
 		
 		hide: function () {
@@ -48,6 +56,29 @@
 			containerHTML.classList.remove('collapsed');
 		}
 	};
+	
+	
+	var transition = function (from, to, cb, duration, step) {
+		if (step === undefined) { step = 1000/60; } 
+		
+		var count = 0;
+		console.log(from)
+		console.log(to)
+		
+		var fn = function () {
+			if (count >= duration / step) {
+				cb(to);
+				return;
+			}
+			
+			var progress = count / (duration / step);
+			cb(from + (to - from) * progress);
+			count++;
+			setTimeout(fn, step);
+		};
+		
+		fn();
+	}
 	 
 	/*
 	 * This function quickly allows the application to check whether it should 

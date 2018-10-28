@@ -21,7 +21,6 @@ body {
 	left: 0;
 	height: 100%;
 	width:  100%;
-	transition: left .2s ease-in, opacity .2s ease-in, width .2s ease-in;
 	
 	.menu-title {
 		color: #2a912e;
@@ -131,7 +130,6 @@ body {
 		}
 	}
 	
-	transition: opacity .2s ease-in, width .2s ease-in;
 }
 
 .content {
@@ -146,7 +144,6 @@ body {
     * is changed in size, not all children behave as expected.
 	 */
 	overflow-x: hidden;
-	transition: width .2s ease-in
 }
 
 	
