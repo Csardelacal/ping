@@ -53,5 +53,7 @@ $navbar-padding   :        15px;
 	
 	&:after {
 		clear: both;
+		content: '';
+		display: table;
 	}
 }

@@ -36,13 +36,13 @@ and open the template in the editor.
 	padding-left: 10px;
 	
 	li {
-		margin-left: 4px;
+		margin-left: 0px;
 		padding-left: 5px;
 	}
 	
 	li.active {
 		margin-left: 0;
-		border-left: solid 4px #AAA;
+		font-weight: bold;
 	}
 	
 	a {

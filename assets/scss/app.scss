@@ -112,14 +112,15 @@ a {
 
 .user-card {
 	.banner {
-		height: 64px;
 		overflow: hidden;
 		background: #3289c7;
+		min-height: 40px;
 		
 		img {
 			width: 100%;
 			height: auto;
 			background: #FFF;
+			vertical-align: top;
 		}
 	}
 	

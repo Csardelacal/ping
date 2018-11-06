@@ -1,37 +1,29 @@
 
-<!--Sidebar (secondary navigation) -->
-<div class="contains-sidebar">
-	<div class="sidebar">
-		<div class="spacer" style="height: 10px"></div> 
-		<div class="material unpadded user-card">
-			<?php $user = $sso->getUser($authUser->id); ?>
-			<a href="<?= url('user', $user->getUsername()) ?>">
-				<div class="banner" style="height: 47px">
-					<?php try { $banner = $user->getAttribute('banner')->getPreviewURL(320, 75) ?>
-					<?php if (!$banner) { throw new Exception(); } ?>
-					<img src="<?= $banner ?>" width="275" height="64">
-					<?php } catch (Exception$e) { } ?>
-				</div>
-				<div class="padded" style="margin-top: -35px;">
-					<img class="avatar" src="<?= $user->getAvatar(128) ?>">
-					<div class="user-info">
-						<span class="user-name"><?= $user->getUsername() ?></span>
-						<span class="user-bio"><?= db()->table('follow')->get('prey__id', $user->getId())->count() ?> followers</span>
-					</div>
-				</div>
-			</a>
-		</div>
-
-		<?= $secondary_navigation ?>
-	</div>
-</div>
-	
-<div class="content">
 	<div class="spacer" style="height: 10px"></div> 
 	
-	<div class="row l4 fluid">
+	<div class="row l4">
+		<div class="span l1">
+			<div class="material unpadded user-card">
+				<?php $user = $sso->getUser($authUser->id); ?>
+				<a href="<?= url('user', $user->getUsername()) ?>">
+					<div class="banner">
+						<?php try { $banner = $user->getAttribute('banner')->getPreviewURL(320, 120) ?>
+						<?php if (!$banner) { throw new Exception(); } ?>
+						<img src="<?= $banner ?>" width="275" height="64">
+						<?php } catch (Exception$e) { } ?>
+					</div>
+					<div class="padded" style="margin-top: -35px;">
+						<img class="avatar" src="<?= $user->getAvatar(128) ?>">
+						<div class="user-info">
+							<span class="user-name">@<?= $user->getUsername() ?></span>
+							<span class="user-bio"><?= db()->table('follow')->get('prey__id', $user->getId())->count() ?> followers</span>
+						</div>
+					</div>
+				</a>
+			</div>
+		</div>
 		<!-- Main content-->
-		<div class="span l3">
+		<div class="span l2">
 			<div class="material unpadded">
 				<form method="POST" action="<?= url('ping', 'push') ?>" enctype="multipart/form-data">
 					<div class="padded add-ping">
@@ -281,7 +273,6 @@
 			</div>
 		</div>
 	</div>
-</div>
 
 <script type="text/javascript" src="<?= spitfire\core\http\URL::asset('js/lysine.js') ?>"></script>
 <script type="text/javascript" src="<?= spitfire\core\http\URL::asset('js/queue.js') ?>"></script>
@@ -470,9 +461,9 @@
 								try {
 									let div = document.createElement('div');
 									div.innerHTML = html;
-									return div.querySelector('.errormsg .wrapper p').innerHTML
+									return div.querySelector('.errormsg .wrapper p').innerHTML;
 								}
-								catch(e){ return `Image upload failed (HTTP ${status})` }
+								catch(e){ return `Image upload failed (HTTP ${status})`; }
 							})(this.responseText);
 						}
 					}

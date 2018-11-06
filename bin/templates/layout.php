@@ -5,6 +5,7 @@
 		<title><?= isset(${'page.title'}) && ${'page.title'}? ${'page.title'} : 'Ping - Notifications' ?></title>
 		<link href="https://fonts.googleapis.com/css?family=Nunito+Sans" rel="stylesheet"> 
 		<link type="text/css" rel="stylesheet" href="<?= \spitfire\core\http\URL::asset('css/app.css') ?>">
+		<meta name="_scss" content="<?= \spitfire\SpitFire::baseUrl() ?>/assets/scss/_/js/">
 		
 		<?php if (\spitfire\core\Environment::get('analytics.id')): ?>
 		<script>
@@ -46,40 +47,54 @@
 		
 		<!--Top most navigation-->
 		<div class="navbar">
-			<div class="row l1">
-				<div class="span l1">
-					<div class="left">
-						<span class="toggle-button dark"></span>
-						<a href="<?= url() ?>">
-							<img src="<?= spitfire\core\http\URL::asset('img/logo.png') ?>" width="17" style="margin-right: 5px; vertical-align: -3px"> Ping
-						</a>
+			<div class="left">
+				<span class="toggle-button dark"></span>
+				<a href="<?= url() ?>">
+					<img src="<?= spitfire\core\http\URL::asset('img/logo.png') ?>" width="17" style="margin-right: 5px; vertical-align: -3px"> Ping
+					<span class="badge" data-ping-counter data-ping-amt="0">?</span>
+				</a>
+			</div>
+			<div class="right">
+				<?php if(isset($authUser)): ?>
+					<span class="h-spacer" style="display: inline-block; width: 10px;"></span>
+					<a class="menu-item not-mobile" href="<?= url('settings') ?>">
+						<img src="<?= $authUser->avatar ?>" width="17"  style="margin-right: 5px; vertical-align: -3px">
+						Settings
+					</a>
+					<span class="h-spacer" style="display: inline-block; width: 10px;"></span>
+					<div class="has-dropdown" style="display: inline-block">
+						<span class="app-switcher toggle" data-toggle="app-drawer"></span>
+						<div class="dropdown right-bound unpadded" data-dropdown="app-drawer">
+							<div class="app-drawer" id="app-drawer"></div>
+						</div>
 					</div>
-					<div class="right">
-						<?php if(isset($authUser)): ?>
-							<a class="menu-item" href="<?= url('feed') ?>">Feed <span class="badge" data-ping-counter data-ping-amt="0">?</span></a>
-							<span class="h-spacer" style="display: inline-block; width: 10px;"></span>
-							<a class="menu-item" href="<?= url('settings') ?>">
-								<img src="<?= $authUser->avatar ?>" width="17"  style="margin-right: 5px; vertical-align: -3px">
-								Settings
-							</a>
-							<span class="h-spacer" style="display: inline-block; width: 10px;"></span>
-							<div class="has-dropdown" style="display: inline-block">
-								<span class="app-switcher toggle" data-toggle="app-drawer"></span>
-								<div class="dropdown right-bound unpadded" data-dropdown="app-drawer">
-									<div class="app-drawer" id="app-drawer"></div>
-								</div>
-							</div>
-							<span class="h-spacer" style="display: inline-block; width: 20px;"></span>
-						<?php else: ?>
-							<a class="menu-item" href="<?= url('user', 'login') ?>">Login</a>
-						<?php endif; ?>
-					</div>
-				</div>
+					<span class="h-spacer" style="display: inline-block; width: 20px;"></span>
+				<?php else: ?>
+					<a class="menu-item" href="<?= url('user', 'login') ?>">Login</a>
+				<?php endif; ?>
 			</div>
 		</div>
 		
-		<div class="auto-extend" style="max-width: 71em; margin: 0 auto;">
-			<?= $this->content() ?>
+		<div class="auto-extend">
+			<!--Sidebar -->
+			<div class="contains-sidebar">
+				<div class="sidebar">
+					<div class="menu-title"> Account</div>
+					<div class="menu-entry"><a href="<?= url() ?>"                  >Feed</a></div>
+					<div class="menu-entry"><a href="<?= url('activity')         ?>">Activity</a></div>
+					<div class="menu-entry"><a href="<?= url('people', 'followingMe') ?>">Followers</a></div>
+					<div class="menu-entry"><a href="<?= url('people', 'iFollow') ?>"  >Following</a></div>
+					<div class="menu-entry"><a href="<?= url('user', $authUser->username) ?>"><img src="<?= $authUser->avatar ?>" width="17"  style="margin-right: 5px; vertical-align: -3px">My profile</a></div>
+					
+					
+					<div class="menu-title"> Settings</div>
+					<div class="menu-entry"><a href="<?= url('settings')         ?>">Settings</a></div>
+				</div>
+			</div><!--
+
+			--><div class="content" data-sticky-context>
+				<?= $this->content() ?>
+			</div>
 		</div>
 		
 		<script type="text/javascript">
@@ -92,15 +107,15 @@
 		});
 		</script>
 		
-		<script src="<?= spitfire\core\http\URL::asset('js/depend.js') ?>" type="text/javascript"></script>
-		<script src="<?= spitfire\core\http\URL::asset('js/depend/router.js') ?>" type="text/javascript"></script>
-		<script type="text/javascript" src="<?= spitfire\core\http\URL::asset('js/ui-layout.js') ?>"></script>
+		<script src="<?= spitfire\core\http\URL::asset('js/m3/depend.js') ?>" type="text/javascript"></script>
+		<script src="<?= spitfire\core\http\URL::asset('js/m3/depend/router.js') ?>" type="text/javascript"></script>
 		
 		<script type="text/javascript">
 		(function () {
-			depend(['depend/router'], function(router) {
+			depend(['m3/depend/router'], function(router) {
 				router.all().to(function(e) { return '<?= \spitfire\SpitFire::baseUrl() . '/assets/js/' ?>' + e + '.js'; });
 				router.equals('phpas/app/drawer').to( function() { return '<?= $sso->getAppDrawerJS() ?>'; });
+				router.equals('_scss').to( function() { return '<?= \spitfire\SpitFire::baseUrl() ?>/assets/scss/_/js/_.scss.js'; });
 			});
 			
 			depend(['ui/dropdown'], function (dropdown) {
@@ -109,6 +124,10 @@
 			
 			depend(['phpas/app/drawer'], function (drawer) {
 				console.log(drawer);
+			});
+			
+			depend(['_scss'], function() {
+				console.log('Loaded _scss');
 			});
 		}());
 		</script>
