@@ -19,8 +19,8 @@ class PingModel extends spitfire\Model
 		 * This should be the actual media field, but since the old media field is
 		 * still out there in the wild we'll have to deprecate it first.
 		 */
-		$schema->attached= new ChildrenField('media\media', 'ping');
 		$schema->processed = new BooleanField();
+		$schema->attached= new ChildrenField('media\media', 'ping');
 		
 		$schema->replies = new ChildrenField('ping', 'irt');
 		$schema->shared  = new ChildrenField('ping', 'share');

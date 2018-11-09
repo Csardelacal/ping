@@ -21,6 +21,10 @@ class Bucket
 	
 	public function upload($file, $name = null) {
 		
+		if (filesize($file) === 0) {
+			throw new \spitfire\exceptions\PrivateException('File is empty', 1811091157);
+		}
+		
 		$r = $this->master->request('/media/create.json');
 		$r->get('signature', (string)$this->ctx->signature());
 		$r->post('bucket', $this->uniqid);
@@ -37,6 +41,7 @@ class Bucket
 		
 		$media = new Media($this, $response->name, $response->uniqid);
 		$media->setLinks([$response->link]);
+		$media->setMime(mime($file));
 		return $media;
 	}
 	

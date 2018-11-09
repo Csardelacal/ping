@@ -8,10 +8,8 @@ class ThumbModel extends Model
 {
 	
 	public function definitions(Schema $schema) {
-		$schema->ping   = new \Reference('ping');
 		$schema->media  = new \Reference('media\media');
-		$schema->width  = new \IntegerField(true);
-		$schema->aspect = new \EnumField('original', 'square', 'double');
+		$schema->aspect = new \EnumField('t', 's', 'm', 'l', 'xl', 'src');
 		$schema->mime   = new \StringField(20);
 		$schema->file   = new \FileField();
 		$schema->poster = new \FileField();

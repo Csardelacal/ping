@@ -83,6 +83,10 @@ body {
 @media all and (min-width: 1160px) {
   .contains-sidebar + .content {
     width: calc(100% - 200px); }
+  .contains-sidebar.collapsed {
+    display: none; }
+    .contains-sidebar.collapsed + .content {
+      width: 100%; }
   .contains-sidebar .sidebar {
     position: relative;
     width: 200px; } }

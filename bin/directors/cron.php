@@ -75,4 +75,72 @@ class CronDirector extends Director
 		
 	}
 	
+	public function media() {
+		#Create a user
+		$this->sso   = new \auth\SSOCache(spitfire\core\Environment::get('SSO'));
+		
+		#Initialize storage
+		storage()->register(new \cloudy\sf\Mount('cloudy://', new \cloudy\Cloudy('http://1488571465@localhost/cloudy/pool1/', $this->sso)));
+		
+		console()->success('Initiating cron...')->ln();
+		$started   = time();
+		$ping      = false;
+		
+		
+		$file = spitfire()->getCWD() . '/bin/usr/.media.cron.lock';
+		$fh = fopen($file, file_exists($file)? 'r' : 'w+');
+		
+		if (!flock($fh, LOCK_EX)) { 
+			console()->error('Could not acquire lock')->ln();
+			return 1; 
+		}
+		
+		console()->success('Acquired lock!')->ln();
+		
+		while(null !== $ping = db()->table('ping')->getAll()->group()->where('processed', false)->where('processed', null)->endGroup()->first()) {
+			
+			$attached = $ping->attached->toArray();
+			
+			if (empty($attached) && $ping->media) {
+				$file = storage()->dir(spitfire\core\Environment::get('uploads.directory'))->make(uniqid() . pathinfo($ping->media, PATHINFO_BASENAME));
+				
+				try {
+					$file->write(storage()->get($ping->media)->read());
+					
+				} catch (\Exception $ex) {
+
+					$file->write(file_get_contents($ping->media));
+				}
+				
+				$media = db()->table('media\media')->newRecord();
+				$media->type = 'image';
+				$media->file = $file->uri();
+				$media->ping = $ping;
+				$media->store();
+				
+				console()->success('Created fallback media')->ln();
+			}
+			
+			foreach ($ping->attached->toArray() as $media) {
+				$micro = microtime(true);
+				
+				$compressor = new media\Compressor($media);
+				$compressor->process();
+				
+				console()->success('Processed media, took ' . (microtime(true) - $micro) . ' seconds')->ln();
+			}
+			
+			console()->success('Processed ping')->ln();
+			
+			$ping->processed = true;
+			$ping->store();
+		}
+		
+		console()->success('Cron ended, was running for ' . (time() - $started) . ' seconds')->ln();
+		
+		flock($fh, LOCK_UN);
+		
+		return 0;
+	}
+	
 }

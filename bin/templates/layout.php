@@ -77,7 +77,7 @@
 		
 		<div class="auto-extend">
 			<!--Sidebar -->
-			<div class="contains-sidebar">
+			<div class="contains-sidebar collapsed">
 				<div class="sidebar">
 					<div class="menu-title"> Account</div>
 					<div class="menu-entry"><a href="<?= url() ?>"                  >Feed</a></div>

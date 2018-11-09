@@ -126,6 +126,14 @@ body {
 			width: calc(100% - 200px);
 		}
 		
+		&.collapsed {
+			display: none;
+			
+			&+.content {
+				width: 100%;
+			}
+		}
+		
 		.sidebar {
 			position: relative;
 			width: 200px;

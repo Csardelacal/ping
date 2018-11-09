@@ -35,6 +35,7 @@ class FeedController extends AppController
 				  ->endGroup()
 				->endGroup()
 				->addRestriction('created', time() - 720 * 3600, '>')
+				->where('processed', true)
 				->addRestriction('deleted', null, 'IS')
 				->setOrder('created', 'DESC');
 		
