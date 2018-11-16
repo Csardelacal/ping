@@ -50,11 +50,6 @@ class MediaController extends AppController
 		$record->secret = base64_encode(random_bytes(50));
 		$record->store();
 		
-		#Generate a preview so it does not need to happen later.
-		$record->preview();
-		$record->square();
-		
-		
 		
 		$this->view->set('record', $record);
 		

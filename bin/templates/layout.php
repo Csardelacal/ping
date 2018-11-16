@@ -20,6 +20,19 @@
 		 </script>
 		 <?php endif; ?>
 		
+		<script src="<?= spitfire\core\http\URL::asset('js/m3/depend.js') ?>" type="text/javascript"></script>
+		<script src="<?= spitfire\core\http\URL::asset('js/m3/depend/router.js') ?>" type="text/javascript"></script>
+		
+		<script type="text/javascript">
+		(function () {
+			depend(['m3/depend/router'], function(router) {
+				router.all().to(function(e) { return '<?= \spitfire\SpitFire::baseUrl() . '/assets/js/' ?>' + e + '.js'; });
+				router.equals('phpas/app/drawer').to( function() { return '<?= $sso->getAppDrawerJS() ?>'; });
+				router.equals('_scss').to( function() { return '<?= \spitfire\SpitFire::baseUrl() ?>/assets/scss/_/js/_.scss.js'; });
+			});
+		}());
+		</script>
+		
 	</head>
 	<body>
 		<script>
@@ -106,18 +119,8 @@
 			ae.style.minHeight = Math.max(ae.clientHeight + (wh - dh), 0) + 'px';
 		});
 		</script>
-		
-		<script src="<?= spitfire\core\http\URL::asset('js/m3/depend.js') ?>" type="text/javascript"></script>
-		<script src="<?= spitfire\core\http\URL::asset('js/m3/depend/router.js') ?>" type="text/javascript"></script>
-		
 		<script type="text/javascript">
 		(function () {
-			depend(['m3/depend/router'], function(router) {
-				router.all().to(function(e) { return '<?= \spitfire\SpitFire::baseUrl() . '/assets/js/' ?>' + e + '.js'; });
-				router.equals('phpas/app/drawer').to( function() { return '<?= $sso->getAppDrawerJS() ?>'; });
-				router.equals('_scss').to( function() { return '<?= \spitfire\SpitFire::baseUrl() ?>/assets/scss/_/js/_.scss.js'; });
-			});
-			
 			depend(['ui/dropdown'], function (dropdown) {
 				dropdown('.app-switcher');
 			});

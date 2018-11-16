@@ -83,6 +83,9 @@ class Compressor
 			if ($width && $height) {
 				$manipulator->fit($width, $height);
 			}
+			elseif ($width && $manipulator instanceof \spitfire\io\media\FFMPEGManipulator) {
+				$manipulator->downscale($width);
+			}
 			elseif ($width) {
 				$manipulator->scale($width);
 			}

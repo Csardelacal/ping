@@ -59,18 +59,6 @@ class PingController extends AppController
 		$irt      = $_POST['irt']?? null;
 		$explicit = !!($_POST['explicit']?? false);
 		
-		#If the media is a file, we will store it
-		/**
-		 * @todo This method should be deprecated in favor of batch processing the
-		 * files
-		 */
-		if ($media instanceof Upload) {
-			$media = $media->store()->uri();
-		}
-		elseif (is_string($media)) {
-			$media = null;
-		}
-		
 		#There needs to be a src user. That means that somebody is originating the
 		#notification. There has to be one, and no more than one.
 		$src = db()->table('user')->get('authId', $srcid)->first()? : UserModel::makeFromSSO($this->sso->getUser($srcid));
@@ -96,6 +84,31 @@ class PingController extends AppController
 		$notification->explicit= $explicit;
 		$notification->irt     = $irt? db()->table('ping')->get('_id', $irt)->first(true) : null;
 		$notification->store();
+		
+		#If the media is a file, we will store it
+		/**
+		 * @todo This method should be deprecated in favor of batch processing the
+		 * files
+		 */
+		if ($media instanceof Upload) {
+			$media = $media->store()->uri();
+		}
+		elseif (is_string($media)) {
+			$file = storage()->dir(spitfire\core\Environment::get('uploads.directory'))->make(uniqid() . pathinfo($media, PATHINFO_BASENAME));
+			
+			try {
+				$file->write(storage()->get($media)->read());
+
+			} catch (\Exception $ex) {
+
+				$file->write(file_get_contents($media));
+			}
+			
+			$media = [];
+			
+			$notification->media = $file->uri();
+			$notification->store();
+		}
 		
 		#Attach the media
 		foreach (array_filter($media) as $file) {

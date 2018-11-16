@@ -118,10 +118,12 @@ class CronDirector extends Director
 				$media->ping = $ping;
 				$media->store();
 				
+				$attached[] = $media;
+				
 				console()->success('Created fallback media')->ln();
 			}
 			
-			foreach ($ping->attached->toArray() as $media) {
+			foreach ($attached as $media) {
 				$micro = microtime(true);
 				
 				$compressor = new media\Compressor($media);

@@ -91,6 +91,19 @@
 				</form>
 
 				<div class="separator"></div>
+				
+				<?php if(db()->table('ping')->get('src', db()->table('user')->get('_id', $authUser->id))->where('processed', null)->first()): ?>
+				<div class="padded" style="color: #0571B1">
+					<div class="row l1 fluid">
+						<div class="span l1">
+							Your latest ping is being processed...
+						</div>
+					</div>
+				</div>
+				
+				<div class="separator"></div>
+				
+				<?php endif; ?>
 
 				<?php foreach($notifications as $notification): ?>
 				<?php $user = $sso->getUser($notification->src->authId); ?>
@@ -234,6 +247,7 @@
 
 								<div class="row1 fluid">
 									<div class="span1" style="text-align: right">
+										<a data-condition="v(userName) == patch" data-lysine-href="<?= url('ping', 'delete') ?>{{id}}">Delete</a>
 										<a data-lysine-href="<?= url('ping', 'detail') ?>{{id}}#replies" class="reply-link" data-for="replyCount"></a>
 										<a data-lysine-href="<?= url('ping', 'share'); ?>{{id}}" class="share-link" data-for="shareCount"></a>
 									</div>
@@ -278,7 +292,7 @@
 <script type="text/javascript" src="<?= spitfire\core\http\URL::asset('js/queue.js') ?>"></script>
 
 <script type="text/javascript">
-(function() {
+depend(['m3/core/lysine'], function(Lysine) {
 	var xhr = null;
 	var current = <?= isset($notification) && $notification? $notification->_id : 0 ?>;
 	var notifications = [];
@@ -358,7 +372,7 @@
 	//Attach the listener
 	window.addEventListener('load',   listener, false);
 	document.addEventListener('scroll', listener, false);
-}());
+});
 
 (function () {
 	
