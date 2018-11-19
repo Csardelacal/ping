@@ -90,6 +90,16 @@ class CronDirector extends Director
 		$file = spitfire()->getCWD() . '/bin/usr/.media.cron.lock';
 		$fh = fopen($file, file_exists($file)? 'r' : 'w+');
 		
+		/**
+		 * Prepare a semaphore based flip-flop.
+		 */
+		try {
+			$sem = new FlipFlop($file);
+		} 
+		catch (Exception $ex) {
+			$sem = new TimerFlipFlop($file);
+		}
+		
 		if (!flock($fh, LOCK_EX)) { 
 			console()->error('Could not acquire lock')->ln();
 			return 1; 
@@ -97,7 +107,21 @@ class CronDirector extends Director
 		
 		console()->success('Acquired lock!')->ln();
 		
-		while(null !== $ping = db()->table('ping')->getAll()->group()->where('processed', false)->where('processed', null)->endGroup()->first()) {
+		while(
+			null !== $ping = db()->table('ping')->getAll()->group()->where('processed', false)->where('processed', null)->endGroup()->first() ||
+			$sem->wait()
+		) {
+			/*
+			 * Check if the cron has been running long enough that we should consider
+			 * stopping it.
+			 */
+			if (time() - $started > 1440) {
+				break;
+			}
+			
+			if (!$ping) {
+				continue;
+			}
 			
 			$attached = $ping->attached->toArray();
 			
@@ -106,9 +130,8 @@ class CronDirector extends Director
 				
 				try {
 					$file->write(storage()->get($ping->media)->read());
-					
-				} catch (\Exception $ex) {
-
+				} 
+				catch (\Exception $ex) {
 					$file->write(file_get_contents($ping->media));
 				}
 				

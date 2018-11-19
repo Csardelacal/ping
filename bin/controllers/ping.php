@@ -150,6 +150,14 @@ class PingController extends AppController
 			}
 		}
 		
+		try {
+			$sem = new cron\FlipFlop(spitfire()->getCWD() . '/bin/usr/.media.cron.lock');
+			$sem->notify();
+		}
+		catch (Exception $ex) {
+			#Notifying the cron-job failed. Gracefully recover.
+		}
+		
 	}
 	
 	public function delete($id, $confirm = null) {
