@@ -46,22 +46,23 @@
 								<div class="span l9">
 									<div class="row l5 m4 s4 fluid">
 										<div class="span l1 m1 s1" data-lysine-view="file-upload-preview" >
-											<div style="line-height: 100px; text-align: center; overflow: hidden; border-radius: 8px; height: 100px">
-												<img data-lysine-src="{{source}}" style="vertical-align: middle; " onload="if (this.width > this.height) {
-														this.style.width  = 100 * (this.width / this.height) + 'px';
-														this.style.height = 100 + 'px';
-													}
-													else {
-														this.style.height = 100 * (this.height / this.width) + 'px';
-														this.style.width  = 100 + 'px';
-													}">
+											<div data-condition="v(type) == image">
+												<div>
+													<img data-lysine-src="{{source}}" style="vertical-align: middle; " onload="if (this.width < this.height) {
+															var mw = this.parentNode.clientWidth;
+															this.style.width  = mw * (this.width / this.height) + 'px';
+															this.style.height = mw + 'px';
+														}
+														else {
+															var mw = this.parentNode.clientWidth;
+															this.style.height = mw * (this.height / this.width) + 'px';
+															this.style.width  = mw + 'px';
+														}">
+												</div>
 											</div>
-											<input type="hidden" name="media[]" value="" data-for="id">
-										</div>
-									</div>
-									<div class="row l1 m1 s1 fluid">
-										<div class="span l1 m1 s1" data-lysine-view="video-upload-preview" >
-											<video data-lysine-src="{{source}}" style="vertical-align: middle; width: 100px; ">
+											<div data-condition="v(type) == video">
+												<video data-lysine-src="{{source}}" style="vertical-align: middle; width: 100%" controls></video>
+											</div>
 											<input type="hidden" name="media[]" value="" data-for="id">
 										</div>
 									</div>
@@ -399,163 +400,115 @@ depend(['m3/core/lysine'], function(Lysine) {
 	
 }());
 
-(function () {
+depend(['m3/core/request', 'm3/core/array/iterate'], function (request, iterate) {
 	
-	var xhr = new XMLHttpRequest();
-	xhr.open('GET', '<?= url('people', 'whoToFollow')->setExtension('json') ?>');
+	request('<?= url('people', 'whoToFollow')->setExtension('json') ?>')
 	
-	xhr.onreadystatechange = function () {
-		if (xhr.readyState === 4 && xhr.status === 200) {
-			var json = JSON.parse(xhr.responseText).payload;
+	.then(function(response) {
+		var json = JSON.parse(response).payload;
+		
+		iterate(json, function(e) {
+			var view = new Lysine.view('whotofollow');
+			view.setData(e);
+		});
+	})
+	.catch(function () {
+		console.log('Error loading suggestions');
+	});
+});
+</script>
+
+<script type="text/javascript">
+	depend(['m3/core/request', 'm3/core/array/iterate'], function(request, iterate) {
+		
+		var mediaLimit = 4;
+		
+		/*
+		 * The forms used for media input
+		 */
+		var forms = {
 			
-			for (var i in json) {
-				if (!json.hasOwnProperty(i)) { continue; }
+			img: {
+				input : document.getElementById('ping_media'),
+				ui: document.getElementById('ping_media_selector'),
+				type: 'image',
+				exclusive: false
+			},
+			
+			video: {
+				input : document.getElementById('ping_video'),
+				ui: document.getElementById('ping_video_selector'),
+				type: 'video',
+				exclusive: true
+			}
+		};
+		
+		var queue = new Queue();
+		var uploads = [];
+		
+		iterate(forms, function (form) {
+			
+			form.ui.addEventListener('click', function () {
+				form.input.click();
+			});
+
+			form.input.addEventListener('change', function (e) {
+				var files = e.target.nodeName.toLowerCase() === 'input'? e.target.files : null;
 				
-				var view = new Lysine.view('whotofollow');
-				view.setData(json[i]);
-			}
-		}
-	};
-	
-	xhr.send();
-}());
-</script>
+				iterate(files, function (e) {
+					var job = queue.job();
 
-<script type="text/javascript">
-	(function() {
-		var input = document.getElementById('ping_media');
-		var ui    = document.getElementById('ping_media_selector');
-		var queue = new Queue();
-		
-		ui.addEventListener('click', function () {
-			input.click();
-		});
-		
-		input.addEventListener('change', function (e) {
-			var files = e.target.nodeName.toLowerCase() === 'input'? e.target.files : null;
-
-			for (var i = 0; i < files.length; i++) {
-				var job = queue.job();
-
-				if (files[i].size > 25 * 1024 * 1024) {
-					//Needs a better error
-					alert('Files must be smaller than 25MB');
-					job.complete();
-					continue;
-				}
-
-				var reader = new FileReader();
-				var v = new Lysine.view('file-upload-preview');
-
-				reader.onload = function (e) {
-					
-					v.setData({
-						source: e.target.result,
-						id: null
-					});
-					
-				};
-
-				reader.readAsDataURL(files[i]);
-
-				var upload = new XMLHttpRequest();
-				upload.onreadystatechange = function(job) { return function () {
-					if (this.readyState === 4){
-						const status = this.status;
-						if (status === 200) {
-							var json  = JSON.parse(this.responseText);
-							v.id = json.id + ':' + json.secret;
-
-							job.complete();
-						}
-						else {
-							img.style.borderColor = 'red';
-							img.style.backgroundColor = 'rgba(255,0,0,.1)';
-							img.title = (function(html){
-								try {
-									let div = document.createElement('div');
-									div.innerHTML = html;
-									return div.querySelector('.errormsg .wrapper p').innerHTML;
-								}
-								catch(e){ return `Image upload failed (HTTP ${status})`; }
-							})(this.responseText);
-						}
+					if (e.size > 25 * 1024 * 1024) {
+						//Needs a better error
+						alert('Files must be smaller than 25MB');
+						job.complete();
+						return;
 					}
-				}; }(job);
 
-				var fd = new FormData();
-				fd.append('file', files[i]);
-				fd.append('type', 'image');
+					var reader = new FileReader();
+					let v = new Lysine.view('file-upload-preview');
 
-				upload.open('POST', '<?= url('media', 'upload')->setExtension('json') ?>');
-				upload.send(fd);
+					reader.onload = function (e) {
 
-			}
-		});
-	}());
-</script>
+						v.setData({
+							source: e.target.result,
+							type: form.type,
+							id: null
+						});
 
+					};
 
-<script type="text/javascript">
-	//VIDEO UPLOAD
-	(function() {
-		var input = document.getElementById('ping_video');
-		var ui    = document.getElementById('ping_video_selector');
-		var queue = new Queue();
-		
-		ui.addEventListener('click', function () {
-			input.click();
-		});
-		
-		input.addEventListener('change', function (e) {
-			var files = e.target.nodeName.toLowerCase() === 'input'? e.target.files : null;
-
-			for (var i = 0; i < files.length; i++) {
-				var job = queue.job();
-
-				if (files[i].size > 25 * 1024 * 1024) {
-					//Needs a better error
-					alert('Files must be smaller than 25MB');
-					job.complete();
-					continue;
-				}
-
-				var reader = new FileReader();
-				var v = new Lysine.view('video-upload-preview');
-
-				reader.onload = function (e) {
+					reader.readAsDataURL(e);
 					
-					v.setData({
-						source: e.target.result,
-						id: null
+					var fd = new FormData();
+					fd.append('file', e);
+					fd.append('type', form.type);
+					
+					request('<?= url('media', 'upload')->setExtension('json') ?>', fd)
+					.then(function(response) {
+						var json  = JSON.parse(response);
+						console.log(json);
+						v.id = json.id + ':' + json.secret;
+
+						job.complete();
+					})
+					.catch(function(error) {
+						//Show an error toastimg.style.borderColor = 'red';
+						img.style.backgroundColor = 'rgba(255,0,0,.1)';
+						img.title = (function(html){
+							try {
+								let div = document.createElement('div');
+								div.innerHTML = html;
+								return div.querySelector('.errormsg .wrapper p').innerHTML;
+							}
+							catch(e){ return `Image upload failed (HTTP ${status})`; }
+						})(this.responseText);
 					});
-					
-				};
-
-				reader.readAsDataURL(files[i]);
-
-				var upload = new XMLHttpRequest();
-				upload.onreadystatechange = function(job) { return function () {
-					if (this.readyState === 4){
-						const status = this.status;
-						if (status === 200) {
-							var json  = JSON.parse(this.responseText);
-							v.id = json.id + ':' + json.secret;
-
-							job.complete();
-						}
-					}
-				}; }(job);
-
-				var fd = new FormData();
-				fd.append('file', files[i]);
-				fd.append('type', 'video');
-
-				upload.open('POST', '<?= url('media', 'upload')->setExtension('json') ?>');
-				upload.send(fd);
-
-			}
+				});
+			
+			});
 		});
-	}());
+	});
 </script>
+
 

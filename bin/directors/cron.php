@@ -108,7 +108,7 @@ class CronDirector extends Director
 		console()->success('Acquired lock!')->ln();
 		
 		while(
-			null !== $ping = db()->table('ping')->getAll()->group()->where('processed', false)->where('processed', null)->endGroup()->first() ||
+			(null !== $ping = db()->table('ping')->getAll()->group()->where('processed', false)->where('processed', null)->endGroup()->first()) ||
 			$sem->wait()
 		) {
 			/*
