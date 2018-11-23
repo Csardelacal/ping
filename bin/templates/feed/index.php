@@ -289,11 +289,10 @@
 		</div>
 	</div>
 
-<script type="text/javascript" src="<?= spitfire\core\http\URL::asset('js/lysine.js') ?>"></script>
 <script type="text/javascript" src="<?= spitfire\core\http\URL::asset('js/queue.js') ?>"></script>
 
 <script type="text/javascript">
-depend(['m3/core/lysine'], function(Lysine) {
+depend(['m3/core/lysine'], function(lysine) {
 	var xhr = null;
 	var current = <?= isset($notification) && $notification? $notification->_id : 0 ?>;
 	var notifications = [];
@@ -316,7 +315,7 @@ depend(['m3/core/lysine'], function(Lysine) {
 				}
 				
 				for (var i= 0; i < data.payload.length; i++) { 
-					var view =  new Lysine.view('ping');
+					var view =  new lysine.view('ping');
 					notifications.push(view);
 					
 					view.setData({
@@ -400,7 +399,7 @@ depend(['m3/core/lysine'], function(Lysine) {
 	
 }());
 
-depend(['m3/core/request', 'm3/core/array/iterate'], function (request, iterate) {
+depend(['m3/core/request', 'm3/core/array/iterate', 'm3/core/lysine'], function (request, iterate, lysine) {
 	
 	request('<?= url('people', 'whoToFollow')->setExtension('json') ?>')
 	
@@ -408,7 +407,7 @@ depend(['m3/core/request', 'm3/core/array/iterate'], function (request, iterate)
 		var json = JSON.parse(response).payload;
 		
 		iterate(json, function(e) {
-			var view = new Lysine.view('whotofollow');
+			var view = new lysine.view('whotofollow');
 			view.setData(e);
 		});
 	})
@@ -419,7 +418,7 @@ depend(['m3/core/request', 'm3/core/array/iterate'], function (request, iterate)
 </script>
 
 <script type="text/javascript">
-	depend(['m3/core/request', 'm3/core/array/iterate'], function(request, iterate) {
+	depend(['m3/core/request', 'm3/core/array/iterate', 'm3/core/lysine'], function(request, iterate, lysine) {
 		
 		var mediaLimit = 4;
 		
@@ -466,10 +465,10 @@ depend(['m3/core/request', 'm3/core/array/iterate'], function (request, iterate)
 					}
 
 					var reader = new FileReader();
-					let v = new Lysine.view('file-upload-preview');
+					let v = new lysine.view('file-upload-preview');
 
 					reader.onload = function (e) {
-
+						console.log(form);
 						v.setData({
 							source: e.target.result,
 							type: form.type,

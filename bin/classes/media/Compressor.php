@@ -94,7 +94,7 @@ class Compressor
 			}
 			
 			$poster = $manipulator->poster();
-			$location = storage()->dir(\spitfire\core\Environment::get('uploads.thumbs'));
+			$location = storage()->dir(\spitfire\core\Environment::get('uploads.thumbs')? : \spitfire\core\Environment::get('uploads.directory'));
 			
 			try {
 				/*
