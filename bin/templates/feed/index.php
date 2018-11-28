@@ -46,7 +46,7 @@
 								<div class="span l9">
 									<div class="row l5 m4 s4 fluid">
 										<div class="span l1 m1 s1" data-lysine-view="file-upload-preview" >
-											<div data-condition="v(type) == image">
+											<div data-condition="value(type) == image">
 												<div>
 													<img data-lysine-src="{{source}}" style="vertical-align: middle; " onload="if (this.width < this.height) {
 															var mw = this.parentNode.clientWidth;
@@ -60,7 +60,7 @@
 														}">
 												</div>
 											</div>
-											<div data-condition="v(type) == video">
+											<div data-condition="value(type) == video">
 												<video data-lysine-src="{{source}}" style="vertical-align: middle; width: 100%" controls></video>
 											</div>
 											<input type="hidden" name="media[]" value="" data-for="id">
@@ -248,7 +248,7 @@
 
 								<div class="row1 fluid">
 									<div class="span1" style="text-align: right">
-										<a data-condition="v(userName) == patch" data-lysine-href="<?= url('ping', 'delete') ?>{{id}}">Delete</a>
+										<a data-condition="value(userName) == patch" data-lysine-href="<?= url('ping', 'delete') ?>{{id}}">Delete</a>
 										<a data-lysine-href="<?= url('ping', 'detail') ?>{{id}}#replies" class="reply-link" data-for="replyCount"></a>
 										<a data-lysine-href="<?= url('ping', 'share'); ?>{{id}}" class="share-link" data-for="shareCount"></a>
 									</div>
