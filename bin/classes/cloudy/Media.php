@@ -60,5 +60,8 @@ class Media
 		return $this;
 	}
 	
+	public function delete() {
+		$this->bucket->remove($this->filename);
+	}
 	
 }

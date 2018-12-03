@@ -70,6 +70,14 @@ class Bucket
 		return $file;
 	}
 	
+	public function remove($filename) {
+		$r = $this->master->request(sprintf('/media/delete/%s/%s.json', $this->uniqid, $filename));
+		$r->get('signature', (string)$this->ctx->signature());
+		$r->send()->expect(200)->json();
+		
+		return true;
+	}
+	
 	public function getCloudy() {
 		return $this->ctx;
 	}
