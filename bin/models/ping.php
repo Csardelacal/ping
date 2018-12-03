@@ -103,5 +103,22 @@ class PingModel extends spitfire\Model
 		
 		return $file;
 	}
+	
+	public function attachmentsPreview() {
+		$ret = [];
+		$cnt = 0;
+		
+		$attached = $this->attached->toArray();
+		$length = count($attached);
+		
+		foreach ($attached as $attachment) {
+			$ret[] = [
+				'idx' => $cnt++,
+				'embed' => $attachment->preview($length > 1? 't' : 'm')->getEmbed()
+			];
+		}
+		
+		return $ret;
+	}
 
 }

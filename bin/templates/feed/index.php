@@ -194,14 +194,15 @@
 				<?php endif; ?>
 
 				<div data-lysine-view="ping">
+					
 					<div class="padded" style="padding-top: 5px;">
-						<div class="row10 fluid">
-							<div class="span1 desktop-only" style="text-align: center">
+						<div class="row l10 fluid">
+							<div class="span l1 desktop-only" style="text-align: center">
 								<img data-lysine-src="{{avatar}}" style="width: 100%; border: solid 1px #777; border-radius: 3px;">
 							</div>
-							<div class="span9">
-								<div class="row4">
-									<div class="span3">
+							<div class="span l9">
+								<div class="row l4">
+									<div class="span l3">
 										<img class="mobile-only" data-lysine-src="{{avatar}}" style="width: 16px; border: solid 1px #777; border-radius: 3px; vertical-align: middle">
 										<a data-for="userName" data-lysine-href="{{userURL}}" style="color: #000; font-weight: bold; font-size: .8em;"></a>
 									</div>
@@ -213,14 +214,15 @@
 									<div class="spacer" style="height: 10px"></div>
 
 									<div class="source-ping">
-										<div class="row10 fluid">
+										<div class="row l10 fluid">
 											<div class="span1 desktop-only" style="text-align: center;">
 												<img data-lysine-src="{{avatar}}" style="width: 32px; border: solid 1px #777; border-radius: 3px;">
 											</div>
-											<div class="span9">
+											<div class="span l9">
 												<a  data-for="username" data-lysine-href="{{userURL}}"  style="color: #000; font-weight: bold; font-size: .8em;"></a>
 
-												<p style="margin: 0;" data-for="content"></p>
+												<p style="margin: 0;"><a  data-for="content" data-lysine-href="<?= url('ping', 'detail'); ?>{{id}}"></a></p>
+												
 											</div>
 										</div>
 									</div>
@@ -234,21 +236,52 @@
 											<a data-lysine-href="{{notificationURL}}" style="color: #000;" data-for="notificationContent">
 											</a>
 										</p>
-
+										
 										<div class="spacer" style="height: 20px"></div>
+										
+										<div class="media-preview" data-condition="count(media) != 0">
+											<!--Single images-->
+											<div class="row l1" data-condition="count(media) == 1">
+												<div class="span l1 ng" data-for="media.0.embed"></div>
+											</div>
+											
+											<!-- Two images -->
+											<div class="row l2 m2 s2" data-condition="count(media) == 2">
+												<div class="span l1 ng" data-for="media.0.embed"></div>
+												<div class="span l1 ng" data-for="media.1.embed"></div>
+											</div>
+											
+											<!--Three images-->
+											<div class="row l3 m3 s3" data-condition="count(media) == 3">
+												<div class="span l2 ng" data-for="media.0.embed"></div>
+												<div class="span l1 ng" >
+													<div data-for="media.1.embed"></div>
+													<div data-for="media.2.embed"></div>
+												</div>
+											</div>
+											
+											<!--Four images-->
+											<div class="row l2 m2 s2" data-condition="count(media) == 4">
+												<div class="span l1 ng">
+													<div data-for="media.0.embed"></div>
+													<div data-for="media.1.embed"></div>
+												</div>
+												<div class="span l1 ng">
+													<div data-for="media.2.embed"></div>
+													<div data-for="media.3.embed"></div>
+												</div>
+											</div>
+										</div>
 
-										<a class="media" data-lysine-href="{{notificationURL}}" data-for="notificationMediaEmbed">
-											<!--<img data-lysine-src="{{notificationMedia}}" style="width: 100%">-->
-										</a>
 									</div>
 								</div>
-
-
+								
+								
 								<div class="spacer" style="height: 20px;"></div>
 
 								<div class="row1 fluid">
 									<div class="span1" style="text-align: right">
-										<a data-condition="value(userName) == patch" data-lysine-href="<?= url('ping', 'delete') ?>{{id}}">Delete</a>
+										<a data-lysine-href="{{notificationURL}}" data-condition="value(notificationURL) != #" >Open</a>
 										<a data-lysine-href="<?= url('ping', 'detail') ?>{{id}}#replies" class="reply-link" data-for="replyCount"></a>
 										<a data-lysine-href="<?= url('ping', 'share'); ?>{{id}}" class="share-link" data-for="shareCount"></a>
 									</div>
@@ -325,8 +358,7 @@ depend(['m3/core/lysine'], function(lysine) {
 						userURL            : data.payload[i].user.url,
 						notificationURL    : data.payload[i].url || '#',
 						notificationContent: data.payload[i].content,
-						notificationMedia  : data.payload[i].media? data.payload[i].media : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
-						notificationMediaEmbed  : data.payload[i].media? data.payload[i].mediaEmbed : '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==">',
+						media              : data.payload[i].media,
 						timeRelative       : data.payload[i].timeRelative,
 						replyCount         : data.payload[i].replies || 'Reply',
 						shareCount         : data.payload[i].shares  || 'Share',
@@ -445,6 +477,14 @@ depend(['m3/core/request', 'm3/core/array/iterate', 'm3/core/lysine'], function 
 		var queue = new Queue();
 		var uploads = [];
 		
+		queue.onProgress = function() {
+			//Disable the post ping button
+		};
+		
+		queue.onComplete = function() {
+			//Enable the post ping button
+		};
+		
 		iterate(forms, function (form) {
 			
 			form.ui.addEventListener('click', function () {
@@ -486,8 +526,7 @@ depend(['m3/core/request', 'm3/core/array/iterate', 'm3/core/lysine'], function 
 					request('<?= url('media', 'upload')->setExtension('json') ?>', fd)
 					.then(function(response) {
 						var json  = JSON.parse(response);
-						console.log(json);
-						v.id = json.id + ':' + json.secret;
+						v.set('id', json.id + ':' + json.secret);
 
 						job.complete();
 					})

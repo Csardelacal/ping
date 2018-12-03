@@ -32,7 +32,7 @@ foreach ($notifications as $n) {
 	$payload[] = Array(
 		'id'           => $n->_id,
 		'url'          => $n->url,
-		'media'        => $n->preview()? $n->preview()->file : null,
+		'media'        => $n->attachmentsPreview(),
 		'mediaEmbed'   => $n->preview()? $n->preview()->getMediaEmbed() : null,
 		'content'      => Mention::idToMentions($n->content),
 		'timestamp'    => $n->created,

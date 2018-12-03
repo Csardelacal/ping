@@ -206,6 +206,7 @@
 												<a  data-for="username" data-lysine-href="{{userURL}}"  style="color: #000; font-weight: bold; font-size: .8em;"></a>
 
 												<p style="margin: 0;"><a  data-for="content" data-lysine-href="<?= url('ping', 'detail'); ?>{{id}}"></a></p>
+												
 											</div>
 										</div>
 									</div>
@@ -219,20 +220,52 @@
 											<a data-lysine-href="{{notificationURL}}" style="color: #000;" data-for="notificationContent">
 											</a>
 										</p>
-
+										
 										<div class="spacer" style="height: 20px"></div>
+										
+										<div class="media-preview" data-condition="count(media) != 0">
+											<!--Single images-->
+											<div class="row l1" data-condition="count(media) == 1">
+												<div class="span l1 ng" data-for="media.0.embed"></div>
+											</div>
+											
+											<!-- Two images -->
+											<div class="row l2 m2 s2" data-condition="count(media) == 2">
+												<div class="span l1 ng" data-for="media.0.embed"></div>
+												<div class="span l1 ng" data-for="media.1.embed"></div>
+											</div>
+											
+											<!--Three images-->
+											<div class="row l3 m3 s3" data-condition="count(media) == 3">
+												<div class="span l2 ng" data-for="media.0.embed"></div>
+												<div class="span l1 ng" >
+													<div data-for="media.1.embed"></div>
+													<div data-for="media.2.embed"></div>
+												</div>
+											</div>
+											
+											<!--Four images-->
+											<div class="row l2 m2 s2" data-condition="count(media) == 4">
+												<div class="span l1 ng">
+													<div data-for="media.0.embed"></div>
+													<div data-for="media.1.embed"></div>
+												</div>
+												<div class="span l1 ng">
+													<div data-for="media.2.embed"></div>
+													<div data-for="media.3.embed"></div>
+												</div>
+											</div>
+										</div>
 
-										<a class="media" data-lysine-href="{{notificationURL}}" >
-											<img data-lysine-src="{{notificationMedia}}" style="width: 100%">
-										</a>
 									</div>
 								</div>
-
-
+								
+								
 								<div class="spacer" style="height: 20px;"></div>
 
 								<div class="row1 fluid">
 									<div class="span1" style="text-align: right">
+										<a data-lysine-href="{{notificationURL}}" data-condition="value(notificationURL) != #" >Open</a>
 										<a data-lysine-href="<?= url('ping', 'detail') ?>{{id}}#replies" class="reply-link" data-for="replyCount"></a>
 										<a data-lysine-href="<?= url('ping', 'share'); ?>{{id}}" class="share-link" data-for="shareCount"></a>
 									</div>
@@ -265,7 +298,7 @@
 <script type="text/javascript" src="<?= \spitfire\core\http\URL::asset('js/lysine.js') ?>"></script>
 
 <script type="text/javascript">
-(function() {
+depend(['m3/core/lysine'], function(Lysine) {
 	var xhr = null;
 	var current = <?= json_encode(isset($notification) && $notification? $notification->_id : null) ?>;
 	var notifications = [];
@@ -298,17 +331,14 @@
 						userURL            : '<?= url('user') ?>/' + data.payload[i].user.username,
 						notificationURL    : data.payload[i].url || '#',
 						notificationContent: data.payload[i].content,
+						mediaCount         : data.payload[i].mediaCount,
+						media              : data.payload[i].media,
 						notificationMedia  : data.payload[i].media? data.payload[i].media : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
 						timeRelative       : data.payload[i].timeRelative,
 						replyCount         : data.payload[i].replies || 'Reply',
 						shareCount         : data.payload[i].shares  || 'Share',
 						irt                : data.payload[i].irt? [data.payload[i].irt] : []
 					});
-					
-					if (!data.payload[i].media) {
-						var child = view.getHTML().querySelector('.media');
-						child.parentNode.removeChild(child);
-					}
 					
 					if (!data.payload[i].irt) {
 						var child = view.getHTML().querySelector('.irt');
@@ -358,7 +388,7 @@
 	//Attach the listener
 	window.addEventListener('load',   listener, false);
 	document.addEventListener('scroll', listener, false);
-}());
+});
 
 (function () {
 	
