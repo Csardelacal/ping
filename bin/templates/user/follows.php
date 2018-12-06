@@ -7,10 +7,10 @@
 
 <div class="spacer" style="height: 18px"></div>
 
-<div class="row5">
+<div class="row l4">
 	
 	<!--Sidebar (secondary navigation) -->
-	<div class="span1">
+	<div class="span l1">
 		<div class="profile-resume desktop-only">
 			<a href="<?= url('user', $user->getUsername()) ?>"><img class="avatar" src="<?= $user->getAvatar(256) ?>"></a>
 			<div class="spacer" style="height: 10px"></div>
@@ -45,13 +45,13 @@
 		</div>
 	</div>
 	
-	<div class="span4">
-		<?php $every = new Every(3, '</div><div class=s"pacer" style="height:30px;"></div><div class="row3">'); ?>
+	<div class="span l3">
+		<?php $every = new Every(3, '</div><div class="spacer" style="height:30px;"></div><div class="row3">'); ?>
 		
-		<div class="row3">
+		<div class="row l3">
 			<?php foreach ($followers as $follower): ?>
 			<?php $user = $sso->getUser($follower->authId); ?>
-			<div class="span1 material unpadded user-card">
+			<div class="span l1 material unpadded user-card">
 				<a href="<?= url('user', $user->getUsername()) ?>">
 					<div class="banner">
 						<?php try { $banner = $user->getAttribute('banner')->getPreviewURL(320, 75) ?>

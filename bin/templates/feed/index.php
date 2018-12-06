@@ -108,7 +108,27 @@
 
 				<?php foreach($notifications as $notification): ?>
 				<?php $user = $sso->getUser($notification->src->authId); ?>
-				<div class="padded" style="padding-top: 5px;">
+				<?php if ($notification->irt): ?>
+				<div class="source-ping">
+					<div class="row l10 fluid">
+						<div class="span l1 desktop-only" style="text-align: center;">
+							<img src="<?= $sso->getUser($notification->irt->src->authId)->getAvatar(64) ?>" style="width: 32px; border: solid 1px #777; border-radius: 3px;">
+						</div>
+						<div class="span l9">
+							<a href="<?= url('user', $sso->getUser($notification->irt->src->authId)->getUsername()) ?>"  style="color: #000; font-weight: bold; font-size: .8em;">
+								<?= $sso->getUser($notification->irt->src->authId)->getUsername() ?>
+							</a>
+
+							<p style="margin: 0;">
+								<?= Mention::idToMentions($notification->irt->content) ?>
+							</p>
+						</div>
+					</div>
+				</div>
+				<?php endif; ?>
+				
+				
+				<div class="padded">
 
 
 					<div class="row l10 fluid">
@@ -129,28 +149,6 @@
 								</div>
 							</div>
 
-							<?php if ($notification->irt): ?>
-							<div class="spacer" style="height: 10px"></div>
-
-							<div class="source-ping">
-								<div class="row10 fluid">
-									<div class="span1 desktop-only" style="text-align: center;">
-										<img src="<?= $sso->getUser($notification->irt->src->authId)->getAvatar(64) ?>" style="width: 32px; border: solid 1px #777; border-radius: 3px;">
-									</div>
-									<div class="span9">
-										<a href="<?= url('user', $sso->getUser($notification->irt->src->authId)->getUsername()) ?>"  style="color: #000; font-weight: bold; font-size: .8em;">
-											<?= $sso->getUser($notification->irt->src->authId)->getUsername() ?>
-										</a>
-
-										<p style="margin: 0;">
-											<?= Mention::idToMentions($notification->irt->content) ?>
-										</p>
-									</div>
-								</div>
-							</div>
-
-							<div class="spacer" style="height: 10px"></div>
-							<?php endif; ?>
 
 							<div class="row l1 fluid" style="margin-top: 5px">
 								<div class="span l1">
@@ -194,6 +192,26 @@
 				<?php endif; ?>
 
 				<div data-lysine-view="ping">
+					<div class="irt" data-lysine-view data-for="irt">
+						<div class="source-ping">
+							<div class="row l10 fluid">
+								<div class="span l1 desktop-only" style="text-align: center;">
+									<img data-lysine-src="{{avatar}}" style="width: 32px; border: solid 1px #777; border-radius: 3px;">
+								</div>
+								<div class="span l9">
+									<a  data-for="username" data-lysine-href="{{userURL}}"  style="color: #000; font-weight: bold; font-size: .8em;"></a>
+
+									<p style="margin: 0;">
+										<a  data-for="content" data-lysine-href="<?= url('ping', 'detail'); ?>{{id}}"></a>
+										<a  data-condition="count(media) != 0" data-lysine-href="<?= url('ping', 'detail'); ?>{{id}}"><strong>[[Media]]</strong></a>
+									</p>
+
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="spacer" style="height: 10px"></div>
 					
 					<div class="padded" style="padding-top: 5px;">
 						<div class="row l10 fluid">
@@ -210,25 +228,6 @@
 								</div>
 
 
-								<div class="irt" data-lysine-view data-for="irt">
-									<div class="spacer" style="height: 10px"></div>
-
-									<div class="source-ping">
-										<div class="row l10 fluid">
-											<div class="span1 desktop-only" style="text-align: center;">
-												<img data-lysine-src="{{avatar}}" style="width: 32px; border: solid 1px #777; border-radius: 3px;">
-											</div>
-											<div class="span l9">
-												<a  data-for="username" data-lysine-href="{{userURL}}"  style="color: #000; font-weight: bold; font-size: .8em;"></a>
-
-												<p style="margin: 0;"><a  data-for="content" data-lysine-href="<?= url('ping', 'detail'); ?>{{id}}"></a></p>
-												
-											</div>
-										</div>
-									</div>
-
-									<div class="spacer" style="height: 10px"></div>
-								</div>
 
 								<div class="row1" style="margin-top: 5px">
 									<div class="span1">
@@ -508,13 +507,32 @@ depend(['m3/core/request', 'm3/core/array/iterate', 'm3/core/lysine'], function 
 					let v = new lysine.view('file-upload-preview');
 
 					reader.onload = function (e) {
-						console.log(form);
 						v.setData({
 							source: e.target.result,
 							type: form.type,
 							id: null
 						});
-
+						
+						uploads.push({
+							view: v,
+							form: form
+						});
+						
+						iterate(uploads, function(e) { 
+							if (e.form.exclusive) {
+								document.getElementById('ping_media_selector').style.display = 'none';
+								document.getElementById('ping_video_selector').style.display = 'none';
+							};
+						});
+						
+						if (uploads.length >= mediaLimit) {
+							document.getElementById('ping_media_selector').style.display = 'none';
+							document.getElementById('ping_video_selector').style.display = 'none';
+						}
+						
+						if (uploads.length > 0) {
+							document.getElementById('ping_video_selector').style.display = 'none';
+						}
 					};
 
 					reader.readAsDataURL(e);
@@ -531,16 +549,8 @@ depend(['m3/core/request', 'm3/core/array/iterate', 'm3/core/lysine'], function 
 						job.complete();
 					})
 					.catch(function(error) {
-						//Show an error toastimg.style.borderColor = 'red';
-						img.style.backgroundColor = 'rgba(255,0,0,.1)';
-						img.title = (function(html){
-							try {
-								let div = document.createElement('div');
-								div.innerHTML = html;
-								return div.querySelector('.errormsg .wrapper p').innerHTML;
-							}
-							catch(e){ return `Image upload failed (HTTP ${status})`; }
-						})(this.responseText);
+						alert('Error uploading file. Please retry');
+						v.destroy();
 					});
 				});
 			

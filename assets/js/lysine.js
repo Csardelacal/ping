@@ -437,10 +437,10 @@ if (window      === undefined) { throw 'Lysine requires a browser to work. Windo
 				if (elements[i].getAttribute && elements[i].getAttribute('data-for')) {
 					if (elements[i].hasAttribute('data-lysine-view')) {
 						v = new ArrayAdapter(elements[i]);
-						adapters[elements[i].getAttribute('data-for')] = v;
+						adapters.push(v);
 					}
 					else {
-						adapters[elements[i].getAttribute('data-for')] = this.getAdapter(elements[i], null);
+						adapters.push(this.getAdapter(elements[i], null));
 					}
 				}
 				else if (elements[i].nodeType !== 3) {

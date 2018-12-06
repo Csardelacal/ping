@@ -1,12 +1,12 @@
 
 <div class="spacer" style="height: 80px"></div>
 
-<div class="row5">
-	<div class="span1">
+<div class="row l5">
+	<div class="span l1">
 		
 	</div>
 	
-	<div class="span3">
+	<div class="span l3">
 		<div class="material">
 			<p style="color: #555; font-size: .8em;">
 				Use this page to define how you wish to receive email notifications 
@@ -18,11 +18,11 @@
 			
 			<form method="POST" action="">
 				<?php foreach (array_reverse($types) as $label => $id): ?>
-				<div class="row3 fluid">
-					<div class="span1">
+				<div class="row l3 fluid">
+					<div class="span l1">
 						<label style="color: #555; font-size: .8em;"><?= ucfirst($label) ?></label>
 					</div>
-					<div class="span2">
+					<div class="span l2">
 						<span class="styled-select">
 							<select name="notification[<?= $id ?>]">
 								<option value="<?= settings\NotificationModel::NOTIFY_EMAIL ?>" <?= isset($calculated[$id]) && $calculated[$id] == 0? 'selected' : '' ?>>Instant email notifications</option>
@@ -36,8 +36,8 @@
 				
 				<div class="spacer" style="height: 30px"></div>
 				
-				<div class="row1">
-					<div class="span1" style="text-align: right">
+				<div class="row l1">
+					<div class="span l1" style="text-align: right">
 						<input type="submit" value="Store" class="button">
 					</div>
 				</div>

@@ -93,7 +93,6 @@ a {
 }
 
 .separator {
-	margin: 10px 0;
 	border-top: solid 1px #c0d9eb;
 }
 
@@ -198,11 +197,24 @@ a {
 }
 
 .source-ping {
-	padding: 10px 0px;
-	border: solid 1px #DDD;
-	border-radius: 5px;
+	padding: 15px 10px 10px;
+	border-bottom: solid 1px #DDD;
 	background: #F6F6F6;
 	color: #444;
+	position: relative;
+	font-size: .95em;
+	
+	&:after {
+		content: '';
+		position: absolute;
+		bottom: -10px;
+		left: 35px;
+		background: #3191f1;
+		width: 3px;
+		border-radius: 2px;
+		height: 20px;
+		height: calc(100% - 40px);
+	}
 }
 
 .media-cover {

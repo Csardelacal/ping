@@ -1,14 +1,14 @@
 
 <div class="spacer" style="height: 18px"></div>
 		
-<div class="row5">
+<div class="row l4">
 	<!--Sidebar (secondary navigation) -->
-	<div class="span1">
+	<div class="span l1">
 		<div class="material unpadded user-card">
 			<?php $user = $sso->getUser($authUser->id); ?>
 			<a href="<?= url('user', $user->getUsername()) ?>">
-				<div class="banner" style="height: 47px">
-					<?php try { $banner = $user->getAttribute('banner')->getPreviewURL(320, 75) ?>
+				<div class="banner">
+					<?php try { $banner = $user->getAttribute('banner')->getPreviewURL(320, 120) ?>
 					<?php if (!$banner) { throw new Exception(); } ?>
 					<img src="<?= $banner ?>" width="275" height="64">
 					<?php } catch (Exception$e) { } ?>
@@ -16,18 +16,16 @@
 				<div class="padded" style="margin-top: -35px;">
 					<img class="avatar" src="<?= $user->getAvatar(128) ?>">
 					<div class="user-info">
-						<span class="user-name"><?= $user->getUsername() ?></span>
+						<span class="user-name">@<?= $user->getUsername() ?></span>
 						<span class="user-bio"><?= db()->table('follow')->get('prey__id', $user->getId())->count() ?> followers</span>
 					</div>
 				</div>
 			</a>
 		</div>
-
-		<?= $secondary_navigation ?>
 	</div>
 
 	<!-- Main content-->
-	<div class="span3">
+	<div class="span l2">
 		<div class="material unpadded">
 			
 			<div class="spacer" style="height: 10px"></div>
@@ -35,8 +33,8 @@
 			<?php foreach($notifications as $notification): ?>
 			<?php $user = $sso->getUser($notification->src->authId); ?>
 			<div class="padded">
-				<div class="row10 fluid">
-					<div class="span8">
+				<div class="row l10 fluid">
+					<div class="span l8">
 						<span class="notification-avatar">
 							<img src="<?= $user->getAvatar(64) ?>" style="width: 24px; border: solid 1px #777; border-radius: 50%; vertical-align: middle">
 							<span class="activity-type <?= array_search($notification->type, NotificationModel::getTypesAvailable()) ?>"></span>
@@ -46,7 +44,7 @@
 						<?= Mention::idToMentions($notification->content) ?>
 						<?php if ($notification->url): ?></a><?php endif; ?>
 					</div>
-					<div class="span2 desktop-only" style="color: #666; font-size: .8em; text-align: right">
+					<div class="span l2 desktop-only" style="color: #666; font-size: .8em; text-align: right">
 						<?= Time::relative($notification->created) ?>
 					</div>
 				</div>
