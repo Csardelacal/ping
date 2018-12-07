@@ -94,10 +94,10 @@ class PingController extends AppController
 			$media = $media->store()->uri();
 		}
 		elseif (is_string($media)) {
-			$media = [];
-			
 			$notification->media = $media;
 			$notification->store();
+			
+			$media = [];
 		}
 		
 		#Attach the media
