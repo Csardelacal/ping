@@ -86,7 +86,7 @@ class CronDirector extends Director
 		$ping      = false;
 		
 		
-		$file = spitfire()->getCWD() . '/bin/usr/.media.cron.lock';
+		$file = spitfire()->getCWD() . '/bin/usr/.media.cron' . $divisor . '.lock';
 		$fh = fopen($file, file_exists($file)? 'r' : 'w+');
 		
 		/**

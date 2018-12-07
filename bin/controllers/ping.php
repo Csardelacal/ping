@@ -141,7 +141,7 @@ class PingController extends AppController
 		}
 		
 		try {
-			$sem = new cron\FlipFlop(spitfire()->getCWD() . '/bin/usr/.media.cron.lock');
+			$sem = new cron\FlipFlop(spitfire()->getCWD() . '/bin/usr/.media.cron' . ($notification->_id % 8) . '.lock');
 			$sem->notify();
 		}
 		catch (Exception $ex) {
