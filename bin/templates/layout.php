@@ -68,7 +68,7 @@
 				</a>
 			</div>
 			<div class="right">
-				<?php if(isset($authUser)): ?>
+				<?php if(isset($authUser) && $authUser): ?>
 					<span class="h-spacer" style="display: inline-block; width: 10px;"></span>
 					<a class="menu-item not-mobile" href="<?= url('settings') ?>">
 						<img src="<?= $authUser->avatar ?>" width="17"  style="margin-right: 5px; vertical-align: -3px">
@@ -92,6 +92,8 @@
 			<!--Sidebar -->
 			<div class="contains-sidebar collapsed">
 				<div class="sidebar">
+					
+					<?php if(isset($authUser) && $authUser): ?>
 					<div class="menu-title"> Account</div>
 					<div class="menu-entry"><a href="<?= url() ?>"                  >Feed</a></div>
 					<div class="menu-entry"><a href="<?= url('activity')         ?>">Activity</a></div>
@@ -102,6 +104,10 @@
 					
 					<div class="menu-title"> Settings</div>
 					<div class="menu-entry"><a href="<?= url('settings')         ?>">Settings</a></div>
+					<?php else: ?>
+					<div class="menu-title"> Account</div>
+					<div class="menu-entry"><a href="<?= url('user', 'login') ?>"   >Login</a></div>
+					<?php endif; ?>
 				</div>
 			</div><!--
 

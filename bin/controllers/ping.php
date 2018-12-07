@@ -94,19 +94,9 @@ class PingController extends AppController
 			$media = $media->store()->uri();
 		}
 		elseif (is_string($media)) {
-			$file = storage()->dir(spitfire\core\Environment::get('uploads.directory'))->make(uniqid() . pathinfo($media, PATHINFO_BASENAME));
-			
-			try {
-				$file->write(storage()->get($media)->read());
-
-			} catch (\Exception $ex) {
-
-				$file->write(file_get_contents($media));
-			}
-			
 			$media = [];
 			
-			$notification->media = $file->uri();
+			$notification->media = $media;
 			$notification->store();
 		}
 		

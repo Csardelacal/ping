@@ -20,7 +20,7 @@ define ('BASEDIR',                rtrim(dirname(__FILE__),'\/'));
 define ('APP_DIRECTORY',         'bin/apps/');
 define ('CONFIG_DIRECTORY',      'bin/settings/');
 define ('CONTROLLERS_DIRECTORY', 'bin/controllers/');
-define ('ASSET_DIRECTORY',       'assets/');
+define ('ASSET_DIRECTORY',       BASEDIR . '/assets/');
 define ('TEMPLATES_DIRECTORY',   'bin/templates/');
 define ('SESSION_SAVE_PATH',     'bin/usr/sessions/');
 
