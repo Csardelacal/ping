@@ -20,12 +20,17 @@ class ThumbModel extends Model
 			return null;
 		}
 		
+		$memcached = \spitfire\cache\MemcachedAdapter::getInstance()->setTimeout(86400);
 		
-		$file = storage($this->file);
-		$post = $this->poster? storage()->get($this->poster) : null;
+		list($uri, $mime, $post) = unserialize($memcached->get('embed_for_' . $this->media->_id . '_' . $this->aspect, function () {
+			$file = storage($this->file);
+			$post = $this->poster? storage()->get($this->poster) : null;
 
-		$uri  = $file instanceof \spitfire\storage\objectStorage\EmbedInterface? $file->publicURI() : url('image', 'preview', $this->_id);
-		$mime = $file instanceof \spitfire\storage\objectStorage\NodeInterface? $file->mime() : 'image/png';
+			$uri  = $file instanceof \spitfire\storage\objectStorage\EmbedInterface? $file->publicURI() : url('image', 'preview', $this->_id);
+			$mime = $file instanceof \spitfire\storage\objectStorage\NodeInterface? $file->mime() : 'image/png';
+			
+			return serialize([$uri, $mime, $post]);
+		}));
 		
 		if ($this->media->type === 'video') {
 			return sprintf('<video controls preload="none" src="%s" poster="%s" style="width: 100%%"></video>', $uri, $post instanceof \spitfire\storage\objectStorage\EmbedInterface? $post->publicURI() : $post);
