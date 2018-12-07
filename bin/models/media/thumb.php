@@ -20,7 +20,8 @@ class ThumbModel extends Model
 			return null;
 		}
 		
-		$memcached = \spitfire\cache\MemcachedAdapter::getInstance()->setTimeout(86400);
+		$memcached = new \spitfire\cache\MemcachedAdapter();
+		$memcached->setTimeout(86400);
 		
 		list($uri, $mime, $post) = unserialize($memcached->get('embed_for_' . $this->media->_id . '_' . $this->aspect, function () {
 			$file = storage($this->file);
