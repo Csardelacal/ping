@@ -75,7 +75,9 @@ class CronDirector extends Director
 		
 	}
 	
-	public function media() {
+	public function media($divisor = 0)  {
+		$probability = 8;
+		
 		#Create a user
 		$this->sso   = new \auth\SSOCache(spitfire\core\Environment::get('SSO'));
 		
@@ -117,6 +119,11 @@ class CronDirector extends Director
 			}
 			
 			if (!$ping) {
+				continue;
+			}
+			
+			if ($ping->_id % $probability != $divisor) {
+				sleep(2);
 				continue;
 			}
 			
