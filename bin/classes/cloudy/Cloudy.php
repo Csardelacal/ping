@@ -16,7 +16,7 @@ class Cloudy
 		$this->endpoint  = rtrim($reflection->getProtocol() . '://' . $reflection->getServer() . ':' . $reflection->getPort() . $reflection->getPath(), '/');
 		$this->appId     = $reflection->getUser();
 		
-		$this->sso = $sso;
+		$this->sso = $sso instanceof \auth\SSO || $sso instanceof \auth\SSOCache? $sso : new \auth\SSOCache($sso);
 	}
 	
 	public function bucket($uniqid) {

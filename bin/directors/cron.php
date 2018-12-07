@@ -79,9 +79,6 @@ class CronDirector extends Director
 		#Create a user
 		$this->sso   = new \auth\SSOCache(spitfire\core\Environment::get('SSO'));
 		
-		#Initialize storage
-		storage()->register(new \cloudy\sf\Mount('cloudy://', new \cloudy\Cloudy('http://1488571465@localhost/cloudy/pool1/', $this->sso)));
-		
 		console()->success('Initiating cron...')->ln();
 		$started   = time();
 		$ping      = false;

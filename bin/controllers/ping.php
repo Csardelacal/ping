@@ -31,7 +31,7 @@ class PingController extends AppController
 			$srcid = $this->user->id;
 		}
 		#Validate the app
-		elseif (isset($_GET['signature']) && $this->sso->authApp($_GET['signature'])->isAuthenticated()) {
+		elseif (isset($_GET['signature']) && $this->sso->authApp($_GET['signature'])) {
 			$srcid = $_POST['src']?? null;
 		}
 		/**

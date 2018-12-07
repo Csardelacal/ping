@@ -34,9 +34,6 @@ abstract class AppController extends Controller
 		$this->sso   = new SSOCache(Environment::get('SSO'));
 		$this->token = isset($_GET['token'])? $this->sso->makeToken($_GET['token']) : $session->getUser();
 		
-		#Initialize storage
-		storage()->register(new \cloudy\sf\Mount('cloudy://', new \cloudy\Cloudy('http://1488571465@localhost/cloudy/pool1/', $this->sso)));
-		
 		#Fetch the user from the cache if necessary
 		$this->user  = $this->token && $this->token instanceof auth\Token? $cache->get('ping_token_' . $this->token->getId(), function () { 
 			return $this->token->isAuthenticated()? $this->token->getTokenInfo()->user : null; 
