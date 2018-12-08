@@ -129,12 +129,13 @@ class CronDirector extends Director
 					$file->write(storage()->get($ping->media)->read());
 				} 
 				catch (\Exception $ex) {
-					$file->write(file_get_contents($ping->media));
+					$body = file_get_contents($ping->media);
 					if (!strstr($http_response_header[0], '200')) { 
 						$ping->processed = true;
 						$ping->store();
 						continue;
 					}
+					$file->write($body);
 				}
 				
 				$media = db()->table('media\media')->newRecord();
