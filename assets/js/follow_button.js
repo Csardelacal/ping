@@ -32,6 +32,36 @@
 		document.head.appendChild(s);
 	};
 	
+	var CORSRequest = function (url, callback) {
+		var request = new XMLHttpRequest();
+		
+		if (!"withCredentials" in request) {
+			throw "XHR is not CORS compatible";
+		}
+		
+		request.onreadystatechange = function () {
+			if (request.readyState === 4 && request.status === 200) {
+				callback({error: false});
+			}
+			
+			if (request.readyState === 4 && request.status !== 200) {
+				callback({error: true});
+			}
+		};
+		
+		request.open('GET', url);
+		request.send();
+	};
+	
+	var Request = function (url, callback) {
+		try {
+			return CORSRequest(url, callback);
+		}
+		catch (e) {
+			return JSRequest(url, callback);
+		}
+	}
+	
 	var Button = function (html, userid) {
 		var ctx = this;
 		
@@ -41,12 +71,12 @@
 			this.following = !this.following;
 			html.innerHTML = actions.pending;
 			
-			JSRequest( (this.following? 'people/follow' : 'people/unfollow') + '/' + userid + '.json', function () {
+			Request( (this.following? 'people/follow' : 'people/unfollow') + '/' + userid + '.json', function () {
 				html.innerHTML = ctx.following? actions.unfollow : actions.follow;
 			} );
 		};
 		
-		JSRequest('people/isFollowing/' + userid + '.json', function (e) {
+		Request('people/isFollowing/' + userid + '.json', function (e) {
 			if (e.error) { return; }
 			
 			html.innerHTML = e.following? actions.unfollow : actions.follow;
