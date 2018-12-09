@@ -49,7 +49,7 @@
 			}
 		};
 		
-		request.open('GET', url);
+		request.open('GET', baseURL + url + '?' + (token? 'token=' + token : ''));
 		request.send();
 	};
 	
