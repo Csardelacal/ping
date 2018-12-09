@@ -345,8 +345,9 @@ depend(['m3/core/lysine'], function(Lysine) {
 						child.parentNode.removeChild(child);
 					}
 					
-					if (data.payload[i].media && data.payload[i].explicit) {
-						var media = view.getHTML().querySelector('.media-preview');
+					var media = view.getHTML().querySelector('.media-preview');
+					
+					if (data.payload[i].media && data.payload[i].explicit && media) {
 						var cover = media.parentNode.insertBefore(document.createElement('div'), media);
 						
 						cover.className = 'media-cover';
