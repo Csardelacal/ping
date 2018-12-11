@@ -20,19 +20,26 @@ class Cloudy
 	}
 	
 	public function bucket($uniqid) {
-		$r = request(sprintf('%s/bucket/read/%s.json', $this->endpoint, $uniqid));
-		$r->get('signature', (string)$this->sso->makeSignature($this->appId));
+		$cache = new \spitfire\cache\MemcachedAdapter();
 		
-		try {
-			$response = $r->send()->expect(200)->json();
-		} catch (\Exception $ex) {
-			die($r->send()->html());
-		}
-		
-		if (!isset($response->payload)) {
-			var_dump($response);
-			die();
-		}
+		$response = $cache->get('cloudy_bucket_' . $uniqid, function() use ($uniqid) {
+			$r = request(sprintf('%s/bucket/read/%s.json', $this->endpoint, $uniqid));
+			$r->get('signature', (string)$this->sso->makeSignature($this->appId));
+
+			try {
+				$response = $r->send()->expect(200)->json();
+			} 
+			catch (\Exception $ex) {
+				die($r->send()->html());
+			}
+
+			if (!isset($response->payload)) {
+				var_dump($response);
+				die();
+			}
+			
+			return $response;
+		});
 		
 		$server   = $response->payload->master->hostname;
 		
