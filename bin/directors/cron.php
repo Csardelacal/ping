@@ -97,17 +97,25 @@ class CronDirector extends Director
 			$sem = new TimerFlipFlop($file);
 		}
 		
-		if (!flock($fh, LOCK_EX)) { 
-			console()->error('Could not acquire lock')->ln();
-			return 1; 
-		}
-		
-		console()->success('Acquired lock!')->ln();
-		
+		$next = function () {
+			return db()->table('ping')->getAll()
+				->group()->where('processed', false)->where('processed', null)->endGroup()
+				->group()->where('locked', false)->where('locked', null)->endGroup()
+				->first();
+		};
+				
 		while(
-			(null !== $ping = db()->table('ping')->getAll()->group()->where('processed', false)->where('processed', null)->endGroup()->first()) ||
+			(flock($fh, LOCK_EX) && null !== ($ping = $next())) ||
 			$sem->wait()
 		) {
+			
+			console()->success('Acquired lock!')->ln();
+			
+			$ping->locked = true;
+			$ping->store();
+			
+			flock($fh, LOCK_UN);
+
 			/*
 			 * Check if the cron has been running long enough that we should consider
 			 * stopping it.
@@ -161,13 +169,11 @@ class CronDirector extends Director
 			console()->success('Processed ping')->ln();
 			
 			$ping->processed = true;
+			$ping->locked = false;
 			$ping->store();
 		}
 		
-		console()->success('Cron ended, was running for ' . (time() - $started) . ' seconds')->ln();
-		
-		flock($fh, LOCK_UN);
-		
+		console()->success('Cron ended, was running for ' . (time() - $started) . ' seconds')->ln();		
 		return 0;
 	}
 	
