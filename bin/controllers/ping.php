@@ -83,6 +83,8 @@ class PingController extends AppController
 		$notification->url     = $url;
 		$notification->explicit= $explicit;
 		$notification->irt     = $irt? db()->table('ping')->get('_id', $irt)->first(true) : null;
+		$notification->processed = false;
+		$notification->locked = false;
 		$notification->store();
 		
 		#If the media is a file, we will store it
