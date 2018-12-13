@@ -108,14 +108,6 @@ class CronDirector extends Director
 			(flock($fh, LOCK_EX) && null !== ($ping = $next())) ||
 			$sem->wait()
 		) {
-			
-			console()->success('Acquired lock!')->ln();
-			
-			$ping->locked = true;
-			$ping->store();
-			
-			flock($fh, LOCK_UN);
-
 			/*
 			 * Check if the cron has been running long enough that we should consider
 			 * stopping it.
@@ -127,6 +119,14 @@ class CronDirector extends Director
 			if (!$ping) {
 				continue;
 			}
+			
+			console()->success('Acquired lock!')->ln();
+			
+			$ping->locked = true;
+			$ping->store();
+			
+			flock($fh, LOCK_UN);
+
 			
 			$attached = $ping->attached->toArray();
 			
