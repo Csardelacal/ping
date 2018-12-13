@@ -39,7 +39,15 @@ class MediaModel extends Model
 	
 	public function preview($size = 'm') {
 		
-		return $this->getTable()->getDb()->table('media\thumb')->get('media', $this)->where('aspect', $size)->first(true);
+		try {
+			return $this->getTable()->getDb()->table('media\thumb')->get('media', $this)->where('aspect', $size)->first(true);
+		}
+		catch (\Exception$e) {
+			$this->ping->processed = false;
+			$this->ping->store();
+			trigger_error(sprintf('Found unprocessed media in ping #%s', $this->ping->_id), E_USER_WARNING);
+			throw new \spitfire\exceptions\PublicException('Media error', 500, $e);
+		}
 		
 	}
 
