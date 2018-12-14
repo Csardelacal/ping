@@ -13,6 +13,8 @@ class Media implements EmbedInterface
 	
 	private $media;
 	
+	private $body = null;
+	
 	public function __construct($parent, $media) {
 		$this->parent = $parent;
 		$this->media = $media;
@@ -46,6 +48,8 @@ class Media implements EmbedInterface
 	}
 
 	public function read(): string {
+		if ($this->body !== null) { return $this->body; }
+		
 		$servers = $this->media->getServers();
 		
 		if (!count($servers)) {
@@ -60,7 +64,7 @@ class Media implements EmbedInterface
 		
 		spitfire()->log(sprintf('Trying to fetch file %s from %s', $this->media->getUniqid(), $server));
 		
-		return $r->send()->expect(200)->html();
+		return $this->body = $r->send()->expect(200)->html();
 	}
 
 	public function up(): NodeInterface {
@@ -79,6 +83,7 @@ class Media implements EmbedInterface
 		$filename = $meta_data["uri"];
 		
 		$this->media = $this->parent->getBucket()->upload($filename, $this->basename());
+		$this->body = $data;
 		return true;
 	}
 
