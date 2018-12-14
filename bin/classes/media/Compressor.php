@@ -50,7 +50,6 @@ class Compressor
 		
 		try {
 			$original = storage()->get($this->media->file);
-			$manipulator = media()->load($original);
 		} 
 		catch (\Exception $ex) {
 			console()->error('Error loading media. ' . $ex->getMessage())->ln();
@@ -61,6 +60,14 @@ class Compressor
 		 * Loop over the formats we need to generate from the file.
 		 */
 		foreach ($this->sizes as $name => $target) {
+			
+			try {
+				$manipulator = media()->load($original);
+			} 
+			catch (\Exception $ex) {
+				console()->error('Error loading media. ' . $ex->getMessage())->ln();
+				return;
+			}
 			
 			$width  = $target[0];
 			$height = $target[1];
