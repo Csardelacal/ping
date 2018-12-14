@@ -47,6 +47,16 @@ class Compressor
 	}
 	
 	public function process() {
+		
+		try {
+			$original = storage()->get($this->media->file);
+			$manipulator = media()->load($original);
+		} 
+		catch (\Exception $ex) {
+			console()->error('Error loading media. ' . $ex->getMessage())->ln();
+			return;
+		}
+		
 		/**
 		 * Loop over the formats we need to generate from the file.
 		 */
@@ -68,14 +78,6 @@ class Compressor
 			$thumb->media  = $this->media;
 			$thumb->aspect = $name;
 			
-			try {
-				$original = storage()->get($this->media->file);
-				$manipulator = media()->load($original);
-			} 
-			catch (\Exception $ex) {
-				console()->error('Error loading media. ' . $ex->getMessage())->ln();
-				return;
-			}
 			
 			/*
 			 * Resize the media appropriately
