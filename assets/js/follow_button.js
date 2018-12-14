@@ -41,7 +41,8 @@
 		
 		request.onreadystatechange = function () {
 			if (request.readyState === 4 && request.status === 200) {
-				callback({error: false});
+				var response = JSON.parse(request.responseText);
+				callback(response);
 			}
 			
 			if (request.readyState === 4 && request.status !== 200) {
