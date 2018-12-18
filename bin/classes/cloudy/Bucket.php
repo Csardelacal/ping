@@ -47,7 +47,7 @@ class Bucket
 	
 	public function getMedia($name) {
 		
-		$r = $this->master->request(sprintf('/media/read/%s/%s.json', $this->uniqid, urlencode($name)));
+		$r = $this->master->request(sprintf('/media/read/%s/%s.json', $this->uniqid, $name));
 		$r->get('signature', (string)$this->ctx->signature());
 		$response = $r->send()->expect(200)->json();
 		
@@ -71,7 +71,7 @@ class Bucket
 	}
 	
 	public function remove($filename) {
-		$r = $this->master->request(sprintf('/media/delete/%s/%s.json', $this->uniqid, urlencode($filename)));
+		$r = $this->master->request(sprintf('/media/delete/%s/%s.json', $this->uniqid, $filename));
 		$r->get('signature', (string)$this->ctx->signature());
 		$r->send()->expect(200)->json();
 		
