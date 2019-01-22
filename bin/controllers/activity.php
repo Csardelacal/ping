@@ -39,7 +39,7 @@ class ActivityController extends AppController
 		
 		#Validate the app
 		if (isset($_GET['signature'])) {
-			if(!$this->sso->authApp($_GET['signature'])->isAuthenticated()) {
+			if(!$this->sso->authApp($_GET['signature'])) {
 				throw new PublicException('Invalid signature', 403);
 			}
 		}
