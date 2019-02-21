@@ -64,7 +64,7 @@
 				<span class="toggle-button dark"></span>
 				<a href="<?= url() ?>">
 					<img src="<?= spitfire\core\http\URL::asset('img/logo.png') ?>" width="17" style="margin-right: 5px; vertical-align: -3px"> Ping
-					<span class="badge" data-ping-counter data-ping-amt="0">?</span>
+					<span class="badge" data-ping-feed data-ping-amt="0">?</span>
 				</a>
 			</div>
 			<div class="right">
@@ -73,6 +73,11 @@
 					<a class="menu-item not-mobile" href="<?= url('settings') ?>">
 						<img src="<?= $authUser->avatar ?>" width="17"  style="margin-right: 5px; vertical-align: -3px">
 						Settings
+					</a>
+					<span class="h-spacer" style="display: inline-block; width: 10px;"></span>
+					<a class="menu-item not-mobile" href="<?= url('activity') ?>">
+						Activity
+						<span class="badge" data-ping-activity data-ping-amt="0">?</span>
 					</a>
 					<span class="h-spacer" style="display: inline-block; width: 10px;"></span>
 					<div class="has-dropdown" style="display: inline-block">
@@ -156,6 +161,5 @@
 		</script>
 		
 		<script type="text/javascript" src="<?= url('feed', 'counter')->setExtension('js')->setParam('nonce', 60 * (int)(time() / 60)) ?>"></script>
-		<script type="text/javascript" src="<?= url('cron')->setExtension('js') ?>"></script>
 	</body>
 </html>
