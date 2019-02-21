@@ -31,7 +31,7 @@
 			<div class="spacer" style="height: 10px"></div>
 			
 			<?php foreach($notifications as $notification): ?>
-			<?php $user = $sso->getUser($notification->src->authId); ?>
+			<?php $user = $sso->getUser($notification->src->_id); ?>
 			<div class="padded">
 				<div class="row l10 fluid">
 					<div class="span l8">

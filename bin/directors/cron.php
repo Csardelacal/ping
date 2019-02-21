@@ -131,7 +131,7 @@ class CronDirector extends Director
 			$attached = $ping->attached->toArray();
 			
 			if (empty($attached) && $ping->media) {
-				$file = storage()->dir(spitfire\core\Environment::get('uploads.directory'))->make(uniqid() . str_replace('?', '', pathinfo($ping->media, PATHINFO_BASENAME)));
+				$file = storage()->dir(spitfire\core\Environment::get('uploads.directory'))->make(uniqid() . str_replace(['?', '%'], '', pathinfo($ping->media, PATHINFO_BASENAME)));
 				
 				try {
 					$file->write(storage()->get($ping->media)->read());
