@@ -1,14 +1,13 @@
 <?php namespace media;
 
 use EnumField;
+use Exception;
 use FileField;
 use Reference;
-use spitfire\core\Environment;
+use spitfire\exceptions\PublicException;
 use spitfire\Model;
 use spitfire\storage\database\Schema;
 use StringField;
-use function media;
-use function storage;
 
 /* 
  * To change this license header, choose License Headers in Project Properties.
@@ -42,11 +41,11 @@ class MediaModel extends Model
 		try {
 			return $this->getTable()->getDb()->table('media\thumb')->get('media', $this)->where('aspect', $size)->first(true);
 		}
-		catch (\Exception$e) {
+		catch (Exception$e) {
 			$this->ping->processed = false;
 			$this->ping->store();
 			trigger_error(sprintf('Found unprocessed media in ping #%s', $this->ping->_id), E_USER_WARNING);
-			throw new \spitfire\exceptions\PublicException('Media error', 500, $e);
+			throw new PublicException('Media error', 500, $e);
 		}
 		
 	}

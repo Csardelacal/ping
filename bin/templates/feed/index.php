@@ -1,27 +1,7 @@
 
 	<div class="spacer" style="height: 10px"></div> 
 	
-	<div class="row l4">
-		<div class="span l1">
-			<div class="material unpadded user-card">
-				<?php $user = $sso->getUser($authUser->id); ?>
-				<a href="<?= url('user', $user->getUsername()) ?>">
-					<div class="banner">
-						<?php try { $banner = $user->getAttribute('banner')->getPreviewURL(320, 120) ?>
-						<?php if (!$banner) { throw new Exception(); } ?>
-						<img src="<?= $banner ?>" width="275" height="64">
-						<?php } catch (Exception$e) { } ?>
-					</div>
-					<div class="padded" style="margin-top: -35px;">
-						<img class="avatar" src="<?= $user->getAvatar(128) ?>">
-						<div class="user-info">
-							<span class="user-name">@<?= $user->getUsername() ?></span>
-							<span class="user-bio"><?= db()->table('follow')->get('prey__id', $user->getId())->count() ?> followers</span>
-						</div>
-					</div>
-				</a>
-			</div>
-		</div>
+	<div class="row l3">
 		<!-- Main content-->
 		<div class="span l2">
 			<div class="material unpadded">
@@ -46,22 +26,17 @@
 								<div class="span l9">
 									<div class="row l5 m4 s4 fluid">
 										<div class="span l1 m1 s1" data-lysine-view="file-upload-preview" >
-											<div data-condition="value(type) == image">
-												<div>
-													<img data-lysine-src="{{source}}" style="vertical-align: middle; " onload="if (this.width < this.height) {
-															var mw = this.parentNode.clientWidth;
-															this.style.width  = mw * (this.width / this.height) + 'px';
-															this.style.height = mw + 'px';
-														}
-														else {
-															var mw = this.parentNode.clientWidth;
-															this.style.height = mw * (this.height / this.width) + 'px';
-															this.style.width  = mw + 'px';
-														}">
-												</div>
-											</div>
-											<div data-condition="value(type) == video">
-												<video data-lysine-src="{{source}}" style="vertical-align: middle; width: 100%" controls></video>
+											<div>
+												<img data-lysine-src="{{source}}" style="vertical-align: middle; " onload="if (this.width < this.height) {
+														var mw = this.parentNode.clientWidth;
+														this.style.width  = mw * (this.width / this.height) + 'px';
+														this.style.height = mw + 'px';
+													}
+													else {
+														var mw = this.parentNode.clientWidth;
+														this.style.height = mw * (this.height / this.width) + 'px';
+														this.style.width  = mw + 'px';
+													}">
 											</div>
 											<input type="hidden" name="media[]" value="" data-for="id">
 										</div>
@@ -76,47 +51,48 @@
 									<!--Just a spacer-->
 								</div><!--
 								--><div class="span l4">
-									<input type="file" id="ping_media" accept="image/*" style="display: none">
+									<input type="file" id="ping_media" style="display: none">
 									<img src="<?= spitfire\core\http\URL::asset('img/camera.png') ?>" id="ping_media_selector" style="vertical-align: middle; height: 24px; opacity: .5; margin: 0 5px;">
-
-									<input type="file" id="ping_video" accept="video/*" style="display: none">
-									<img src="<?= spitfire\core\http\URL::asset('img/video.png') ?>" id="ping_video_selector" style="vertical-align: middle; height: 24px; opacity: .5; margin: 0 5px;">
 								</div><!--
 								--><div class="span l5" style="text-align: right">
 									<span id="new-ping-character-count">250</span>
-									<input type="submit" value="Ping!">
+									<input type="submit" value="Ping!" id="send-ping">
 								</div><!--
 							--></div>
 						</div>
 					</div>
 				</form>
 
-				<div class="separator"></div>
+			</div>
 				
-				<?php if(db()->table('ping')->get('src', db()->table('user')->get('_id', $authUser->id))->where('processed', null)->first()): ?>
-				<div class="padded" style="color: #0571B1">
-					<div class="row l1 fluid">
-						<div class="span l1">
-							Your latest ping is being processed...
-						</div>
+			<?php if(db()->table('ping')->get('src', db()->table('author')->get('user', db()->table('user')->get('_id', $authUser->id)))->where('processed', 0)->first()): ?>
+			<div class="spacer" style="height: 10px"></div>
+			
+			<div class="material" style="color: #0571B1">
+				<div class="row l1 fluid">
+					<div class="span l1">
+						Your latest ping is being processed...
 					</div>
 				</div>
-				
-				<div class="separator"></div>
-				
-				<?php endif; ?>
+			</div>
 
-				<?php foreach($notifications as $notification): ?>
-				<?php $user = $sso->getUser($notification->src->authId); ?>
+			<?php endif; ?>
+			
+			<div class="spacer" style="height: 10px"></div>
+			
+			<?php foreach($notifications as $notification): ?>
+			<?php $user = $notification->src->user? $sso->getUser($notification->src->user->authId) : null; ?>
+			<div class="material unpadded">
+
 				<?php if ($notification->irt): ?>
 				<div class="source-ping">
 					<div class="row l10 fluid">
 						<div class="span l1 desktop-only" style="text-align: center;">
-							<img src="<?= $sso->getUser($notification->irt->src->authId)->getAvatar(64) ?>" style="width: 32px; border: solid 1px #777; border-radius: 3px;">
+							<img src="<?= $sso->getUser($notification->irt->src->user->authId)->getAvatar(64) ?>" style="width: 32px; border: solid 1px #777; border-radius: 3px;">
 						</div>
 						<div class="span l9">
-							<a href="<?= url('user', $sso->getUser($notification->irt->src->authId)->getUsername()) ?>"  style="color: #000; font-weight: bold; font-size: .8em;">
-								<?= $sso->getUser($notification->irt->src->authId)->getUsername() ?>
+							<a href="<?= url('user', $sso->getUser($notification->irt->src->user->authId)->getUsername()) ?>"  style="color: #000; font-weight: bold; font-size: .8em;">
+								<?= $sso->getUser($notification->irt->src->user->authId)->getUsername() ?>
 							</a>
 
 							<p style="margin: 0;">
@@ -138,7 +114,7 @@
 						<div class="span l9">
 							<div class="row l4">
 								<div class="span l3">
-									<img class="mobile-only" src="<?= $user->getAvatar(64) ?>" style="width: 16px; border: solid 1px #777; border-radius: 3px; vertical-align: middle">
+									<img src="<?= $user->getAvatar(64) ?>" class="not-desktop" style="width: 32px; border-radius: 50%; vertical-align: middle">
 									<a href="<?= url('user', $user->getUsername()) ?>" style="color: #000; font-weight: bold; font-size: .8em;"><?= $user->getUsername() ?></a>
 									<?php if ($notification->share): ?>
 									<a href="<?= url('ping', 'detail', $notification->share->_id) ?>" style="font-size: .8em; color: #777;"> from <?= $sso->getUser($notification->share->src->_id)->getUsername() ?></a>
@@ -182,9 +158,11 @@
 						</div>
 					</div>
 				</div>
-
-				<div class="separator"></div>
-				<?php endforeach; ?>
+			</div>
+			
+			<div class="spacer" style="height: 10px"></div>
+			
+			<?php endforeach; ?>
 				<?php if (empty($notifications)): ?>
 				<div style="padding: 50px; text-align: center; color: #777; font-size: .8em; font-style: italic; text-align: center">
 					Nothing here yet. Follow or interact with users to build your feed!
@@ -292,10 +270,27 @@
 					<div class="separator"></div>
 				</div>
 			</div>
-		</div>
 
 		<!-- Contextual menu-->
 		<div class="span l1">
+			<div class="material unpadded user-card">
+				<?php $user = $sso->getUser($authUser->id); ?>
+				<a href="<?= url('user', $user->getUsername()) ?>">
+					<div class="banner">
+						<?php try { $banner = $user->getAttribute('banner')->getPreviewURL(320, 120) ?>
+						<?php if (!$banner) { throw new Exception(); } ?>
+						<img src="<?= $banner ?>" width="275" height="64">
+						<?php } catch (Exception$e) { } ?>
+					</div>
+					<div class="padded" style="margin-top: -35px;">
+						<img class="avatar" src="<?= $user->getAvatar(128) ?>">
+						<div class="user-info">
+							<span class="user-name">@<?= $user->getUsername() ?></span>
+							<span class="user-bio"><?= db()->table('follow')->get('prey__id', $user->getId())->count() ?> followers</span>
+						</div>
+					</div>
+				</a>
+			</div>
 			<div class="spacer" style="height: 70px;"></div>
 			<div style="color: #888; font-size: .8em">Users you may like to follow:</div>
 			<div class="spacer" style="height: 10px;"></div>
@@ -456,21 +451,9 @@ depend(['m3/core/request', 'm3/core/array/iterate', 'm3/core/lysine'], function 
 		/*
 		 * The forms used for media input
 		 */
-		var forms = {
-			
-			img: {
-				input : document.getElementById('ping_media'),
-				ui: document.getElementById('ping_media_selector'),
-				type: 'image',
-				exclusive: false
-			},
-			
-			video: {
-				input : document.getElementById('ping_video'),
-				ui: document.getElementById('ping_video_selector'),
-				type: 'video',
-				exclusive: true
-			}
+		var form = {
+			input : document.getElementById('ping_media'),
+			ui: document.getElementById('ping_media_selector')
 		};
 		
 		var queue = new Queue();
@@ -478,83 +461,78 @@ depend(['m3/core/request', 'm3/core/array/iterate', 'm3/core/lysine'], function 
 		
 		queue.onProgress = function() {
 			//Disable the post ping button
+			document.getElementById('send-ping').setAttribute('disabled', 'disabled');
 		};
 		
 		queue.onComplete = function() {
 			//Enable the post ping button
+			document.getElementById('send-ping').removeAttribute('disabled');
 		};
 		
-		iterate(forms, function (form) {
-			
-			form.ui.addEventListener('click', function () {
-				form.input.click();
-			});
+		form.ui.addEventListener('click', function () {
+			form.input.click();
+		});
 
-			form.input.addEventListener('change', function (e) {
-				var files = e.target.nodeName.toLowerCase() === 'input'? e.target.files : null;
+		form.input.addEventListener('change', function (e) {
+			var files = e.target.nodeName.toLowerCase() === 'input'? e.target.files : null;
+
+			iterate(files, function (e) {
+				var job = queue.job();
+
+				if (e.size > 25 * 1024 * 1024) {
+					//Needs a better error
+					alert('Files must be smaller than 25MB');
+					job.complete();
+					return;
+				}
 				
-				iterate(files, function (e) {
-					var job = queue.job();
-
-					if (e.size > 25 * 1024 * 1024) {
-						//Needs a better error
-						alert('Files must be smaller than 25MB');
-						job.complete();
-						return;
-					}
+				var v = new lysine.view('file-upload-preview');
+				
+				if (e.type.substring(0, 5) === 'image') {
 
 					var reader = new FileReader();
-					let v = new lysine.view('file-upload-preview');
 
 					reader.onload = function (e) {
 						v.setData({
 							source: e.target.result,
-							type: form.type,
 							id: null
 						});
-						
+
 						uploads.push({
-							view: v,
-							form: form
+							view: v
 						});
-						
-						iterate(uploads, function(e) { 
-							if (e.form.exclusive) {
-								document.getElementById('ping_media_selector').style.display = 'none';
-								document.getElementById('ping_video_selector').style.display = 'none';
-							};
-						});
-						
-						if (uploads.length >= mediaLimit) {
-							document.getElementById('ping_media_selector').style.display = 'none';
-							document.getElementById('ping_video_selector').style.display = 'none';
-						}
-						
-						if (uploads.length > 0) {
-							document.getElementById('ping_video_selector').style.display = 'none';
-						}
+
 					};
 
 					reader.readAsDataURL(e);
-					
-					var fd = new FormData();
-					fd.append('file', e);
-					fd.append('type', form.type);
-					
-					request('<?= url('media', 'upload')->setExtension('json') ?>', fd)
-					.then(function(response) {
-						var json  = JSON.parse(response);
-						v.set('id', json.id + ':' + json.secret);
-
-						job.complete();
-					})
-					.catch(function(error) {
-						alert('Error uploading file. Please retry');
-						v.destroy();
+				}
+				else {
+					v.setData({
+						source: '<?= \spitfire\core\http\URL::asset('img/video.png') ?>',
+						id: null
 					});
+				}
+
+				if (uploads.length >= mediaLimit) {
+					document.getElementById('ping_media_selector').style.display = 'none';
+				}
+
+				var fd = new FormData();
+				fd.append('file', e);
+
+				request('<?= url('media', 'upload')->setExtension('json') ?>', fd)
+				.then(function(response) {
+					var json  = JSON.parse(response);
+					v.set('id', json.id + ':' + json.secret);
+
+					job.complete();
+				})
+				.catch(function(error) {
+					alert('Error uploading file. Please retry');
+					v.destroy();
 				});
-			
 			});
+			
 		});
 	});
 </script>

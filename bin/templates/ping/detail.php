@@ -63,7 +63,7 @@
 				
 				
 				<?php foreach ($notifications as $notification): ?>
-				<?php $u = $sso->getUser($notification->src->authId); ?>
+				<?php $u = $sso->getUser($notification->src->user->authId); ?>
 				<div class="padded" style="padding-top: 5px;">
 					<div class="row l10 fluid">
 						<div class="span l1 desktop-only" style="text-align: center">
