@@ -61,10 +61,10 @@ class PingController extends AppController
 		
 		#There needs to be a src user. That means that somebody is originating the
 		#notification. There has to be one, and no more than one.
-		$src = db()->table('user')->get('authId', $srcid)->first()? : UserModel::makeFromSSO($this->sso->getUser($srcid));
+		$src = db()->table('user')->get('authId', $srcid)->first()? : AuthorModel::get(UserModel::makeFromSSO($this->sso->getUser($srcid)));
 		
 		#If a source is sent
-		$target = $tgtid === null? null : (db()->table('user')->get('authId', $tgtid)->fetch()? : UserModel::makeFromSSO($this->sso->getUser($tgtid)));
+		$target = $tgtid === null? null : (db()->table('user')->get('authId', $tgtid)->fetch()? : AuthorModel::get(UserModel::makeFromSSO($this->sso->getUser($tgtid))));
 		
 		#Prepare an email sender to push emails to whoever needs them
 		$email   = new EmailSender($this->sso);

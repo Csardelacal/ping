@@ -86,7 +86,8 @@ class UserController extends AppController
 	 */
 	public function __call($username, $args) {
 		$user = $this->sso->getUser($username);
-		$dbu  = db()->table('user')->get('authId', $user->getId())->fetch();
+		$dbu  = db()->table('user')->get('authId', $user->getId())->first(true);
+		$author = db()->table('author')->get('user', $dbu)->first();
 		
 		if (!$dbu || !$user) { throw new \spitfire\exceptions\PublicException('No user found', 404); }
 		
@@ -98,12 +99,12 @@ class UserController extends AppController
 			->getAll()
 			->group()
 				->group(spitfire\storage\database\RestrictionGroup::TYPE_AND)
-					->addRestriction('src', $dbu)
+					->addRestriction('src', $author)
 					->addRestriction('target', null, 'IS')
 				->endGroup()
 				->group(spitfire\storage\database\RestrictionGroup::TYPE_AND)
-					->addRestriction('src', db()->table('user')->get('_id', $this->user? $this->user->id : null)->fetch())
-					->addRestriction('target', $dbu)
+					->addRestriction('src', AuthorModel::get(db()->table('user')->get('_id', $this->user? $this->user->id : null)->fetch()))
+					->addRestriction('target', $author)
 				->endGroup()
 			->endGroup()
 			->addRestriction('deleted', null, 'IS')

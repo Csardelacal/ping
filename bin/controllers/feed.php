@@ -24,7 +24,7 @@ class FeedController extends AppController
 
 		$dbuser  = db()->table('user')->get('authId', $this->user->id)->fetch()? : UserModel::makeFromSSO($this->sso->getUser($this->user->id));
 		$follows = db()->table('follow')->get('follower__id', $dbuser->_id);
-		$users   = db()->table('user')->getAll()->where('followers', $follows)->all()->each(function($e) {
+		$users   = db()->table('author')->getAll()->where('followers', $follows)->all()->each(function($e) {
 			return $e->_id;
 		})->toArray();
 		

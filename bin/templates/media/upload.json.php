@@ -8,5 +8,6 @@
 
 echo json_encode([
 	'id' => $record->_id,
-	'secret' => $record->secret
+	'secret' => $record->secret,
+	'type'   => $record->type
 ]);
