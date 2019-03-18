@@ -61,7 +61,7 @@ class PingController extends AppController
 		
 		#There needs to be a src user. That means that somebody is originating the
 		#notification. There has to be one, and no more than one.
-		$src = db()->table('user')->get('authId', $srcid)->first()? : AuthorModel::get(UserModel::makeFromSSO($this->sso->getUser($srcid)));
+		$src = AuthorModel::get(db()->table('user')->get('authId', $srcid)->first()? : UserModel::makeFromSSO($this->sso->getUser($srcid)));
 		
 		#If a source is sent
 		$target = $tgtid === null? null : (db()->table('user')->get('authId', $tgtid)->fetch()? : AuthorModel::get(UserModel::makeFromSSO($this->sso->getUser($tgtid))));
@@ -150,6 +150,8 @@ class PingController extends AppController
 			#Notifying the cron-job failed. Gracefully recover.
 		}
 		
+		$this->view->set('ping', $notification);
+		
 	}
 	
 	public function delete($id, $confirm = null) {
@@ -197,8 +199,8 @@ class PingController extends AppController
 		$query = $ping->replies->getQuery();
 		$g = $query->group();
 		$g->addRestriction('target', null, 'IS');
-		$g->addRestriction('target', db()->table('user')->get('authId', $this->user? $this->user->id : null));
-		$g->addRestriction('src', db()->table('user')->get('authId', $this->user->id));
+		$g->addRestriction('target', AuthorModel::get(db()->table('user')->get('authId', $this->user? $this->user->id : null)->first()));
+		$g->addRestriction('src', AuthorModel::get(db()->table('user')->get('authId', $this->user->id)->first()));
 		
 		$query->setOrder('_id', 'desc');
 		

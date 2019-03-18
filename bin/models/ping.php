@@ -4,6 +4,7 @@ class PingModel extends spitfire\Model
 {
 	
 	public function definitions(\spitfire\storage\database\Schema $schema) {
+		$schema->guid    = new StringField(150);
 		$schema->src     = new Reference('author'); # User originating the action
 		$schema->target  = new Reference('author'); # If a notification is not a broadcast
 		$schema->content = new StringField(300);  # A ping can contain up to 255 characters - but user id's get expanded
@@ -30,6 +31,7 @@ class PingModel extends spitfire\Model
 	
 	public function onbeforesave() {
 		if (!$this->created) { $this->created = time(); }
+		if (!$this->guid   ) { $this->guid = substr(base_convert(bin2hex(random_bytes(100)), 16, 36), 0, 150); }
 	}
 	
 	/**

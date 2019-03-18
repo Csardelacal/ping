@@ -19,7 +19,7 @@ class AuthorModel extends spitfire\Model
 		 */
 		$schema->displayName      = new StringField(100); # In case the author is an external author, we present the displayname
 		$schema->fqun             = new StringField(255); # Allows the author to have a fully qualified username - this allows federation
-		$schema->guid             = new StringField(255); # We use this to see how many unread pings the user has
+		$schema->guid             = new StringField(255); 
 		$schema->avatar           = new StringField(255); # The URL to the author's avatar. this is not necessary if the user field is populated
 		
 		/*
@@ -33,14 +33,17 @@ class AuthorModel extends spitfire\Model
 	/**
 	 * Retrieves the author from a post
 	 */
-	public static function get(UserModel$user) {
+	public static function get(UserModel$user = null) {
+		if ($user === null) {
+			return null;
+		}
 		
 		try {
 			return db()->table('author')->get('user', $user)->first(true);
 		}
 		catch (\spitfire\exceptions\PrivateException$e) {
 			$author = db()->table('author')->newRecord();
-			$author->guid = substr(base_convert(base64_encode(random_bytes(100)), 64, 32), 0, 150);
+			$author->guid = substr(base_convert(bin2hex(random_bytes(100)), 16, 36), 0, 150);
 			$author->user = $user;
 			$author->store();
 			
