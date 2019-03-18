@@ -151,6 +151,11 @@
 									</p>
 								</div>
 								<div class="span l1" style="text-align: right">
+									<?php if (db()->table('feedback')->get('ping', $notification)->where('author', AuthorModel::get(db()->table('user')->get('authId', $authUser->id)->first()))->first()): ?>
+									<a href="<?= url('feedback', 'revoke', $notification->_id) ?>" class="like-link"><?= db()->table('feedback')->get('ping', $notification)->count()? : 'Like' ?></a>
+									<?php else: ?>
+									<a href="<?= url('feedback', 'push', $notification->_id) ?>" class="like-link"><?= db()->table('feedback')->get('ping', $notification)->count()? : 'Like' ?></a>
+									<?php endif; ?>
 									<a href="<?= url('ping', 'detail', $notification->_id) ?>#replies" class="reply-link"><?= $notification->replies->getQuery()->count()? : 'Reply' ?></a>
 									<a href="<?= url('ping', 'share', $notification->_id); ?>" class="share-link"><?= $notification->original()->shared->getQuery()->count()? : 'Share' ?></a>
 								</div>

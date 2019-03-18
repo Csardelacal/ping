@@ -4,7 +4,7 @@ $payload = Array();
 
 foreach ($notifications as $n) {
 	
-	$user  = $sso->getUser($n->src->authId);
+	$user  = $sso->getUser($n->src->user->authId);
 	
 	/*
 	 * Get the response data. This is only added if the ping is actually a response
@@ -13,19 +13,19 @@ foreach ($notifications as $n) {
 	 */
 	$irt   = $n->irt? [
 		'id'           => $n->irt->_id,
-		'username'     => $sso->getUser($n->irt->src->authId)->getUsername(),
-		'userURL'      => strval(url('user', $sso->getUser($n->irt->src->authId)->getUsername())->absolute()),
-		'avatar'       => $sso->getUser($n->irt->src->authId)->getAvatar(32),
+		'username'     => $sso->getUser($n->irt->src->user->authId)->getUsername(),
+		'userURL'      => strval(url('user', $sso->getUser($n->irt->src->user->authId)->getUsername())->absolute()),
+		'avatar'       => $sso->getUser($n->irt->src->user->authId)->getAvatar(32),
 		'url'          => $n->irt->deleted? null : $n->irt->url,
 		'media'        => $n->irt->deleted || $n->irt->attached->getQuery()->count() == 0? null : $n->irt->attachmentsPreview(),
 		'content'      => $n->irt->deleted? '[Deleted]' : Mention::idToMentions($n->irt->content),
 		'timestamp'    => $n->irt->created,
 		'timeRelative' => Time::relative($n->irt->created),
 		'user'         => Array(
-			'id'        => $n->irt->src->authId,
-			'url'       => strval(url('user', $sso->getUser($n->irt->src->authId)->getUsername())->absolute()),
-			'username'  => $sso->getUser($n->irt->src->authId)->getUsername(),
-			'avatar'    => $sso->getUser($n->irt->src->authId)->getAvatar(32)
+			'id'        => $n->irt->src->user->authId,
+			'url'       => strval(url('user', $sso->getUser($n->irt->src->user->authId)->getUsername())->absolute()),
+			'username'  => $sso->getUser($n->irt->src->user->authId)->getUsername(),
+			'avatar'    => $sso->getUser($n->irt->src->user->authId)->getAvatar(32)
 		)
 	] : null;
 	
@@ -39,8 +39,8 @@ foreach ($notifications as $n) {
 		'irt'          => $irt,
 		'replies'      => $n->replies->getQuery()->count(),
 		'user'         => Array(
-			'id'        => $n->src->authId,
-			'url'       => strval(url('user', $sso->getUser($n->src->authId)->getUsername())->absolute()),
+			'id'        => $n->src->user->authId,
+			'url'       => strval(url('user', $sso->getUser($n->src->user->authId)->getUsername())->absolute()),
 			'username'  => $user->getUsername(),
 			'avatar'    => $user->getAvatar(128),
 		)

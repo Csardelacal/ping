@@ -143,16 +143,6 @@ a {
   color: #444;
   position: relative;
   font-size: .95em; }
-  .source-ping:after {
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 35px;
-    background: #3191f1;
-    width: 3px;
-    border-radius: 2px;
-    height: 20px;
-    height: calc(100% - 40px); }
 
 .media-cover {
   background: #EEE;
@@ -218,9 +208,25 @@ a {
     margin: 0 5px;
     vertical-align: middle; }
 
-.share-link, .reply-link {
+.like-link {
+  color: #333;
+  font-weight: bold;
+  margin: 0 10px;
+  line-height: 14px;
+  font-size: 12px; }
+  .like-link:before {
+    content: '';
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    background: url("../img/like.png");
+    background-size: 12px 12px;
+    margin: 0 5px;
+    vertical-align: middle; }
+
+.share-link, .reply-link, .like-link {
   opacity: .6; }
-  .share-link:hover, .reply-link:hover {
+  .share-link:hover, .reply-link:hover, .like-link:hover {
     opacity: 1; }
 
 #new-ping-content {

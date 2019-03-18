@@ -133,9 +133,12 @@
 					
 					<div class="padded add-ping">
 						<div>
-							<div class="row1">
-								<div class="span1">
-									<textarea name="content" id="new-ping-content" placeholder="Reply to <?= $user->getUsername() ?>..."></textarea>
+							<div class="row l10">
+								<div class="span l1 desktop-only" style="text-align: center">
+									<img src="<?= $sso->getUser($authUser->id)->getAvatar(64) ?>" style="width: 100%; border: solid 1px #777; border-radius: 3px;">
+								</div>
+								<div class="span l9">
+									<textarea name="content" id="new-ping-content" placeholder="Message to broadcast..."></textarea>
 								</div>
 							</div>
 						</div>
@@ -143,17 +146,44 @@
 						<div class="spacer" style="height: 10px"></div>
 
 						<div>
-							<div class="row2">
-								<div class="span1">
-
-								</div>
-								<div class="span1" style="text-align: right">
-									<span id="new-ping-character-count">250</span>
-									<input type="file" name="media" id="ping_media" accept="image/*" style="display: none" onchange="document.getElementById('ping_media_selector').style.opacity = '1'">
-									<img src="<?= spitfire\core\http\URL::asset('img/camera.png') ?>" id="ping_media_selector" onclick="document.getElementById('ping_media').click()" style="vertical-align: middle; height: 24px; opacity: .3; margin: 0 5px;">
-									<input type="submit" value="Ping!">
+							<div class="row l10">
+								<div class="span l1"></div>
+								<div class="span l9">
+									<div class="row l5 m4 s4 fluid">
+										<div class="span l1 m1 s1" data-lysine-view="file-upload-preview" >
+											<div>
+												<img data-lysine-src="{{source}}" style="vertical-align: middle; " onload="if (this.width < this.height) {
+														var mw = this.parentNode.clientWidth;
+														this.style.width  = mw * (this.width / this.height) + 'px';
+														this.style.height = mw + 'px';
+													}
+													else {
+														var mw = this.parentNode.clientWidth;
+														this.style.height = mw * (this.height / this.width) + 'px';
+														this.style.width  = mw + 'px';
+													}">
+											</div>
+											<input type="hidden" name="media[]" value="" data-for="id">
+										</div>
+									</div>
 								</div>
 							</div>
+						</div>
+
+						<div>
+							<div class="row l10"><!--
+								--><div class="span l1">
+									<!--Just a spacer-->
+								</div><!--
+								--><div class="span l4">
+									<input type="file" id="ping_media" style="display: none">
+									<img src="<?= spitfire\core\http\URL::asset('img/camera.png') ?>" id="ping_media_selector" style="vertical-align: middle; height: 24px; opacity: .5; margin: 0 5px;">
+								</div><!--
+								--><div class="span l5" style="text-align: right">
+									<span id="new-ping-character-count">250</span>
+									<input type="submit" value="Ping!" id="send-ping">
+								</div><!--
+							--></div>
 						</div>
 					</div>
 				</form>
@@ -231,10 +261,9 @@
 }());
 </script>
 
-<script type="text/javascript" src="<?= \spitfire\core\http\URL::asset('js/lysine.js') ?>"></script>
 
 <script type="text/javascript">
-(function() {
+depend(['m3/core/lysine'], function(Lysine) {
 	var xhr     = null;
 	var current = null;
 	var notifications = [];
@@ -327,7 +356,7 @@
 	//Attach the listener
 	window.addEventListener('load',   listener, false);
 	document.addEventListener('scroll', listener, false);
-}());
+});
 
 (function () {
 	
@@ -342,4 +371,100 @@
 	document.querySelector('#new-ping-content').addEventListener('keyup', listener, false);
 	
 }());
+</script>
+
+
+<script type="text/javascript" src="<?= spitfire\core\http\URL::asset('js/queue.js') ?>"></script>
+<script type="text/javascript">
+	depend(['m3/core/request', 'm3/core/array/iterate', 'm3/core/lysine'], function(request, iterate, lysine) {
+		
+		var mediaLimit = 4;
+		
+		/*
+		 * The forms used for media input
+		 */
+		var form = {
+			input : document.getElementById('ping_media'),
+			ui: document.getElementById('ping_media_selector')
+		};
+		
+		var queue = new Queue();
+		var uploads = [];
+		
+		queue.onProgress = function() {
+			//Disable the post ping button
+			document.getElementById('send-ping').setAttribute('disabled', 'disabled');
+		};
+		
+		queue.onComplete = function() {
+			//Enable the post ping button
+			document.getElementById('send-ping').removeAttribute('disabled');
+		};
+		
+		form.ui.addEventListener('click', function () {
+			form.input.click();
+		});
+
+		form.input.addEventListener('change', function (e) {
+			var files = e.target.nodeName.toLowerCase() === 'input'? e.target.files : null;
+
+			iterate(files, function (e) {
+				var job = queue.job();
+
+				if (e.size > 25 * 1024 * 1024) {
+					//Needs a better error
+					alert('Files must be smaller than 25MB');
+					job.complete();
+					return;
+				}
+				
+				var v = new lysine.view('file-upload-preview');
+				
+				if (e.type.substring(0, 5) === 'image') {
+
+					var reader = new FileReader();
+
+					reader.onload = function (e) {
+						v.setData({
+							source: e.target.result,
+							id: null
+						});
+
+						uploads.push({
+							view: v
+						});
+
+					};
+
+					reader.readAsDataURL(e);
+				}
+				else {
+					v.setData({
+						source: '<?= \spitfire\core\http\URL::asset('img/video.png') ?>',
+						id: null
+					});
+				}
+
+				if (uploads.length >= mediaLimit) {
+					document.getElementById('ping_media_selector').style.display = 'none';
+				}
+
+				var fd = new FormData();
+				fd.append('file', e);
+
+				request('<?= url('media', 'upload')->setExtension('json') ?>', fd)
+				.then(function(response) {
+					var json  = JSON.parse(response);
+					v.set('id', json.id + ':' + json.secret);
+
+					job.complete();
+				})
+				.catch(function(error) {
+					alert('Error uploading file. Please retry');
+					v.destroy();
+				});
+			});
+			
+		});
+	});
 </script>
