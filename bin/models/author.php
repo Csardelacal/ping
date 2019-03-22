@@ -43,7 +43,7 @@ class AuthorModel extends spitfire\Model
 		}
 		catch (\spitfire\exceptions\PrivateException$e) {
 			$author = db()->table('author')->newRecord();
-			$author->guid = substr(base_convert(bin2hex(random_bytes(100)), 16, 36), 0, 150);
+			$author->guid = substr(bin2hex(random_bytes(100)), 0, 150);
 			$author->user = $user;
 			$author->store();
 			

@@ -36,16 +36,18 @@ class FeedBackController extends AppController
 		}
 		
 		$author = AuthorModel::get(db()->table('user')->get('authId', $this->user->id)->first()? : UserModel::makeFromSSO($this->sso->getUser($this->user->id)));
+		$exists = db()->table('feedback')->get('author', $author)->where('ping', $ping)->where('removed', null)->first();
 		
-		if (db()->table('feedback')->get('author', $author)->where('ping', $ping)->where('removed', null)->first()) {
-			throw new PublicException('Not allowed', 403);
+		if ($exists) {
+			$exists->removed = time();
+			$exists->store();
 		}
 		
 		$record = db()->table('feedback')->newRecord();
 		$record->ping     = $ping;
 		$record->author   = $author;
 		$record->biased   = 0;
-		$record->appId    = $this->authapp? $this->authapp->getSrc()->getId() : null;
+		$record->appId    = $this->authapp? ($this->authapp instanceof \auth\App? $this->authapp->getSrc()->getId() : $this->authapp) : null;
 		
 		switch($_GET['reaction']?? null) {
 			case 'dislike': 
@@ -63,6 +65,21 @@ class FeedBackController extends AppController
 		$this->view->set('feedback', $record);
 	}
 	
+	public function revoke(PingModel$ping) {
+		
+		if (!$this->user) {
+			throw new PublicException('Not allowed', 403);
+		}
+		
+		$author = AuthorModel::get(db()->table('user')->get('authId', $this->user->id)->first()? : UserModel::makeFromSSO($this->sso->getUser($this->user->id)));
+		
+		if (!db()->table('feedback')->get('author', $author)->where('ping', $ping)->where('removed', null)->first()) {
+			throw new PublicException('Not allowed', 403);
+		}
+		
+		db()->table('feedback')->get('ping', $ping)->where('author', $author)->first()->delete();
+	}
+	
 	public function retrieve(PingModel$ping) {
 		
 		$this->view->set('overall', [
@@ -72,7 +89,7 @@ class FeedBackController extends AppController
 		
 		if ($this->user) {
 			$author = AuthorModel::get(db()->table('user')->get('authId', $this->user->id)->first()? : UserModel::makeFromSSO($this->sso->getUser($this->user->id)));
-			$this->view->set('mine', db()->table('feedback')->get('ping', $ping)->where('author', $author)->first()->reaction );
+			$this->view->set('mine', db()->table('feedback')->get('ping', $ping)->where('author', $author)->where('removed', null)->first()->reaction );
 		}
 	}
 }

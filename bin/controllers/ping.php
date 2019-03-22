@@ -23,28 +23,12 @@ class PingController extends AppController
 	 */
 	public function push() {
 		
-		#Get the applications credentials
-		$appId  = isset($_GET['appId']) ? $_GET['appId']  : null;
-		$appSec = isset($_GET['appSec'])? $_GET['appSec'] : null;
-		
 		if ($this->user) {
 			$srcid = $this->user->id;
 		}
 		#Validate the app
 		elseif (isset($_GET['signature']) && $this->sso->authApp($_GET['signature'])) {
 			$srcid = $_POST['src']?? null;
-		}
-		/**
-		 * This block refers to the old mechanism of authenticating apps against
-		 * PHPAS. It would require the app to send both the secret and the id to 
-		 * identify itself.
-		 * 
-		 * @deprecated since version 20181003
-		 */
-		elseif(isset($_GET['appId'])) {
-			trigger_error('Authenticating apps with plaintext secrets is deprecated. Offending app is ' . $_GET['appId'], E_USER_DEPRECATED);
-			$authUtil = new AuthUtil($this->sso);
-			$authUtil->checkAppCredentials($appId, $appSec);
 		}
 		else {
 			throw new PublicException('Authentication required', 403);
@@ -56,6 +40,7 @@ class PingController extends AppController
 		$content  = str_replace("\r", '', $_POST['content']);
 		$url      = $_POST['url']?? null;
 		$media    = $_POST['media']?? null;
+		$poll     = $_POST['poll']?? null;
 		$irt      = $_POST['irt']?? null;
 		$explicit = !!($_POST['explicit']?? false);
 		
@@ -87,15 +72,11 @@ class PingController extends AppController
 		$notification->locked = false;
 		$notification->store();
 		
-		#If the media is a file, we will store it
 		/**
 		 * @todo This method should be deprecated in favor of batch processing the
 		 * files
 		 */
-		if ($media instanceof Upload) {
-			$media = $media->store()->uri();
-		}
-		elseif (is_string($media)) {
+		if (is_string($media)) {
 			$notification->media = $media;
 			$notification->store();
 			
@@ -109,16 +90,24 @@ class PingController extends AppController
 			$record->ping = $notification;
 			$record->store();
 		}
+		
+		#Create poll options
+		foreach (array_filter($poll) as $option) {
+			$record = db()->table('poll\option')->newRecord();
+			$record->ping = $notification;
+			$record->text = $option;
+			$record->store();
+		}
 
 		#Check the user's preferences and send an email
-		$email->push($_POST['target'], $this->sso->getUser($src->authId), $content, $url, null);
+		$email->push($_POST['target'], $this->sso->getUser($src->user->authId), $content, $url, null);
 
 		if ($irt) {
 			$tgt = db()->table('ping')->get('_id', $irt)->fetch()->src;
 			$n = db()->table('notification')->newRecord();
 			$n->src     = $src;
 			$n->target  = $tgt;
-			$n->content = 'Replied to your ping';
+			$n->content = 'Replied to you';
 			$n->type    = NotificationModel::TYPE_COMMENT;
 			$n->url     = strval(url('ping', 'detail', $notification->_id)->absolute());
 			$n->store();

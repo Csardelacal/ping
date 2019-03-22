@@ -45,6 +45,32 @@
 							</div>
 						</div>
 
+						<div class="spacer" style="height: 10px"></div>
+						
+						<div class="row l10" id="poll-dialog" style="display: none">
+							<div class="span l1"></div>
+							<div class="span l9">
+								<div data-lysine-view="poll-create-option">
+									<div class="row l5 m4 s4 fluid">
+										<div class="span l4 m3 s3">
+											<input type="text" name="poll[]" placeholder="Option..." style="width: 100%; border: none; border-bottom: solid 1px #ccc; padding: 3px;">
+										</div>
+										<div class="span l1 m1 s1">
+											<a href="#remove-poll" class="poll-create-remove">Remove</a>
+										</div>
+									</div>
+								</div>
+								
+								<div class="row l5 m4 s4 fluid">
+									<div class="span l4 m3 s3">
+										<a href="#add-poll" id="poll-create-add">Add option</a>
+									</div>
+								</div>
+							</div>
+							
+							<div class="spacer" style="height: 10px"></div>
+						</div>
+
 						<div>
 							<div class="row l10"><!--
 								--><div class="span l1">
@@ -53,6 +79,7 @@
 								--><div class="span l4">
 									<input type="file" id="ping_media" style="display: none">
 									<img src="<?= spitfire\core\http\URL::asset('img/camera.png') ?>" id="ping_media_selector" style="vertical-align: middle; height: 24px; opacity: .5; margin: 0 5px;">
+									<img src="<?= spitfire\core\http\URL::asset('img/poll.png') ?>" id="ping_poll" style="vertical-align: middle; height: 24px; opacity: .3; margin: 0 5px;">
 								</div><!--
 								--><div class="span l5" style="text-align: right">
 									<span id="new-ping-character-count">250</span>
@@ -132,6 +159,15 @@
 										<?= Mention::idToMentions($notification->content) ?>
 									</p>
 
+									<?php $poll = db()->table('poll\option')->get('ping', $notification)->all() ?>
+									<?php $resp = db()->table('poll\reply')->get('ping', $notification)->where('author', AuthorModel::get(db()->table('user')->get('authId', $authUser->id)->first()))->first() ?>
+									<?php if ($poll->count() > 0): ?>
+									<div class="spacer" style="height: 10px"></div>
+									<?php foreach($poll as $option): ?>
+									<a href="<?= url('poll', 'vote', $option->_id) ?>" class="poll-open-response" style="display: block; width: 100%; background: #EEEEF7; border-radius: 4px; color: #333; margin-top: 3px; padding: 3px;"><?= __($option->text?: "Untitled") ?></a>
+									<?php endforeach; ?>
+									<?php endif; ?>
+									
 									<div class="spacer" style="height: 10px"></div>
 
 									<?php $media = $notification->original()->attached; ?>
@@ -542,4 +578,30 @@ depend(['m3/core/request', 'm3/core/array/iterate', 'm3/core/lysine'], function 
 	});
 </script>
 
+<script type="text/javascript">
+depend(['m3/core/lysine'], function (Lysine) {
+	
+	var addOption = function () {
+		
+		var v = new Lysine.view('poll-create-option');
 
+		v.getHTML().addEventListener('click', function (e) { e.stopPropagation(); })
+		v.getHTML().querySelector('.poll-create-remove').addEventListener('click', function (v) {return function (e) { v.destroy(); e.stopPropagation(); }}(v))
+	};
+	
+	document.getElementById('ping_poll').addEventListener('click', function (e) {
+		for (var i = 0; i < 3; i++) {
+			addOption();
+		}
+		
+		document.getElementById('poll-dialog').style.display = 'block';
+		document.getElementById('ping_poll').style.display = 'none';
+		e.preventDefault();
+		e.stopPropagation();
+	});
+	
+	document.getElementById('poll-create-add').addEventListener('click', function (e) {
+		addOption();
+	});
+});
+</script>
