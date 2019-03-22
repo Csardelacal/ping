@@ -41,9 +41,9 @@ abstract class AppController extends Controller
 		}) : null;
 		
 		$this->authapp = isset($_GET['signature'])? $this->sso->authApp($_GET['signature']) : 
-			$this->user? $cache->get('ping_token_' . $this->token->getId(), function () { 
+			($this->user? $cache->get('ping_token_' . $this->token->getId(), function () { 
 				return $this->token->getTokenInfo()->app->id; 
-			}) : null;
+			}) : null);
 		
 		#Maintain the user in the view. This way we can draw an interface for them
 		$this->view->set('authUser', $this->user);

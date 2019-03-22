@@ -1,4 +1,4 @@
-<?php 
+<?php namespace poll;
 
 use spitfire\Model;
 use spitfire\storage\database\Schema;
@@ -27,9 +27,8 @@ use spitfire\storage\database\Schema;
  * THE SOFTWARE.
  */
 
-class FeedbackModel extends Model
+class ReplyModel extends Model
 {
-	
 	
 	/**
 	 * 
@@ -37,14 +36,11 @@ class FeedbackModel extends Model
 	 * @return Schema
 	 */
 	public function definitions(Schema $schema) {
-		$schema->author   = new Reference(AuthorModel::class);
-		$schema->ping     = new Reference(PingModel::class);
-		$schema->guid     = new StringField(250);
-		$schema->appId    = new StringField(50);
-		$schema->reaction = new IntegerField();
-		$schema->biased   = new BooleanField();
-		$schema->created  = new IntegerField(true);
-		$schema->removed  = new IntegerField(true);
+		$schema->ping   = new \Reference(\PingModel::class);
+		$schema->option = new \Reference(OptionModel::class);
+		$schema->author = new \Reference(\AuthorModel::class);
+		$schema->guid = new \StringField(150);
+		$schema->created = new \IntegerField(true);
 	}
 	
 	public function onbeforesave() {
@@ -57,5 +53,6 @@ class FeedbackModel extends Model
 			$this->created = time();
 		}
 	}
+
 
 }

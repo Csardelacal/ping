@@ -1,7 +1,4 @@
-<?php 
-
-use spitfire\Model;
-use spitfire\storage\database\Schema;
+<?php
 
 /* 
  * The MIT License
@@ -27,35 +24,8 @@ use spitfire\storage\database\Schema;
  * THE SOFTWARE.
  */
 
-class FeedbackModel extends Model
-{
-	
-	
-	/**
-	 * 
-	 * @param Schema $schema
-	 * @return Schema
-	 */
-	public function definitions(Schema $schema) {
-		$schema->author   = new Reference(AuthorModel::class);
-		$schema->ping     = new Reference(PingModel::class);
-		$schema->guid     = new StringField(250);
-		$schema->appId    = new StringField(50);
-		$schema->reaction = new IntegerField();
-		$schema->biased   = new BooleanField();
-		$schema->created  = new IntegerField(true);
-		$schema->removed  = new IntegerField(true);
-	}
-	
-	public function onbeforesave() {
-		
-		if (!$this->guid) {
-			$this->guid = substr(bin2hex(random_bytes(100)), 0, 150);
-		}
-		
-		if (!$this->created) {
-			$this->created = time();
-		}
-	}
-
-}
+echo json_encode([
+	'status' => 'OK',
+	'payload' => [
+	]
+]);
