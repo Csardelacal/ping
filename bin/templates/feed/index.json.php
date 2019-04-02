@@ -29,6 +29,18 @@ foreach ($notifications as $n) {
 		)
 	] : null;
 	
+	$poll = db()->table('poll\option')->get('ping', $n)->all()->each(function ($e) use ($authUser) {
+		$m = new spitfire\cache\MemcachedAdapter();
+		
+		return [
+			'id' => $e->_id,
+			'body' => $e->text,
+			'responses' => $m->get('responses_' . $e->_id, function () use ($e) { return db()->table('poll\reply')->get('option', $e)->count(); }),
+			'selected'  => !!db()->table('poll\reply')->get('option', $e)->where('author', AuthorModel::get(db()->table('user')->get('_id', $authUser->id)->first()))->first()
+		];
+	});
+	
+	
 	$payload[] = Array(
 		'id'           => $n->_id,
 		'url'          => $n->url,
@@ -38,6 +50,11 @@ foreach ($notifications as $n) {
 		'timeRelative' => Time::relative($n->created),
 		'irt'          => $irt,
 		'replies'      => $n->replies->getQuery()->count(),
+		'feedback'     => [
+			'like'      => db()->table('feedback')->get('ping', $n)->where('reaction',  1)->count(),
+			'dislike'   => db()->table('feedback')->get('ping', $n)->where('reaction', -1)->count(),
+		],
+		'poll'         => $poll->toArray(),
 		'user'         => Array(
 			'id'        => $n->src->user->authId,
 			'url'       => strval(url('user', $sso->getUser($n->src->user->authId)->getUsername())->absolute()),

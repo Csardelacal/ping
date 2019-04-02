@@ -47,7 +47,7 @@ class FeedController extends AppController
 			$query->addRestriction('_id', $_GET['until'], '<');
 		}
 
-		$notifications = $query->range(0, 10);
+		$notifications = $query->range(0, 2);
 
 		#Set the notifications that were unseen as seen
 		$dbuser->lastSeen = time();
