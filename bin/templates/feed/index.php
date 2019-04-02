@@ -162,10 +162,16 @@
 									<?php $poll = db()->table('poll\option')->get('ping', $notification)->all() ?>
 									<?php $resp = db()->table('poll\reply')->get('ping', $notification)->where('author', AuthorModel::get(db()->table('user')->get('authId', $authUser->id)->first()))->first() ?>
 									<?php if ($poll->count() > 0): ?>
-									<div class="spacer" style="height: 10px"></div>
-									<?php foreach($poll as $option): ?>
-									<a href="<?= url('poll', 'vote', $option->_id) ?>" class="poll-open-response" style="display: block; width: 100%; background: #EEEEF7; border-radius: 4px; color: #333; margin-top: 3px; padding: 3px;"><?= __($option->text?: "Untitled") ?></a>
-									<?php endforeach; ?>
+									<div data-poll="<?= $notification->_id ?>">
+										<div class="spacer" style="height: 10px"></div>
+										<?php foreach($poll as $option): ?>
+										<a href="<?= url('poll', 'vote', $option->_id) ?>" 
+											data-option="<?= $option->_id ?>" 
+											class="poll-open-response <?= $resp && $resp->option->_id == $option->_id? 'selected-response' : ''  ?>"> 
+												  <?= __($option->text?: "Untitled") ?>
+										</a>
+										<?php endforeach; ?>
+									</div>
 									<?php endif; ?>
 									
 									<div class="spacer" style="height: 10px"></div>
@@ -188,9 +194,9 @@
 								</div>
 								<div class="span l1" style="text-align: right">
 									<?php if (db()->table('feedback')->get('ping', $notification)->where('author', AuthorModel::get(db()->table('user')->get('authId', $authUser->id)->first()))->first()): ?>
-									<a href="<?= url('feedback', 'revoke', $notification->_id) ?>" class="like-link"><?= db()->table('feedback')->get('ping', $notification)->count()? : 'Like' ?></a>
+									<a href="<?= url('feedback', 'revoke', $notification->_id) ?>" class="like-link like-active" data-ping="<?= $notification->_id ?>"><?= db()->table('feedback')->get('ping', $notification)->count()? : 'Like' ?></a>
 									<?php else: ?>
-									<a href="<?= url('feedback', 'push', $notification->_id) ?>" class="like-link"><?= db()->table('feedback')->get('ping', $notification)->count()? : 'Like' ?></a>
+									<a href="<?= url('feedback', 'push', $notification->_id) ?>" class="like-link" data-ping="<?= $notification->_id ?>"><?= db()->table('feedback')->get('ping', $notification)->count()? : 'Like' ?></a>
 									<?php endif; ?>
 									<a href="<?= url('ping', 'detail', $notification->_id) ?>#replies" class="reply-link"><?= $notification->replies->getQuery()->count()? : 'Reply' ?></a>
 									<a href="<?= url('ping', 'share', $notification->_id); ?>" class="share-link"><?= $notification->original()->shared->getQuery()->count()? : 'Share' ?></a>
@@ -254,6 +260,19 @@
 											<a data-lysine-href="{{notificationURL}}" style="color: #000;" data-for="notificationContent">
 											</a>
 										</p>
+										
+										
+										<div data-condition="count(poll) !== 0" data-poll="{{id}}">
+											<div class="spacer" style="height: 10px"></div>
+											<div data-for="poll" data-lysine-view>
+												<a data-lysine-href="<?= url('poll', 'vote') ?>{{id}}" 
+													data-lysine-data-option="{{id}}" 
+													data-lysine-class="poll-open-response {{selected?selected-response:}}"
+													data-for="body"> 
+														 
+												</a>
+											</div>
+										</div>
 										
 										<div class="spacer" style="height: 20px"></div>
 										
@@ -394,6 +413,7 @@ depend(['m3/core/lysine'], function(lysine) {
 						notificationURL    : data.payload[i].url || '#',
 						notificationContent: data.payload[i].content,
 						media              : data.payload[i].media,
+						poll               : data.payload[i].poll,
 						timeRelative       : data.payload[i].timeRelative,
 						replyCount         : data.payload[i].replies || 'Reply',
 						shareCount         : data.payload[i].shares  || 'Share',
@@ -602,6 +622,66 @@ depend(['m3/core/lysine'], function (Lysine) {
 	
 	document.getElementById('poll-create-add').addEventListener('click', function (e) {
 		addOption();
+	});
+});
+</script>
+
+<script type="text/javascript">
+depend(['m3/core/delegate', 'm3/core/request', 'm3/core/collection', 'm3/core/parent'], function (delegate, request, collect, parent) {
+	
+	/*
+	 * Delegation for the poll system. When the user clicks on a response to a poll,
+	 * we transmit their selection to the server and update the UI.
+	 */
+	delegate('click', function (e) {
+		/*
+		 * Only register the click event when the user clicks on a poll response.
+		 * As opposed to direct event listeners, the delegation will listen to all
+		 * clicks and only perform an action when the element satisfies this condition.
+		 */
+		return e.classList.contains('poll-open-response');
+	}, function (event, element) {
+		/*
+		 * Send the request to the server to update the selected option. If the call
+		 * succeeds, we redraw the UI to reflect the change.
+		 */
+		request('<?= url('poll', 'vote') ?>' + element.getAttribute('data-option') + '.json').then(function() {
+			var poll = parent(element, function (e) { return e.hasAttribute('data-poll'); });
+			
+			collect(poll.querySelectorAll('*[data-option]')).each(
+				function (e) {
+					e.classList.remove('selected-response');
+				}
+			);
+ 
+			element.classList.add('selected-response');
+		}).catch(function (e) {
+			console.error(e);
+		});
+		event.preventDefault();
+	} );
+	
+	delegate('click', function (e) {
+		return e.classList.contains('like-link');
+	}, function (event, element) {
+		var url = element.classList.contains('like-active')? 
+			'<?= url('feedback', 'revoke') ?>' + element.getAttribute('data-ping') + '.json' : 
+			'<?= url('feedback', 'push') ?>' + element.getAttribute('data-ping') + '.json';
+		
+		request(url).then(function() {
+			if (element.classList.contains('like-active')) {
+				element.classList.remove('like-active');
+				element.innerHTML = (parseInt(element.innerHTML) || 0) - 1;
+			}
+			else {
+				element.classList.add('like-active'); 
+				element.innerHTML = (parseInt(element.innerHTML) || 0) + 1;
+			}
+		}).catch(function (e) {
+			console.error(e);
+		});
+		
+		event.preventDefault();
 	});
 });
 </script>

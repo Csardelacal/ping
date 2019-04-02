@@ -23,6 +23,12 @@ class PingModel extends spitfire\Model
 		 */
 		$schema->attached= new ChildrenField('media\media', 'ping');
 		
+		/*
+		 * This is required for the polls to work properly and be able to be closed
+		 * after the user determines they're no longer interesting
+		 */
+		$schema->pollEnd   = new IntegerField(true);
+		
 		$schema->processed = new BooleanField();
 		$schema->locked    = new BooleanField();
 		
