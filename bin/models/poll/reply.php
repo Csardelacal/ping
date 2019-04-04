@@ -39,7 +39,7 @@ class ReplyModel extends Model
 		$schema->ping   = new \Reference(\PingModel::class);
 		$schema->option = new \Reference(OptionModel::class);
 		$schema->author = new \Reference(\AuthorModel::class);
-		$schema->guid = new \StringField(150);
+		$schema->guid   = new \StringField(150);
 		$schema->created = new \IntegerField(true);
 	}
 	

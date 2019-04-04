@@ -106,7 +106,7 @@ class PingController extends AppController
 			$tgt = db()->table('ping')->get('_id', $irt)->fetch()->src;
 			$n = db()->table('notification')->newRecord();
 			$n->src     = $src;
-			$n->target  = $tgt;
+			$n->target  = $tgt->user;
 			$n->content = 'Replied to you';
 			$n->type    = NotificationModel::TYPE_COMMENT;
 			$n->url     = strval(url('ping', 'detail', $notification->_id)->absolute());
@@ -124,7 +124,7 @@ class PingController extends AppController
 
 			#Check the user's preferences and send an email
 			if ($u->notify($n->type, NotificationSetting::NOTIFY_EMAIL)) {
-				$email->push($n->target->_id, $this->sso->getUser($src->authId), 'Mentioned you', null);
+				$email->push($n->target->_id, $this->sso->getUser($n->src->user->_id), 'Mentioned you', null);
 			}
 			elseif ($u->notify($n->type, NotificationSetting::NOTIFY_DIGEST)) {
 				$email->queue($n);

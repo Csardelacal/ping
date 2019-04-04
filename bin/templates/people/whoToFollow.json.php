@@ -8,9 +8,9 @@
 
 $payload = [];
 
-$users->each(function ($e) use (&$payload, $sso) { 
+$authors->each(function ($e) use (&$payload, $sso) { 
 	
-	$user = $sso->getUser($e->_id);
+	$user = $sso->getUser($e->user->_id);
 	$mc = new \spitfire\cache\MemcachedAdapter();
 	
 	try { 

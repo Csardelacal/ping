@@ -27,7 +27,7 @@
 		
 		<div class="row l3">
 			<?php foreach ($followers as $follower): ?>
-			<?php $user = $sso->getUser($follower->authId); ?>
+			<?php $user = $sso->getUser($follower->user->authId); ?>
 			<div class="span l1 material unpadded user-card">
 				<a href="<?= url('user', $user->getUsername()) ?>">
 					<div class="banner">

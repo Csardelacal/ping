@@ -9,11 +9,6 @@ class ActivityController extends AppController
 	public function index() {
 		if (!$this->user) { throw new PublicException('Auth error: Login required', 403); }
 		
-		$this->secondaryNav->add(url('feed'), 'Feed');
-		$this->secondaryNav->add(url('activity'), 'Activity')->setActive(true);
-		$this->secondaryNav->add(url('people', 'followingMe'), 'Followers');
-		$this->secondaryNav->add(url('people', 'iFollow'), 'Following');
-		
 		if (isset($_GET['until'])) {
 			$notifications = db()->table('notification')->get('target__id', $this->user->id)->addRestriction('_id', $_GET['until'], '<')->setOrder('_id', 'DESC')->range(0, 50);
 		} else {
