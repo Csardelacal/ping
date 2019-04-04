@@ -46,7 +46,6 @@ class FeedBackController extends AppController
 		$record = db()->table('feedback')->newRecord();
 		$record->ping     = $ping;
 		$record->author   = $author;
-		$record->biased   = 0;
 		$record->appId    = $this->authapp? ($this->authapp instanceof \auth\App? $this->authapp->getSrc()->getId() : $this->authapp) : null;
 		
 		switch($_GET['reaction']?? null) {

@@ -16,13 +16,8 @@ class PeopleController extends AppController
 	public function followingMe() {
 		
 		
-		$this->secondaryNav->add(url('feed'), 'Feed');
-		$this->secondaryNav->add(url('people', 'followingMe'), 'Followers')->setActive(true);
-		$this->secondaryNav->add(url('people', 'iFollow'), 'Following');
-		
-		
-		$query     = db()->table('follow')->get('prey__id', db()->table('user')->get('authId', $this->user->id)->fetch()->_id);
-		$followers = db()->table('user')->get('following', $query);
+		$query     = db()->table('follow')->get('prey__id', AuthorModel::get(db()->table('user')->get('authId', $this->user->id)->fetch())->_id);
+		$followers = db()->table('author')->get('following', $query);
 		
 		$paginator = new \spitfire\storage\database\pagination\Paginator($followers);
 		
@@ -31,12 +26,10 @@ class PeopleController extends AppController
 	}
 	
 	public function iFollow() {
-		$this->secondaryNav->add(url('feed'), 'Feed');
-		$this->secondaryNav->add(url('people', 'followingMe'), 'Followers');
-		$this->secondaryNav->add(url('people', 'iFollow'), 'Following')->setActive(true);
 		
-		$query     = db()->table('follow')->get('follower__id', db()->table('user')->get('authId', $this->user->id)->fetch()->_id);
-		$followers = db()->table('user')->get('followers', $query);
+		$me        = AuthorModel::get(db()->table('user')->get('authId', $this->user->id)->first());
+		$query     = db()->table('follow')->get('follower__id', $me->_id);
+		$followers = db()->table('author')->get('followers', $query);
 		
 		$paginator = new \spitfire\storage\database\pagination\Paginator($followers);
 		
@@ -49,8 +42,8 @@ class PeopleController extends AppController
 		#Check if the user is already being followed
 		$u = $this->sso->getUser($user);
 		
-		$q1 = db()->table('user')->get('authId', $this->user->id)->fetch()? : UserModel::makeFromSSO($this->sso->getUser($this->user->id));
-		$q2 = db()->table('user')->get('authId', $u->getId())->fetch()? : UserModel::makeFromSSO($u);
+		$q1 = AuthorModel::get(db()->table('user')->get('authId', $this->user->id)->fetch()? : UserModel::makeFromSSO($this->sso->getUser($this->user->id)));
+		$q2 = AuthorModel::get(db()->table('user')->get('authId', $u->getId())->fetch()? : UserModel::makeFromSSO($u));
 		
 		$following = db()->table('follow')->get('follower', $q1)->addRestriction('prey', $q2)->fetch();
 		if ($following) { throw new \spitfire\exceptions\PublicException('Already following', 400); }
@@ -83,8 +76,8 @@ class PeopleController extends AppController
 		#Check if the user is already being followed
 		$u = $this->sso->getUser($user);
 		
-		$q1 = db()->table('user')->get('authId', $this->user->id);
-		$q2 = db()->table('user')->get('authId', $u->getId());
+		$q1 = AuthorModel::get(db()->table('user')->get('authId', $this->user->id)->first());
+		$q2 = AuthorModel::get(db()->table('user')->get('authId', $u->getId())->first());
 		
 		$following = db()->table('follow')->get('follower', $q1)->addRestriction('prey', $q2)->fetch();
 		if (!$following) { throw new \spitfire\exceptions\PublicException('Not yet following', 400); }
@@ -95,14 +88,16 @@ class PeopleController extends AppController
 	public function whoToFollow() {
 		
 		$u = $this->user;
-		$following   = db()->table('follow')->get('follower__id', $u->id);
-		$exclude     = db()->table('follow')->get('follower__id', $u->id);
+		$me = AuthorModel::get(db()->table('user')->get('_id', $u->id)->first())->_id;
 		
-		$suggestions = db()->table('follow')->getAll()->where('follower', db()->table('user')->get('followers', $following));
-		$users       = db()->table('user')->get('followers', $suggestions)->where('followers', '!=', $exclude)->where('_id', '!=', $u->id);
+		$following   = db()->table('follow')->get('follower__id', $me);
+		$exclude     = db()->table('follow')->get('follower__id', $me);
+		
+		$suggestions = db()->table('follow')->getAll()->where('follower', db()->table('author')->get('followers', $following));
+		$users       = db()->table('author')->get('followers', $suggestions)->where('followers', '!=', $exclude)->where('_id', '!=', $me);
 		
 		
-		$this->view->set('users', $users->range(0, 5));
+		$this->view->set('authors', $users->range(0, 5));
 		
 	}
 	
@@ -112,8 +107,8 @@ class PeopleController extends AppController
 			$this->view->set('errorMsg', 'Not authenticated');
 			$this->view->set('following', false);
 		} else {
-			$q1 = db()->table('user')->get('authId', $this->user->id);
-			$q2 = db()->table('user')->get('authId', $uid);
+			$q1 = AuthorModel::get(db()->table('user')->get('authId', $this->user->id)->first());
+			$q2 = AuthorModel::get(db()->table('user')->get('authId', $uid)->first());
 
 			$following = db()->table('follow')->get('follower', $q1)->addRestriction('prey', $q2)->fetch();
 

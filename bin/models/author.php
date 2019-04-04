@@ -18,8 +18,7 @@ class AuthorModel extends spitfire\Model
 		 * be used for caching information.
 		 */
 		$schema->displayName      = new StringField(100); # In case the author is an external author, we present the displayname
-		$schema->fqun             = new StringField(255); # Allows the author to have a fully qualified username - this allows federation
-		$schema->guid             = new StringField(255); 
+		$schema->guid             = new StringField(255); # The GUID will allow the server to identify the user across the world
 		$schema->avatar           = new StringField(255); # The URL to the author's avatar. this is not necessary if the user field is populated
 		
 		/*
@@ -41,7 +40,7 @@ class AuthorModel extends spitfire\Model
 		try {
 			return db()->table('author')->get('user', $user)->first(true);
 		}
-		catch (\spitfire\exceptions\PrivateException$e) {
+		catch (\spitfire\exceptions\PublicException$e) {
 			$author = db()->table('author')->newRecord();
 			$author->guid = substr(bin2hex(random_bytes(100)), 0, 150);
 			$author->user = $user;
