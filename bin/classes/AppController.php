@@ -15,6 +15,9 @@ abstract class AppController extends Controller
 	protected $sso;
 	protected $user;
 	
+	
+	protected $core;
+	
 	/**
 	 *
 	 * @var auth\Token
@@ -49,9 +52,8 @@ abstract class AppController extends Controller
 		$this->view->set('authUser', $this->user);
 		$this->view->set('sso', $this->sso);
 		
-		#Create a sidebar navigation
-		$this->secondaryNav = new Navigation();
-		$this->view->set('secondary_navigation', $this->secondaryNav);
+		#Create the core, so the application can reliably and consistently handle events
+		$this->core = ping\core\Bootstrapper::core();
 		
 		_t(new ping\Locale());
 	}
