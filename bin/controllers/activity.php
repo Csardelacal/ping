@@ -3,11 +3,29 @@
 use spitfire\exceptions\PublicException;
 use settings\NotificationModel as NotificationSetting;
 
+/**
+ * Activity refers to anything that happens on the network ping is directly connected
+ * to. This means that, unlike pings or authors, the activity is not able to be
+ * federated. The server can determine to push activity to the user if there's an
+ * event on the federated network that is considered worthy of attention.
+ * 
+ * Whenever a user receives activity, they will be notified about it. Either via
+ * email or push notification.
+ * 
+ * @author César de la Cal Bretschneider <cesar@magic3w.com>
+ */
 class ActivityController extends AppController
 {
 	
 	public function index() {
-		if (!$this->user) { throw new PublicException('Auth error: Login required', 403); }
+		/*
+		 * A user can only get their activity feed when they are logged into the
+		 * application.
+		 */
+		if (!$this->user) { 
+			$this->response->setBody('Redirect...')->getHeaders()->redirect(url('user', 'login'));
+			return;
+		}
 		
 		if (isset($_GET['until'])) {
 			$notifications = db()->table('notification')->get('target__id', $this->user->id)->addRestriction('_id', $_GET['until'], '<')->setOrder('_id', 'DESC')->range(0, 50);
@@ -28,19 +46,9 @@ class ActivityController extends AppController
 	 */
 	public function push() {
 		
-		#Get the applications credentials
-		$appId  = isset($_GET['appId']) ? $_GET['appId']  : null;
-		$appSec = isset($_GET['appSec'])? $_GET['appSec'] : null;
-		
 		#Validate the app
-		if (isset($_GET['signature'])) {
-			if(!$this->sso->authApp($_GET['signature'])) {
-				throw new PublicException('Invalid signature', 403);
-			}
-		}
-		else {
-			$authUtil = new AuthUtil($this->sso);
-			$authUtil->checkAppCredentials($appId, $appSec);
+		if (!isset($_GET['signature']) || !$this->sso->authApp($_GET['signature'])) {
+			throw new PublicException('Invalid signature', 403);
 		}
 		
 		
@@ -75,35 +83,16 @@ class ActivityController extends AppController
 		}, $tgtid));
 		
 		
-		#Prepare an email sender to push emails to whoever needs them
-		$email   = new EmailSender($this->sso);
-		
 		#It could happen that the target is established as an email and therefore
 		#receives notifications directly as emails
 		foreach ($targets as $target) {
-			if ($target instanceof UserModel) {
-				
-				#Make it a record
-				$notification = db()->table('notification')->newRecord();
-				$notification->src = $src;
-				$notification->target = $target;
-				$notification->content = Mention::mentionsToId($content);
-				$notification->url     = $url;
-				$notification->type    = $type;
-				$notification->store();
-
-				#Check the user's preferences and send an email
-				if ($target->notify($notification->type, NotificationSetting::NOTIFY_EMAIL)) {
-					$email->push($notification->target->_id, $this->sso->getUser($src->authId), $content, $url);
-				}
-				elseif ($target->notify($notification->type, NotificationSetting::NOTIFY_DIGEST)) {
-					$email->queue($notification);
-				}
-			}
-			# Notify the user via mail.
-			elseif (filter_var($_POST['target'], FILTER_VALIDATE_EMAIL)) {
-				$email->push($_POST['target'], $this->sso->getUser($src->authId), $content, $url);
-			}
+			$this->core->activity()->push()->run([
+				'src'     => $src,
+				'target'  => $target,
+				'content' => $content,
+				'url'     => $url,
+				'type'    => $type
+			]);
 		}
 		
 		#This happens if the user defined no targets (this would imply that the ping 
