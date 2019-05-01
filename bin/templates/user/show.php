@@ -58,7 +58,7 @@
 				</p>
 				<?php elseif ($user->getId() !== $authUser->id): ?>
 				<form method="POST" action="<?= url('ping', 'push', Array('returnto' => (string)url('user', $user->getUsername()))) ?>" enctype="multipart/form-data">
-					<input type="hidden" name="target" value="<?= $user->getId() ?>">
+					<input type="hidden" name="target" value="<?= AuthorModel::get(db()->table('user')->get('_id', $user->getId())->first())->guid ?>">
 					<div class="padded add-ping">
 						<div>
 							<div class="row1">

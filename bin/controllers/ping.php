@@ -1,7 +1,6 @@
 <?php
 
 use spitfire\exceptions\PublicException;
-use spitfire\io\Upload;
 use settings\NotificationModel as NotificationSetting;
 
 class PingController extends AppController
@@ -49,14 +48,14 @@ class PingController extends AppController
 		$src = AuthorModel::get(db()->table('user')->get('authId', $srcid)->first()? : UserModel::makeFromSSO($this->sso->getUser($srcid)));
 		
 		#If a source is sent
-		$target = $tgtid === null? null : (db()->table('user')->get('authId', $tgtid)->fetch()? : AuthorModel::get(UserModel::makeFromSSO($this->sso->getUser($tgtid))));
+		$target = $tgtid === null? null : (db()->table('author')->get('guid', $tgtid)->fetch()? : AuthorModel::get(UserModel::makeFromSSO($this->sso->getUser($tgtid))));
 		
 		#Prepare an email sender to push emails to whoever needs them
 		$email   = new EmailSender($this->sso);
 		
 		#It could happen that the target is established as an email and therefore
 		#receives notifications directly as emails
-		if (!($target instanceof UserModel || $target === null)) {
+		if (!($target instanceof AuthorModel || $target === null)) {
 			throw new PublicException('Invalid target', 400);
 		}
 
