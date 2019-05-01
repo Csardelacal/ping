@@ -91,10 +91,6 @@ class UserController extends AppController
 		
 		if (!$dbu || !$user) { throw new \spitfire\exceptions\PublicException('No user found', 404); }
 		
-		$this->secondaryNav->add(url('feed'), 'Feed');
-		$this->secondaryNav->add(url('people', 'followingMe'), 'Followers');
-		$this->secondaryNav->add(url('people', 'iFollow'), 'Following');
-		
 		$feed = db()->table('ping')
 			->getAll()
 			->group()
