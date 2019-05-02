@@ -54,15 +54,15 @@ class FeedController extends AppController
 				  ->where('src__id', $me->_id)
 				  ->group(spitfire\storage\database\RestrictionGroup::TYPE_AND)
 					->where('src__id', $authors)
-				   ->where('target', null, 'IS')
+				   ->where('target', null)
 				  ->endGroup()
 				->endGroup()
 				->where('processed', true)
-				->where('deleted', null, 'IS')
+				->where('deleted', null)
 				->setOrder('created', 'DESC');
 
 		if (isset($_GET['until'])) {
-			$query->where('_id', $_GET['until'], '<');
+			$query->where('_id', '<', $_GET['until']);
 		}
 
 		$notifications = $query->range(0, 2);
