@@ -29,6 +29,10 @@ a {
 	text-decoration: none;
 }
 
+*[disabled] {
+	pointer-events: none;
+}
+
 .button {
 	background: #3191f1 none repeat scroll 0 0;
 	border: medium none;
@@ -47,6 +51,11 @@ a {
 	
 	&.unfollow {
 		/*Follow button specific styles*/
+	}
+	
+	&[disabled] {
+		background: #AAAAAA;
+		box-shadow: -2px -2px 1px #888 inset;
 	}
 }
 

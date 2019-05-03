@@ -26,16 +26,22 @@
 								<div class="span l9">
 									<div class="row l5 m4 s4 fluid">
 										<div class="span l1 m1 s1" data-lysine-view="file-upload-preview" >
-											<div>
-												<img data-lysine-src="{{source}}" style="vertical-align: middle; " onload="if (this.width < this.height) {
+											<div style="text-align: center; height: 100%; border: solid 1px #DDD; border-radius: 3px; overflow: hidden;">
+												<img style="vertical-align: middle" data-lysine-src="{{source}}" onload="
+													this.parentNode.style.height = this.parentNode.clientWidth + 'px';
+													
+													console.log(this.width + 'x' + this.height);
+													if (this.width > this.height) {
 														var mw = this.parentNode.clientWidth;
 														this.style.width  = mw * (this.width / this.height) + 'px';
 														this.style.height = mw + 'px';
 													}
 													else {
 														var mw = this.parentNode.clientWidth;
-														this.style.height = mw * (this.height / this.width) + 'px';
-														this.style.width  = mw + 'px';
+														var h  = mw * (this.height / this.width);
+														this.style.height     = h + 'px';
+														this.style.width      = mw + 'px';
+														this.style.marginTop  = -(h - mw)/2 + 'px';
 													}">
 											</div>
 											<input type="hidden" name="media[]" value="" data-for="id">
@@ -518,6 +524,7 @@ depend(['m3/core/request', 'm3/core/array/iterate', 'm3/core/lysine'], function 
 		
 		var queue = new Queue();
 		var uploads = [];
+		var locked = false;
 		
 		queue.onProgress = function() {
 			//Disable the post ping button
@@ -558,10 +565,6 @@ depend(['m3/core/request', 'm3/core/array/iterate', 'm3/core/lysine'], function 
 							id: null
 						});
 
-						uploads.push({
-							view: v
-						});
-
 					};
 
 					reader.readAsDataURL(e);
@@ -571,9 +574,27 @@ depend(['m3/core/request', 'm3/core/array/iterate', 'm3/core/lysine'], function 
 						source: '<?= \spitfire\core\http\URL::asset('img/video.png') ?>',
 						id: null
 					});
+					
+					if (uploads.length > 0) {
+						throw 'Videos can only be uploaded on their own.';
+					}
+					
+					locked = true;
 				}
 
+				uploads.push({
+					view: v
+				});
+
 				if (uploads.length >= mediaLimit) {
+					locked = true;
+				}
+				
+				/*
+				 * If we have completed the maximum number of uploads, the system will
+				 * stop accepting further uploads.
+				 */
+				if (locked) {
 					document.getElementById('ping_media_selector').style.display = 'none';
 				}
 

@@ -22,6 +22,9 @@ a {
   color: #25A9F8;
   text-decoration: none; }
 
+*[disabled] {
+  pointer-events: none; }
+
 .button, .add-ping input[type=submit] {
   background: #3191f1 none repeat scroll 0 0;
   border: medium none;
@@ -37,6 +40,9 @@ a {
     /*Follow button specific styles*/ }
   .button.unfollow, .add-ping input.unfollow[type=submit] {
     /*Follow button specific styles*/ }
+  .button[disabled], .add-ping input[disabled][type=submit] {
+    background: #AAAAAA;
+    box-shadow: -2px -2px 1px #888 inset; }
 
 .material {
   background: #FFF;
