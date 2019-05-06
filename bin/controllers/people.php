@@ -18,6 +18,7 @@ class PeopleController extends AppController
 		
 		$query     = db()->table('follow')->get('prey__id', AuthorModel::get(db()->table('user')->get('authId', $this->user->id)->fetch())->_id);
 		$followers = db()->table('author')->get('following', $query);
+		$followers->setOrder('_id', 'DESC');
 		
 		$paginator = new \spitfire\storage\database\pagination\Paginator($followers);
 		
@@ -30,6 +31,8 @@ class PeopleController extends AppController
 		$me        = AuthorModel::get(db()->table('user')->get('authId', $this->user->id)->first());
 		$query     = db()->table('follow')->get('follower__id', $me->_id);
 		$followers = db()->table('author')->get('followers', $query);
+		
+		$followers->setOrder('_id', 'DESC');
 		
 		$paginator = new \spitfire\storage\database\pagination\Paginator($followers);
 		
