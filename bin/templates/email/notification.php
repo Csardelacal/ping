@@ -14,8 +14,8 @@
 			
 			<!--User badge-->
 			<div style="padding: 10px 0px;">
-				<img src="<?= $src->getAvatar(64) ?>" style="border-radius: 50%; width: 24px; height: 24px; vertical-align: middle" width="24">
-				<?= $src->getUsername() ?>
+				<img src="<?= $src->avatar ?>" style="border-radius: 50%; width: 24px; height: 24px; vertical-align: middle" width="24">
+				<?= $src->displayname ?>
 			</div>
 			
 			<!--Separator-->
@@ -33,7 +33,7 @@
 					<?php elseif (!empty($media) && !empty($url)): ?>
 					<a href="<?= $url ?>"><img src="<?= $media ?>" style="width: 100%"></a>
 					<?php elseif(empty($url) && empty($media)): ?>
-					<a href="<?= url('user', $src->getUsername())->absolute() ?>" style="background: #3167f1; color: #FFF; border-radius: 5px; padding: 10px; text-decoration: none; font-weight: bold;">Reply to <?= $src->getUsername() ?></a>
+					<a href="<?= url('user', $src->displayName)->absolute() ?>" style="background: #3167f1; color: #FFF; border-radius: 5px; padding: 10px; text-decoration: none; font-weight: bold;">Reply to <?= $src->displayName ?></a>
 					<?php endif; ?>
 				</p>
 			</div>

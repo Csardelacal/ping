@@ -1,4 +1,4 @@
-<?php namespace ping\core\feed;
+<?php namespace ping\core;
 
 /* 
  * The MIT License
@@ -24,14 +24,26 @@
  * THE SOFTWARE.
  */
 
-/**
- * 
- */
-class Push extends \ping\core\Pluggable
+class Event
 {
 	
-	protected function body($parameter) {
+	use Pluggable;
+	
+	private $registered = [];
+	
+	public function __get($name) {
 		
+		if (isset($this->registered[$name])) {
+			return $this->registered[$name];
+		} 
+		else {
+			return $this->registered[$name] = new Event();
+		}
+	}
+	
+	public function do($operation, $object) {
+		$before = $this->before()->run($object);
+		return $this->after()->run($operation($before)?: $before);
 	}
 
 }

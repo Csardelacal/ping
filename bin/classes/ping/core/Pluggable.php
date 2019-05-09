@@ -29,7 +29,7 @@
  * a piece of code, after it has run all the dependencies, and then runs all the
  * dependent code.
  */
-abstract class Pluggable
+Trait Pluggable
 {
 	
 	private $before;
@@ -38,7 +38,7 @@ abstract class Pluggable
 	
 	public function before() {
 		if (!$this->before) {
-			$this->before = new ClosurePluggable();
+			$this->before = new Extension();
 		}
 		
 		return $this->before;
@@ -46,27 +46,10 @@ abstract class Pluggable
 	
 	public function after() {
 		if (!$this->after) {
-			$this->after = new ClosurePluggable();
+			$this->after = new Extension();
 		}
 		
 		return $this->after;
-	}
-	
-	abstract protected function body($parameter);
-	
-	/**
-	 * Run is the main function of the pluggable object, when invoked, it will first
-	 * execute all the registered before objects, then the body, and finally, the
-	 * after code.
-	 * 
-	 * @param mixed $parameter
-	 */
-	public function run($parameter) {
-		$parameter = $this->before? $this->before->run($parameter) : $parameter;
-		
-		$parameter = $this->body($parameter)?: $parameter;
-		
-		return $this->after? $this->after->run($parameter) : $parameter;
 	}
 	
 }
