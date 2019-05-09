@@ -1,7 +1,5 @@
 <?php namespace ping\core;
 
-use ping\core\activity\ActivityFeed;
-
 /* 
  * The MIT License
  *
@@ -33,14 +31,21 @@ use ping\core\activity\ActivityFeed;
 class Ping
 {
 	
-	private $activity;
-	
-	public function __construct() {
-		$this->activity = new ActivityFeed();
-	}
-	
-	public function activity() {
-		return $this->activity;
+	public static function instance() {
+		
+		static $core = null;
+		
+		if (!$core) {
+			$core= new Event();
+			$recipes = glob(rtrim(__DIR__, '\/') . '/_recipes/*')?: [];
+
+			foreach ($recipes as $recipe) {
+				include($recipe);
+			}
+		}
+		
+		
+		return $core;
 	}
 	
 }

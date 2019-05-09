@@ -1,4 +1,6 @@
-<?php namespace ping\core\feed;
+<?php namespace ping\core;
+
+use Closure;
 
 /* 
  * The MIT License
@@ -24,20 +26,49 @@
  * THE SOFTWARE.
  */
 
-class PingFeed
+class Extension 
 {
-	
-	private $push;
-	
-	public function __construct() {
-		;
-	}
+	use Pluggable;
 	
 	/**
 	 * 
-	 * @return type
+	 *
+	 * @var Closure[] 
 	 */
-	public function push() {
-		return $this->push;
+	private $body = [];
+	
+	/**
+	 * 
+	 * @param Closure $callable
+	 * @return $this
+	 */
+	public function do(Closure$callable) {
+		$this->body[] = $callable;
+		return $this;
+	}
+	
+	public function _body($parameter) {
+		$arg = $parameter;
+		
+		foreach ($this->body as $callable) {
+			$arg = $callable($arg)?: $arg;
+		}
+		
+		return $arg;
+	}
+	
+	/**
+	 * Run is the main function of the pluggable object, when invoked, it will first
+	 * execute all the registered before objects, then the body, and finally, the
+	 * after code.
+	 * 
+	 * @param mixed $parameter
+	 */
+	public function run($parameter) {
+		$parameter = $this->before? $this->before->run($parameter) : $parameter;
+		
+		$parameter = $this->_body($parameter)?: $parameter;
+		
+		return $this->after? $this->after->run($parameter) : $parameter;
 	}
 }

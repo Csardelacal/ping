@@ -42,33 +42,31 @@ class ActivityController extends AppController
 	
 	/**
 	 * 
+	 * @validate GET#signature (required)
+	 * @validate POST#src (required)
+	 * @validate POST#target (required)
+	 * @validate POST#content(required string length[1, 250])
+	 * @validate POST#url(required string url)
 	 * @request-method POST
 	 */
 	public function push() {
 		
 		#Validate the app
-		if (!isset($_GET['signature']) || !$this->sso->authApp($_GET['signature'])) {
+		if (!$this->sso->authApp($_GET['signature'])) {
 			throw new PublicException('Invalid signature', 403);
 		}
 		
 		
 		#Read POST data
-		$srcid    = _def($_POST['src'], null);
-		$tgtid    = (array)_def($_POST['target'], null);
-		$content  = str_replace("\r", '',_def($_POST['content'], null));
-		$url      = _def($_POST['url'], null);
+		$srcid    = $_POST['src'];
+		$tgtid    = (array)$_POST['target'];
+		$content  = str_replace("\r", '', $_POST['content']);
+		$url      = $_POST['url'];
 		$type     = _def($_POST['type'], 0);
-		
-		
-		#Validation
-		$v = Array();
-		$v['msg']   = validate($content)->minLength(1, 'Content cannot be empty')->maxLength(250, 'Ping is too long');
-		$v['url']   = $url   === null? null : validate($url)->asURL('URL needs to be a URL');
-		validate($v['msg'], $v['url']);
 		
 		#There needs to be a src user. That means that somebody is originating the
 		#notification. There has to be one, and no more than one.
-		$src = db()->table('user')->get('authId', $srcid)->fetch()? : UserModel::makeFromSSO($this->sso->getUser($srcid));
+		$src = AuthorModel::get(db()->table('user')->get('_id', $srcid)->fetch()? : UserModel::makeFromSSO($this->sso->getUser($srcid)));
 		
 		$targets = array_filter(array_map(function ($tgtid) use ($srcid) {
 			
@@ -78,7 +76,7 @@ class ActivityController extends AppController
 			
 			#If there is no user specified we do skip them
 			try { return db()->table('user')->get('authId', $tgtid)->fetch()? : UserModel::makeFromSSO($this->sso->getUser($tgtid)); } 
-			catch (Exception$e) { return $tgtid; }
+			catch (Exception$e) { return null; }
 			
 		}, $tgtid));
 		
@@ -86,13 +84,18 @@ class ActivityController extends AppController
 		#It could happen that the target is established as an email and therefore
 		#receives notifications directly as emails
 		foreach ($targets as $target) {
-			$this->core->activity()->push()->run([
-				'src'     => $src,
-				'target'  => $target,
-				'content' => $content,
-				'url'     => $url,
-				'type'    => $type
-			]);
+			
+			#Make it a record
+			$notification = db()->table('notification')->newRecord();
+			$notification->src     = $src;
+			$notification->target  = $target;
+			$notification->content = $content;
+			$notification->url     = $url;
+			$notification->type    = $type;
+			
+			$this->core->activity->push->do(function ($notification) {
+				$notification->store();
+			}, $notification);
 		}
 		
 		#This happens if the user defined no targets (this would imply that the ping 

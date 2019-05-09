@@ -31,21 +31,21 @@ use settings\NotificationModel as NotificationSetting;
  * After a new activity is pushed to the database, the system should decide whether
  * it needs to send a email to the user immediately, later (as a digest) or not at all.
  */
-$core->activity()->push()->after()->do(function ($parameter) {
+$core->activity->push->after()->do(function ($parameter) {
 	
 	//TODO This code deserves to go, it's broken
 	$sso     = new \auth\SSOCache(\spitfire\core\Environment::get('SSO'));
 	$email   = new \EmailSender($sso);
 	
-	$target  = $parameter['target'];
-	$src     = $parameter['src'];
-	$url     = $parameter['url'];
-	$content = $parameter['content'];
-	$type    = $parameter['type'];
+	$target  = $parameter->target;
+	$src     = $parameter->src;
+	$url     = $parameter->url;
+	$content = $parameter->content;
+	$type    = $parameter->type;
 	
 	if ((!$target instanceof UserModel) || $target->notify($type, NotificationSetting::NOTIFY_EMAIL)) {
 		//TODO This code deserves to go, it's broken
-		$email->push($target->_id, $sso->getUser($src->_id), $content, $url);
+		$email->push($target->_id, $src, $content, $url);
 	}
 	elseif ($target->notify($type, NotificationSetting::NOTIFY_DIGEST)) {
 		/*
@@ -55,7 +55,7 @@ $core->activity()->push()->after()->do(function ($parameter) {
 		$r = db()->table('email\digestqueue')->newRecord();
 		$r->user         = $target;
 		$r->type         = $type;
-		$r->notification = db()->table('notification')->get('_id', $parameter['id'])->first();
+		$r->notification = db()->table('notification')->get('_id', $parameter->id)->first();
 		$r->store();
 	}
 });

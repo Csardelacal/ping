@@ -1,7 +1,11 @@
 <?php
 
+use auth\SSO;
 use auth\SSOCache;
-use navigation\Navigation;
+use auth\Token;
+use ping\core\Ping;
+use ping\Locale;
+use spitfire\cache\MemcachedAdapter;
 use spitfire\core\Environment;
 use spitfire\io\session\Session;
 
@@ -10,7 +14,7 @@ abstract class AppController extends Controller
 	
 	/**
 	 *
-	 * @var auth\SSO
+	 * @var SSO
 	 */
 	protected $sso;
 	protected $user;
@@ -20,7 +24,7 @@ abstract class AppController extends Controller
 	
 	/**
 	 *
-	 * @var auth\Token
+	 * @var Token
 	 */
 	protected $token;
 	
@@ -30,7 +34,7 @@ abstract class AppController extends Controller
 		$session     = Session::getInstance();
 		
 		#Create a brief cache for the sessions.
-		$cache       = new spitfire\cache\MemcachedAdapter();
+		$cache       = new MemcachedAdapter();
 		$cache->setTimeout(120);
 		
 		#Create a user
@@ -39,7 +43,7 @@ abstract class AppController extends Controller
 		$this->authapp = isset($_GET['signature'])? $this->sso->authApp($_GET['signature']) : null;
 		
 		#Fetch the user from the cache if necessary
-		$this->user  = $this->token && $this->token instanceof auth\Token? $cache->get('ping_token_' . $this->token->getId(), function () { 
+		$this->user  = $this->token && $this->token instanceof Token? $cache->get('ping_token_' . $this->token->getId(), function () { 
 			return $this->token->isAuthenticated()? $this->token->getTokenInfo()->user : null; 
 		}) : null;
 		
@@ -53,9 +57,9 @@ abstract class AppController extends Controller
 		$this->view->set('sso', $this->sso);
 		
 		#Create the core, so the application can reliably and consistently handle events
-		$this->core = ping\core\Bootstrapper::core();
+		$this->core = Ping::instance();
 		
-		_t(new ping\Locale());
+		_t(new Locale());
 	}
 	
 }

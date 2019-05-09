@@ -19,7 +19,8 @@ class AuthorModel extends spitfire\Model
 		 */
 		$schema->displayName      = new StringField(100); # In case the author is an external author, we present the displayname
 		$schema->guid             = new StringField(255); # The GUID will allow the server to identify the user across the world
-		$schema->avatar           = new StringField(255); # The URL to the author's avatar. this is not necessary if the user field is populated
+		$schema->avatar           = new FileField();      # The author's avatar. this is not necessary if the user field is populated
+		$schema->banner           = new FileField();      # The author's banner. this is not necessary if the user field is populated
 		
 		/*
 		 * Users can freely follow authors and be followed by authors that are not
