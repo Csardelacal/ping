@@ -31,9 +31,7 @@
 			<div class="span l1 material unpadded user-card">
 				<a href="<?= url('user', $user->getUsername()) ?>">
 					<div class="banner">
-						<?php try { $banner = $user->getAttribute('banner')->getPreviewURL(320, 75) ?>
-						<img src="<?= $banner ?>" width="275" height="64">
-						<?php } catch (Exception$e) { } ?>
+						<img src="<?= $follower->getBanner()? : 'data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mM06jz+HwAE+gKDdqiDIQAAAABJRU5ErkJggg==' ?>" width="275" height="64">
 					</div>
 					<div class="padded" style="margin-top: -35px;">
 						<img class="avatar" src="<?= $user->getAvatar(128) ?>">

@@ -41,14 +41,15 @@ class User
 		if (!isset($this->attributes->{$name})) { throw new Exception("Attribute {$name} is not set"); }
 		if (!is_object($this->attributes->{$name})) { return $this->attributes->{$name}->value; }
 		
-		$data = $this->attributes->{$name}->value;
+		$data = $this->attributes->{$name};
 		
-		if ($data === null) {
+		if ($data->value === null) {
 			throw new Exception("Attribute {$name} is not set");
 		}
 		
 		switch($data->type) {
-			case 'file': return new File($data->preview, $data->download);
+			case 'file': return $data->value === null? null : new File($data->value->preview, $data->value->download);
+			case 'text': return $data->value;
 			default: throw new Exception('Invalid data type');
 		}
 	}
