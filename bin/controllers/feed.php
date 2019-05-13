@@ -109,9 +109,9 @@ class FeedController extends AppController
 		 * query that counts the open notifications.
 		 */
 		$follows = db()->table('follow')->get('follower__id', $me->_id);
-		$users   = db()->table('user')->get('followers', $follows)->all()->each(function($e) {
+		$users   = db()->table('author')->get('followers', $follows)->all()->each(function($e) {
 			return $e->_id;
-		})->toArray();
+		})->toArray()? : null;
 		
 		/*
 		 * Create the query to find all the posts from authors that we subscribed 

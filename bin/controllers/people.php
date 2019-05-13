@@ -54,24 +54,11 @@ class PeopleController extends AppController
 		$follow = db()->table('follow')->newRecord();
 		$follow->follower = $q1;
 		$follow->prey     = $q2;
-		$follow->store();
 		
-		$notification = db()->table('notification')->newRecord();
-		$notification->src     = $q1;
-		$notification->target  = $q2;
-		$notification->content = "Started following you";
-		$notification->type    = NotificationModel::TYPE_FOLLOW;
-		$notification->store();
+		$this->core->people->follow->do(function ($follow) {
+			$follow->store();
+		}, $follow);
 		
-		$email   = new EmailSender($this->sso);
-		
-		#Check the user's preferences and send an email
-		if ($q2->notify($notification->type, NotificationSetting::NOTIFY_EMAIL)) {
-			$email->push($notification->target->_id, $this->sso->getUser($q1->authId), $notification->content, url('user', $q1->authId)->absolute());
-		}
-		elseif ($q2->notify($notification->type, NotificationSetting::NOTIFY_DIGEST)) {
-			$email->queue($notification);
-		}
 	}
 	
 	public function unfollow($user) {
