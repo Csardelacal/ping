@@ -8,7 +8,7 @@ class PingModel extends spitfire\Model
 		$schema->authapp = new StringField(50);
 		$schema->src     = new Reference('author'); # User originating the action
 		$schema->target  = new Reference('author'); # If a notification is not a broadcast
-		$schema->content = new StringField(300);  # A ping can contain up to 255 characters - but user id's get expanded
+		$schema->content = new StringField(999);  # A ping can contain up to 255 characters - but user id's get expanded
 		$schema->url     = new StringField(255);  # Source URL for the notification
 		$schema->media   = new StringField(255);  # URL with the content. Media should be cached. @deprecated
 		$schema->explicit= new BooleanField();    # Indicates whether the user should have to opt in to see the content

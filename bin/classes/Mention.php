@@ -6,17 +6,18 @@ class Mention
 {
 	
 	public static function mentionsToId($inText) {
-		return preg_replace_callback('/(?<=^|\s|\n)\@([a-z0-9_]+)/i', function ($e) {
-			$sso  = new auth\SSOCache(Environment::get('SSO'));
-			$user = $sso->getUser($e[1]);
-			return '@' . ($user? $user->getId() : $e[1]);
+		return preg_replace_callback('/(?<=^|\s|\n)(\@[a-z0-9_\@]+)/i', function ($e) {
+			$user = AuthorModel::find($e[1]);
+			$user->store();
+			return '@' . ($user? ':' . $user->guid : $e[1]);
 		}, $inText);
 	}
 	
 	public static function idToMentions($inText) {
-		return preg_replace_callback('/\@([0-9]+)/i', function ($e) {
-			$sso  = new auth\SSOCache(Environment::get('SSO'));
-			$user = $sso->getUser($e[1]);
+		return preg_replace_callback('/\@(\:?[0-9a-z]+)/i', function ($e) {
+			$sso    = new auth\SSOCache(Environment::get('SSO'));
+			$author = AuthorModel::find($e[1]);
+			$user   = !$author || $author->server? null : $sso->getUser($author->user->_id);
 			
 			if (!$user) { return '@' . $e[1]; }
 			return sprintf('<a href="%s">@%s</a>', url('user', $user->getUsername()) , $user->getUsername());
@@ -24,11 +25,11 @@ class Mention
 	}
 	
 	public static function getMentionedUsers($inText) {
-		preg_match_all('/\@([0-9]+)/i', $inText, $matches);
+		preg_match_all('/\@(\:?[0-9a-z]+)/i', $inText, $matches);
 		$matches = $matches[0];
 		
 		foreach ($matches as &$match) {
-			$match = db()->table('user')->get('_id', trim($match, '@'))->fetch();
+			$match = AuthorModel::find(trim($match, '@'));
 		}
 		
 		return array_filter($matches);

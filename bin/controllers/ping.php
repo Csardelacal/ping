@@ -69,7 +69,10 @@ class PingController extends AppController
 		$notification->irt     = $irt? db()->table('ping')->get('_id', $irt)->first(true) : null;
 		$notification->processed = false;
 		$notification->locked = false;
-		$notification->store();
+		
+		$this->core->feed->push->do(function ($notification) {
+			$notification->store();
+		}, $notification);
 		
 		/**
 		 * @todo This method should be deprecated in favor of batch processing the
@@ -98,38 +101,6 @@ class PingController extends AppController
 			$record->store();
 		}
 
-		#Check the user's preferences and send an email
-		$email->push($_POST['target'], $this->sso->getUser($src->user->authId), $content, $url, null);
-
-		if ($irt) {
-			$tgt = db()->table('ping')->get('_id', $irt)->fetch()->src;
-			$n = db()->table('notification')->newRecord();
-			$n->src     = $src;
-			$n->target  = $tgt->user;
-			$n->content = 'Replied to you';
-			$n->type    = NotificationModel::TYPE_COMMENT;
-			$n->url     = strval(url('ping', 'detail', $notification->_id)->absolute());
-			$n->store();
-		}
-
-		$mentioned = Mention::getMentionedUsers($notification->content);
-		foreach ($mentioned as $u) {
-			$n = db()->table('notification')->newRecord();
-			$n->src     = $src;
-			$n->target  = $u;
-			$n->content = 'Mentioned you';
-			$n->type    = NotificationModel::TYPE_MENTION;
-			$n->store();
-
-			#Check the user's preferences and send an email
-			if ($u->notify($n->type, NotificationSetting::NOTIFY_EMAIL)) {
-				$email->push($n->target->_id, $this->sso->getUser($n->src->user->_id), 'Mentioned you', null);
-			}
-			elseif ($u->notify($n->type, NotificationSetting::NOTIFY_DIGEST)) {
-				$email->queue($n);
-			}
-		}
-		
 		try {
 			$sem = new cron\FlipFlop(spitfire()->getCWD() . '/bin/usr/.media.cron.lock');
 			$sem->notify();

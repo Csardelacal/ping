@@ -33,6 +33,12 @@ class AuthorModel extends spitfire\Model
 		$schema->following = new ChildrenField('follow', 'follower');
 	}
 	
+	public function onbeforesave() {
+		if (!$this->guid) {
+			$this->guid = substr(bin2hex(random_bytes(100)), 0, 150);
+		}
+	}
+	
 	public static function find($identifier) {
 		
 		if ($identifier === null) {
@@ -51,16 +57,16 @@ class AuthorModel extends spitfire\Model
 		if (substr_count($identifier, '@') == 1 && Strings::startsWith($identifier, '@')) {
 			#Search for a local user
 			$sso = current_context()->controller->sso;
-			$usr = $sso->getUser($identifier);
+			$usr = $sso->getUser(trim($identifier, '@'));
 			return db()->table('author')->get('user__id', $usr->getId())->first();
 		}
 		
 		if (Strings::startsWith($identifier, ':')) {
 			#Search by GUID
-			return db()->table('author')->get('guid', $identifier)->first();
+			return db()->table('author')->get('guid', trim($identifier, ':'))->first();
 		}
 		
-		if (is_int($identifier)) {
+		if (intval($identifier)) {
 			#Search for a local user
 			#Please note that a user may not have been created if they didn't enable ping
 			return db()->table('author')->get('user__id', $identifier)->first();
