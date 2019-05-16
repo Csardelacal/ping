@@ -29,7 +29,7 @@ foreach ($notifications as $n) {
 		)
 	] : null;
 	
-	$poll = db()->table('poll\option')->get('ping', $n)->all()->each(function ($e) use ($authUser) {
+	$poll = db()->table('poll\option')->get('ping', $n->original())->all()->each(function ($e) use ($authUser) {
 		$m = new spitfire\cache\MemcachedAdapter();
 		
 		return [
@@ -44,7 +44,7 @@ foreach ($notifications as $n) {
 	$payload[] = Array(
 		'id'           => $n->_id,
 		'url'          => $n->url,
-		'media'        => $n->attachmentsPreview(),
+		'media'        => $n->original()->attachmentsPreview(),
 		'content'      => Mention::idToMentions($n->content),
 		'timestamp'    => $n->created,
 		'timeRelative' => Time::relative($n->created),
