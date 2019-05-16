@@ -50,9 +50,6 @@ class PingController extends AppController
 		#If a source is sent
 		$target = $tgtid === null? null : (db()->table('author')->get('guid', $tgtid)->fetch()? : AuthorModel::get(UserModel::makeFromSSO($this->sso->getUser($tgtid))));
 		
-		#Prepare an email sender to push emails to whoever needs them
-		$email   = new EmailSender($this->sso);
-		
 		#It could happen that the target is established as an email and therefore
 		#receives notifications directly as emails
 		if (!($target instanceof AuthorModel || $target === null)) {
@@ -70,9 +67,6 @@ class PingController extends AppController
 		$notification->processed = false;
 		$notification->locked = false;
 		
-		$this->core->feed->push->do(function ($notification) {
-			$notification->store();
-		}, $notification);
 		
 		/**
 		 * @todo This method should be deprecated in favor of batch processing the
@@ -80,27 +74,30 @@ class PingController extends AppController
 		 */
 		if (is_string($media)) {
 			$notification->media = $media;
-			$notification->store();
 			
 			$media = [];
 		}
 		
-		#Attach the media
-		foreach (array_filter($media) as $file) {
-			list($id, $secret) = explode(':', $file);
-			$record = db()->table('media\media')->get('_id', $id)->where('secret', $secret)->first(true);
-			$record->ping = $notification;
-			$record->store();
-		}
-		
-		#Create poll options
-		foreach (array_filter($poll) as $option) {
-			$record = db()->table('poll\option')->newRecord();
-			$record->ping = $notification;
-			$record->text = $option;
-			$record->store();
-		}
+		$this->core->feed->push->do(function ($notification) use ($poll, $media) {
+			$notification->store();
 
+			#Attach the media
+			foreach (array_filter($media) as $file) {
+				list($id, $secret) = explode(':', $file);
+				$record = db()->table('media\media')->get('_id', $id)->where('secret', $secret)->first(true);
+				$record->ping = $notification;
+				$record->store();
+			}
+
+			#Create poll options
+			foreach (array_filter($poll) as $option) {
+				$record = db()->table('poll\option')->newRecord();
+				$record->ping = $notification;
+				$record->text = $option;
+				$record->store();
+			}
+		}, $notification);
+		
 		try {
 			$sem = new cron\FlipFlop(spitfire()->getCWD() . '/bin/usr/.media.cron.lock');
 			$sem->notify();
@@ -131,7 +128,10 @@ class PingController extends AppController
 		
 		if ($confirm === $salt) {
 			$notification->deleted = time();
-			$notification->store();
+			
+			$this->core->feed->delete->do(function ($notification) {
+				$notification->store();
+			}, $notification);
 			
 			return $this->response->setBody('OK')->getHeaders()->redirect(url('feed'));
 		}
@@ -173,21 +173,12 @@ class PingController extends AppController
 	}
 	
 	public function share($pingid) {
-		$original = db()->table('ping')->get('_id', $pingid)->fetch();
-		$dispatcher = new NotificationDispatcher($this->sso, db());
+		$original = db()->table('ping')->get('_id', $pingid)->where('deleted', null)->first(true);
 		
-		if (!$this->user)                    { throw new PublicException('Log in required', 403); }
-		if (!$original || $original->target) { throw new PublicException('Ping cannot be shared', 403); }
+		if (!$this->user)      { throw new PublicException('Log in required', 403); }
+		if ($original->target) { throw new PublicException('Ping cannot be shared', 403); }
 		
-		$src = db()->table('user')->get('authId', $this->user->id)->fetch();
-		$count = 0;
-		
-		do {
-			$dispatcher->push($src, $original->src, 'Shared your ping', strval(url('ping', 'detail', $original->_id)->absolute()), NotificationModel::TYPE_SHARE);
-			$original = $original->share? : $original;
-			$count++;
-		} 
-		while ($count < 10 && $original->share);
+		$src = AuthorModel::get(db()->table('user')->get('_id', $this->user->id)->fetch());
 		
 		$shared = db()->table('ping')->newRecord();
 		$shared->_id     = null;
@@ -201,7 +192,10 @@ class PingController extends AppController
 		$shared->created = time();
 		$shared->irt     = $original->irt;
 		$shared->share   = $original;
-		$shared->store();
+		
+		$this->core->feed->push->do(function ($notification) {
+			$notification->store();
+		}, $shared);
 		
 		$this->view->set('shared', $shared);
 	}

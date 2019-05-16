@@ -39,7 +39,7 @@ $router->request('', function (Parameters$params, Parameters$server, $extension)
 	$controller = $path->getController();
 	$action     = $path->getAction();
 	
-	if ($app !== spitfire() || $controller !== ['user']) { return false; }
+	if ($app !== spitfire()->getURISpace() || $controller !== ['user']) { return false; }
 
 	return '/@' . $action;
 }));

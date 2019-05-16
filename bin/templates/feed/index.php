@@ -165,8 +165,8 @@
 										<?= Mention::idToMentions($notification->content) ?>
 									</p>
 
-									<?php $poll = db()->table('poll\option')->get('ping', $notification)->all() ?>
-									<?php $resp = db()->table('poll\reply')->get('ping', $notification)->where('author', AuthorModel::get(db()->table('user')->get('authId', $authUser->id)->first()))->first() ?>
+									<?php $poll = db()->table('poll\option')->get('ping', $notification->original())->all() ?>
+									<?php $resp = db()->table('poll\reply')->get('ping', $notification->original())->where('author', AuthorModel::get(db()->table('user')->get('authId', $authUser->id)->first()))->first() ?>
 									<?php if ($poll->count() > 0): ?>
 									<div data-poll="<?= $notification->_id ?>">
 										<div class="spacer" style="height: 10px"></div>
