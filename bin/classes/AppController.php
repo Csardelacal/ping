@@ -19,6 +19,12 @@ abstract class AppController extends Controller
 	public $sso;
 	protected $user;
 	
+	/**
+	 *
+	 * @var \auth\AppAuthentication
+	 */
+	protected $authapp;
+	
 	
 	protected $core;
 	
