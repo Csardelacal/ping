@@ -1,16 +1,29 @@
 <?php
 
+use cron\FlipFlop;
 use spitfire\exceptions\PublicException;
-use settings\NotificationModel as NotificationSetting;
 
+/**
+ * Pings are the base data type of Ping, they allow a user to broadcast a message
+ * (status update, ping) to a following. Allowing them to collect feedback and 
+ * comments on it.
+ * 
+ * @author César de la Cal Bretschneider <cesar@magic3w.com>
+ */
 class PingController extends AppController
 {
 	
+	/**
+	 * There's not really much value in the /ping method. This could potentially
+	 * be used to redirect the user or provide information about the server.
+	 */
 	public function index() {
 		
 	}
 	
 	/**
+	 * Pushes a ping to the server's public feed. This allows the ping to be displayed,
+	 * shared and replied to.
 	 * 
 	 * @validate >> POST#src (positive number)
 	 * @validate >> POST#target (positive number)
@@ -22,12 +35,18 @@ class PingController extends AppController
 	 */
 	public function push() {
 		
+		/*
+		 * This happens when the user has an active session with the application,
+		 * and not represented by an application. We assume that there's no intermediary.
+		 * 
+		 * Applications should log into the application using their signature, and
+		 * while they will receive very open privileges, Ping likes to be 
+		 * transparent about where pings originated from.
+		 */
 		if ($this->user) {
 			$srcid = $this->user->id;
-		}
-		#Validate the app
-		elseif (isset($_GET['signature']) && $this->sso->authApp($_GET['signature'])) {
-			$srcid = $_POST['src']?? null;
+			$authapp = $this->authapp? $this->authapp->getSrc()->getId() : null;
+			//TODO: Keep logs of the application that originated a ping.
 		}
 		else {
 			throw new PublicException('Authentication required', 403);
@@ -47,8 +66,11 @@ class PingController extends AppController
 		#notification. There has to be one, and no more than one.
 		$src = AuthorModel::get(db()->table('user')->get('authId', $srcid)->first()? : UserModel::makeFromSSO($this->sso->getUser($srcid)));
 		
-		#If a source is sent
-		$target = $tgtid === null? null : (db()->table('author')->get('guid', $tgtid)->fetch()? : AuthorModel::get(UserModel::makeFromSSO($this->sso->getUser($tgtid))));
+		/*
+		 * Check whether the source defined a target for this ping. If the target
+		 * can be traced to an author, we will record that.
+		 */
+		$target = $tgtid === null? null : AuthorModel::find($tgtid);
 		
 		#It could happen that the target is established as an email and therefore
 		#receives notifications directly as emails
@@ -99,7 +121,7 @@ class PingController extends AppController
 		}, $notification);
 		
 		try {
-			$sem = new cron\FlipFlop(spitfire()->getCWD() . '/bin/usr/.media.cron.lock');
+			$sem = new FlipFlop(spitfire()->getCWD() . '/bin/usr/.media.cron.lock');
 			$sem->notify();
 		}
 		catch (Exception $ex) {
@@ -167,8 +189,6 @@ class PingController extends AppController
 		
 		$replies = $query->range(0, 20);
 		
-		//$this->view->set('user',          $this->sso->getUser($ping->src->_id));
-		//$this->view->set('ping',          $ping);
 		$this->view->set('notifications', $replies);
 	}
 	
