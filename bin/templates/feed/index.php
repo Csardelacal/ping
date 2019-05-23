@@ -26,7 +26,7 @@
 								<div class="span l9">
 									<div class="row l5 m4 s4 fluid">
 										<div class="span l1 m1 s1" data-lysine-view="file-upload-preview" >
-											<div style="text-align: center; height: 100%; border: solid 1px #DDD; border-radius: 3px; overflow: hidden;">
+											<div style="text-align: center; height: 100%; border: solid 1px #DDD; border-radius: 3px; overflow: hidden; position: relative">
 												<img style="vertical-align: middle" data-lysine-src="{{source}}" onload="
 													this.parentNode.style.height = this.parentNode.clientWidth + 'px';
 													
@@ -43,8 +43,9 @@
 														this.style.width      = mw + 'px';
 														this.style.marginTop  = -(h - mw)/2 + 'px';
 													}">
+												<input type="hidden" name="media[]" value="" data-for="id">
+												<a class="remove-media" href="#" style="color: #FFF; font-weight: bold; font-size: 1.8em; position: absolute; top: -5px; right: 5px; text-shadow: 0 0 8px rgba(0, 0, 0, .7); line-height: 1em; ">&times;</a>
 											</div>
-											<input type="hidden" name="media[]" value="" data-for="id">
 										</div>
 									</div>
 								</div>
@@ -614,6 +615,17 @@ depend(['m3/core/request', 'm3/core/array/iterate', 'm3/core/lysine'], function 
 				});
 			});
 			
+		});
+		
+	
+		depend(['m3/core/delegate'], function (delegate) {
+			delegate('click', function (e) {
+				return e.classList.contains('remove-media');
+			}, function (event, element) {
+				element.parentNode.parentNode.parentNode.removeChild(element.parentNode.parentNode);
+				uploads.pop();
+				locked = false;
+			});
 		});
 	});
 </script>
