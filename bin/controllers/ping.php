@@ -72,8 +72,10 @@ class PingController extends AppController
 		 */
 		$target = $tgtid === null? null : AuthorModel::find($tgtid);
 		
-		#It could happen that the target is established as an email and therefore
-		#receives notifications directly as emails
+		/*
+		 * If there is a target, and it's not an author known to the server, then
+		 * we must stop the application from creating the ping.
+		 */
 		if (!($target instanceof AuthorModel || $target === null)) {
 			throw new PublicException('Invalid target', 400);
 		}
@@ -81,6 +83,7 @@ class PingController extends AppController
 		#Make it a record
 		$notification = db()->table('ping')->newRecord();
 		$notification->src = $src;
+		$notification->authapp = $authapp;
 		$notification->target = $target;
 		$notification->content = Mention::mentionsToId($content);
 		$notification->url     = $url;
