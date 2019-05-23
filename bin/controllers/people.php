@@ -13,29 +13,33 @@ class PeopleController extends AppController
 		}
 	}
 	
-	public function followingMe() {
+	public function following($username = null) {
 		
-		
-		$query     = db()->table('follow')->get('prey__id', AuthorModel::get(db()->table('user')->get('authId', $this->user->id)->fetch())->_id);
+		$author    = AuthorModel::find($username?: $this->user->id);
+		$query     = db()->table('follow')->get('prey__id', $author->_id);
 		$followers = db()->table('author')->get('following', $query);
 		$followers->setOrder('_id', 'DESC');
 		
 		$paginator = new \spitfire\storage\database\pagination\Paginator($followers);
 		
+		$this->view->set('author', $author);
+		$this->view->set('user', $this->sso->getUser($author->user->_id));
 		$this->view->set('pagination', $paginator);
 		$this->view->set('followers',  $paginator->records());
 	}
 	
-	public function iFollow() {
+	public function follows($username = null) {
 		
-		$me        = AuthorModel::get(db()->table('user')->get('authId', $this->user->id)->first());
-		$query     = db()->table('follow')->get('follower__id', $me->_id);
+		$author        = AuthorModel::find($username?: $this->user->id);
+		$query     = db()->table('follow')->get('follower__id', $author->_id);
 		$followers = db()->table('author')->get('followers', $query);
 		
 		$followers->setOrder('_id', 'DESC');
 		
 		$paginator = new \spitfire\storage\database\pagination\Paginator($followers);
 		
+		$this->view->set('author', $author);
+		$this->view->set('user', $this->sso->getUser($author->user->_id));
 		$this->view->set('pagination', $paginator);
 		$this->view->set('followers',  $paginator->records());
 	}

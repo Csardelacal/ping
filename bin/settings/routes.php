@@ -20,7 +20,9 @@ use spitfire\core\router\Router;
 
 $router = Router::getInstance();
 
-$router->addRoute('/followers/', ['controller' => 'people', 'action' => 'followingMe']);
+$router->addRoute('/followers/', ['controller' => 'people', 'action' => 'following']);
+$router->addRoute('/following/', ['controller' => 'people', 'action' => 'follows']);
+
 
 /*
  * This is a bit of a hacky route, but allows matching /@csharp to the profile, 
@@ -32,7 +34,7 @@ $router->request('', function (Parameters$params, Parameters$server, $extension)
 	if (isset($args[1])) { return false; }
 	if (!Strings::startsWith($args[0], '@')) { return false; }
 	
-	return new Path(spitfire(), ['user'], substr($args[0], 1), null);
+	return new Path(spitfire(), ['user'], substr($args[0], 1), null, $extension);
 })
 ->setReverser(new ClosureReverser(function (Path$path, $explicit = false) {
 	$app        = $path->getApp();
@@ -42,4 +44,42 @@ $router->request('', function (Parameters$params, Parameters$server, $extension)
 	if ($app !== spitfire()->getURISpace() || $controller !== ['user']) { return false; }
 
 	return '/@' . $action;
+}));
+
+/*
+ * This router is in charge of mapping @user/followers to their followers page, 
+ * making it easier to understand where on the page the user currently is.
+ * 
+ * The reverser should make it simple to disassemble the rule and provide consistent
+ * links to the appropriate links anywhere on the site.
+ */
+$router->addRoute('/:username/followers/', function (Parameters$params, Parameters$server, $extension) {
+	if (!Strings::startsWith($params->getParameter('username'), '@')) { return false; }
+	return new Path(spitfire(), ['people'], 'following', [$params->getParameter('username')], $extension);
+})
+->setReverser(new ClosureReverser(function (Path$path, $explicit = false) {
+	$app        = $path->getApp();
+	$controller = $path->getController();
+	$action     = $path->getAction();
+	$object     = $path->getObject();
+	
+	if ($app !== spitfire()->getURISpace() || $controller !== ['people'] || $action !== 'following') { return false; }
+
+	return '/@' . reset($object) . '/followers';
+}));
+
+
+$router->addRoute('/:username/follows/', function (Parameters$params, Parameters$server, $extension) {
+	if (!Strings::startsWith($params->getParameter('username'), '@')) { return false; }
+	return new Path(spitfire(), ['people'], 'follows', [$params->getParameter('username')], $extension);
+})
+->setReverser(new ClosureReverser(function (Path$path, $explicit = false) {
+	$app        = $path->getApp();
+	$controller = $path->getController();
+	$action     = $path->getAction();
+	$object     = $path->getObject();
+	
+	if ($app !== spitfire()->getURISpace() || $controller !== ['people'] || $action !== 'follows') { return false; }
+
+	return '/@' . reset($object) . '/follows';
 }));
