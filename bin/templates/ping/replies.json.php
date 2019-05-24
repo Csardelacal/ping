@@ -47,6 +47,5 @@ foreach ($notifications as $n) {
 
 echo json_encode(Array(
 	 'payload' => $payload,
-	 'until'   => isset($n)? $n->_id : 0,
 	 'messages' => spitfire()->getMessages()
 ));

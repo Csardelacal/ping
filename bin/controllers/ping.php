@@ -46,7 +46,6 @@ class PingController extends AppController
 		if ($this->user) {
 			$srcid = $this->user->id;
 			$authapp = $this->authapp instanceof auth\App? $this->authapp->getSrc()->getId() : null;
-			//TODO: Keep logs of the application that originated a ping.
 		}
 		else {
 			throw new PublicException('Authentication required', 403);
