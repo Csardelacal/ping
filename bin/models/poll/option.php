@@ -45,7 +45,7 @@ class OptionModel extends Model
 	public function onbeforesave() {
 		
 		if (!$this->guid) {
-			$this->guid = substr(bin2hex(random_bytes(100)), 0, 150);
+			$this->guid = 'o' . strtolower(substr(str_replace(['+', '/', '='], '', base64_encode(random_bytes(200))), 0, 100));
 		}
 		
 		if (!$this->created) {

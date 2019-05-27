@@ -51,8 +51,11 @@ class PingController extends AppController
 			throw new PublicException('Authentication required', 403);
 		}
 		
-		
-		#Read POST data
+		/*
+		 * Default optional input to null. Spitfire already handles validation via
+		 * the @validate annotation, so we just have to assume that we need to set
+		 * fields that were empty to null.
+		 */
 		$tgtid    = $_POST['target']?? null;
 		$content  = str_replace("\r", '', $_POST['content']);
 		$url      = $_POST['url']?? null;
@@ -102,6 +105,11 @@ class PingController extends AppController
 			$media = [];
 		}
 		
+		/*
+		 * Once all the validation has been performed and we are sure that data can
+		 * be handled properly by the database we send it to the event handler that 
+		 * will execute the code appropriately.
+		 */
 		$this->core->feed->push->do(function ($notification) use ($poll, $media) {
 			$notification->store();
 
@@ -122,6 +130,10 @@ class PingController extends AppController
 			}
 		}, $notification);
 		
+		/*
+		 * This will notify the cron job, allowing the system to process the ping 
+		 * immediately as it is received.
+		 */
 		try {
 			$sem = new FlipFlop(spitfire()->getCWD() . '/bin/usr/.media.cron.lock');
 			$sem->notify();
@@ -134,22 +146,51 @@ class PingController extends AppController
 		
 	}
 	
+	/**
+	 * Delete a ping. This method will not actually remove it  from the database,
+	 * instead, it will flag it for deletion at a later point.
+	 * 
+	 * @param int $id
+	 * @param string $confirm
+	 * @return type
+	 * @throws PublicException
+	 */
 	public function delete($id, $confirm = null) {
+		/**
+		 * Find the ping in question and generate a random hash that the user will
+		 * have to return to confirm they know what they're doing.
+		 * 
+		 * @todo Replace with Spitfire's XSRF token method.
+		 */
 		$notification = db()->table('ping')->get('_id', $id)->fetch();
 		$salt = sha1('somethingrandom' . $id . (int)(time() / 86400));
 		
 		if (!$notification) { throw new PublicException('No notification found', 404); }
 		
+		/*
+		 * If the user is not logged in, there is no point to even continue. A guest 
+		 * must never be allowed to delete any ping.
+		 */
 		if (!$this->user) {
 			throw new PublicException('Login required', 403);
 		}
 		
-		if ($notification->target === null && $notification->src->_id !== $this->user->id)  
-			{ throw new PublicException('No notification found', 404); }
+		/*
+		 * Check if the user deleting the ping is actually the person who generated
+		 * the ping. Users must only be able to delete a ping they actually posted
+		 * themselves.
+		 */
+		if ($notification->src->_id !== AuthorModel::find($this->user->id)->_id) { 
+			throw new PublicException('No notification found', 404); 
+		}
 		
-		if ($notification->target !== null && $notification->target->_id !== $this->user->id)  
-			{ throw new PublicException('No notification found', 404); }
-		
+		/*
+		 * Confirm the user actually wishes to delete the ping in question. To do
+		 * so, the application will generate a random hash that the user will have
+		 * to send back properly.
+		 * 
+		 * This way we ensure that the user is not deleting a ping via XSRF.
+		 */
 		if ($confirm === $salt) {
 			$notification->deleted = time();
 			
@@ -164,26 +205,64 @@ class PingController extends AppController
 		$this->view->set('salt', $salt);
 	}
 	
+	/**
+	 * Permalink to a ping. The user may provide either a numeric ID or a string based
+	 * GUID to retrieve the content and details of the ping.
+	 * 
+	 * @param int|string $pingid
+	 * @throws PublicException
+	 */
 	public function detail($pingid) {
-		$ping = db()->table('ping')->get('_id', $pingid)->fetch();
+		/*
+		 * Retrieve the ping from the database.
+		 */
+		$ping = db()->table('ping')->get(is_numeric($pingid)? '_id' : 'guid', $pingid)->fetch();
 		
+		/*
+		 * If the ping was deleted, then the user is obviously not allowed to see 
+		 * the contents any more. The ping will be deleted sooner or later by the 
+		 * garbage collector.
+		 */
 		if (!$ping || $ping->deleted) { throw new PublicException('Ping does not exist', 404);}
 		
+		/*
+		 * Pass the data onto the view.
+		 */
 		$this->view->set('user', $this->sso->getUser($ping->src->_id));
 		$this->view->set('ping', $ping);
 	}
 	
+	/**
+	 * Retrieves a list of replies to the ping.
+	 * 
+	 * @param int|string $pingid
+	 * @throws PublicException
+	 */
 	public function replies($pingid) {
-		$ping = db()->table('ping')->get('_id', $pingid)->fetch();
+		$ping = db()->table('ping')->get(is_numeric($pingid)? '_id' : 'guid', $pingid)->fetch();
 		
 		if (!$ping || $ping->deleted) { throw new PublicException('Ping does not exist', 404); }
 		if ($ping->target && $ping->src->authId !== $this->user->id && $ping->target->authId !== $this->user->id) { throw new PublicException('Ping does not exist', 404); }
 		
 		$query = $ping->replies->getQuery();
 		$g = $query->group();
-		$g->addRestriction('target', null, 'IS');
-		$g->addRestriction('target', AuthorModel::get(db()->table('user')->get('authId', $this->user? $this->user->id : null)->first()));
-		$g->addRestriction('src', AuthorModel::get(db()->table('user')->get('authId', $this->user->id)->first()));
+		
+		/*
+		 * If the ping is part of a private conversation, we include the pings from
+		 * me and the ones directed at me.
+		 */
+		if ($ping->target) {
+			$g->addRestriction('target', AuthorModel::get(db()->table('user')->get('authId', $this->user? $this->user->id : null)->first()));
+			$g->addRestriction('src', AuthorModel::get(db()->table('user')->get('authId', $this->user->id)->first()));
+		}
+		/*
+		 * Otherwise we include the ones that were not sent to a specifid user.
+		 * I need to revisit this behavior, since it appears that the user should 
+		 * not be able to send private messages as a reply to a public thread.
+		 */
+		else {
+			$g->addRestriction('target', null, 'IS');
+		}
 		
 		$query->setOrder('_id', 'desc');
 		
@@ -194,8 +273,16 @@ class PingController extends AppController
 		$this->view->set('notifications', $replies);
 	}
 	
+	/**
+	 * Amplifies the reach of a ping by sharing it to the followers of the current
+	 * user. Shared pings cannot receive interactions of their own, replies, shares
+	 * and other should be normalized back to the source.
+	 * 
+	 * @param int|string $pingid
+	 * @throws PublicException
+	 */
 	public function share($pingid) {
-		$original = db()->table('ping')->get('_id', $pingid)->where('deleted', null)->first(true);
+		$original = db()->table('ping')->get(is_numeric($pingid)? '_id' : 'guid', $pingid)->where('deleted', null)->first(true);
 		
 		if (!$this->user)      { throw new PublicException('Log in required', 403); }
 		if ($original->target) { throw new PublicException('Ping cannot be shared', 403); }
