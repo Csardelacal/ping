@@ -163,7 +163,7 @@ class PingController extends AppController
 		 * @todo Replace with Spitfire's XSRF token method.
 		 */
 		$notification = db()->table('ping')->get('_id', $id)->fetch();
-		$salt = sha1('somethingrandom' . $id . (int)(time() / 86400));
+		$salt = new \spitfire\io\XSSToken();
 		
 		if (!$notification) { throw new PublicException('No notification found', 404); }
 		
@@ -191,7 +191,7 @@ class PingController extends AppController
 		 * 
 		 * This way we ensure that the user is not deleting a ping via XSRF.
 		 */
-		if ($confirm === $salt) {
+		if ($salt->verify($confirm)) {
 			$notification->deleted = time();
 			
 			$this->core->feed->delete->do(function ($notification) {
