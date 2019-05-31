@@ -50,7 +50,29 @@ depend(['m3/core/request'], function (request) {
 				.catch(function (e) { console.error(e); });
 			
 		},
-		author : function (author) { /*INSERT CODE TO REMOTELY LOAD THE PING*/ }
+		
+		author : function (author, callback, offset) { 
+			var uri = this.ctx.endpoint().trim('/') + '/user/show/' + author + '.json' + (offset !== undefined? '?until=' + offset : '');
+			var ctx = this.ctx;
+			var slf = this;
+			
+			request(uri, null)
+				.then(JSON.parse)
+				.then(function (e) {
+					if (!e.payload) { throw {'message' : 'Invalid response', 'response' : e}; }
+					
+					var pl = [];
+					for (var i = 0; i < e.payload.length; i++) { pl.push(new Ping(ctx, e.payload[i])); }
+					
+					return new PingList(
+						ctx, 
+						pl, 
+						function () { return e.payload.until !== 0? slf.author(author, callback, e.until) : null; }
+					);
+				})
+				.then(callback)
+				.catch(function (e) { console.error(e); });
+		}
 	};
 	
 	var Ping = function (ctx, payload) {
@@ -58,6 +80,15 @@ depend(['m3/core/request'], function (request) {
 	};
 	
 	Ping.prototype = {
+		
+	};
+	
+	var PingList = function (ctx, pings, next) {
+		this._pings = pings;
+		this._next  = next;
+	};
+	
+	PingList.prototype = {
 		
 	};
 	

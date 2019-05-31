@@ -84,7 +84,7 @@ class UserController extends AppController
 	 * @param type $args
 	 * @throws \spitfire\exceptions\PublicException
 	 */
-	public function __call($username, $args) {
+	public function show($username) {
 		$user = $this->sso->getUser($username);
 		$dbu  = db()->table('user')->get('authId', $user->getId())->first(true);
 		$author = db()->table('author')->get('user', $dbu)->first();
