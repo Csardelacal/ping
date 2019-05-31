@@ -28,22 +28,26 @@ $router->addRoute('/following/', ['controller' => 'people', 'action' => 'follows
  * This is a bit of a hacky route, but allows matching /@csharp to the profile, 
  * as oposed to having to type out /user/csharp
  */
+
+//$router->request('/user/:username/', ['controller' => ['user'], 'action' => 'show', 'object' => [ ':username' ]]);
+
 $router->request('', function (Parameters$params, Parameters$server, $extension) {
 	$args = array_values($params->getUnparsed());
 	
 	if (isset($args[1])) { return false; }
 	if (!Strings::startsWith($args[0], '@')) { return false; }
 	
-	return new Path(spitfire(), ['user'], substr($args[0], 1), null, $extension);
+	return new Path(spitfire(), ['user'], 'show', substr($args[0], 1), $extension);
 })
 ->setReverser(new ClosureReverser(function (Path$path, $explicit = false) {
 	$app        = $path->getApp();
 	$controller = $path->getController();
 	$action     = $path->getAction();
+	$object     = $path->getObject();
 	
-	if ($app !== spitfire()->getURISpace() || $controller !== ['user']) { return false; }
+	if ($app !== spitfire()->getURISpace() || $controller !== ['user'] || $action !== 'show') { return false; }
 
-	return '/@' . $action;
+	return '/@' . reset($object);
 }));
 
 /*

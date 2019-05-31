@@ -723,5 +723,10 @@ depend(['m3/core/delegate', 'm3/core/request', 'm3/core/collection', 'm3/core/pa
 depend(['ping/ping'], function (ping) {
 	var p = new ping('<?= spitfire()->baseUrl() ?>', '<?= (isset($_GET['token'])? $this->sso->makeToken($_GET['token']) : \spitfire\io\session\Session::getInstance()->getUser())->getId() ?>');
 	p.ping().get(265, function (e) { console.log(e); return e; });
+	
+	p.ping().author('patch', function (list) {
+		console.log(list);
+		list._next();
+	});
 });
 </script>
