@@ -67,7 +67,7 @@ depend(['m3/core/request'], function (request) {
 					return new PingList(
 						ctx, 
 						pl, 
-						function () { return e.payload.until !== 0? slf.author(author, callback, e.until) : null; }
+						function () { return e.until != 0? slf.author(author, callback, e.until) : null; }
 					);
 				})
 				.then(callback)

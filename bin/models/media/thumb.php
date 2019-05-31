@@ -42,7 +42,7 @@ class ThumbModel extends Model
 				case 'video/mp4':
 				case 'video/quicktime':
 				case 'image/gif':
-					return sprintf('<video muted playsinline preload="none" loop src="%s" poster="%s" style="width: 100%%" onmouseover="this.play()" onmouseout="this.pause()"></video>', $uri, $post instanceof \spitfire\storage\objectStorage\EmbedInterface? $post->publicURI() : $post);
+					return sprintf('<video muted playsinline preload="none" loop src="%s" poster="%s" style="width: 100%%" onmouseover="this.play()" onmouseout="this.pause()"></video>', $uri, $post instanceof \spitfire\storage\objectStorage\EmbedInterface? $post->publicURI() : $post->uri());
 				default:
 					return sprintf('<img src="%s"  style="width: 100%%">', $uri);
 			}
