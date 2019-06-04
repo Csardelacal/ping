@@ -85,11 +85,9 @@ class UserController extends AppController
 	 * @throws \spitfire\exceptions\PublicException
 	 */
 	public function show($username) {
-		$user = $this->sso->getUser($username);
-		$dbu  = db()->table('user')->get('authId', $user->getId())->first(true);
-		$author = db()->table('author')->get('user', $dbu)->first();
+		$author = AuthorModel::find($username);
 		
-		if (!$dbu || !$user) { throw new \spitfire\exceptions\PublicException('No user found', 404); }
+		if (!$author) { throw new \spitfire\exceptions\PublicException('No author found', 404); }
 		
 		$feed = db()->table('ping')
 			->getAll()
@@ -111,7 +109,8 @@ class UserController extends AppController
 		}
 		
 		$this->view->setFile('user/show');
-		$this->view->set('user', $user);
+		$this->view->set('author', $author);
+		$this->view->set('user', $author);
 		$this->view->set('notifications', $feed->range(0, 10));
 		
 	}
