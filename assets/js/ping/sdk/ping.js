@@ -85,6 +85,7 @@ depend(['m3/core/request'], function (request) {
 	
 	var PingList = function (ctx, pings, next) {
 		this._pings = pings;
+		this._ctx   = ctx;
 		this._next  = next;
 	};
 	

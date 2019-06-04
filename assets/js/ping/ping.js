@@ -29,7 +29,7 @@
  * itself, reducing load on the source application and making the application
  * more responsive to the end user.
  */
-depend(['ping/sdk/ping'], function (Ping) {
+depend(['ping/sdk/ping', 'ping/sdk/feed'], function (Ping, Feed) {
 	
 	/**
 	 * 
@@ -45,8 +45,8 @@ depend(['ping/sdk/ping'], function (Ping) {
 	};
 	
 	SDK.prototype = {
-		feed     : function () {},
-		media    : function () {},
+		feed     : function () { return new Feed(this); },
+		media    : function () {  },
 		ping     : function () { return new Ping(this); },
 		activity : function () {},
 		

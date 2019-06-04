@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-depend([], function () {
+depend(['m3/core/request'], function (request) {
 	
 	/**
 	 * The feed is in charge of delivering updates to the user from the authors
@@ -30,11 +30,51 @@ depend([], function () {
 	 * 
 	 * @returns {pingL#25.Feed}
 	 */
-	var Feed = function (token) {
-		this.token = token;
+	var Feed = function (ctx) {
+		this._ctx = ctx;
 	};
 	
 	Feed.prototype = {
+		read : function (callback, offset) {
+			var uri = this._ctx.endpoint().trim('/') + '/feed.json' + (offset !== undefined? '?until=' + offset : '');
+			var ctx = this._ctx;
+			var slf = this;
+			
+			request(uri, null)
+				.then(JSON.parse)
+				.then(function (e) {
+					if (!e.payload) { throw {message : 'Invalid response', response : e}; }
+					
+					var pl = [];
+					for (var i = 0; i < e.payload.length; i++) { pl.push(new Ping(ctx, e.payload[i])); }
+					
+					return new PingList(
+						ctx, 
+						pl, 
+						function () { return e.until != 0? slf.read(callback, e.until) : null; }
+					);
+				})
+				.then(callback)
+				.catch(function (e) { console.error(e); });
+		}
+	};
+	
+	
+	var Ping = function (ctx, payload) {
+		this.payload = payload;
+	};
+	
+	Ping.prototype = {
+		
+	};
+	
+	var PingList = function (ctx, pings, next) {
+		this._pings = pings;
+		this._ctx   = ctx;
+		this._next  = next;
+	};
+	
+	PingList.prototype = {
 		
 	};
 	
