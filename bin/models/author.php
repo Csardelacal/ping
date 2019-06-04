@@ -123,4 +123,45 @@ class AuthorModel extends spitfire\Model
 		
 	}
 	
+	public function getDisplayName() {
+		if ($this->displayName) {
+			return $this->displayName;
+		}
+		else {
+			$sso = current_context()->controller->sso;
+			$usr = $sso->getUser($this->user->_id);
+			return $usr->getUsername();
+		}
+		
+	}
+	
+	public function getUserName() {
+		if ($this->userName) {
+			return $this->userName;
+		}
+		else {
+			$sso = current_context()->controller->sso;
+			$usr = $sso->getUser($this->user->_id);
+			return $usr->getUsername();
+		}
+		
+	}
+	
+	public function getBio() {
+		if ($this->bio) {
+			return $this->bio;
+		}
+		else {
+			try {
+				$sso = current_context()->controller->sso;
+				$usr = $sso->getUser($this->user->_id);
+				return $usr->getAttribute('bio');
+			}
+			catch (\Exception$e) {
+				return null;
+			}
+		}
+		
+	}
+	
 }

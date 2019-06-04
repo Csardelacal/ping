@@ -1,11 +1,11 @@
 
-<div class="profile <?= $authUser && $authUser->id === $user->getId()? 'mine' : '' ?>">
+<div class="profile <?= $authUser && $authUser->id === $user->user->_id? 'mine' : '' ?>">
 
-	<?php try { $banner = $user->getAttribute('banner')->getPreviewURL(1280, 300); ?>
+	<?php if ($user->getBanner()): ?>
 	<div id="banner">
-		<img src="<?= $banner ?>">
+		<img src="<?= $user->getBanner() ?>">
 	</div>
-	<?php } catch(Exception$e) {} ?>
+	<?php endif; ?>
 
 	<div class="spacer" style="height: 18px"></div>
 
@@ -17,29 +17,28 @@
 				<div class="spacer" style="height: 10px"></div>
 				<a href="<?= url('user', $user->getUsername()) ?>"><span class="user-name"><?= $user->getUsername() ?></span></a>
 				<div class="spacer" style="height: 10px"></div>
-				<div class="bio"><?php try { $bio = $user->getAttribute('bio'); ?><?=  nl2br(__($bio)); ?><?php } catch(Exception$e) { ?><em>No bio provided</em><?php } ?></div>
+				<div class="bio"><?=  __($user->getBio()?: 'No bio provided'); ?></div>
 				
 				<div class="spacer" style="height: 50px"></div>
 				
-				<span class="follower-count"><a href="<?= url('people', 'following', $user->getUsername()) ?>"><strong><?= db()->table('follow')->get('prey__id', $user->getId())->count() ?></strong> followers</a></span>
-				<span class="follow-count"><a href="<?= url('people', 'follows', $user->getUsername()) ?>"><strong><?= db()->table('follow')->get('follower__id', $user->getId())->count() ?></strong> follows</a></span>
-				<span class="ping-count"><strong><?= db()->table('ping')->get('src__id', $user->getId())->addRestriction('target__id', null, 'IS')->count() ?></strong> posts</span>
+				<span class="follower-count"><a href="<?= url('people', 'following', $user->getUsername()) ?>"><strong><?= db()->table('follow')->get('prey', $user)->count() ?></strong> followers</a></span>
+				<span class="follow-count"><a href="<?= url('people', 'follows', $user->getUsername()) ?>"><strong><?= db()->table('follow')->get('follower', $user)->count() ?></strong> follows</a></span>
+				<span class="ping-count"><strong><?= db()->table('ping')->get('src', $user)->addRestriction('target__id', null, 'IS')->count() ?></strong> posts</span>
 			</div>
 			
 			<div class="material unpadded user-card mobile-only">
 				<div class="banner" style="height: 47px">
-					<?php try { $banner = $user->getAttribute('banner')->getPreviewURL(320, 75) ?>
-					<?php if (!$banner) { throw new Exception(); } ?>
-					<img src="<?= $banner ?>" width="275" height="64">
-					<?php } catch (Exception$e) { } ?>
+					<?php if ($user->getBanner()): ?>
+					<img src="<?= $user->getBanner() ?>" width="275" height="64">
+					<?php endif; ?>
 				</div>
 				<div class="padded" style="margin-top: -35px;">
 					<img class="avatar" src="<?= $user->getAvatar(128) ?>">
 					<div class="user-info">
 						<a href="<?= url('user', $user->getUsername()) ?>"><span class="user-name"><?= $user->getUsername() ?></span></a>
 						<div class="user-bio">
-							<a href="<?= url('user', 'following', $user->getUsername()) ?>"><?= db()->table('follow')->get('prey__id', $user->getId())->count() ?></a> followers
-							<a href="<?= url('user', 'follows', $user->getUsername()) ?>"><?= db()->table('follow')->get('follower__id', $user->getId())->count() ?></a> follows
+							<a href="<?= url('user', 'following', $user->getUsername()) ?>"><?= db()->table('follow')->get('prey', $user)->count() ?></a> followers
+							<a href="<?= url('user', 'follows', $user->getUsername()) ?>"><?= db()->table('follow')->get('follower', $user)->count() ?></a> follows
 						</div>
 					</div>
 				</div>
@@ -49,43 +48,16 @@
 		<!-- Main content-->
 		<div class="span l3">
 			<div class="mobile-only" style="padding: 20px 0; text-align: right">
-				<a class="button follow" href="<?= url('user', 'login') ?>" data-ping-follow="<?= $user->getId() ?>">Login to follow</a>
+				<a class="button follow" href="<?= url('user', 'login') ?>" data-ping-follow="<?= $user->_id ?>">Login to follow</a>
 			</div>
 			<div class="material unpadded">
 				<?php if (!$authUser): ?>
 				<p style="color: #777; font-size: .8em; text-align: center; padding: 15px 20px">
 					Log in to send <?= $user->getUsername() ?> a ping...
 				</p>
-				<?php elseif ($user->getId() !== $authUser->id): ?>
-				<form method="POST" action="<?= url('ping', 'push', Array('returnto' => (string)url('user', $user->getUsername()))) ?>" enctype="multipart/form-data">
-					<input type="hidden" name="target" value="<?= AuthorModel::get(db()->table('user')->get('_id', $user->getId())->first())->guid ?>">
-					<div class="padded add-ping">
-						<div>
-							<div class="row1">
-								<div class="span1">
-									<textarea name="content" id="new-ping-content" placeholder="Send ping to <?= $user->getUsername() ?>..."></textarea>
-								</div>
-							</div>
-						</div>
-
-						<div class="spacer" style="height: 10px"></div>
-						
-						<div>
-							<div class="row l2">
-								<div class="span l1">
-
-								</div>
-								<div class="span l1" style="text-align: right">
-									<span id="new-ping-character-count">250</span>
-									<input type="file" name="media" id="ping_media" accept="image/*" style="display: none" onchange="document.getElementById('ping_media_selector').style.opacity = '1'">
-									<img src="<?= spitfire\core\http\URL::asset('img/camera.png') ?>" id="ping_media_selector" onclick="document.getElementById('ping_media').click()" style="vertical-align: middle; height: 24px; opacity: .3; margin: 0 5px;">
-									<input type="submit" value="Ping!">
-								</div>
-							</div>
-						</div>
-					</div>
-				</form>
-
+				<?php elseif ($user->_id !== $authUser->id): ?>
+					
+				<?= current_context()->view->element('ping/editor')->set('target', $author->_id)->render() ?>
 				<?php else: ?>
 
 				<p style="color: #777; font-size: .8em; text-align: center; padding: 15px 20px">
@@ -93,12 +65,37 @@
 				</p>
 
 				<?php endif; ?>
+			</div>
+			
+			<div class="spacer" style="height: 30px"></div>
+			
+			<?php foreach($notifications as $notification): ?>
+			<?php $user = $notification->src->user? $sso->getUser($notification->src->user->authId) : null; ?>
+			<div class="material unpadded">
 
-				<div class="separator"></div>
+				<?php if ($notification->irt): ?>
+				<div class="source-ping">
+					<div class="row l10 fluid">
+						<div class="span l1 desktop-only" style="text-align: center;">
+							<img src="<?= $sso->getUser($notification->irt->src->user->authId)->getAvatar(64) ?>" style="width: 32px; border: solid 1px #777; border-radius: 3px;">
+						</div>
+						<div class="span l9">
+							<a href="<?= url('user', $sso->getUser($notification->irt->src->user->authId)->getUsername()) ?>"  style="color: #000; font-weight: bold; font-size: .8em;">
+								<?= $sso->getUser($notification->irt->src->user->authId)->getUsername() ?>
+							</a>
 
-				<?php foreach($notifications as $notification): ?>
-				<?php $u = $sso->getUser($notification->src->user->authId); ?>
-				<div class="padded" style="padding-top: 5px;">
+							<p style="margin: 0;">
+								<?= Mention::idToMentions($notification->irt->content) ?>
+							</p>
+						</div>
+					</div>
+				</div>
+				<?php endif; ?>
+
+
+				<div class="padded">
+
+
 					<div class="row l10 fluid">
 						<div class="span l1 desktop-only" style="text-align: center">
 							<img src="<?= $user->getAvatar(64) ?>" style="width: 100%; border: solid 1px #777; border-radius: 3px;">
@@ -106,7 +103,7 @@
 						<div class="span l9">
 							<div class="row l4">
 								<div class="span l3">
-									<img class="mobile-only" src="<?= $user->getAvatar(64) ?>" style="width: 16px; border: solid 1px #777; border-radius: 3px; vertical-align: middle">
+									<img src="<?= $user->getAvatar(64) ?>" class="not-desktop" style="width: 32px; border-radius: 50%; vertical-align: middle">
 									<a href="<?= url('user', $user->getUsername()) ?>" style="color: #000; font-weight: bold; font-size: .8em;"><?= $user->getUsername() ?></a>
 									<?php if ($notification->share): ?>
 									<a href="<?= url('ping', 'detail', $notification->share->_id) ?>" style="font-size: .8em; color: #777;"> from <?= $sso->getUser($notification->share->src->_id)->getUsername() ?></a>
@@ -117,34 +114,27 @@
 								</div>
 							</div>
 
-							<?php if ($notification->irt): ?>
-							<div class="spacer" style="height: 10px"></div>
-
-							<div class="source-ping">
-								<div class="row10 fluid">
-									<div class="span1 desktop-only" style="text-align: center;">
-										<img src="<?= $sso->getUser($notification->irt->src->user->authId)->getAvatar(64) ?>" style="width: 32px; border: solid 1px #777; border-radius: 3px;">
-									</div>
-									<div class="span9">
-										<a href="<?= url('user', $sso->getUser($notification->irt->src->user->authId)->getUsername()) ?>"  style="color: #000; font-weight: bold; font-size: .8em;">
-											<?= $sso->getUser($notification->irt->src->user->authId)->getUsername() ?>
-										</a>
-
-										<p style="margin: 0;">
-											<?= Mention::idToMentions($notification->irt->content) ?>
-										</p>
-									</div>
-								</div>
-							</div>
-
-							<div class="spacer" style="height: 10px"></div>
-							<?php endif; ?>
 
 							<div class="row l1 fluid" style="margin-top: 5px">
 								<div class="span l1">
 									<p style="margin: 0;">
 										<?= Mention::idToMentions($notification->content) ?>
 									</p>
+
+									<?php $poll = db()->table('poll\option')->get('ping', $notification->original())->all() ?>
+									<?php $resp = db()->table('poll\reply')->get('ping', $notification->original())->where('author', AuthorModel::get(db()->table('user')->get('authId', $authUser->id)->first()))->first() ?>
+									<?php if ($poll->count() > 0): ?>
+									<div data-poll="<?= $notification->_id ?>">
+										<div class="spacer" style="height: 10px"></div>
+										<?php foreach($poll as $option): ?>
+										<a href="<?= url('poll', 'vote', $option->_id) ?>" 
+											data-option="<?= $option->_id ?>" 
+											class="poll-open-response <?= $resp && $resp->option->_id == $option->_id? 'selected-response' : ''  ?>"> 
+												  <?= __($option->text?: "Untitled") ?>
+										</a>
+										<?php endforeach; ?>
+									</div>
+									<?php endif; ?>
 
 									<div class="spacer" style="height: 10px"></div>
 
@@ -165,7 +155,11 @@
 									</p>
 								</div>
 								<div class="span l1" style="text-align: right">
-									<a class="delete-link" href="<?= url('ping', 'delete', $notification->_id) ?>" title="Delete this post">&times; Delete</a>
+									<?php if (db()->table('feedback')->get('ping', $notification)->where('author', AuthorModel::get(db()->table('user')->get('authId', $authUser->id)->first()))->first()): ?>
+									<a href="<?= url('feedback', 'revoke', $notification->_id) ?>" class="like-link like-active" data-ping="<?= $notification->_id ?>"><?= db()->table('feedback')->get('ping', $notification)->count()? : 'Like' ?></a>
+									<?php else: ?>
+									<a href="<?= url('feedback', 'push', $notification->_id) ?>" class="like-link" data-ping="<?= $notification->_id ?>"><?= db()->table('feedback')->get('ping', $notification)->count()? : 'Like' ?></a>
+									<?php endif; ?>
 									<a href="<?= url('ping', 'detail', $notification->_id) ?>#replies" class="reply-link"><?= $notification->replies->getQuery()->count()? : 'Reply' ?></a>
 									<a href="<?= url('ping', 'share', $notification->_id); ?>" class="share-link"><?= $notification->original()->shared->getQuery()->count()? : 'Share' ?></a>
 								</div>
@@ -173,12 +167,35 @@
 						</div>
 					</div>
 				</div>
+			</div>
 
-				<div class="separator"></div>
-				<?php endforeach; ?>
+			<div class="spacer" style="height: 10px"></div>
 
-				<div data-lysine-view="ping">
-					
+			<?php endforeach; ?>
+
+			<div data-lysine-view="ping">
+				<div class="material unpadded">
+					<div class="irt" data-lysine-view data-for="irt">
+						<div class="source-ping">
+							<div class="row l10 fluid">
+								<div class="span l1 desktop-only" style="text-align: center;">
+									<img data-lysine-src="{{avatar}}" style="width: 32px; border: solid 1px #777; border-radius: 3px;">
+								</div>
+								<div class="span l9">
+									<a  data-for="username" data-lysine-href="{{userURL}}"  style="color: #000; font-weight: bold; font-size: .8em;"></a>
+
+									<p style="margin: 0;">
+										<a  data-for="content" data-lysine-href="<?= url('ping', 'detail'); ?>{{id}}"></a>
+										<a  data-condition="count(media) != 0" data-lysine-href="<?= url('ping', 'detail'); ?>{{id}}"><strong>[[Media]]</strong></a>
+									</p>
+
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="spacer" style="height: 10px"></div>
+
 					<div class="padded" style="padding-top: 5px;">
 						<div class="row l10 fluid">
 							<div class="span l1 desktop-only" style="text-align: center">
@@ -190,51 +207,42 @@
 										<img class="mobile-only" data-lysine-src="{{avatar}}" style="width: 16px; border: solid 1px #777; border-radius: 3px; vertical-align: middle">
 										<a data-for="userName" data-lysine-href="{{userURL}}" style="color: #000; font-weight: bold; font-size: .8em;"></a>
 									</div>
-									<div class="span1 desktop-only" style="text-align: right; font-size: .8em; color: #777;" data-for="timeRelative"></div>
+									<div class="span l1 desktop-only" style="text-align: right; font-size: .8em; color: #777;" data-for="timeRelative"></div>
 								</div>
 
 
-								<div class="irt" data-lysine-view data-for="irt">
-									<div class="spacer" style="height: 10px"></div>
-
-									<div class="source-ping">
-										<div class="row l10 fluid">
-											<div class="span1 desktop-only" style="text-align: center;">
-												<img data-lysine-src="{{avatar}}" style="width: 32px; border: solid 1px #777; border-radius: 3px;">
-											</div>
-											<div class="span l9">
-												<a  data-for="username" data-lysine-href="{{userURL}}"  style="color: #000; font-weight: bold; font-size: .8em;"></a>
-
-												<p style="margin: 0;"><a  data-for="content" data-lysine-href="<?= url('ping', 'detail'); ?>{{id}}"></a></p>
-												
-											</div>
-										</div>
-									</div>
-
-									<div class="spacer" style="height: 10px"></div>
-								</div>
 
 								<div class="row1" style="margin-top: 5px">
 									<div class="span1">
-										<p style="margin: 0;">
-											<a data-lysine-href="{{notificationURL}}" style="color: #000;" data-for="notificationContent">
-											</a>
-										</p>
-										
+										<p style="margin: 0;" style="color: #000;" data-for="notificationContent"></p>
+
+
+										<div data-condition="count(poll) !== 0" data-poll="{{id}}">
+											<div class="spacer" style="height: 10px"></div>
+											<div data-for="poll" data-lysine-view>
+												<a data-lysine-href="<?= url('poll', 'vote') ?>{{id}}" 
+													data-lysine-data-option="{{id}}" 
+													data-lysine-class="poll-open-response {{selected?selected-response:}}"
+													data-for="body"> 
+
+												</a>
+											</div>
+										</div>
+
 										<div class="spacer" style="height: 20px"></div>
-										
+
 										<div class="media-preview" data-condition="count(media) != 0">
 											<!--Single images-->
 											<div class="row l1" data-condition="count(media) == 1">
 												<div class="span l1 ng" data-for="media.0.embed"></div>
 											</div>
-											
+
 											<!-- Two images -->
 											<div class="row l2 m2 s2" data-condition="count(media) == 2">
 												<div class="span l1 ng" data-for="media.0.embed"></div>
 												<div class="span l1 ng" data-for="media.1.embed"></div>
 											</div>
-											
+
 											<!--Three images-->
 											<div class="row l3 m3 s3" data-condition="count(media) == 3">
 												<div class="span l2 ng" data-for="media.0.embed"></div>
@@ -243,7 +251,7 @@
 													<div data-for="media.2.embed"></div>
 												</div>
 											</div>
-											
+
 											<!--Four images-->
 											<div class="row l2 m2 s2" data-condition="count(media) == 4">
 												<div class="span l1 ng">
@@ -259,8 +267,8 @@
 
 									</div>
 								</div>
-								
-								
+
+
 								<div class="spacer" style="height: 20px;"></div>
 
 								<div class="row1 fluid">
@@ -274,14 +282,14 @@
 						</div>
 					</div>
 
-					<div class="separator"></div>
 				</div>
+				<div class="spacer" style="height: 10px"></div>
 			</div>
 		</div>
 
 		<!-- Contextual menu-->
 		<div class="span l1 desktop-only">
-			<a class="button follow" href="<?= url('user', 'login') ?>" data-ping-follow="<?= $user->getId() ?>">Login to follow</a>
+			<a class="button follow" href="<?= url('user', 'login') ?>" data-ping-follow="<?= $user->_id ?>">Login to follow</a>
 		</div>
 	</div>
 </div>
@@ -308,7 +316,7 @@ depend(['m3/core/lysine'], function(Lysine) {
 		if (current === 0) { return; }
 		
 		xhr = new XMLHttpRequest();
-		xhr.open('GET', '<?= url('user', $user->getUsername())->setExtension('json') ?>?until=' + current);
+		xhr.open('GET', '<?= url('user', 'show', $user->getUsername())->setExtension('json') ?>?until=' + current);
 		
 		xhr.onreadystatechange = function () {
 			if (xhr.readyState === 4 && xhr.status === 200) {
@@ -328,12 +336,11 @@ depend(['m3/core/lysine'], function(Lysine) {
 						id                 : data.payload[i].id,
 						userName           : data.payload[i].user.username,
 						avatar             : data.payload[i].user.avatar,
-						userURL            : '<?= url('user') ?>/' + data.payload[i].user.username,
+						userURL            : data.payload[i].user.url,
 						notificationURL    : data.payload[i].url || '#',
 						notificationContent: data.payload[i].content,
-						mediaCount         : data.payload[i].mediaCount,
 						media              : data.payload[i].media,
-						notificationMedia  : data.payload[i].media? data.payload[i].media : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
+						poll               : data.payload[i].poll,
 						timeRelative       : data.payload[i].timeRelative,
 						replyCount         : data.payload[i].replies || 'Reply',
 						shareCount         : data.payload[i].shares  || 'Share',
@@ -390,18 +397,4 @@ depend(['m3/core/lysine'], function(Lysine) {
 	window.addEventListener('load',   listener, false);
 	document.addEventListener('scroll', listener, false);
 });
-
-(function () {
-	
-	/**
-	 * This little listener makes sure to display the amount of characters left for
-	 * the user to type in
-	 */
-	var listener = function() {
-		document.querySelector('#new-ping-character-count').innerHTML = 250 - this.value.length;
-	};
-	
-	document.querySelector('#new-ping-content').addEventListener('keyup', listener, false);
-	
-}());
 </script>

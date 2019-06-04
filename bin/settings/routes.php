@@ -37,7 +37,7 @@ $router->request('', function (Parameters$params, Parameters$server, $extension)
 	if (isset($args[1])) { return false; }
 	if (!Strings::startsWith($args[0], '@')) { return false; }
 	
-	return new Path(spitfire(), ['user'], 'show', substr($args[0], 1), $extension);
+	return new Path(spitfire(), ['user'], 'show', $args[0], $extension);
 })
 ->setReverser(new ClosureReverser(function (Path$path, $explicit = false) {
 	$app        = $path->getApp();
