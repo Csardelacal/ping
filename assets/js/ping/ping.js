@@ -34,14 +34,12 @@ depend(['ping/sdk/ping', 'ping/sdk/feed'], function (Ping, Feed) {
 	/**
 	 * 
 	 * @param {string} endpoint
-	 * @param {string} token
-	 * @param {string} signature optional signature to authenticate the source application
+	 * @param {string} token optional Only needed for authenticated requests
 	 * @returns {pingL#33.Ping}
 	 */
-	var SDK = function (endpoint, token, signature) {
+	var SDK = function (endpoint, token) {
 		this._endpoint = endpoint;
 		this._token = token;
-		this._signature = signature;
 	};
 	
 	SDK.prototype = {
@@ -52,8 +50,7 @@ depend(['ping/sdk/ping', 'ping/sdk/feed'], function (Ping, Feed) {
 		
 		//Getters and setters
 		endpoint : function () { return this._endpoint; },
-		token    : function () { return this._token; },
-		signature: function () { return this._signature; }
+		token    : function () { return this._token; }
 	};
 	
 	return SDK;
