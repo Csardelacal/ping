@@ -35,11 +35,52 @@ depend(['m3/core/request'], function (request) {
 	};
 	
 	Feed.prototype = {
+		/**
+		 * Reads the feed. If you pass the offset (the ID of the last ping you have
+		 * available) it will return the feed starting at that point.
+		 * 
+		 * The callback will receive a PingList object containing an array of pings
+		 * as it's first and only parameter. This pinglist object gives you access
+		 * to:
+		 * 
+		 * * The array of pings the server returned
+		 * * The context. Which allows you to make further calls to the SDK (for responses, for example)
+		 * * A function that calls your function again with the next set of pings.
+		 * 
+		 * This allows your application to simply let itself be called over and over
+		 * to generate a timeline.
+		 * 
+		 * @param {function} callback
+		 * @param {int} offset
+		 * @returns {undefined}
+		 */
 		read : function (callback, offset) {
-			var uri = this._ctx.endpoint().trim('/') + '/feed.json' + (offset !== undefined? '?until=' + offset : '');
+			
+			/*
+			 * Construct an URI that idenitfies the user against Ping and send a 
+			 * request to Ping.
+			 * 
+			 * The token will authenticate both the user and the application embedding
+			 * the SDK since Ping will be able to retrieve metadata from PHPAS, allowing
+			 * it to determine whether it should share the feed for this user with 
+			 * the application.
+			 * 
+			 * Additionally, (although at the time of writing this is not the case)
+			 * Ping should send a Access-Control header limited to the application's 
+			 * domain to ensure the user is not being attacked with XSRF to leak data.
+			 * 
+			 * For this, Ping would also need to be able to understand the options 
+			 * header. Which (again, at this point) is not being supported, but as 
+			 * soon as it is, this should transparently become operational - only
+			 * breaking non compliant applications.
+			 */
+			var uri = this._ctx.endpoint().trim('/') + '/feed.json?token=' + this._ctx.token() + (offset !== undefined? '&until=' + offset : '');
 			var ctx = this._ctx;
 			var slf = this;
 			
+			/*
+			 * Send the request to ping.
+			 */
 			request(uri, null)
 				.then(JSON.parse)
 				.then(function (e) {
