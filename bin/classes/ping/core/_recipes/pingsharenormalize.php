@@ -33,7 +33,7 @@ $core->feed->push->before()->do(function ($ping) {
 		
 	if (!$ping->share) { return; }
 	
-	$original = $ping;
+	$original = $ping->share;
 	
 	while ($original->share) {
 		$original = $original->share;
