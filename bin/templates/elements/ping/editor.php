@@ -3,6 +3,9 @@
 	<?php if (isset($target) && $target): ?>
 		<input type="hidden" name="target" value="<?= $target ?>">
 	<?php endif; ?>
+	<?php if (isset($irt) && $irt): ?>
+		<input type="hidden" name="irt" value="<?= $irt ?>">
+	<?php endif; ?>
 
 	<div class="padded add-ping">
 		<div class="row l10">

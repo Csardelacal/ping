@@ -45,7 +45,7 @@ $router->request('', function (Parameters$params, Parameters$server, $extension)
 	$action     = $path->getAction();
 	$object     = $path->getObject();
 	
-	if ($app !== spitfire()->getURISpace() || $controller !== ['user'] || $action !== 'show') { return false; }
+	if ($app !== spitfire()->getMapping()->getURISpace() || $controller !== ['user'] || $action !== 'show') { return false; }
 
 	return '/@' . reset($object);
 }));
@@ -67,7 +67,7 @@ $router->addRoute('/:username/followers/', function (Parameters$params, Paramete
 	$action     = $path->getAction();
 	$object     = $path->getObject();
 	
-	if ($app !== spitfire()->getURISpace() || $controller !== ['people'] || $action !== 'following') { return false; }
+	if ($app !== spitfire()->getMapping()->getURISpace() || $controller !== ['people'] || $action !== 'following') { return false; }
 
 	return '/@' . reset($object) . '/followers';
 }));
@@ -83,7 +83,7 @@ $router->addRoute('/:username/follows/', function (Parameters$params, Parameters
 	$action     = $path->getAction();
 	$object     = $path->getObject();
 	
-	if ($app !== spitfire()->getURISpace() || $controller !== ['people'] || $action !== 'follows') { return false; }
+	if ($app !== spitfire()->getMapping()->getURISpace() || $controller !== ['people'] || $action !== 'follows') { return false; }
 
 	return '/@' . reset($object) . '/follows';
 }));
