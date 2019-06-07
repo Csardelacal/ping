@@ -365,3 +365,10 @@
 		});
 	});
 </script>
+
+
+<script type="text/javascript">
+depend(['ping/editor'], function (editor) {
+	console.log('editor.loaded');
+});
+</script>
