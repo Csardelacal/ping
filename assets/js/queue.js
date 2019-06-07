@@ -76,5 +76,6 @@
 	};
 	
 	window.Queue = Queue;
+	depend && depend(function () { return Queue; });
 	
 }());
