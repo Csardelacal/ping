@@ -15,7 +15,7 @@ foreach ($notifications as $n) {
 		'timeRelative' => Time::relative($n->created),
 		'replies'      => [
 			'count'  => $n->replies->getQuery()->count(),
-			'sample' => $n->replies->getQuery()->setOrder('created', 'ASC')->range(0, 5)->each(function ($n) use ($sso) {
+			'sample' => $n->replies->getQuery()->setOrder('created', 'DESC')->range(0, 5)->each(function ($n) use ($sso) {
 				$user  = $sso->getUser($n->src->user->authId);
 				return [
 					'id'           => $n->_id,
@@ -47,5 +47,6 @@ foreach ($notifications as $n) {
 
 echo json_encode(Array(
 	 'payload' => $payload,
+	 'until'   => $n? $n->_id : null,
 	 'messages' => spitfire()->getMessages()
 ));

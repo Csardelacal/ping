@@ -1,0 +1,112 @@
+<div data-lysine-view="ping">
+	<div class="material unpadded">
+		<div class="irt" data-lysine-view data-for="irt">
+			<div class="source-ping">
+				<div class="row l10 fluid">
+					<div class="span l1 desktop-only" style="text-align: center;">
+						<img data-lysine-src="{{avatar}}" style="width: 32px; border: solid 1px #777; border-radius: 3px;">
+					</div>
+					<div class="span l9">
+						<a  data-for="username" data-lysine-href="{{userURL}}"  style="color: #000; font-weight: bold; font-size: .8em;"></a>
+
+						<p style="margin: 0;">
+							<a  data-for="content" data-lysine-href="<?= url('ping', 'detail'); ?>{{id}}"></a>
+							<a  data-condition="count(media) != 0" data-lysine-href="<?= url('ping', 'detail'); ?>{{id}}"><strong>[[Media]]</strong></a>
+						</p>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="spacer" style="height: 10px"></div>
+
+		<div class="padded" style="padding-top: 5px;">
+			<div class="row l10 fluid">
+				<div class="span l1 desktop-only" style="text-align: center">
+					<img data-lysine-src="{{avatar}}" style="width: 100%; border: solid 1px #777; border-radius: 3px;">
+				</div>
+				<div class="span l9">
+					<div class="row l4">
+						<div class="span l3">
+							<img class="mobile-only" data-lysine-src="{{avatar}}" style="width: 16px; border: solid 1px #777; border-radius: 3px; vertical-align: middle">
+							<a data-for="userName" data-lysine-href="{{userURL}}" style="color: #000; font-weight: bold; font-size: .8em;"></a>
+						</div>
+						<div class="span l1 desktop-only" style="text-align: right; font-size: .8em; color: #777;" data-for="timeRelative"></div>
+					</div>
+
+
+
+					<div class="row1" style="margin-top: 5px">
+						<div class="span1">
+							<p style="margin: 0;" style="color: #000;" data-for="notificationContent"></p>
+
+
+							<div data-condition="count(poll) !== 0" data-poll="{{id}}">
+								<div class="spacer" style="height: 10px"></div>
+								<div data-for="poll" data-lysine-view>
+									<a data-lysine-href="<?= url('poll', 'vote') ?>{{id}}" 
+										data-lysine-data-option="{{id}}" 
+										data-lysine-class="poll-open-response {{selected?selected-response:}}"
+										data-for="body"> 
+
+									</a>
+								</div>
+							</div>
+
+							<div class="spacer" style="height: 20px"></div>
+
+							<div class="media-preview" data-condition="count(media) != 0">
+								<!--Single images-->
+								<div class="row l1" data-condition="count(media) == 1">
+									<div class="span l1 ng" data-for="media.0.embed"></div>
+								</div>
+
+								<!-- Two images -->
+								<div class="row l2 m2 s2" data-condition="count(media) == 2">
+									<div class="span l1 ng" data-for="media.0.embed"></div>
+									<div class="span l1 ng" data-for="media.1.embed"></div>
+								</div>
+
+								<!--Three images-->
+								<div class="row l3 m3 s3" data-condition="count(media) == 3">
+									<div class="span l2 ng" data-for="media.0.embed"></div>
+									<div class="span l1 ng" >
+										<div data-for="media.1.embed"></div>
+										<div data-for="media.2.embed"></div>
+									</div>
+								</div>
+
+								<!--Four images-->
+								<div class="row l2 m2 s2" data-condition="count(media) == 4">
+									<div class="span l1 ng">
+										<div data-for="media.0.embed"></div>
+										<div data-for="media.1.embed"></div>
+									</div>
+									<div class="span l1 ng">
+										<div data-for="media.2.embed"></div>
+										<div data-for="media.3.embed"></div>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+
+					<div class="spacer" style="height: 20px;"></div>
+
+					<div class="row1 fluid">
+						<div class="span1" style="text-align: right">
+							<a data-lysine-href="{{notificationURL}}" data-condition="value(notificationURL) != #" >Open</a>
+							<a data-lysine-href="<?= url('ping', 'detail') ?>{{id}}#replies" class="reply-link" data-for="replyCount"></a>
+							<a data-lysine-href="<?= url('ping', 'share'); ?>{{id}}" class="share-link" data-for="shareCount"></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<div class="spacer" style="height: 10px"></div>
+</div>
