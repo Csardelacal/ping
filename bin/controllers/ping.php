@@ -240,9 +240,10 @@ class PingController extends AppController
 	 */
 	public function replies($pingid) {
 		$ping = db()->table('ping')->get(is_numeric($pingid)? '_id' : 'guid', $pingid)->fetch();
+		$me = AuthorModel::find($this->user->id);
 		
 		if (!$ping || $ping->deleted) { throw new PublicException('Ping does not exist', 404); }
-		if ($ping->target && $ping->src->authId !== $this->user->id && $ping->target->authId !== $this->user->id) { throw new PublicException('Ping does not exist', 404); }
+		if ($ping->target && $ping->src->_id !== $me->_id && $ping->target->_id !== $me->_id) { throw new PublicException('Ping does not exist', 404); }
 		
 		$query = $ping->replies->getQuery();
 		$g = $query->group();

@@ -130,56 +130,9 @@
 			
 			<div class="spacer" style="height: 30px"></div>
 			
-			<div class="material unpadded" id="replies">
+			<div id="replies">
 				
-				<div class="spacer" style="height: 10px"></div>
-				
-				<div data-lysine-view="ping">
-					
-					<div class="padded" style="padding-top: 5px;">
-						<div class="row10 fluid">
-							<div class="span1 desktop-only" style="text-align: center">
-								<img data-lysine-src="{{avatar}}" style="width: 100%; border: solid 1px #777; border-radius: 3px;">
-							</div>
-							<div class="span9">
-								<div class="row4">
-									<div class="span3">
-										<img class="mobile-only" data-lysine-src="{{avatar}}" style="width: 16px; border: solid 1px #777; border-radius: 3px; vertical-align: middle">
-										<a data-for="userName" data-lysine-href="{{userURL}}" style="color: #000; font-weight: bold; font-size: .8em;"></a>
-									</div>
-									<div class="span1 desktop-only" style="text-align: right; font-size: .8em; color: #777;" data-for="timeRelative"></div>
-								</div>
-
-								<div class="row1" style="margin-top: 5px">
-									<div class="span1">
-										<p style="margin: 0;">
-											<a data-lysine-href="{{notificationURL}}" style="color: #000;" data-for="notificationContent">
-											</a>
-										</p>
-
-										<div class="spacer" style="height: 20px"></div>
-
-										<a class="media" data-lysine-href="{{notificationURL}}" >
-											<img data-lysine-src="{{notificationMedia}}" style="width: 100%">
-										</a>
-									</div>
-								</div>
-
-
-								<div class="spacer" style="height: 20px;"></div>
-
-								<div class="row1 fluid">
-									<div class="span1" style="text-align: right">
-										<a data-lysine-href="<?= url('ping', 'detail') ?>{{id}}#replies" class="reply-link" data-for="replyCount"></a>
-										<a data-lysine-href="<?= url('ping', 'share'); ?>{{id}}" class="share-link" data-for="shareCount"></a>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="separator"></div>
-				</div>
+				<?= current_context()->view->element('ping/ping.lysine.html')->render() ?>
 			</div>
 		</div>
 
@@ -236,7 +189,7 @@ depend(['m3/core/lysine'], function(Lysine) {
 						notificationContent: data.payload[i].content,
 						notificationMedia  : data.payload[i].media? data.payload[i].media : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
 						timeRelative       : data.payload[i].timeRelative,
-						replyCount         : data.payload[i].replies || 'Reply',
+						replyCount         : data.payload[i].replies.count || 'Reply',
 						shareCount         : data.payload[i].shares  || 'Share',
 						irt                : data.payload[i].irt? [data.payload[i].irt] : []
 					});
