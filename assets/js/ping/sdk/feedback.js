@@ -22,37 +22,47 @@
  * THE SOFTWARE.
  */
 
+depend(['m3/core/request'], function (request) {
+	
+	var Feedback = function (ctx) {
+		this._ctx = ctx;
+	};
+	
+	Feedback.prototype = {
+			
+		push : function (pingId, reaction, cb) {
 
-/*
- * This Javascript file provides an entry point to the Ping SDK. This should make
- * it easy for your application to create and retrieve pings from the client 
- * itself, reducing load on the source application and making the application
- * more responsive to the end user.
- */
-depend(['ping/sdk/ping', 'ping/sdk/feed', 'ping/sdk/feedback'], function (Ping, Feed, Feedback) {
-	
-	/**
-	 * 
-	 * @param {string} endpoint
-	 * @param {string} token optional Only needed for authenticated requests
-	 * @returns {pingL#33.Ping}
-	 */
-	var SDK = function (endpoint, token) {
-		this._endpoint = endpoint;
-		this._token = token;
+			var uri = this._ctx.endpoint().trim('/') + '/feedback/push/' + pingId +'.json?reaction=' + reaction + 'token=' + encodeURIComponent(this._ctx.token());
+
+			request(uri, null)
+				.then(JSON.parse)
+				.then(function (resp) {
+					cb(resp);
+				});
+		},
+
+		revoke : function (pingId, cb) {
+
+			var uri = this._ctx.endpoint().trim('/') + '/feedback/revoke/' + pingId +'.json?token=' + encodeURIComponent(this._ctx.token());
+
+			request(uri, null)
+				.then(JSON.parse)
+				.then(function (resp) {
+					cb(resp);
+				});
+		},
+
+		vote : function (id, cb) {
+
+			var uri = this._ctx.endpoint().trim('/') + '/poll/vote/' + id +'.json?token=' + encodeURIComponent(this._ctx.token());
+
+			request(uri, null)
+				.then(JSON.parse)
+				.then(function (resp) {
+					cb(resp);
+				});
+		}
 	};
 	
-	SDK.prototype = {
-		feed     : function () { return new Feed(this); },
-		feedback : function () { return new Feedback(this); },
-		media    : function () {  },
-		ping     : function () { return new Ping(this); },
-		activity : function () {},
-		
-		//Getters and setters
-		endpoint : function () { return this._endpoint; },
-		token    : function () { return this._token; }
-	};
-	
-	return SDK;
+	return Feedback;
 });

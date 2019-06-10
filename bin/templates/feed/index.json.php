@@ -14,7 +14,7 @@ foreach ($notifications as $n) {
 	$irt   = $n->irt? [
 		'id'           => $n->irt->_id,
 		'username'     => $sso->getUser($n->irt->src->user->authId)->getUsername(),
-		'userURL'      => strval(url('user', $sso->getUser($n->irt->src->user->authId)->getUsername())->absolute()),
+		'userURL'      => strval(url('user', 'show', $sso->getUser($n->irt->src->user->authId)->getUsername())->absolute()),
 		'avatar'       => $sso->getUser($n->irt->src->user->authId)->getAvatar(32),
 		'url'          => $n->irt->deleted? null : $n->irt->url,
 		'media'        => $n->irt->deleted || $n->irt->attached->getQuery()->count() == 0? null : $n->irt->attachmentsPreview(),
@@ -51,13 +51,14 @@ foreach ($notifications as $n) {
 		'irt'          => $irt,
 		'replies'      => $n->replies->getQuery()->count(),
 		'feedback'     => [
+			'mine'      => !!db()->table('feedback')->get('ping', $n)->where('author',  $me)->where('reaction',  1)->first(),
 			'like'      => db()->table('feedback')->get('ping', $n)->where('reaction',  1)->count(),
 			'dislike'   => db()->table('feedback')->get('ping', $n)->where('reaction', -1)->count(),
 		],
 		'poll'         => $poll->toArray(),
 		'user'         => Array(
 			'id'        => $n->src->user->authId,
-			'url'       => strval(url('user', $sso->getUser($n->src->user->authId)->getUsername())->absolute()),
+			'url'       => strval(url('user', 'show', $sso->getUser($n->src->user->authId)->getUsername())->absolute()),
 			'username'  => $user->getUsername(),
 			'avatar'    => $user->getAvatar(128),
 		)

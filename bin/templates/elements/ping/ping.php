@@ -8,7 +8,7 @@
 					<img src="<?= $sso->getUser($ping->irt->src->user->authId)->getAvatar(64) ?>" style="width: 32px; border: solid 1px #777; border-radius: 3px;">
 				</div>
 				<div class="span l9">
-					<a href="<?= url('user', $sso->getUser($ping->irt->src->user->authId)->getUsername()) ?>"  style="color: #000; font-weight: bold; font-size: .8em;">
+					<a href="<?= url('user', 'show', $sso->getUser($ping->irt->src->user->authId)->getUsername()) ?>"  style="color: #000; font-weight: bold; font-size: .8em;">
 						<?= $sso->getUser($ping->irt->src->user->authId)->getUsername() ?>
 					</a>
 
@@ -32,7 +32,7 @@
 				<div class="row l4">
 					<div class="span l3">
 						<img src="<?= $user->getAvatar(64) ?>" class="not-desktop" style="width: 32px; border-radius: 50%; vertical-align: middle">
-						<a href="<?= url('user', $user->getUsername()) ?>" style="color: #000; font-weight: bold; font-size: .8em;"><?= $user->getUsername() ?></a>
+						<a href="<?= url('user', 'show', $user->getUsername()) ?>" style="color: #000; font-weight: bold; font-size: .8em;"><?= $user->getUsername() ?></a>
 						<?php if ($ping->share): ?>
 							<a href="<?= url('ping', 'detail', $ping->share->_id) ?>" style="font-size: .8em; color: #777;"> from <?= $sso->getUser($ping->share->src->_id)->getUsername() ?></a>
 						<?php endif; ?>

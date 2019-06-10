@@ -45,7 +45,7 @@
 	<div class="span l1">
 		<div class="material unpadded user-card">
 			<?php $user = $sso->getUser($authUser->id); ?>
-			<a href="<?= url('user', $user->getUsername()) ?>">
+			<a href="<?= url('user', 'show', $user->getUsername()) ?>">
 				<div class="banner">
 					<?php try { ?>
 						<?php $banner = $user->getAttribute('banner')->getPreviewURL(320, 120) ?>
@@ -70,7 +70,7 @@
 
 		<div data-lysine-view="whotofollow">
 			<div class="material unpadded user-card">
-				<a data-lysine-href="<?= url('user', '{{username}}') ?>?ref=whotofollow">
+				<a data-lysine-href="<?= url('user', 'show', '{{username}}') ?>?ref=whotofollow">
 					<div class="banner" style="height: 47px">
 						<img src="about:blank" data-lysine-src="{{banner}}" width="275" height="64">
 					</div>
@@ -136,20 +136,11 @@
 					media: current.media,
 					poll: current.poll,
 					timeRelative: current.timeRelative,
+					feedback : current.feedback,
 					replyCount: current.replies || 'Reply',
 					shareCount: current.shares || 'Share',
 					irt: current.irt ? [current.irt] : []
 				});
-
-				if (!current.media) {
-					var child = view.getHTML().querySelector('.media');
-					child.parentNode.removeChild(child);
-				}
-
-				if (!current.irt) {
-					var child = view.getHTML().querySelector('.irt');
-					child.parentNode.removeChild(child);
-				}
 				
 			}
 			
@@ -180,64 +171,7 @@
 </script>
 
 <script type="text/javascript">
-	depend(['m3/core/delegate', 'm3/core/request', 'm3/core/collection', 'm3/core/parent'], function (delegate, request, collect, parent) {
-
-		/*
-		 * Delegation for the poll system. When the user clicks on a response to a poll,
-		 * we transmit their selection to the server and update the UI.
-		 */
-		delegate('click', function (e) {
-			/*
-			 * Only register the click event when the user clicks on a poll response.
-			 * As opposed to direct event listeners, the delegation will listen to all
-			 * clicks and only perform an action when the element satisfies this condition.
-			 */
-			return e.classList.contains('poll-open-response');
-		}, function (event, element) {
-			/*
-			 * Send the request to the server to update the selected option. If the call
-			 * succeeds, we redraw the UI to reflect the change.
-			 */
-			request('<?= url('poll', 'vote') ?>' + element.getAttribute('data-option') + '.json').then(function () {
-				var poll = parent(element, function (e) {
-					return e.hasAttribute('data-poll');
-				});
-
-				collect(poll.querySelectorAll('*[data-option]')).each(
-						  function (e) {
-							  e.classList.remove('selected-response');
-						  }
-				);
-
-				element.classList.add('selected-response');
-			}).catch(function (e) {
-				console.error(e);
-			});
-			event.preventDefault();
-		});
-
-		delegate('click', function (e) {
-			return e.classList.contains('like-link');
-		}, function (event, element) {
-			var url = element.classList.contains('like-active') ?
-					  '<?= url('feedback', 'revoke') ?>' + element.getAttribute('data-ping') + '.json' :
-					  '<?= url('feedback', 'push') ?>' + element.getAttribute('data-ping') + '.json';
-
-			request(url).then(function () {
-				if (element.classList.contains('like-active')) {
-					element.classList.remove('like-active');
-					element.innerHTML = (parseInt(element.innerHTML) || 0) - 1;
-				} else {
-					element.classList.add('like-active');
-					element.innerHTML = (parseInt(element.innerHTML) || 0) + 1;
-				}
-			}).catch(function (e) {
-				console.error(e);
-			});
-
-			event.preventDefault();
-		});
-	});
+depend(['ping/feedback'], function (baseurl) { baseurl('<?= spitfire()->baseUrl() ?>', '<?= (isset($_GET['token']) ? $this->sso->makeToken($_GET['token']) : \spitfire\io\session\Session::getInstance()->getUser())->getId() ?>'); });
 </script>
 
 

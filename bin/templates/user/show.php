@@ -191,3 +191,9 @@ depend(['m3/core/lysine'], function(Lysine) {
 	document.addEventListener('scroll', listener, false);
 });
 </script>
+
+<script type="text/javascript">
+depend(['ping/editor'], function (editor) {
+	console.log('Editor initialized');
+}); 
+</script>
