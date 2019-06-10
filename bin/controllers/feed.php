@@ -71,6 +71,7 @@ class FeedController extends AppController
 		$dbuser->lastSeen = time();
 		$dbuser->store();
 
+		$this->view->set('me', $me);
 		$this->view->set('notifications', $notifications);
 	}
 	

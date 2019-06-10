@@ -99,6 +99,7 @@
 					<div class="row1 fluid">
 						<div class="span1" style="text-align: right">
 							<a data-lysine-href="{{notificationURL}}" data-condition="value(notificationURL) != #" >Open</a>
+							<a href="#likelink" data-lysine-class="like-link {{feedback.mine?like-active}}" data-lysine-data-ping="{{id}}" data-for="feedback.like"></a>
 							<a data-lysine-href="<?= url('ping', 'detail') ?>{{id}}#replies" class="reply-link" data-for="replyCount"></a>
 							<a data-lysine-href="<?= url('ping', 'share'); ?>{{id}}" class="share-link" data-for="shareCount"></a>
 						</div>

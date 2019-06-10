@@ -115,4 +115,8 @@ class UserController extends AppController
 		
 	}
 	
+	public function __call($name, $arguments) {
+		return $this->response->setBody('Redirecting...')->getHeaders()->redirect(url('user', 'show', $name));
+	}
+	
 }
