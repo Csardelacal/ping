@@ -6,7 +6,7 @@
 	<div class="span l2">
 
 		<div class="material unpadded">
-			<?= current_context()->view->element('ping/editor')->render() ?>
+			<?= current_context()->view->element('ping/editor.lysine.html')->render() ?>
 		</div>
 
 		<?php if (db()->table('ping')->get('src', db()->table('author')->get('user', db()->table('user')->get('_id', $authUser->id)))->where('processed', 0)->first()): ?>
@@ -194,5 +194,6 @@ depend(['ping/feedback'], function (baseurl) { baseurl('<?= spitfire()->baseUrl(
 <script type="text/javascript">
 depend(['ping/editor'], function (editor) {
 	console.log('editor.loaded');
+	editor(<?= json_encode(['endpoint' => (string)url()]) ?>);
 });
 </script>

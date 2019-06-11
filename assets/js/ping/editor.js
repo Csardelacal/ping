@@ -25,161 +25,51 @@
 
 
 
-depend(function () {
+depend(['m3/core/parent', 'm3/core/delegate', 'm3/core/request', 'm3/core/array/iterate', 'm3/core/lysine', 'queue'], function (parent, delegate, request, iterate, Lysine, Queue) {
 
 	/**
 	 * This little listener makes sure to display the amount of characters left for
-	 * the user to type in
+	 * the user to type in. This way, the user is constantly informed if they need
+	 * to start shortening their message down.
 	 */
 	var listener = function () {
 
-		var self = this;
-
 		setTimeout(function () {
-			var height = Math.min(self.scrollHeight, 400);
-			var length = self.value.length;
+			document.querySelectorAll('.new-ping-content').forEach(function (self) {
+				var height = Math.min(self.scrollHeight, 400);
+				var length = self.value.length;
+				var form = parent(self, function (e) { return e.tagName.toLowerCase() === 'form';});
 
-			self.style.height = height + 'px';
-			document.querySelector('#new-ping-character-count').innerHTML = 250 - length;
+				self.style.height = height + 'px';
+				form.querySelector('.new-ping-character-count').innerHTML = 250 - length;
+			});
 		}, 1);
 
 	};
 
-	document.querySelector('#new-ping-content').addEventListener('keypress', listener, false);
-	document.querySelector('.add-ping').addEventListener('click', function () {
-		document.querySelector('#new-ping-content').focus();
-	}, false);
-
-
-	depend(['m3/core/request'], function (request) {
-		document.getElementById('ping-editor').addEventListener('submit', function (e) {
-			request(this.action.trim('/') + '.json', new FormData(this))
-			.then(function (resp) {
-				//Clean up the editor and refresh the pings on the page.
-				window.location.reload();
-			});
-
-			e.stopPropagation();
-			e.preventDefault();
+	document.addEventListener('keypress', listener, false);
+	
+	/**
+	 * This listener "catches" the user's intention to 
+	 */
+	delegate('submit', function (e) { return e.classList.contains('ping-editor'); }, function (e, found) {
+		request(found.action.trim('/') + '.json', new FormData(found))
+		.then(function (resp) {
+			//Clean up the editor and refresh the pings on the page.
+			window.location.reload();
 		});
+
+		e.stopPropagation();
+		e.preventDefault();
 	});
 
 
-	depend(['m3/core/request', 'm3/core/array/iterate', 'm3/core/lysine', 'queue'], function (request, iterate, lysine, Queue) {
-
-		var mediaLimit = 4;
-
-		/*
-		 * The forms used for media input
-		 */
-		var form = {
-			input: document.getElementById('ping_media'),
-			ui: document.getElementById('ping_media_selector')
-		};
-
-		var queue = new Queue();
-		var uploads = [];
-		var locked = false;
-
-		queue.onProgress = function () {
-			//Disable the post ping button
-			document.getElementById('send-ping').setAttribute('disabled', 'disabled');
-		};
-
-		queue.onComplete = function () {
-			//Enable the post ping button
-			document.getElementById('send-ping').removeAttribute('disabled');
-		};
-
-		form.ui.addEventListener('click', function () {
-			form.input.click();
-		});
-
-		form.input.addEventListener('change', function (e) {
-			var files = e.target.nodeName.toLowerCase() === 'input' ? e.target.files : null;
-
-			iterate(files, function (e) {
-				var job = queue.job();
-
-				if (e.size > 25 * 1024 * 1024) {
-					//Needs a better error
-					alert('Files must be smaller than 25MB');
-					job.complete();
-					return;
-				}
-
-				var v = new lysine.view('file-upload-preview');
-
-				if (e.type.substring(0, 5) === 'image') {
-
-					var reader = new FileReader();
-
-					reader.onload = function (e) {
-						v.setData({
-							source: e.target.result,
-							id: null
-						});
-
-					};
-
-					reader.readAsDataURL(e);
-				} else {
-					v.setData({
-						source: '/assets/img/video.png',
-						id: null
-					});
-
-					if (uploads.length > 0) {
-						throw 'Videos can only be uploaded on their own.';
-					}
-
-					locked = true;
-				}
-
-				uploads.push({
-					view: v
-				});
-
-				if (uploads.length >= mediaLimit) {
-					locked = true;
-				}
-
-				/*
-				 * If we have completed the maximum number of uploads, the system will
-				 * stop accepting further uploads.
-				 */
-				if (locked) {
-					document.getElementById('ping_media_selector').style.display = 'none';
-				}
-
-				var fd = new FormData();
-				fd.append('file', e);
-
-				request('/media/upload.json', fd)
-						  .then(function (response) {
-							  var json = JSON.parse(response);
-							  v.set('id', json.id + ':' + json.secret);
-
-							  job.complete();
-						  })
-						  .catch(function (error) {
-							  alert('Error uploading file. Please retry');
-							  v.destroy();
-						  });
-			});
-
-		});
-
-
-		depend(['m3/core/delegate'], function (delegate) {
-			delegate('click', function (e) {
-				return e.classList.contains('remove-media');
-			}, function (event, element) {
-				element.parentNode.parentNode.parentNode.removeChild(element.parentNode.parentNode);
-				uploads.pop();
-				locked = false;
-			});
-		});
+	delegate('click', function (e) {
+		return e.classList.contains('remove-media');
+	}, function (event, element) {
+		element.parentNode.parentNode.parentNode.removeChild(element.parentNode.parentNode);
+		uploads.pop();
+		locked = false;
 	});
 
 	depend(['m3/core/lysine'], function (Lysine) {
@@ -242,4 +132,107 @@ depend(function () {
 			src.style.marginTop = -(h - mw) / 2 + 'px';
 		}
 	}, true);
+	
+	return function (data) {
+		var view = new Lysine.view('ping-editor');
+		view.setData(data);
+		
+		
+		var mediaLimit = 4;
+		var queue = new Queue();
+		var uploads = [];
+		var locked = false;
+
+		queue.onProgress = function () {
+			//Disable the post ping button
+			view.getHTML().querySelector('.send-ping').setAttribute('disabled', 'disabled');
+		};
+
+		queue.onComplete = function () {
+			//Enable the post ping button
+			view.getHTML().querySelector('.send-ping').removeAttribute('disabled');
+		};
+
+		view.on('.ping_media_selector', 'click', function () {
+			view.getHTML().querySelector('.ping_media').click();
+		});
+
+		view.on('.ping_media', 'change', function (e) {
+			var files = e.target.nodeName.toLowerCase() === 'input' ? e.target.files : null;
+
+			iterate(files, function (e) {
+				var job = queue.job();
+
+				if (e.size > 25 * 1024 * 1024) {
+					//Needs a better error
+					alert('Files must be smaller than 25MB');
+					job.complete();
+					return;
+				}
+
+				var v = new Lysine.view('file-upload-preview');
+
+				if (e.type.substring(0, 5) === 'image') {
+
+					var reader = new FileReader();
+
+					reader.onload = function (e) {
+						v.setData({
+							source: e.target.result,
+							id: null
+						});
+
+					};
+
+					reader.readAsDataURL(e);
+				} else {
+					v.setData({
+						source: '/assets/img/video.png',
+						id: null
+					});
+
+					if (uploads.length > 0) {
+						throw 'Videos can only be uploaded on their own.';
+					}
+
+					locked = true;
+				}
+
+				uploads.push({
+					view: v
+				});
+
+				if (uploads.length >= mediaLimit) {
+					locked = true;
+				}
+
+				/*
+				 * If we have completed the maximum number of uploads, the system will
+				 * stop accepting further uploads.
+				 */
+				if (locked) {
+					view.getHTML().getElementById('ping_media_selector').style.display = 'none';
+				}
+
+				var fd = new FormData();
+				fd.append('file', e);
+
+				request('/media/upload.json', fd)
+						  .then(function (response) {
+							  var json = JSON.parse(response);
+							  v.set('id', json.id + ':' + json.secret);
+
+							  job.complete();
+						  })
+						  .catch(function (error) {
+							  alert('Error uploading file. Please retry');
+							  v.destroy();
+						  });
+			});
+
+		});
+
+		
+		return view;
+	};
 });
