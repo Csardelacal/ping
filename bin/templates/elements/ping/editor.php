@@ -1,5 +1,12 @@
 	
-<form method="POST" action="<?= url('ping', 'push') ?>" enctype="multipart/form-data" id="ping-editor">
+<!-- 
+This editor should be wrapped in noscript tags, to provide a fallback for 
+users who have Javascript disabled in their browser. Or for users where the Lysine
+based editor has issues starting up.
+
+It should, therefore, be stripped of any Javascript.
+-->
+<form method="POST" action="<?= url('ping', 'push') ?>" enctype="multipart/form-data" class="ping-editor">
 	<?php if (isset($target) && $target): ?>
 		<input type="hidden" name="target" value="<?= $target ?>">
 	<?php endif; ?>
@@ -13,7 +20,7 @@
 				<img src="<?= $sso->getUser($authUser->id)->getAvatar(64) ?>" style="width: 100%; border: solid 1px #777; border-radius: 3px;">
 			</div>
 			<div class="span l9">
-				<textarea name="content" id="new-ping-content" placeholder="Message to broadcast..."></textarea>
+				<textarea name="content" class="new-ping-content" placeholder="Message to broadcast..."></textarea>
 
 				<div class="spacer" style="height: 10px"></div>
 
@@ -33,7 +40,7 @@
 
 		<div class="spacer" style="height: 10px"></div>
 
-		<div class="row l10" id="poll-dialog" style="display: none">
+		<div class="row l10" class="poll-dialog" style="display: none">
 			<div class="span l1"></div>
 			<div class="span l9">
 				<div data-lysine-view="poll-create-option">
@@ -49,7 +56,7 @@
 
 				<div class="row l5 m4 s4 fluid">
 					<div class="span l4 m3 s3">
-						<a href="#add-poll" id="poll-create-add">Add option</a>
+						<a href="#add-poll" class="poll-create-add">Add option</a>
 					</div>
 				</div>
 			</div>
@@ -63,13 +70,13 @@
 					<!--Just a spacer-->
 				</div><!--
 				--><div class="span l4">
-					<input type="file" id="ping_media" style="display: none">
-					<img src="<?= spitfire\core\http\URL::asset('img/camera.png') ?>" id="ping_media_selector" style="vertical-align: middle; height: 24px; opacity: .5; margin: 0 5px;">
-					<img src="<?= spitfire\core\http\URL::asset('img/poll.png') ?>" id="ping_poll" style="vertical-align: middle; height: 24px; opacity: .3; margin: 0 5px;">
+					<input type="file" class="ping_media" style="display: none">
+					<img src="<?= spitfire\core\http\URL::asset('img/camera.png') ?>" class="ping_media_selector" style="vertical-align: middle; height: 24px; opacity: .5; margin: 0 5px;">
+					<img src="<?= spitfire\core\http\URL::asset('img/poll.png') ?>" class="ping_poll" style="vertical-align: middle; height: 24px; opacity: .3; margin: 0 5px;">
 				</div><!--
 				--><div class="span l5" style="text-align: right">
-					<span id="new-ping-character-count">250</span>
-					<input type="submit" value="Ping!" id="send-ping">
+					<span class="new-ping-character-count">250</span>
+					<input type="submit" value="Ping!" class="send-ping">
 				</div><!--
 				--></div>
 		</div>
