@@ -179,7 +179,7 @@ a {
 	.avatar {
 		width: 100%;
 		border-radius: 10px;
-		border: solid 3px #FFF;
+		border: solid 5px #FFF;
 	}
 	
 	.bio,
@@ -352,6 +352,34 @@ a {
 	}
 }
 
+#page-banner {
+	max-height: 400px;
+	min-height: 100px;
+	overflow: hidden;
+	
+	border-bottom: solid 2px #CCC;
+	position: relative;
+	
+	&:after {
+		content: '';
+		position: absolute;
+		top : 0;
+		left : 0;
+		width: 100%;
+		height: 100%;
+		background-image: linear-gradient(0deg, rgba(0, 0, 0, .3), transparent 5%, transparent 95%, rgba(0, 0, 0, .3));
+	}
+	
+	
+	img {
+		max-width: 100%;
+		width: 2000px;
+		margin: 0 auto;
+		display: block;
+		vertical-align: middle;
+	}
+}
+
 
 @media all and (min-width: $MobileBreakpoint) {
 	.mobile-only { display: none !important; }
@@ -361,12 +389,12 @@ a {
 	.desktop-only { display: none !important; }
 }
 
-@import "scaffolding/_scaffolding.scss";
+//@import "scaffolding/_scaffolding.scss";
 @import '_navigation';
 @import '_activity';
 @import '_styledSelect';
 @import '_navbar';
 @import '_vars';
-@import 'ui-layout';
 @import 'ui/_ui.scss';
 @import "ping/_ping.scss";
+@import "_/_.scss";

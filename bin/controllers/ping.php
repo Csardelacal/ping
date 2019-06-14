@@ -217,6 +217,7 @@ class PingController extends AppController
 		 * Retrieve the ping from the database.
 		 */
 		$ping = db()->table('ping')->get(is_numeric($pingid)? '_id' : 'guid', $pingid)->fetch();
+		$me = AuthorModel::find($this->user->id);
 		
 		/*
 		 * If the ping was deleted, then the user is obviously not allowed to see 
@@ -224,12 +225,14 @@ class PingController extends AppController
 		 * garbage collector.
 		 */
 		if (!$ping || $ping->deleted) { throw new PublicException('Ping does not exist', 404);}
+		if ($ping->target && $ping->src->_id !== $me->_id && $ping->target->_id !== $me->_id) { throw new PublicException('Ping does not exist', 404); }
 		
 		/*
 		 * Pass the data onto the view.
 		 */
-		$this->view->set('user', $this->sso->getUser($ping->src->_id));
+		$this->view->set('user', $ping->src);
 		$this->view->set('ping', $ping);
+		$this->view->set('me', $me);
 	}
 	
 	/**
@@ -239,12 +242,24 @@ class PingController extends AppController
 	 * @throws PublicException
 	 */
 	public function replies($pingid) {
+		/*
+		 * Find the ping by either ID or GUID. Please note that there's a very slight
+		 * chance that this code will missunderstand a GUID (specifically when a 
+		 * numeric GUID is generated - which should be extremely rare)
+		 */
 		$ping = db()->table('ping')->get(is_numeric($pingid)? '_id' : 'guid', $pingid)->fetch();
 		$me = AuthorModel::find($this->user->id);
 		
+		/*
+		 * If the ping has been deleted, or is private, we do not show it ot the 
+		 * public.
+		 */
 		if (!$ping || $ping->deleted) { throw new PublicException('Ping does not exist', 404); }
 		if ($ping->target && $ping->src->_id !== $me->_id && $ping->target->_id !== $me->_id) { throw new PublicException('Ping does not exist', 404); }
 		
+		/*
+		 * Fetch the query that provides all the replies to this ping.
+		 */
 		$query = $ping->replies->getQuery();
 		$g = $query->group();
 		

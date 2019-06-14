@@ -3,7 +3,7 @@
 <div data-lysine-view="ping-editor">
 	<form method="POST" data-lysine-action="{{endpoint}}/ping/push" enctype="multipart/form-data" class="ping-editor">
 		<input type="hidden" name="target" data-lysine-value="{{target}}" data-condition="null(target) == false">
-		<input type="hidden" name="irt" data-lysine-value="{{irt}}">
+		<input type="hidden" name="irt" data-lysine-value="{{irt}}" data-condition="null(irt) == false">
 
 		<div class="padded add-ping">
 			<div class="row l10">
@@ -17,7 +17,7 @@
 
 					<div class="row l5 m4 s4 fluid">
 
-						<div class="span l1 m1 s1" data-lysine-view data-for="uploads" >
+						<div class="span l1 m1 s1" data-lysine-view data-for="media" >
 							<div style="text-align: center; height: 100%; border: solid 1px #DDD; border-radius: 3px; overflow: hidden; position: relative">
 								<img style="vertical-align: middle" data-lysine-src="{{source}}" class="upload-preview">
 								<input type="hidden" name="media[]" value="" data-for="id">
@@ -31,16 +31,16 @@
 
 			<div class="spacer" style="height: 10px"></div>
 
-			<div class="row l10" class="poll-dialog" style="display: none">
+			<div class="row l10 poll-dialog" style="display: none">
 				<div class="span l1"></div>
 				<div class="span l9">
 					<div data-lysine-view data-for="poll">
 						<div class="row l5 m4 s4 fluid">
 							<div class="span l4 m3 s3">
-								<input type="text" name="poll[]" placeholder="Option..." style="width: 100%; border: none; border-bottom: solid 1px #ccc; padding: 3px;">
+								<input type="text" name="poll[]" data-for="value" placeholder="Option..." style="width: 100%; border: none; border-bottom: solid 1px #ccc; padding: 3px;">
 							</div>
 							<div class="span l1 m1 s1">
-								<a href="#remove-poll" class="poll-create-remove">Remove</a>
+								<a href="#remove-poll" data-lysine-data-id="{{id}}" class="poll-create-remove">Remove</a>
 							</div>
 						</div>
 					</div>

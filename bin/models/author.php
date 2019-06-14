@@ -102,7 +102,7 @@ class AuthorModel extends spitfire\Model
 			try {
 				$sso = current_context()->controller->sso;
 				$usr = $sso->getUser($this->user->_id);
-				return $usr->getAttribute('banner')->getPreviewURL(1280, 300);
+				return $usr->getAttribute('banner')->getPreviewURL();
 			}
 			catch (\Exception$e) {
 				return null;
