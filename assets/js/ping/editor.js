@@ -57,53 +57,15 @@ depend(['m3/core/parent', 'm3/core/delegate', 'm3/core/request', 'm3/core/array/
 		.then(function (resp) {
 			//Clean up the editor and refresh the pings on the page.
 			window.location.reload();
-		});
+		})
+		.catch(console.log);
 
 		e.stopPropagation();
 		e.preventDefault();
 	});
 
+	//BROKEN
 
-	delegate('click', function (e) {
-		return e.classList.contains('remove-media');
-	}, function (event, element) {
-		element.parentNode.parentNode.parentNode.removeChild(element.parentNode.parentNode);
-		uploads.pop();
-		locked = false;
-	});
-
-	depend(['m3/core/lysine'], function (Lysine) {
-
-		var addOption = function () {
-
-			var v = new Lysine.view('poll-create-option');
-
-			v.getHTML().addEventListener('click', function (e) {
-				e.stopPropagation();
-			})
-			v.getHTML().querySelector('.poll-create-remove').addEventListener('click', function (v) {
-				return function (e) {
-					v.destroy();
-					e.stopPropagation();
-				}
-			}(v))
-		};
-
-		document.getElementById('ping_poll').addEventListener('click', function (e) {
-			for (var i = 0; i < 3; i++) {
-				addOption();
-			}
-
-			document.getElementById('poll-dialog').style.display = 'block';
-			document.getElementById('ping_poll').style.display = 'none';
-			e.preventDefault();
-			e.stopPropagation();
-		});
-
-		document.getElementById('poll-create-add').addEventListener('click', function (e) {
-			addOption();
-		});
-	});
 
 	/*
 	 * Delegates the listening of the onload event of the image loading functions,
@@ -117,8 +79,6 @@ depend(['m3/core/parent', 'm3/core/delegate', 'm3/core/request', 'm3/core/array/
 		}
 
 		src.parentNode.style.height = src.parentNode.clientWidth + 'px';
-
-		console.log(src.width + 'x' + src.height);
 
 		if (src.width > src.height) {
 			var mw = src.parentNode.clientWidth;
@@ -134,6 +94,9 @@ depend(['m3/core/parent', 'm3/core/delegate', 'm3/core/request', 'm3/core/array/
 	}, true);
 	
 	return function (data) {
+		if (!data.target) { data.target = null; }
+		if (!data.irt) { data.irt = null; }
+		
 		var view = new Lysine.view('ping-editor');
 		view.setData(data);
 		
@@ -159,6 +122,7 @@ depend(['m3/core/parent', 'm3/core/delegate', 'm3/core/request', 'm3/core/array/
 
 		view.on('.ping_media', 'change', function (e) {
 			var files = e.target.nodeName.toLowerCase() === 'input' ? e.target.files : null;
+			var uid = undefined;
 
 			iterate(files, function (e) {
 				var job = queue.job();
@@ -170,26 +134,37 @@ depend(['m3/core/parent', 'm3/core/delegate', 'm3/core/request', 'm3/core/array/
 					return;
 				}
 
-				var v = new Lysine.view('file-upload-preview');
-
 				if (e.type.substring(0, 5) === 'image') {
 
 					var reader = new FileReader();
 
 					reader.onload = function (e) {
-						v.setData({
+						var data = view.getData();
+						console.log('here');
+						if (!data.media) { data.media = []; }
+						uid = data.media.length;
+
+						data.media.push({
+							uid : uid,
 							source: e.target.result,
 							id: null
 						});
+						
+						view.setData(data);
 
 					};
 
 					reader.readAsDataURL(e);
 				} else {
-					v.setData({
+					var data = view.getData();
+					if (!data.media) { data.media = []; }
+					
+					data.media.push({
 						source: '/assets/img/video.png',
 						id: null
 					});
+					
+					view.setData(data);
 
 					if (uploads.length > 0) {
 						throw 'Videos can only be uploaded on their own.';
@@ -199,7 +174,7 @@ depend(['m3/core/parent', 'm3/core/delegate', 'm3/core/request', 'm3/core/array/
 				}
 
 				uploads.push({
-					view: v
+					view: uid
 				});
 
 				if (uploads.length >= mediaLimit) {
@@ -217,21 +192,61 @@ depend(['m3/core/parent', 'm3/core/delegate', 'm3/core/request', 'm3/core/array/
 				var fd = new FormData();
 				fd.append('file', e);
 
-				request('/media/upload.json', fd)
-						  .then(function (response) {
-							  var json = JSON.parse(response);
-							  v.set('id', json.id + ':' + json.secret);
+				request('/ping/media/upload.json', fd)
+					.then(function (response) {
+						var json = JSON.parse(response);
+						view.set('media.' + uid + '.id', json.id + ':' + json.secret);
 
-							  job.complete();
-						  })
-						  .catch(function (error) {
-							  alert('Error uploading file. Please retry');
-							  v.destroy();
-						  });
+						job.complete();
+					})
+					.catch(function (error) {
+						alert('Error uploading file. Please retry');
+						console.log(error);
+						//v.destroy();
+					});
 			});
 
 		});
+		
+		view.on('.remove-media', 'click', function (event, element) {
+			element.parentNode.parentNode.parentNode.removeChild(element.parentNode.parentNode);
+			uploads.pop();
+			locked = false;
+		});
+		
 
+		var addOption = function () {
+			var data = view.getData();
+			
+			if (!data.poll) {
+				data.poll = [];
+			}
+			
+			console.log(data.poll);
+			data.poll[data.poll.length] = {id : data.poll.length, value: ''};
+			view.setData(data);
+		};
+
+		view.on('.ping_poll', 'click', function (e) {
+			for (var i = 0; i < 3; i++) {
+				addOption();
+			}
+
+			view.find('.poll-dialog').style.display = 'block';
+			view.find('.ping_poll').style.display = 'none';
+			e.preventDefault();
+			e.stopPropagation();
+		});
+
+		view.on('.poll-create-add', 'click', function (e) {
+			addOption();
+		});
+		
+		view.on('.poll-create-remove', 'click', function (e) {
+			var data = view.getData();
+			data.poll.splice(this.getAttribute('data-id'), 1);
+			view.setData(data);
+		});
 		
 		return view;
 	};

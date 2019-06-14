@@ -1,38 +1,18 @@
 (function () {
-	var banner = document.getElementById('banner');
+	var banner = document.getElementById('page-banner');
 	
 	if (!banner) { return; } //There's no banner.
 	
 	var img    = banner.querySelector('img');
-	var w      = 1280;
-	var h      =  300;
 	
 	var imgResize = function () {
-		var sw     = banner.clientWidth;
-		var ratio  = sw / w;
-
-		//Set the banner height. This will prevent the content from flopping around
-		banner.style.height   = (h*ratio) + 'px';
-		banner.style.overflow = 'hidden';
-		banner.style.position = 'relative';
+		var sh     = Math.max(banner.clientHeight, 400);
+		var ih     = img.clientHeight;
 		
-		//Stretch the banner to the screen width
-		img.style.width  = sw + 'px';
-		img.style.height = (h * ratio) + 'px';
-
-		//The img is absolute so we can move it in the parent
-		img.style.position = 'absolute';
-		img.style.top      = 0;
-		img.style.left     = 0;
+		img.style.marginTop = ((sh - ih) / 2) + 'px'; //This is always negative
 	};
 	
 	var imgLoad = function () {
-		/*
-		 * Get the actual sizes for the image, this prevents the image from popping.
-		 */
-		w = img.naturalWidth || w;
-		h = img.naturalHeight || h;
-		
 		imgResize();
 	};
 	

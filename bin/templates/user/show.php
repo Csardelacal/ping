@@ -2,14 +2,14 @@
 <div class="profile <?= $authUser && $authUser->id === $user->user->_id? 'mine' : '' ?>">
 
 	<?php if ($user->getBanner()): ?>
-	<div id="banner">
+	<div id="page-banner">
 		<img src="<?= $user->getBanner() ?>">
 	</div>
 	<?php endif; ?>
 
 	<div class="spacer" style="height: 18px"></div>
 
-	<div class="row l5">
+	<div class="row l5" id="feed">
 		<!--Sidebar (secondary navigation) -->
 		<div class="span l1">
 			<div class="profile-resume desktop-only">
@@ -195,5 +195,12 @@ depend(['m3/core/lysine'], function(Lysine) {
 <script type="text/javascript">
 depend(['ping/editor'], function (editor) {
 	console.log('Editor initialized');
+}); 
+</script>
+
+
+<script type="text/javascript">
+depend(['m3/ui/sticky'], function (sticky) {
+	sticky.stick(document.querySelector('.profile-resume'), document.querySelector('#feed'));
 }); 
 </script>
