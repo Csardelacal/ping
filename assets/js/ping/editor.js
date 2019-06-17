@@ -123,6 +123,7 @@ depend(['m3/core/parent', 'm3/core/delegate', 'm3/core/request', 'm3/core/array/
 		view.on('.ping_media', 'change', function (e) {
 			var files = e.target.nodeName.toLowerCase() === 'input' ? e.target.files : null;
 			var uid = undefined;
+			var v = undefined;
 
 			iterate(files, function (e) {
 				var job = queue.job();
@@ -139,32 +140,25 @@ depend(['m3/core/parent', 'm3/core/delegate', 'm3/core/request', 'm3/core/array/
 					var reader = new FileReader();
 
 					reader.onload = function (e) {
-						var data = view.getData();
-						console.log('here');
-						if (!data.media) { data.media = []; }
-						uid = data.media.length;
-
-						data.media.push({
+						uid = parseInt(Math.random() * 1000);
+						
+						v = view.sub('media').push({
 							uid : uid,
 							source: e.target.result,
 							id: null
 						});
-						
-						view.setData(data);
 
 					};
 
 					reader.readAsDataURL(e);
 				} else {
-					var data = view.getData();
-					if (!data.media) { data.media = []; }
+					uid = parseInt(Math.random() * 1000);
 					
-					data.media.push({
+					v = view.sub('media').push({
+						uid : uid,
 						source: '/assets/img/video.png',
 						id: null
 					});
-					
-					view.setData(data);
 
 					if (uploads.length > 0) {
 						throw 'Videos can only be uploaded on their own.';
@@ -174,7 +168,7 @@ depend(['m3/core/parent', 'm3/core/delegate', 'm3/core/request', 'm3/core/array/
 				}
 
 				uploads.push({
-					view: uid
+					view: v
 				});
 
 				if (uploads.length >= mediaLimit) {
@@ -195,7 +189,7 @@ depend(['m3/core/parent', 'm3/core/delegate', 'm3/core/request', 'm3/core/array/
 				request('/ping/media/upload.json', fd)
 					.then(function (response) {
 						var json = JSON.parse(response);
-						view.set('media.' + uid + '.id', json.id + ':' + json.secret);
+						v.set('id', json.id + ':' + json.secret);
 
 						job.complete();
 					})
@@ -208,23 +202,14 @@ depend(['m3/core/parent', 'm3/core/delegate', 'm3/core/request', 'm3/core/array/
 
 		});
 		
-		view.on('.remove-media', 'click', function (event, element) {
-			element.parentNode.parentNode.parentNode.removeChild(element.parentNode.parentNode);
-			uploads.pop();
+		view.sub('media').on('.remove-media', 'click', function (event, view) {
+			view.destroy();
 			locked = false;
 		});
 		
 
 		var addOption = function () {
-			var data = view.getData();
-			
-			if (!data.poll) {
-				data.poll = [];
-			}
-			
-			console.log(data.poll);
-			data.poll[data.poll.length] = {id : data.poll.length, value: ''};
-			view.setData(data);
+			view.sub('poll').push({value : '', id: parseInt(Math.random() * 1000 )});
 		};
 
 		view.on('.ping_poll', 'click', function (e) {
@@ -242,11 +227,10 @@ depend(['m3/core/parent', 'm3/core/delegate', 'm3/core/request', 'm3/core/array/
 			addOption();
 		});
 		
-		view.on('.poll-create-remove', 'click', function (e) {
-			var data = view.getData();
-			data.poll.splice(this.getAttribute('data-id'), 1);
-			view.setData(data);
+		view.sub('poll').on('.poll-create-remove', 'click', function (e, v) {
+			v.destroy();
 		});
+		
 		
 		return view;
 	};
