@@ -123,7 +123,7 @@
 					Log in to reply to <?= $user->getUsername() ?> a ping...
 				</p>
 				<?php else: ?>
-				<?= current_context()->view->element('ping/editor')->set('irt', $notification->_id)->render() ?>
+				<?= current_context()->view->element('ping/editor.lysine.html')->render() ?>
 				<?php endif; ?>
 			</div>
 			
@@ -150,6 +150,13 @@
 }());
 </script>
 
+
+<script type="text/javascript">
+depend(['ping/editor'], function(editor) {
+	console.log('editor.loaded');
+	editor(<?= json_encode(['endpoint' => (string)url(), 'irt' => $notification->_id]) ?>);
+});
+</script>
 
 <script type="text/javascript">
 depend(['m3/core/lysine'], function(Lysine) {

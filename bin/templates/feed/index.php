@@ -36,6 +36,35 @@
 				Nothing here yet. Follow or interact with users to build your feed!
 			</div>
 		<?php endif; ?>
+			
+		<div class="spacer" style="height: 20px;"></div>
+		<div class="row l3">
+			<div class="span l1">
+				<div style="color: #888; font-size: .8em">Users you may like to follow:</div>
+			</div>
+		</div>
+		<div class="spacer" style="height: 10px;"></div>
+		
+		<div class="row l2 ng-lr">
+			<div class="span l1" data-lysine-view="whotofollow">
+				<div class="material unpadded user-card">
+					<a data-lysine-href="<?= url('user', 'show', '{{username}}') ?>?ref=whotofollow">
+						<div class="banner" style="height: 127px">
+							<img src="about:blank" data-lysine-src="{{banner}}" width="275" height="64">
+						</div>
+						<div class="padded" style="margin-top: -35px;">
+							<img class="avatar" data-lysine-src="{{avatar}}">
+							<div class="user-info">
+								<span class="user-name" data-for="username"></span>
+								<span class="user-bio"><span data-for="followers"></span> followers</span>
+							</div>
+						</div>
+					</a>
+				</div>
+			</div>
+
+		</div>
+		<div class="spacer" style="height: 30px;"></div>
 
 		
 		<?= current_context()->view->element('ping/ping.lysine.html')->set('ping', $notification)->render() ?>
@@ -63,28 +92,6 @@
 					</div>
 				</div>
 			</a>
-		</div>
-		<div class="spacer" style="height: 70px;"></div>
-		<div style="color: #888; font-size: .8em">Users you may like to follow:</div>
-		<div class="spacer" style="height: 10px;"></div>
-
-		<div data-lysine-view="whotofollow">
-			<div class="material unpadded user-card">
-				<a data-lysine-href="<?= url('user', 'show', '{{username}}') ?>?ref=whotofollow">
-					<div class="banner" style="height: 47px">
-						<img src="about:blank" data-lysine-src="{{banner}}" width="275" height="64">
-					</div>
-					<div class="padded" style="margin-top: -35px;">
-						<img class="avatar" data-lysine-src="{{avatar}}">
-						<div class="user-info">
-							<span class="user-name" data-for="username"></span>
-							<span class="user-bio"><span data-for="followers"></span> followers</span>
-						</div>
-					</div>
-				</a>
-			</div>
-
-			<div class="spacer" style="height: 10px;"></div>
 		</div>
 	</div>
 </div>
