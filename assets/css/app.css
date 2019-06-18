@@ -979,6 +979,12 @@ div.row {
   div.row.fluid {
     width: 100%;
     max-width: 100%; }
+  div.row.ng .span {
+    padding: 0; }
+  div.row.ng-lr .span:first-child {
+    padding-left: 0; }
+  div.row.ng-lr .span:nth-last-of-type(1) {
+    padding-right: 0; }
 
 /*
 This are the functions (mixins) used to generate the basic scaffolding for our
