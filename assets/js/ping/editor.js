@@ -25,7 +25,13 @@
 
 
 
-depend(['m3/core/parent', 'm3/core/delegate', 'm3/core/request', 'm3/core/array/iterate', 'm3/core/lysine', 'queue'], function (parent, delegate, request, iterate, Lysine, Queue) {
+depend([
+	'm3/core/parent', 
+	'm3/core/delegate', 
+	'm3/core/request', 
+	'm3/core/lysine', 
+	'ping/upload'
+], function (parent, delegate, request, Lysine, UploadTarget) {
 
 	/**
 	 * This little listener makes sure to display the amount of characters left for
@@ -49,24 +55,6 @@ depend(['m3/core/parent', 'm3/core/delegate', 'm3/core/request', 'm3/core/array/
 
 	document.addEventListener('keypress', listener, false);
 	
-	/**
-	 * This listener "catches" the user's intention to 
-	 */
-	delegate('submit', function (e) { return e.classList.contains('ping-editor'); }, function (e, found) {
-		request(found.action.trim('/') + '.json', new FormData(found))
-		.then(function (resp) {
-			//Clean up the editor and refresh the pings on the page.
-			window.location.reload();
-		})
-		.catch(console.log);
-
-		e.stopPropagation();
-		e.preventDefault();
-	});
-
-	//BROKEN
-
-
 	/*
 	 * Delegates the listening of the onload event of the image loading functions,
 	 * this way we don't have to inline the code, which looks awful.
@@ -93,6 +81,22 @@ depend(['m3/core/parent', 'm3/core/delegate', 'm3/core/request', 'm3/core/array/
 		}
 	}, true);
 	
+	/**
+	 * This listener "catches" the user's intention to 
+	 */
+	delegate('submit', function (e) { return e.classList.contains('ping-editor'); }, function (e, found) {
+		request(found.action.trim('/') + '.json', new FormData(found))
+		.then(function (resp) {
+			//Clean up the editor and refresh the pings on the page.
+			window.location.reload();
+		})
+		.catch(console.log);
+
+		e.stopPropagation();
+		e.preventDefault();
+	});
+
+	
 	return function (data) {
 		if (!data.target) { data.target = null; }
 		if (!data.irt) { data.irt = null; }
@@ -101,105 +105,98 @@ depend(['m3/core/parent', 'm3/core/delegate', 'm3/core/request', 'm3/core/array/
 		view.setData(data);
 		
 		
+		var uploader = new UploadTarget(25 * 1024 * 1024);
+		
 		var mediaLimit = 4;
-		var queue = new Queue();
-		var uploads = [];
+		var counter = 0;
 		var locked = false;
 
-		queue.onProgress = function () {
+		uploader.queue.onProgress = function () {
 			//Disable the post ping button
 			view.getHTML().querySelector('.send-ping').setAttribute('disabled', 'disabled');
 		};
 
-		queue.onComplete = function () {
+		uploader.queue.onComplete = function () {
 			//Enable the post ping button
 			view.getHTML().querySelector('.send-ping').removeAttribute('disabled');
 		};
+		
+		uploader.onpreview(function (url, type) {
+			counter++;
+			
+			if (type.startsWith('video') || counter > mediaLimit) {
+				locked = true;
+			}
+			
+			/*
+			 * If we have completed the maximum number of uploads, the system will
+			 * stop accepting further uploads.
+			 */
+			if (locked) {
+				view.getHTML().querySelector('.ping_media_selector').style.display = 'none';
+			}
+			
+			var v = view.sub('media').push({
+				source: url,
+				id: null
+			});
+			
+			return v;
+		});
+		
+		uploader.onupload(function (fd, v, type, done) {
+			if (!v) {
+				console.log('Upload error');
+				return;
+			}
+			
+			request('/ping/media/upload.json', fd)
+			.then(function (response) {
+				var json = JSON.parse(response);
+				v.set('id', json.id + ':' + json.secret);
+				done();
+			})
+			.catch(function (error) {
+				alert('Error uploading file. Please retry');
+				console.log(error);
+				v.destroy();
+				counter--;
+				done();
+			});
+		})
 
-		view.on('.ping_media_selector', 'click', function () {
+		view.on('.ping_media_selector', 'click', function (e) {
 			view.getHTML().querySelector('.ping_media').click();
+			e.preventDefault();
 		});
 
 		view.on('.ping_media', 'change', function (e) {
 			var files = e.target.nodeName.toLowerCase() === 'input' ? e.target.files : null;
-			var uid = undefined;
-			var v = undefined;
+			uploader.put(files);
 
-			iterate(files, function (e) {
-				var job = queue.job();
+		});
 
-				if (e.size > 25 * 1024 * 1024) {
-					//Needs a better error
-					alert('Files must be smaller than 25MB');
-					job.complete();
-					return;
-				}
+		view.getHTML().addEventListener('dragenter', function (e) {
+			this.style.background = '#F00';
+			e.preventDefault();
+		});
 
-				if (e.type.substring(0, 5) === 'image') {
+		view.getHTML().addEventListener('dragover', function (e) {
+			this.style.background = '#F00';
+			e.preventDefault();
+		});
 
-					var reader = new FileReader();
-
-					reader.onload = function (e) {
-						uid = parseInt(Math.random() * 1000);
-						
-						v = view.sub('media').push({
-							uid : uid,
-							source: e.target.result,
-							id: null
-						});
-
-					};
-
-					reader.readAsDataURL(e);
-				} else {
-					uid = parseInt(Math.random() * 1000);
-					
-					v = view.sub('media').push({
-						uid : uid,
-						source: '/assets/img/video.png',
-						id: null
-					});
-
-					if (uploads.length > 0) {
-						throw 'Videos can only be uploaded on their own.';
-					}
-
-					locked = true;
-				}
-
-				uploads.push({
-					view: v
-				});
-
-				if (uploads.length >= mediaLimit) {
-					locked = true;
-				}
-
-				/*
-				 * If we have completed the maximum number of uploads, the system will
-				 * stop accepting further uploads.
-				 */
-				if (locked) {
-					view.getHTML().getElementById('ping_media_selector').style.display = 'none';
-				}
-
-				var fd = new FormData();
-				fd.append('file', e);
-
-				request('/ping/media/upload.json', fd)
-					.then(function (response) {
-						var json = JSON.parse(response);
-						v.set('id', json.id + ':' + json.secret);
-
-						job.complete();
-					})
-					.catch(function (error) {
-						alert('Error uploading file. Please retry');
-						console.log(error);
-						//v.destroy();
-					});
-			});
-
+		view.getHTML().addEventListener('dragend', function (e) {
+			this.style.background = '#FFF';
+			e.preventDefault();
+		});
+		
+		view.getHTML().addEventListener('drop', function (e) {
+			var files = e.dataTransfer.files;
+			uploader.put(files);
+			
+			e.preventDefault();
+			e.stopPropagation();
 		});
 		
 		view.sub('media').on('.remove-media', 'click', function (event, view) {
