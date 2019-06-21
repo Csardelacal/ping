@@ -22,42 +22,28 @@
  * THE SOFTWARE.
  */
 
+depend(['m3/core/request'], function (request) {
+	
+	var Media = function (ctx) {
+		this._ctx = ctx;
+	};
+	
+	Media.prototype = {
+			
+		push : function (payload, cb) {
+			
+			var fd = new FormData();
+			fd.append('file', payload);
+			
+			var uri = this._ctx.endpoint().trim('/') + '/media/upload.json?token=' + encodeURIComponent(this._ctx.token());
 
-/*
- * This Javascript file provides an entry point to the Ping SDK. This should make
- * it easy for your application to create and retrieve pings from the client 
- * itself, reducing load on the source application and making the application
- * more responsive to the end user.
- */
-depend([
-	'ping/sdk/ping', 
-	'ping/sdk/feed', 
-	'ping/sdk/feedback', 
-	'ping/sdk/activity', 
-	'ping/sdk/media'], function (Ping, Feed, Feedback, Activity, Media) {
-	
-	/**
-	 * 
-	 * @param {string} endpoint
-	 * @param {string} token optional Only needed for authenticated requests
-	 * @returns {pingL#33.Ping}
-	 */
-	var SDK = function (endpoint, token) {
-		this._endpoint = endpoint;
-		this._token = token;
+			request(uri, fd)
+				.then(JSON.parse)
+				.then(function (resp) {
+					cb(resp);
+				});
+		}
 	};
 	
-	SDK.prototype = {
-		feed     : function () { return new Feed(this); },
-		feedback : function () { return new Feedback(this); },
-		media    : function () { return new Media(this); },
-		ping     : function () { return new Ping(this); },
-		activity : function () { return new Activity(this); },
-		
-		//Getters and setters
-		endpoint : function () { return this._endpoint; },
-		token    : function () { return this._token; }
-	};
-	
-	return SDK;
+	return Media;
 });
