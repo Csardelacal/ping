@@ -40,6 +40,8 @@ class FeedController extends AppController
 			return $e->_id;
 		})->toArray();
 		
+		$authors[] = $me->_id;
+		
 		/*
 		 * Assemble the query to find all the notifications for the user. Including:
 		 * * Pings I sent
@@ -49,14 +51,8 @@ class FeedController extends AppController
 		 * All the pings shown must be processed and not deleted.
 		 */
 		$query = db()->table('ping')->getAll()
-				->group()
-				  ->where('target__id', $me->_id)
-				  ->where('src__id', $me->_id)
-				  ->group(spitfire\storage\database\RestrictionGroup::TYPE_AND)
-					->where('src__id', $authors)
-				   ->where('target', null)
-				  ->endGroup()
-				->endGroup()
+				->where('src__id', $authors)
+				->where('target', null)
 				->where('processed', true)
 				->where('deleted', null)
 				->setOrder('created', 'DESC');
@@ -65,7 +61,7 @@ class FeedController extends AppController
 			$query->where('_id', '<', $_GET['until']);
 		}
 
-		$notifications = $query->range(0, 2);
+		$notifications = $query->range(0, 10);
 
 		#Set the notifications that were unseen as seen
 		$dbuser->lastSeen = time();

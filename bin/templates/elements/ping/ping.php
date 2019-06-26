@@ -2,7 +2,7 @@
 <div class="material unpadded">
 
 	<?php if ($ping->irt): ?>
-		<div class="source-ping">
+		<div class="source-ping" onclick="window.location = '<?= url('ping', 'detail', $ping->irt->_id) ?>'">
 			<div class="row l10 fluid">
 				<div class="span l1 desktop-only" style="text-align: center;">
 					<img src="<?= $sso->getUser($ping->irt->src->user->authId)->getAvatar(64) ?>" style="width: 32px; border: solid 1px #777; border-radius: 3px;">

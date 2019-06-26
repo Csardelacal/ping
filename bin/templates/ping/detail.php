@@ -154,104 +154,68 @@
 <script type="text/javascript">
 depend(['ping/editor'], function(editor) {
 	console.log('editor.loaded');
-	editor(<?= json_encode(['endpoint' => (string)url(), 'irt' => $notification->_id]) ?>);
+	editor(<?= json_encode([
+		'endpoint' => (string)url(), 
+		'irt' => $notification->_id,
+		'user' => [ 'avatar' => $me->getAvatar() ]
+	]) ?>);
 });
 </script>
 
 <script type="text/javascript">
-depend(['m3/core/lysine'], function(Lysine) {
-	var xhr     = null;
-	var current = null;
-	var notifications = [];
-	
-	var request = function (callback) {
-		if (xhr !== null)  { return; }
-		if (current === 0) { return; }
-		
-		xhr = new XMLHttpRequest();
-		xhr.open('GET', '<?= url('ping', 'replies', $ping->_id)->setExtension('json') ?>' + (current? '?until=' + current : ''));
-		
-		xhr.onreadystatechange = function () {
-			if (xhr.readyState === 4 && xhr.status === 200) {
-				var data = JSON.parse(xhr.responseText);
-				
-				if (data.payload.length === 0 || data.until === null) {
-					current = 0;
-				} else {
-					current = data.until;
-				}
-				
-				for (var i= 0; i < data.payload.length; i++) { 
-					var view =  new Lysine.view('ping');
-					notifications.push(view);
-					
-					view.setData({
-						id                 : data.payload[i].id,
-						userName           : data.payload[i].user.username,
-						avatar             : data.payload[i].user.avatar,
-						userURL            : '<?= url('user') ?>/' + data.payload[i].user.username,
-						notificationURL    : data.payload[i].url || '#',
-						notificationContent: data.payload[i].content,
-						notificationMedia  : data.payload[i].media? data.payload[i].media : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
-						timeRelative       : data.payload[i].timeRelative,
-						replyCount         : data.payload[i].replies.count || 'Reply',
-						shareCount         : data.payload[i].shares  || 'Share',
-						irt                : data.payload[i].irt? [data.payload[i].irt] : []
-					});
-					
-					if (!data.payload[i].media) {
-						var child = view.getHTML().querySelector('.media');
-						child.parentNode.removeChild(child);
-					}
-					
-					if (!data.payload[i].irt) {
-						var child = view.getHTML().querySelector('.irt');
-						child && child.parentNode.removeChild(child);
-					}
-					
-					if (data.payload[i].media && data.payload[i].explicit) {
-						var media = view.getHTML().querySelector('.media');
-						var cover = media.parentNode.insertBefore(document.createElement('div'), media);
-						
-						cover.className = 'media-cover';
-						cover.appendChild(document.createElement('span')).appendChild(document.createTextNode('Ping may contain sensitive media'));
-						cover.addEventListener('click', function (cover, media) { return function () {
-							cover.style.display = 'none';
-							media.style.display = null;
-						}}(cover, media), false);
-						
-						media.style.display = 'none';
-					}
-				}
-				
-				
-				xhr = null;
-				callback();
-			}
-		};
-		
-		xhr.send();
-	};
+depend(['ping/ping', 'm3/core/lysine'], function(SDK, Lysine) {
+	var sdk = new SDK('<?= url() ?>', '<?= (isset($_GET['token']) ? $this->sso->makeToken($_GET['token']) : \spitfire\io\session\Session::getInstance()->getUser())->getId() ?>');
+	var nextPage = undefined;
 	
 	var height = function () {
 		var body = document.body,
-			 html = document.documentElement;
+				  html = document.documentElement;
 
-		return Math.max( body.scrollHeight, body.offsetHeight, 
-						html.clientHeight, html.scrollHeight, html.offsetHeight );
+		return Math.max(body.scrollHeight, body.offsetHeight,
+				  html.clientHeight, html.scrollHeight, html.offsetHeight);
 	};
-	
+
 	//This function listens to the scrolls
 	var listener = function () {
-		var html   = document.documentElement,
-		    scroll = Math.max(html.scrollTop, window.scrollY);
-		
-		if (height() - scroll < html.clientHeight + 700) { request(listener); }
+		var html = document.documentElement,
+				  scroll = Math.max(html.scrollTop, window.scrollY);
+
+		if (nextPage && height() - scroll < html.clientHeight + 700) {
+			nextPage();
+			nextPage = null;
+		}
 	};
 	
-	//Attach the listener
-	window.addEventListener('load',   listener, false);
+	sdk.ping().replies(<?= $notification->_id ?>, function (pingList) {
+		
+		for (var i = 0; i < pingList._pings.length; i++) {
+
+			var view = new Lysine.view('ping');
+			var current = pingList._pings[i].payload;
+
+			/*
+			 * This block should be possible to have refactored out of the feed,
+			 * making it less pointless code that adapts stuff around.
+			 */
+			view.setData({
+				id: current.id,
+				userName: current.user.username,
+				avatar: current.user.avatar,
+				userURL: current.user.url,
+				notificationURL: current.url || '#',
+				notificationContent: current.content,
+				media: current.media,
+				poll: current.poll,
+				timeRelative: current.timeRelative,
+				feedback : current.feedback,
+				replyCount: current.replies.count || 'Reply',
+				shareCount: current.shares || 'Share',
+				irt: current.irt ? [current.irt] : []
+			});
+
+		}
+	});
+	
 	document.addEventListener('scroll', listener, false);
 });
-
 </script>

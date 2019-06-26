@@ -72,6 +72,29 @@ depend(['m3/core/request'], function (request) {
 				})
 				.then(callback)
 				.catch(function (e) { console.error(e); });
+		},
+		
+		replies : function (parent, callback, offset) { 
+			var uri = this.ctx.endpoint().trim('/') + '/ping/replies/' + parent + '.json' + (offset !== undefined? '?until=' + offset : '');
+			var ctx = this.ctx;
+			var slf = this;
+			
+			request(uri, null)
+				.then(JSON.parse)
+				.then(function (e) {
+					if (!e.payload) { throw {'message' : 'Invalid response', 'response' : e}; }
+					
+					var pl = [];
+					for (var i = 0; i < e.payload.length; i++) { pl.push(new Ping(ctx, e.payload[i])); }
+					
+					return new PingList(
+						ctx, 
+						pl, 
+						function () { return e.until != 0? slf.replies(author, callback, e.until) : null; }
+					);
+				})
+				.then(callback)
+				.catch(function (e) { console.error(e); });
 		}
 	};
 	

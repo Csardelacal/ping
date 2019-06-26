@@ -50,6 +50,7 @@ foreach ($notifications as $n) {
 		'timeRelative' => Time::relative($n->created),
 		'irt'          => $irt,
 		'replies'      => $n->replies->getQuery()->count(),
+		'shares'       => $n->shared->getQuery()->count(),
 		'feedback'     => [
 			'mine'      => !!db()->table('feedback')->get('ping', $n)->where('author',  $me)->where('reaction',  1)->first(),
 			'like'      => db()->table('feedback')->get('ping', $n)->where('reaction',  1)->count(),

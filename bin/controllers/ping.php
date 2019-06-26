@@ -280,6 +280,7 @@ class PingController extends AppController
 			$g->addRestriction('target', null, 'IS');
 		}
 		
+		$query->where('share', null);
 		$query->setOrder('_id', 'desc');
 		
 		if (isset($_GET['until'])) { $query->addRestriction('_id', $_GET['until'], '<'); }
@@ -287,6 +288,7 @@ class PingController extends AppController
 		$replies = $query->range(0, 20);
 		
 		$this->view->set('notifications', $replies);
+		$this->view->set('me', $me);
 	}
 	
 	/**
