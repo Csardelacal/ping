@@ -181,26 +181,9 @@
 depend(['ping/feedback'], function (baseurl) { baseurl('<?= spitfire()->baseUrl() ?>', '<?= (isset($_GET['token']) ? $this->sso->makeToken($_GET['token']) : \spitfire\io\session\Session::getInstance()->getUser())->getId() ?>'); });
 </script>
 
-
-<script type="text/javascript">
-	depend(['ping/ping'], function (ping) {
-		var p = new ping('<?= spitfire()->baseUrl() ?>', '<?= (isset($_GET['token']) ? $this->sso->makeToken($_GET['token']) : \spitfire\io\session\Session::getInstance()->getUser())->getId() ?>');
-		p.ping().get(265, function (e) {
-			console.log(e);
-			return e;
-		});
-
-		p.ping().author('@patch', function (list) {
-			console.log(list);
-			list._next();
-		});
-	});
-</script>
-
-
 <script type="text/javascript">
 depend(['ping/editor'], function (editor) {
 	console.log('editor.loaded');
-	editor(<?= json_encode(['endpoint' => (string)url()]) ?>);
+	editor(<?= json_encode(['endpoint' => (string)url(), 'user' => ['avatar' => $me->getAvatar() ]]) ?>);
 });
 </script>
