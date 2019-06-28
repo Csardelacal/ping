@@ -92,6 +92,8 @@ class PingModel extends spitfire\Model
 		foreach ($attached as $attachment) {
 			$ret[] = [
 				'idx' => $cnt++,
+				'type' => $attachment->type,
+				'url' => $attachment->preview($length > 1? 't' : 'm')->getURI(),
 				'embed' => $attachment->preview($length > 1? 't' : 'm')->getEmbed()
 			];
 		}

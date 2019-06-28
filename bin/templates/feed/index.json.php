@@ -1,10 +1,18 @@
 <?php
 
+current_context()->response->getHeaders()->contentType('json');
+
 $payload = Array();
+$m = new spitfire\cache\MemcachedAdapter();
+
+$apps = collect($m->get('ping.app.list', function () use ($sso) {
+	return $sso->getAppList();
+}));
 
 foreach ($notifications as $n) {
 	
 	$user  = $sso->getUser($n->src->user->authId);
+	$app   = $apps->filter(function ($e) use ($n) { return $e->id === $n->authapp; })->rewind();
 	
 	/*
 	 * Get the response data. This is only added if the ping is actually a response
@@ -55,6 +63,12 @@ foreach ($notifications as $n) {
 			'mine'      => !!db()->table('feedback')->get('ping', $n)->where('author',  $me)->where('reaction',  1)->first(),
 			'like'      => db()->table('feedback')->get('ping', $n)->where('reaction',  1)->count(),
 			'dislike'   => db()->table('feedback')->get('ping', $n)->where('reaction', -1)->count(),
+		],
+		'app'          => [
+			'id' => $n->authapp,
+			'icon' => $app? $app->icon : null,
+			'name' => $app? $app->name : null,
+			'url'  => $app? $app->url : null
 		],
 		'poll'         => $poll->toArray(),
 		'user'         => Array(
