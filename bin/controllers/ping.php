@@ -1,7 +1,9 @@
 <?php
 
+use auth\AppAuthentication;
 use cron\FlipFlop;
 use spitfire\exceptions\PublicException;
+use spitfire\io\XSSToken;
 
 /**
  * Pings are the base data type of Ping, they allow a user to broadcast a message
@@ -45,7 +47,7 @@ class PingController extends AppController
 		 */
 		if ($this->user) {
 			$srcid = $this->user->id;
-			$authapp = $this->authapp instanceof auth\App? $this->authapp->getSrc()->getId() : null;
+			$authapp = $this->authapp instanceof AppAuthentication? $this->authapp->getSrc()->getId() : null;
 		}
 		else {
 			throw new PublicException('Authentication required', 403);
@@ -163,7 +165,7 @@ class PingController extends AppController
 		 * @todo Replace with Spitfire's XSRF token method.
 		 */
 		$notification = db()->table('ping')->get('_id', $id)->fetch();
-		$salt = new \spitfire\io\XSSToken();
+		$salt = new XSSToken();
 		
 		if (!$notification) { throw new PublicException('No notification found', 404); }
 		

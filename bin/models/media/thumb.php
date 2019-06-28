@@ -20,6 +20,13 @@ class ThumbModel extends Model
 			return null;
 		}
 		
+		if ($this->aspect === 't') {
+			$medium = $this->getTable()->get('media', $this->media)->where('aspect', 'm')->first(true)->getURI();
+		}
+		else {
+			$medium = $this->getURI();
+		}
+		
 		$memcached = new \spitfire\cache\MemcachedAdapter();
 		$memcached->setTimeout(86400);
 		
@@ -42,9 +49,9 @@ class ThumbModel extends Model
 				case 'video/mp4':
 				case 'video/quicktime':
 				case 'image/gif':
-					return sprintf('<video muted playsinline preload="none" loop src="%s" poster="%s" style="width: 100%%" onmouseover="this.play()" onmouseout="this.pause()"></video>', $uri, $post instanceof \spitfire\storage\objectStorage\EmbedInterface? $post->publicURI() : $post->uri());
+					return sprintf('<video muted playsinline preload="none" loop src="%s" data-large="%s" poster="%s" style="width: 100%%" onmouseover="this.play()" onmouseout="this.pause()"></video>', $uri, $medium, $post instanceof \spitfire\storage\objectStorage\EmbedInterface? $post->publicURI() : $post->uri());
 				default:
-					return sprintf('<img src="%s"  style="width: 100%%">', $uri);
+					return sprintf('<img src="%s" data-large="%s" style="width: 100%%">', $uri, $medium);
 			}
 		}
 	}
@@ -72,6 +79,28 @@ class ThumbModel extends Model
 		catch (Exception $ex) {
 			return sprintf('<img src="%s"  style="width: 100%%">', $this->file);
 		}
+	}
+	
+	public function getURI() {
+		
+		if (!$this->media) {
+			return null;
+		}
+		
+		$memcached = new \spitfire\cache\MemcachedAdapter();
+		$memcached->setTimeout(86400);
+		
+		list($uri, $mime, $post) = unserialize($memcached->get('embed_for_' . $this->media->_id . '_' . $this->aspect, function () {
+			$file = storage($this->file);
+			$post = $this->poster? storage()->get($this->poster) : null;
+
+			$uri  = $file instanceof \spitfire\storage\objectStorage\EmbedInterface? $file->publicURI() : url('image', 'preview', $this->_id);
+			$mime = $file instanceof \spitfire\storage\objectStorage\NodeInterface? $file->mime() : 'image/png';
+			
+			return serialize([$uri, $mime, $post]);
+		}));
+		
+		return $uri;
 	}
 
 }

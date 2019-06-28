@@ -29,6 +29,12 @@
 				router.all().to(function(e) { return '<?= \spitfire\SpitFire::baseUrl() . '/assets/js/' ?>' + e + '.js'; });
 				router.equals('phpas/app/drawer').to( function() { return '<?= $sso->getAppDrawerJS() ?>'; });
 				router.equals('_scss').to( function() { return '<?= \spitfire\SpitFire::baseUrl() ?>/assets/scss/_/js/_.scss.js'; });
+				
+				var location = document.querySelector('meta[name="_scss"]').getAttribute('content') || '/assets/scss/_/js/';
+
+				router.startsWith('_scss/').to(function(str) {
+					return location + str.substring(6) + '.js';
+				});
 			});
 		}());
 		</script>
@@ -157,6 +163,33 @@
 				for (var i = 0; i < els.length; i++) {
 					sticky.stick(els[i], sticky.context(els[i]), els[i].getAttribute('data-sticky'));
 				}
+			});
+		</script>
+		
+		<div style="display: none">
+			<img style="max-height: 100%; max-width: 100%; vertical-align: top; margin: 0 auto; display: block;" id="preview-img" src="about:blank">
+			<video style="max-height: 100%; max-width: 100%; vertical-align: top; margin: 0 auto; display: block;" loop autoplay id="preview-vid" src="about:blank"></video>
+		</div>
+		<script type="text/javascript">
+			depend(['_scss/dialog', 'm3/core/delegate'], function (Dialog, delegate) {
+				
+				console.info('Gallery loaded');
+				var dialogImg = new Dialog(document.getElementById('preview-img'))
+				var dialogVid = new Dialog(document.getElementById('preview-vid'))
+				
+				delegate('click', function (e) {
+					console.log(e);
+					return e.hasAttribute('data-large');
+				}, function (e) {
+					if (this.tagName === 'VIDEO') {
+						document.getElementById('preview-vid').src = this.getAttribute('data-large');
+						dialogVid.show();
+					}
+					else {
+						document.getElementById('preview-img').src = this.getAttribute('data-large');
+						dialogImg.show();
+					}
+				});
 			});
 		</script>
 		

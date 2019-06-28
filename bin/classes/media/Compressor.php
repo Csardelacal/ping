@@ -61,6 +61,10 @@ class Compressor
 		 */
 		foreach ($this->sizes as $name => $target) {
 			
+			if ($this->media->getTable()->getDb()->table('media\thumb')->get('media', $this->media )->where('aspect', $name)->first()) {
+				continue;
+			}
+			
 			try {
 				$manipulator = media()->load($original);
 			} 
@@ -73,9 +77,6 @@ class Compressor
 			$height = $target[1];
 			$format = $target[2];
 			
-			if ($this->media->getTable()->getDb()->table('media\thumb')->get('media', $this->media )->where('aspect', $name)->first()) {
-				continue;
-			}
 			
 			/*
 			 * Prepare a new model to write the data to. We also fill in some basic 
@@ -102,6 +103,7 @@ class Compressor
 				//Do not scale or resize
 			}
 			
+			$manipulator->background(255, 255, 255);
 			$poster = $manipulator->poster();
 			$location = storage()->dir(\spitfire\core\Environment::get('uploads.thumbs')? : \spitfire\core\Environment::get('uploads.directory'));
 			
