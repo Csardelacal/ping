@@ -156,6 +156,7 @@ depend(['ping/editor'], function(editor) {
 	console.log('editor.loaded');
 	editor(<?= json_encode([
 		'endpoint' => (string)url(), 
+		'placeholder' => 'Your reply...', 
 		'irt' => $notification->_id,
 		'user' => [ 'avatar' => $me->getAvatar() ]
 	]) ?>);

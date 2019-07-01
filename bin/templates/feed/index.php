@@ -184,6 +184,10 @@ depend(['ping/feedback'], function (baseurl) { baseurl('<?= spitfire()->baseUrl(
 <script type="text/javascript">
 depend(['ping/editor'], function (editor) {
 	console.log('editor.loaded');
-	editor(<?= json_encode(['endpoint' => (string)url(), 'user' => ['avatar' => $me->getAvatar() ]]) ?>);
+	editor(<?= json_encode([
+		'endpoint' => (string)url(), 
+		'placeholder' => 'Message to broadcast...', 
+		'user' => ['avatar' => $me->getAvatar() ]
+	]) ?>);
 });
 </script>
