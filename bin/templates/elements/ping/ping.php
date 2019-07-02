@@ -50,7 +50,7 @@
 						</p>
 
 						<?php $poll = db()->table('poll\option')->get('ping', $ping->original())->all() ?>
-						<?php $resp = db()->table('poll\reply')->get('ping', $ping->original())->where('author', AuthorModel::get(db()->table('user')->get('authId', $authUser->id)->first()))->first() ?>
+						<?php $resp = $authUser? db()->table('poll\reply')->get('ping', $ping->original())->where('author', AuthorModel::get(db()->table('user')->get('authId', $authUser->id)->first()))->first() : null ?>
 						<?php if ($poll->count() > 0): ?>
 							<div data-poll="<?= $ping->_id ?>">
 								<div class="spacer" style="height: 10px"></div>
@@ -83,7 +83,8 @@
 						</p>
 					</div>
 					<div class="span l1" style="text-align: right">
-						<?php if (db()->table('feedback')->get('ping', $ping)->where('author', AuthorModel::get(db()->table('user')->get('authId', $authUser->id)->first()))->first()): ?>
+						<?php if (!$authUser): ?>
+						<?php elseif (db()->table('feedback')->get('ping', $ping)->where('author', AuthorModel::get(db()->table('user')->get('authId', $authUser->id)->first()))->first()): ?>
 							<a href="<?= url('feedback', 'revoke', $ping->_id) ?>" class="like-link like-active" data-ping="<?= $ping->_id ?>"><?= db()->table('feedback')->get('ping', $ping)->count() ?: 'Like' ?></a>
 						<?php else: ?>
 							<a href="<?= url('feedback', 'push', $ping->_id) ?>" class="like-link" data-ping="<?= $ping->_id ?>"><?= db()->table('feedback')->get('ping', $ping)->count() ?: 'Like' ?></a>

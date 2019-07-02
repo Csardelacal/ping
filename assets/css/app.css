@@ -1530,19 +1530,19 @@ and open the template in the editor.
     Author     : César de la Cal Bretschneider <cesar@magic3w.com>
 */
 .dialog {
-  padding: 2.5rem .0rem .5rem 1.5rem;
+  padding: 2.5rem .5rem 2.5rem .5rem;
   background: #FFF;
   border-radius: .3rem;
   border: solid 1px #999;
-  margin: 5rem auto;
-  max-width: 80%;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  height: calc(100% - 10rem);
+  max-width: 90%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  max-height: calc(100% - 9rem);
+  display: inline-block;
   position: relative; }
   .dialog .inner {
     overflow: auto;
-    height: 100%;
-    position: relative; }
+    position: relative;
+    height: 100%; }
   .dialog .close {
     color: #AAA;
     font-weight: bold;
@@ -1555,6 +1555,15 @@ and open the template in the editor.
     line-height: 1.8rem; }
     .dialog .close:hover {
       color: #777; }
+  .dialog.transparent {
+    background: transparent;
+    border: none;
+    margin: .5rem auto;
+    max-width: 90%;
+    box-shadow: none; }
+    .dialog.transparent .close {
+      color: #FFF;
+      text-shadow: 0 0 3px #555; }
 
 .dialog-backdrop {
   position: fixed;
@@ -1563,7 +1572,12 @@ and open the template in the editor.
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.2);
-  z-index: 9; }
+  z-index: 9;
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center; }
 
 body.has-dialog {
   height: 100%;

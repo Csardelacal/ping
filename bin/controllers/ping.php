@@ -238,6 +238,25 @@ class PingController extends AppController
 	}
 	
 	/**
+	 * Returns a list of pings related to a certain URL. This will only query public
+	 * Pings.
+	 * 
+	 * @param int|string $pingid
+	 * @throws PublicException
+	 */
+	public function url() {
+		/*
+		 * Retrieve the ping from the database.
+		 */
+		$ping = db()->table('ping')->get('url', $_GET['url'])->where('deleted', null)->where('target', null)->all();
+		
+		/*
+		 * Pass the data onto the view.
+		 */
+		$this->view->set('notifications', $ping);
+	}
+	
+	/**
 	 * Retrieves a list of replies to the ping.
 	 * 
 	 * @param int|string $pingid

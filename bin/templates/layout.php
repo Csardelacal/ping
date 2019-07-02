@@ -167,15 +167,15 @@
 		</script>
 		
 		<div style="display: none">
-			<img style="max-height: 100%; max-width: 100%; vertical-align: top; margin: 0 auto; display: block;" id="preview-img" src="about:blank">
-			<video style="max-height: 100%; max-width: 100%; vertical-align: top; margin: 0 auto; display: block;" loop autoplay id="preview-vid" src="about:blank"></video>
+			<img style="max-width: 100%; vertical-align: top; margin: 0 auto; display: block; box-shadow: 0 0 10px #444;" id="preview-img" src="about:blank">
+			<video style="max-width: 100%; vertical-align: top; margin: 0 auto; display: block;" loop autoplay id="preview-vid" src="about:blank"></video>
 		</div>
 		<script type="text/javascript">
 			depend(['_scss/dialog', 'm3/core/delegate'], function (Dialog, delegate) {
 				
 				console.info('Gallery loaded');
-				var dialogImg = new Dialog(document.getElementById('preview-img'))
-				var dialogVid = new Dialog(document.getElementById('preview-vid'))
+				var dialogImg = new Dialog(document.getElementById('preview-img'), { transparent : true })
+				var dialogVid = new Dialog(document.getElementById('preview-vid'), { transparent : true })
 				
 				delegate('click', function (e) {
 					console.log(e);
