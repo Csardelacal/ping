@@ -353,11 +353,11 @@ a {
 }
 
 #page-banner {
-	max-height: 400px;
+	max-height: 300px;
 	min-height: 100px;
 	overflow: hidden;
 	
-	border-bottom: solid 2px #CCC;
+	border-bottom: solid 1px #777;
 	position: relative;
 	
 	&:after {
@@ -395,6 +395,7 @@ a {
 @import '_styledSelect';
 @import '_navbar';
 @import '_vars';
+@import '_spinner';
 @import 'ui/_ui.scss';
 @import "ping/_ping.scss";
 @import "_/_.scss";

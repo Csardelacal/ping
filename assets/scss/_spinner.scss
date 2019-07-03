@@ -22,24 +22,34 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 /*
-    Created on : Apr 2, 2019, 12:37:36 PM
+    Created on : Jul 3, 2019, 9:31:21 AM
     Author     : César de la Cal Bretschneider <cesar@magic3w.com>
 */
 
-.like-link {
+$spinner-color: #CCC;
+$spinner-size: .5rem;
+
+.spinner {
+	display: inline-block;
+	width: $spinner-size * 2;
+	height: $spinner-size;
+	text-align: center;
 	
-	&.like-active {
-		color: #438eba;
+	&:after {
+		content : '';
+		display: inline-block;
+		border-radius: 50%;
+		width: $spinner-size;
+		height: $spinner-size;
+		border-color: $spinner-color $spinner-color $spinner-color transparent;
+		border-width: 4px;
+		border-style: solid;
+		
+		animation: spin infinite 2s linear;
 	}
 }
 
-#share-dialog {
-	width: 300px;
-	text-align: left;
-	padding: 1rem;
-}
-
-#share-confirm-link {
-	display: block;
-	font-size: 1.4rem;
+@keyframes spin {
+	  0% { transform: rotate(000deg); }
+	100% { transform: rotate(360deg); }
 }

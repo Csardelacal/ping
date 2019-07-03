@@ -6,6 +6,7 @@
 		<link href="https://fonts.googleapis.com/css?family=Nunito+Sans" rel="stylesheet"> 
 		<link type="text/css" rel="stylesheet" href="<?= \spitfire\core\http\URL::asset('css/app.css') ?>">
 		<meta name="_scss" content="<?= \spitfire\SpitFire::baseUrl() ?>/assets/scss/_/js/">
+		<meta name="ping.endpoint" content="<?= \spitfire\SpitFire::baseUrl() ?>">
 		
 		<?php if (\spitfire\core\Environment::get('analytics.id')): ?>
 		<script>
@@ -26,14 +27,16 @@
 		<script type="text/javascript">
 		(function () {
 			depend(['m3/depend/router'], function(router) {
-				router.all().to(function(e) { return '<?= \spitfire\SpitFire::baseUrl() . '/assets/js/' ?>' + e + '.js'; });
-				router.equals('phpas/app/drawer').to( function() { return '<?= $sso->getAppDrawerJS() ?>'; });
-				router.equals('_scss').to( function() { return '<?= \spitfire\SpitFire::baseUrl() ?>/assets/scss/_/js/_.scss.js'; });
+				var _SCSS = document.querySelector('meta[name="_scss"]').getAttribute('content') || '/assets/scss/_/js/';
+				var ping  = document.querySelector('meta[name="ping.endpoint"]').getAttribute('content') || '/';
 				
-				var location = document.querySelector('meta[name="_scss"]').getAttribute('content') || '/assets/scss/_/js/';
+				router.all().to(function(e) { return ping + '/assets/js/' + e + '.js'; });
+				router.equals('phpas/app/drawer').to( function() { return '<?= $sso->getAppDrawerJS() ?>'; });
+				router.equals('_scss').to( function() { return ping + '/assets/scss/_/js/_.scss.js'; });
+				
 
 				router.startsWith('_scss/').to(function(str) {
-					return location + str.substring(6) + '.js';
+					return _SCSS + str.substring(6) + '.js';
 				});
 			});
 		}());
@@ -189,6 +192,47 @@
 						document.getElementById('preview-img').src = this.getAttribute('data-large');
 						dialogImg.show();
 					}
+				});
+			});
+		</script>
+		
+		
+		<div style="display: none">
+			<div id="share-dialog" class="confirm">
+				<a id="share-confirm-link" href="#">Share</a>
+				<div id="share-processing" style="display: none;">
+					<div style="text-align: center; padding: 1.5rem; color: #777;">
+						<span class="spinner"></span> Sharing...
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+			depend(['_scss/dialog', 'm3/core/delegate', 'm3/core/request'], function (Dialog, delegate, request) {
+				
+				console.info('Gallery loaded');
+				var dialog = new Dialog(document.getElementById('share-dialog'))
+				
+				delegate('click', function (e) {
+					console.log(e);
+					return e.classList.contains('share-link');
+				}, function (e) {
+					document.getElementById('share-confirm-link').href = this.href;
+					dialog.show();
+					e.preventDefault();
+				});
+				
+				document.getElementById('share-confirm-link').addEventListener('click', function (e) {
+					document.getElementById('share-processing').style.display = 'block';
+					document.getElementById('share-confirm-link').style.display = 'none';
+					
+					
+					request(this.href).then(function () { 
+						dialog.hide(); 
+						document.getElementById('share-processing').style.display = 'none';
+						document.getElementById('share-confirm-link').style.display = 'block';
+					})
+					e.preventDefault();
 				});
 			});
 		</script>

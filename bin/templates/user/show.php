@@ -57,7 +57,7 @@
 				</p>
 				<?php elseif ($user->_id !== $authUser->id): ?>
 					
-				<?= current_context()->view->element('ping/editor')->set('target', $author->_id)->render() ?>
+				<?= current_context()->view->element('ping/editor.lysine.html')->set('target', $author->_id)->render() ?>
 				<?php else: ?>
 
 				<p style="color: #777; font-size: .8em; text-align: center; padding: 15px 20px">
@@ -76,8 +76,17 @@
 
 			<?php endforeach; ?>
 
+			<div id="feed">
+				<?= current_context()->view->element('ping/ping.lysine.html')->render() ?>
+			</div>
 			
-			<?= current_context()->view->element('ping/ping.lysine.html')->render() ?>
+			<div id="loading-spinner" style="text-align: center; padding: 1.5rem; color: #777; display: none;">
+				<span class="spinner"></span> Loading more...
+			</div>
+			
+			<div id="end-of-feed" style="text-align: center; padding: 1.5rem; color: #777; display: none;">
+				<img src="<?= \spitfire\core\http\URL::asset('img/end-of-feed.png') ?>" style="height: .9rem"> That's it!
+			</div>
 		</div>
 
 		<!-- Contextual menu-->
@@ -106,10 +115,15 @@ depend(['m3/core/lysine'], function(Lysine) {
 	
 	var request = function (callback) {
 		if (xhr !== null)  { return; }
-		if (current === 0) { return; }
+		if (current === 0) { 
+			document.getElementById('end-of-feed').style.display = 'block';
+			return; 
+		}
 		
 		xhr = new XMLHttpRequest();
 		xhr.open('GET', '<?= url('user', 'show', $user->getUsername())->setExtension('json') ?>?until=' + current);
+		
+		document.getElementById('loading-spinner').style.display = 'block';
 		
 		xhr.onreadystatechange = function () {
 			if (xhr.readyState === 4 && xhr.status === 200) {
@@ -164,6 +178,8 @@ depend(['m3/core/lysine'], function(Lysine) {
 				
 				xhr = null;
 				callback();
+				
+				document.getElementById('loading-spinner').style.display = 'none';
 			}
 		};
 		
@@ -192,12 +208,18 @@ depend(['m3/core/lysine'], function(Lysine) {
 });
 </script>
 
+<?php if ($authUser && $user->_id !== $authUser->id): ?>
 <script type="text/javascript">
 depend(['ping/editor'], function (editor) {
 	console.log('Editor initialized');
+	editor(<?= json_encode([
+		'endpoint' => (string)url(), 
+		'placeholder' => 'Message to broadcast...', 
+		'user' => ['avatar' => $me->getAvatar() ]
+	]) ?>);
 }); 
 </script>
-
+<?php endif; ?>
 
 <script type="text/javascript">
 depend(['m3/ui/sticky'], function (sticky) {

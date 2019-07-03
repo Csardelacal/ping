@@ -74,15 +74,15 @@
 
 				<div class="spacer" style="height: 20px;"></div>
 
-				<div class="row l2 fluid">
+				<div class="row l3 fluid">
 					<div class="span l1">
 						<p style="margin: 0;">
 							<?php if ($ping->url): ?>
-								<a href="<?= $ping->url ?>" style="font-weight: bold;"><?= __($ping->url, 50) ?></a>
+								<a href="<?= $ping->url ?>" style="font-weight: bold;"><?= __($ping->url, 25) ?></a>
 							<?php endif; ?>
 						</p>
 					</div>
-					<div class="span l1" style="text-align: right">
+					<div class="span l2" style="text-align: right">
 						<?php if (!$authUser): ?>
 						<?php elseif (db()->table('feedback')->get('ping', $ping)->where('author', AuthorModel::get(db()->table('user')->get('authId', $authUser->id)->first()))->first()): ?>
 							<a href="<?= url('feedback', 'revoke', $ping->_id) ?>" class="like-link like-active" data-ping="<?= $ping->_id ?>"><?= db()->table('feedback')->get('ping', $ping)->count() ?: 'Like' ?></a>

@@ -113,6 +113,9 @@ class UserController extends AppController
 		$this->view->set('user', $author);
 		$this->view->set('notifications', $feed->range(0, 10));
 		
+		$dbuser  = db()->table('user')->get('authId', $this->user->id)->fetch()? : UserModel::makeFromSSO($this->sso->getUser($this->user->id));
+		$me      = AuthorModel::get($dbuser);
+		$this->view->set('me', $me);
 	}
 	
 	public function __call($name, $arguments) {
