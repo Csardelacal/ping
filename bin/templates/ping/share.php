@@ -1,3 +1,3 @@
 <?php
 
-$this->response->getHeaders()->redirect(url('feed'));
+current_context()->response->getHeaders()->redirect(url('feed'));

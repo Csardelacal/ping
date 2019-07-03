@@ -1,11 +1,11 @@
 
 <div class="profile <?= $authUser && $authUser->id === $user->getId()? 'mine' : '' ?>">
 
-	<?php try { $banner = $user->getAttribute('banner')->getPreviewURL(1280, 300); ?>
-	<div id="banner">
-		<img src="<?= $banner ?>">
+	<?php if ($author->getBanner()): ?>
+	<div id="page-banner">
+		<img src="<?= $author->getBanner() ?>">
 	</div>
-	<?php } catch(Exception$e) {} ?>
+	<?php endif; ?>
 
 	<div class="spacer" style="height: 18px"></div>
 
@@ -53,19 +53,21 @@
 		<div class="row l3">
 			<?php foreach ($followers as $follower): ?>
 			<?php $user = $sso->getUser($follower->user->authId); ?>
-			<div class="span l1 material unpadded user-card">
-				<a href="<?= url('user', $user->getUsername()) ?>">
-					<div class="banner">
-						<img src="<?= $follower->getBanner()? : 'data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mM06jz+HwAE+gKDdqiDIQAAAABJRU5ErkJggg==' ?>" width="275" height="64">
-					</div>
-					<div class="padded" style="margin-top: -35px;">
-						<img class="avatar" src="<?= $user->getAvatar(128) ?>">
-						<div class="user-info">
-							<span class="user-name"><?= $user->getUsername() ?></span>
-							<span class="user-bio"><?php try { $bio = $user->getAttribute('bio'); ?><?=  __($bio, 30); ?><?php } catch(Exception$e) { ?><em>No bio provided</em><?php } ?></span>
+			<div class="span l1">
+				<div class=" material unpadded user-card">
+					<a href="<?= url('user', $user->getUsername()) ?>">
+						<div class="banner">
+							<img src="<?= $follower->getBanner()? : 'data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mM06jz+HwAE+gKDdqiDIQAAAABJRU5ErkJggg==' ?>" width="275" height="64">
 						</div>
-					</div>
-				</a>
+						<div class="padded" style="margin-top: -35px;">
+							<img class="avatar" src="<?= $user->getAvatar(128) ?>">
+							<div class="user-info">
+								<span class="user-name"><?= $user->getUsername() ?></span>
+								<span class="user-bio"><?php try { $bio = $user->getAttribute('bio'); ?><?=  __($bio, 30); ?><?php } catch(Exception$e) { ?><em>No bio provided</em><?php } ?></span>
+							</div>
+						</div>
+					</a>
+				</div>
 			</div>
 			<?= $every->next() ?>
 			<?php endforeach; ?>
