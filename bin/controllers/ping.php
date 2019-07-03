@@ -107,6 +107,24 @@ class PingController extends AppController
 			$media = [];
 		}
 		
+		/**
+		 * If the user uploaded a file instead, we process it. This should be DRYed
+		 * so it doesn't repeat the code from the media::upload action.
+		 */
+		if ($media instanceof \spitfire\io\Upload) {
+			$local = $media->store();
+			$media = media()->load($local);
+
+			$record = db()->table('media\media')->newRecord();
+			$record->file = $local->uri();
+			$record->source = null;
+			$record->type   = $media instanceof \spitfire\io\media\FFMPEGManipulator && $media->hasAudio()? 'video' : 'image';
+			$record->secret = base64_encode(random_bytes(50));
+			$record->store();
+			
+			$media = [sprintf('%s:%s', $record->_id, $record->secret)];
+		}
+		
 		/*
 		 * Once all the validation has been performed and we are sure that data can
 		 * be handled properly by the database we send it to the event handler that 

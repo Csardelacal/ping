@@ -7,6 +7,10 @@
 
 		<div class="material unpadded">
 			<?= current_context()->view->element('ping/editor.lysine.html')->render() ?>
+			
+			<noscript>
+			<?= current_context()->view->element('ping/editor.php')->set('authUser', $authUser)->render() ?>
+			</noscript>
 		</div>
 
 		<?php if (db()->table('ping')->get('src', db()->table('author')->get('user', db()->table('user')->get('_id', $authUser->id)))->where('processed', 0)->first()): ?>
