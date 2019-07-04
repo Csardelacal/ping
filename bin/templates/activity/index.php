@@ -1,7 +1,78 @@
 
 <div class="spacer" style="height: 18px"></div>
 		
-<div class="row l4">
+<div class="row l3">
+
+	<!-- Main content-->
+	<div class="span l2">
+			
+		
+		<?php foreach($notifications as $notification): ?>
+		<?php $user = $sso->getUser($notification->src->user->_id); ?>
+		<div class="material">
+			<div class="row l10 fluid">
+				<div class="span l1" style="text-align: center">
+					<div class="spacer" style="height: 5px"></div>
+					<a href="<?= url('user', $user->getUsername()) ?>" class="notification-avatar">
+						<img src="<?= $user->getAvatar(64) ?>" style="width: 32px; border: solid 1px #777; border-radius: 50%; vertical-align: middle">
+						<span class="activity-type <?= array_search($notification->type, NotificationModel::getTypesAvailable()) ?>"></span>
+					</a>
+				</div>
+				<div class="span l7">
+
+					<div>
+						<span style="color: #555; font-size: .8rem;"><?= ucfirst($user->getUsername()) ?></span>
+					</div>
+
+					<div>
+						<?php if ($notification->url): ?><a href="<?= $notification->url ?>" style="color: #000;  padding: .2rem 0"><?php endif; ?>
+						<?= Mention::idToMentions($notification->content) ?>
+						<?php if ($notification->url): ?></a><?php endif; ?>
+					</div>
+				</div>
+				<div class="span l2 desktop-only" style="color: #666; font-size: .8rem; text-align: right">
+					<?= Time::relative($notification->created) ?>
+				</div>
+			</div>
+		</div>
+
+		<div class="spacer" style="height: 10px"></div>
+		<?php endforeach; ?>
+		<?php if ($notifications->isEmpty()): ?>
+		<div style="padding: 50px; text-align: center; color: #777; font-size: .8rem; font-style: italic; text-align: center">
+			Nothing here yet. Follow or interact with users to build your feed!
+		</div>
+		<?php endif; ?>
+
+		<div data-lysine-view="ping">
+			<div class="material">
+				<div class="row l10 fluid">
+					<div class="span l1" style="text-align: center">
+						<div class="spacer" style="height: 5px"></div>
+						<a data-lysine-href="{{userURL}}" class="notification-avatar">
+							<img data-lysine-src="{{avatar}}" style="width: 32px; border: solid 1px #777; border-radius: 50%; vertical-align: middle">
+							<span class="activity-type other" data-lysine-class="activity-type {{type}}"></span>
+						</a>
+					</div>
+					<div class="span l7">
+						<div>
+							<a data-for="userName" data-lysine-href="{{userURL}}" style="color: #555; font-size: .8rem;"></a>
+							<span data-for="userName" style="color: #555; font-size: .8rem;"></span>
+						</div>
+						<div>
+							<a data-lysine-href="{{notificationURL}}" style="color: #000; padding: .2rem 0" data-for="notificationContent"></a>
+						</div>
+					</div>
+					<div class="span l2 desktop-only" style="color: #666; font-size: .8rem; text-align: right" data-for="timeRelative"></div>
+				</div>
+			</div>
+
+			<div class="spacer" style="height: 10px;"></div>
+		</div>
+		
+		<div class="spacer" style="height: 50px;"></div>
+	</div>
+	
 	<!--Sidebar (secondary navigation) -->
 	<div class="span l1">
 		<div class="material unpadded user-card">
@@ -23,134 +94,64 @@
 			</a>
 		</div>
 	</div>
-
-	<!-- Main content-->
-	<div class="span l2">
-		<div class="material unpadded">
-			
-			<div class="spacer" style="height: 10px"></div>
-			
-			<?php foreach($notifications as $notification): ?>
-			<?php $user = $sso->getUser($notification->src->user->_id); ?>
-			<div class="padded">
-				<div class="row l10 fluid">
-					<div class="span l8">
-						<span class="notification-avatar">
-							<img src="<?= $user->getAvatar(64) ?>" style="width: 24px; border: solid 1px #777; border-radius: 50%; vertical-align: middle">
-							<span class="activity-type <?= array_search($notification->type, NotificationModel::getTypesAvailable()) ?>"></span>
-						</span>
-						<a href="<?= url('user', $user->getUsername()) ?>" style="color: #000; font-weight: bold;"><?= ucfirst($user->getUsername()) ?></a>
-						<?php if ($notification->url): ?><a href="<?= $notification->url ?>" style="color: #000;"><?php endif; ?>
-						<?= Mention::idToMentions($notification->content) ?>
-						<?php if ($notification->url): ?></a><?php endif; ?>
-					</div>
-					<div class="span l2 desktop-only" style="color: #666; font-size: .8em; text-align: right">
-						<?= Time::relative($notification->created) ?>
-					</div>
-				</div>
-			</div>
-			
-			<div class="separator"></div>
-			<?php endforeach; ?>
-			<?php if ($notifications->isEmpty()): ?>
-			<div style="padding: 50px; text-align: center; color: #777; font-size: .8em; font-style: italic; text-align: center">
-				Nothing here yet. Follow or interact with users to build your feed!
-			</div>
-			<?php endif; ?>
-			
-			<div data-lysine-view="ping">
-				<div class="padded">
-					<div class="row10 fluid">
-						<div class="span8">
-							<span class="notification-avatar">
-								<img data-lysine-src="{{avatar}}" style="width: 24px; border: solid 1px #777; border-radius: 50%; vertical-align: middle">
-								<span class="activity-type other" data-lysine-class="activity-type {{type}}"></span>
-							</span>
-							<a data-for="userName" data-lysine-href="{{userURL}}" style="color: #000; font-weight: bold;"></a>
-							<a data-lysine-href="{{notificationURL}}" style="color: #000;" data-for="notificationContent"></a>
-						</div>
-						<div class="span2 desktop-only" style="color: #666; font-size: .8em; text-align: right" data-for="timeRelative"></div>
-					</div>
-				</div>
-				
-				<div class="separator"></div>
-			</div>
-		</div>
-		
-		<div class="spacer" style="height: 50px;"></div>
-	</div>
-	
-	<!-- Contextual menu-->
-	<div class="span1"></div>
 </div>
 
-<script type="text/javascript" src="<?= spitfire\core\http\URL::asset('js/lysine.js') ?>"></script>
-
 <script type="text/javascript">
-(function() {
-	var xhr = null;
-	var current = <?= isset($notification) && $notification? $notification->_id : 0 ?>;
-	var notifications = [];
-	
-	var request = function (callback) {
-		if (xhr !== null)  { return; }
-		if (current === 0) { return; }
-		
-		xhr = new XMLHttpRequest();
-		xhr.open('GET', '<?= url('activity')->setExtension('json') ?>?until=' + current);
-		
-		xhr.onreadystatechange = function () {
-			if (xhr.readyState === 4 && xhr.status === 200) {
-				var data = JSON.parse(xhr.responseText);
-				
-				if (data.payload.length === 0 || data.until === null) {
-					current = 0;
-				} else {
-					current = data.until;
-				}
-				
-				for (var i= 0; i < data.payload.length; i++) { 
-					var view =  new Lysine.view('ping');
-					notifications.push(view);
-					
-					view.setData({
-						userName           : data.payload[i].user.username,
-						avatar             : data.payload[i].user.avatar,
-						userURL            : '<?= url('user') ?>/' + data.payload[i].user.username,
-						notificationURL    : data.payload[i].url || '#',
-						notificationContent: data.payload[i].content,
-						timeRelative       : data.payload[i].timeRelative
-					});
-				}
-				
-				
-				xhr = null;
-				callback();
-			}
-		};
-		
-		xhr.send();
-	};
-	
+depend(['m3/core/lysine', 'ping/ping'], function (lysine, Ping) {
+
+	var nextPage = null;
+	var token = '<?= (isset($_GET['token']) ? $this->sso->makeToken($_GET['token']) : \spitfire\io\session\Session::getInstance()->getUser())->getId() ?>';
+	var ping = new Ping('<?= spitfire()->baseUrl() ?>', token);
+
 	var height = function () {
 		var body = document.body,
-			 html = document.documentElement;
+				  html = document.documentElement;
 
-		return Math.max( body.scrollHeight, body.offsetHeight, 
-						html.clientHeight, html.scrollHeight, html.offsetHeight );
+		return Math.max(body.scrollHeight, body.offsetHeight,
+				  html.clientHeight, html.scrollHeight, html.offsetHeight);
 	};
-	
+
 	//This function listens to the scrolls
 	var listener = function () {
-		var html   = document.documentElement,
-		    scroll = Math.max(html.scrollTop, window.scrollY);
-		
-		if (height() - scroll < html.clientHeight + 700) { request(listener); }
+		var html = document.documentElement,
+				  scroll = Math.max(html.scrollTop, window.scrollY);
+
+		if (height() - scroll < html.clientHeight + 700) {
+			nextPage && nextPage();
+			nextPage = null;
+		}
 	};
 	
-	//Attach the listener
-	window.addEventListener('load',   listener, false);
-	document.addEventListener('scroll', listener, false);
-}());
-</script>
+	console.log(ping.activity());
 
+	ping.activity().read(function(pingList) {
+		
+		console.log(pingList);
+		for (var i = 0; i < pingList._pings.length; i++) {
+
+			var view = new lysine.view('ping');
+			var data = pingList._pings[i];
+
+			/*
+			 * This block should be possible to have refactored out of the feed,
+			 * making it less pointless code that adapts stuff around.
+			 */
+			view.setData({
+				userName           : data.user.username,
+				avatar             : data.user.avatar,
+				userURL            : '<?= url('user') ?>/' + data.user.username,
+				notificationURL    : data.url || '#',
+				notificationContent: data.content,
+				timeRelative       : data.timeRelative
+			});
+
+		}
+
+		nextPage = pingList._next;
+	}, <?= isset($notification) && $notification? $notification->_id : 0 ?>);
+
+	//Attach the listener
+	document.addEventListener('scroll', listener, false);
+});
+
+</script>

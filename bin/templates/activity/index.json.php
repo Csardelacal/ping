@@ -4,7 +4,7 @@ $payload = Array();
 
 foreach ($notifications as $n) {
 	
-	$user  = $sso->getUser($n->src->authId);
+	$user  = $sso->getUser($n->src->user->authId);
 	
 	$payload[] = Array(
 		'id'           => $n->_id,

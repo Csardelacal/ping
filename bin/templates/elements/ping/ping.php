@@ -78,7 +78,7 @@
 					<div class="span l1">
 						<p style="margin: 0;">
 							<?php if ($ping->url): ?>
-								<a href="<?= $ping->url ?>" style="font-weight: bold;"><?= __($ping->url, 25) ?></a>
+								<a href="<?= $ping->url ?>" style="font-weight: bold;">Open</a>
 							<?php endif; ?>
 						</p>
 					</div>

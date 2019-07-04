@@ -22,6 +22,13 @@ a {
   color: #25A9F8;
   text-decoration: none; }
 
+p.secondary {
+  color: #777; }
+  p.secondary.very {
+    color: #999; }
+p.small {
+  font-size: .8rem; }
+
 *[disabled] {
   pointer-events: none; }
 
