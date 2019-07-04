@@ -74,7 +74,7 @@ depend(['m3/core/request'], function (request) {
 			 * soon as it is, this should transparently become operational - only
 			 * breaking non compliant applications.
 			 */
-			var uri = this._ctx.endpoint().trim('/') + '/acticity.json?token=' + this._ctx.token() + (offset !== undefined? '&until=' + offset : '');
+			var uri = this._ctx.endpoint().trim('/') + '/activity.json?token=' + this._ctx.token() + (offset !== undefined? '&until=' + offset : '');
 			var ctx = this._ctx;
 			var slf = this;
 			
@@ -87,7 +87,7 @@ depend(['m3/core/request'], function (request) {
 					if (!e.payload) { throw {message : 'Invalid response', response : e}; }
 					
 					var pl = [];
-					for (var i = 0; i < e.payload.length; i++) { pl.push(new Activity(ctx, e.payload[i])); }
+					for (var i = 0; i < e.payload.length; i++) { pl.push(e.payload[i]); }
 					
 					return new ActivityList(
 						ctx, 
@@ -101,11 +101,14 @@ depend(['m3/core/request'], function (request) {
 	};
 	
 	
-	var Activity = function (ctx, payload) {
+	var ActivityItem = function (ctx, payload) {
 		this.payload = payload;
+		this.user = payload.user;
+		this.url = payload.url;
+		this.timeRelative = payload.timeRelative;
 	};
 	
-	Activity.prototype = {
+	ActivityItem.prototype = {
 		
 	};
 	

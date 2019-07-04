@@ -29,6 +29,20 @@ a {
 	text-decoration: none;
 }
 
+p {
+	&.secondary {
+		color: #777;
+		
+		&.very {
+			color: #999;
+		}
+	}
+	
+	&.small {
+		font-size: .8rem;
+	}
+}
+
 *[disabled] {
 	pointer-events: none;
 }

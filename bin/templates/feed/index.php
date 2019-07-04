@@ -97,6 +97,13 @@
 				</div>
 			</a>
 		</div>
+		
+		<div class="spacer" style="height: 500px"></div>
+		<p class="very secondary small">
+			Ping is developed by Magic3W and licensed under MIT License
+			&centerdot;
+			<a href="https://github.com/Csardelacal/Ping">Help and source code</a>
+		</p>
 	</div>
 </div>
 

@@ -1,7 +1,6 @@
 <?php
 
 use spitfire\exceptions\PublicException;
-use settings\NotificationModel as NotificationSetting;
 
 /**
  * Activity refers to anything that happens on the network ping is directly connected
@@ -28,9 +27,9 @@ class ActivityController extends AppController
 		}
 		
 		if (isset($_GET['until'])) {
-			$notifications = db()->table('notification')->get('target__id', $this->user->id)->addRestriction('_id', $_GET['until'], '<')->setOrder('_id', 'DESC')->range(0, 50);
+			$notifications = db()->table('notification')->get('target__id', $this->user->id)->addRestriction('_id', $_GET['until'], '<')->setOrder('_id', 'DESC')->range(0, 20);
 		} else {
-			$notifications = db()->table('notification')->get('target__id', $this->user->id)->setOrder('_id', 'DESC')->range(0, 50);
+			$notifications = db()->table('notification')->get('target__id', $this->user->id)->setOrder('_id', 'DESC')->range(0, 20);
 		}
 		
 		$user = db()->table('user')->get('_id', $this->user->id)->fetch();
