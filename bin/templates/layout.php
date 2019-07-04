@@ -173,23 +173,21 @@
 			<video style="max-width: 100%; vertical-align: top; margin: 0 auto; display: block;" loop autoplay id="preview-vid" src="about:blank"></video>
 		</div>
 		<script type="text/javascript">
-			depend(['_scss/dialog', 'm3/core/delegate'], function (Dialog, delegate) {
+			depend(['_scss/gallery', 'm3/core/delegate'], function (Gallery, delegate) {
 				
 				console.info('Gallery loaded');
-				var dialogImg = new Dialog(document.getElementById('preview-img'), { transparent : true })
-				var dialogVid = new Dialog(document.getElementById('preview-vid'), { transparent : true })
+				var gallery = new Gallery();
 				
 				delegate('click', function (e) {
 					console.log(e);
 					return e.hasAttribute('data-large');
 				}, function (e) {
+					console.log('here');
 					if (this.tagName === 'VIDEO') {
-						document.getElementById('preview-vid').src = this.getAttribute('data-large');
-						dialogVid.show();
+						gallery.show(this.getAttribute('data-large'), 'video');
 					}
 					else {
-						document.getElementById('preview-img').src = this.getAttribute('data-large');
-						dialogImg.show();
+						gallery.show(this.getAttribute('data-large'), 'image');
 					}
 				});
 			});
@@ -209,7 +207,6 @@
 		<script type="text/javascript">
 			depend(['_scss/dialog', 'm3/core/delegate', 'm3/core/request'], function (Dialog, delegate, request) {
 				
-				console.info('Gallery loaded');
 				var dialog = new Dialog(document.getElementById('share-dialog'))
 				
 				delegate('click', function (e) {
