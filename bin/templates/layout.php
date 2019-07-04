@@ -31,7 +31,6 @@
 				var ping  = document.querySelector('meta[name="ping.endpoint"]').getAttribute('content') || '/';
 				
 				router.all().to(function(e) { return ping + '/assets/js/' + e + '.js'; });
-				router.equals('phpas/app/drawer').to( function() { return '<?= $sso->getAppDrawerJS() ?>'; });
 				router.equals('_scss').to( function() { return ping + '/assets/scss/_/js/_.scss.js'; });
 				
 
@@ -72,27 +71,24 @@
 			<div class="left">
 				<span class="toggle-button dark"></span>
 				<a href="<?= url() ?>">
-					<img src="<?= spitfire\core\http\URL::asset('img/logo.png') ?>" width="17" style="margin-right: 5px; vertical-align: -3px"> Ping
-					<span class="badge" data-ping-feed data-ping-amt="0">?</span>
+					<img src="<?= spitfire\core\http\URL::asset('img/logo.png') ?>" width="17" style="margin-right: 5px; vertical-align: -3px">
 				</a>
 			</div>
 			<div class="right">
 				<?php if(isset($authUser) && $authUser): ?>
 					<span class="h-spacer" style="display: inline-block; width: 10px;"></span>
-					<a class="menu-item not-mobile" href="<?= url('settings') ?>">
-						<img src="<?= $authUser->avatar ?>" width="17"  style="margin-right: 5px; vertical-align: -3px">
-						Settings
-					</a>
-					<span class="h-spacer" style="display: inline-block; width: 10px;"></span>
-					<a class="menu-item not-mobile" href="<?= url('activity') ?>">
-						Activity
-						<span class="badge" data-ping-activity data-ping-amt="0">?</span>
-					</a>
-					<span class="h-spacer" style="display: inline-block; width: 10px;"></span>
 					<div class="has-dropdown" style="display: inline-block">
-						<span class="app-switcher toggle" data-toggle="app-drawer"></span>
+						<a href="<?= url('user', $authUser->username) ?>" class="app-switcher" data-toggle="app-drawer">
+							<img src="<?= $authUser->avatar ?>" width="24" height="24" style="border-radius: 50%; vertical-align: middle" >
+						</a>
 						<div class="dropdown right-bound unpadded" data-dropdown="app-drawer">
-							<div class="app-drawer" id="app-drawer"></div>
+							<div class="app-drawer" id="app-drawer">
+								<div class="navigation vertical">
+									<a class="navigation-item" href="<?= url('settings')         ?>">Settings</a>
+									<a class="navigation-item" href="<?= url('user', 'show', $authUser->username) ?>">My profile</a>
+									<a class="navigation-item" href="<?= url('account', 'logout') ?>">Logout</a>
+								</div>
+							</div>
 						</div>
 					</div>
 					<span class="h-spacer" style="display: inline-block; width: 20px;"></span>
@@ -103,30 +99,37 @@
 		</div>
 		
 		<div class="auto-extend">
-			<!--Sidebar -->
-			<div class="contains-sidebar collapsed">
-				<div class="sidebar">
-					
-					<?php if(isset($authUser) && $authUser): ?>
-					<div class="menu-title"> Account</div>
-					<div class="menu-entry"><a href="<?= url() ?>"                  >Feed</a></div>
-					<div class="menu-entry"><a href="<?= url('activity')         ?>">Activity</a></div>
-					<div class="menu-entry"><a href="<?= url('people', 'followingMe') ?>">Followers</a></div>
-					<div class="menu-entry"><a href="<?= url('people', 'iFollow') ?>"  >Following</a></div>
-					<div class="menu-entry"><a href="<?= url('user', $authUser->username) ?>"><img src="<?= $authUser->avatar ?>" width="17"  style="margin-right: 5px; vertical-align: -3px">My profile</a></div>
-					
-					
-					<div class="menu-title"> Settings</div>
-					<div class="menu-entry"><a href="<?= url('settings')         ?>">Settings</a></div>
-					<?php else: ?>
-					<div class="menu-title"> Account</div>
-					<div class="menu-entry"><a href="<?= url('user', 'login') ?>"   >Login</a></div>
-					<?php endif; ?>
-				</div>
-			</div><!--
-
-			--><div class="content" data-sticky-context>
+			
+			<div class="content" data-sticky-context>
 				<?= $this->content() ?>
+			</div>
+		</div>
+		
+		<!--Sidebar -->
+		<div class="contains-sidebar">
+			<div class="sidebar">
+				<div class="navbar">
+					<div class="left">
+						<a href="<?= url() ?>">
+							<img src="<?= spitfire\core\http\URL::asset('img/logo.png') ?>" width="17" style="margin-right: 5px; vertical-align: -3px"> Ping
+						</a>
+					</div>
+				</div>
+
+				<?php if(isset($authUser) && $authUser): ?>
+				<div class="menu-title"> Account</div>
+				<div class="menu-entry"><a href="<?= url() ?>"                  >Feed</a></div>
+				<div class="menu-entry"><a href="<?= url('activity')         ?>">Activity <span class="notification-indicator" data-ping-activity data-ping-amt="0">?</span></a></div>
+				<div class="menu-entry"><a href="<?= url('settings')         ?>">Settings</a></div>
+				<?php else: ?>
+				<div class="menu-title"> Account</div>
+				<div class="menu-entry"><a href="<?= url('user', 'login') ?>"   >Login</a></div>
+				<?php endif; ?>
+
+				<div class="spacer" style="height: 10px"></div>
+
+				<div class="menu-title">Our network</div>
+				<div id="appdrawer"></div>
 			</div>
 		</div>
 		
@@ -143,10 +146,6 @@
 		(function () {
 			depend(['ui/dropdown'], function (dropdown) {
 				dropdown('.app-switcher');
-			});
-			
-			depend(['phpas/app/drawer'], function (drawer) {
-				console.log(drawer);
 			});
 			
 			depend(['_scss'], function() {
@@ -234,6 +233,31 @@
 					})
 					e.preventDefault();
 				});
+			});
+			
+			/*
+			 * Load the applications into the sidebar
+			 */
+			depend(['m3/core/request'], function (Request) {
+				var request = new Request('<?= $sso->getEndpoint() ?>/appdrawer.json');
+				request
+					.then(JSON.parse)
+					.then(function (e) {
+						e.forEach(function (i) {
+							console.log(i)
+							var entry = document.createElement('div');
+							var link  = entry.appendChild(document.createElement('a'));
+							var icon  = link.appendChild(document.createElement('img'));
+							entry.className = 'menu-entry';
+							
+							link.href = i.url;
+							link.appendChild(document.createTextNode(i.name));
+							
+							icon.src = i.icon.m;
+							document.getElementById('appdrawer').appendChild(entry);
+						});
+					})
+					.catch(console.log);
 			});
 		</script>
 		

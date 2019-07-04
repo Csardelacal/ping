@@ -13,6 +13,7 @@
 		<!--Sidebar (secondary navigation) -->
 		<div class="span l1">
 			<div class="profile-resume desktop-only">
+				<div class="spacer" style="height: 10px"></div>
 				<a href="<?= url('user', $user->getUsername()) ?>"><img class="avatar" src="<?= $user->getAvatar(256) ?>"></a>
 				<div class="spacer" style="height: 10px"></div>
 				<a href="<?= url('user', $user->getUsername()) ?>"><span class="user-name"><?= $user->getUsername() ?></span></a>
@@ -33,7 +34,7 @@
 					<?php endif; ?>
 				</div>
 				<div class="padded" style="margin-top: -35px;">
-					<img class="avatar" src="<?= $user->getAvatar(128) ?>">
+					<img class="avatar" src="<?= $user->getAvatar(256) ?>">
 					<div class="user-info">
 						<a href="<?= url('user', $user->getUsername()) ?>"><span class="user-name"><?= $user->getUsername() ?></span></a>
 						<div class="user-bio">

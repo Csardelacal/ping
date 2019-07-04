@@ -118,7 +118,7 @@ class AuthorModel extends spitfire\Model
 		else {
 			$sso = current_context()->controller->sso;
 			$usr = $sso->getUser($this->user->_id);
-			return $usr->getAvatar(128);
+			return $usr->getAvatar(256);
 		}
 		
 	}

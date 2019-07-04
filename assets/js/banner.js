@@ -6,7 +6,7 @@
 	var img    = banner.querySelector('img');
 	
 	var imgResize = function () {
-		var sh     = Math.max(banner.clientHeight, 200);
+		var sh     = Math.max(banner.clientHeight, 400);
 		var ih     = img.clientHeight;
 		
 		img.style.marginTop = ((sh - ih) / 2) + 'px'; //This is always negative
