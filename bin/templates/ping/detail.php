@@ -21,8 +21,8 @@
 				
 				<div class="spacer" style="height: 50px"></div>
 				
-				<span class="follower-count"><a href="<?= url('user', 'following', $user->getUsername()) ?>"><strong><?= db()->table('follow')->get('prey__id', $user->_id)->count() ?></strong> followers</a></span>
-				<span class="follow-count"><a href="<?= url('user', 'follows', $user->getUsername()) ?>"><strong><?= db()->table('follow')->get('follower__id', $user->_id)->count() ?></strong> follows</a></span>
+				<span class="follower-count"><a href="<?= url('people', 'following', $user->getUsername()) ?>"><strong><?= db()->table('follow')->get('prey__id', $user->_id)->count() ?></strong> followers</a></span>
+				<span class="follow-count"><a href="<?= url('people', 'follows', $user->getUsername()) ?>"><strong><?= db()->table('follow')->get('follower__id', $user->_id)->count() ?></strong> follows</a></span>
 				<span class="ping-count"><strong><?= db()->table('ping')->get('src__id', $user->_id)->addRestriction('target__id', null, 'IS')->count() ?></strong> posts</span>
 			</div>
 			
@@ -37,8 +37,8 @@
 					<div class="user-info">
 						<a href="<?= url('user', $user->getUsername()) ?>"><span class="user-name"><?= $user->getUsername() ?></span></a>
 						<div class="user-bio">
-							<a href="<?= url('user', 'following', $user->getUsername()) ?>"><?= db()->table('follow')->get('prey__id', $user->_id)->count() ?></a> followers
-							<a href="<?= url('user', 'follows', $user->getUsername()) ?>"><?= db()->table('follow')->get('follower__id', $user->_id)->count() ?></a> follows
+							<a href="<?= url('people', 'following', $user->getUsername()) ?>"><?= db()->table('follow')->get('prey__id', $user->_id)->count() ?></a> followers
+							<a href="<?= url('people', 'follows', $user->getUsername()) ?>"><?= db()->table('follow')->get('follower__id', $user->_id)->count() ?></a> follows
 						</div>
 					</div>
 				</div>
@@ -48,7 +48,7 @@
 		<!-- Main content-->
 		<div class="span l3">
 			<div class="mobile-only" style="padding: 20px 0; text-align: right">
-				<a class="button follow" href="<?= url('user', 'login') ?>" data-ping-follow="<?= $user->_id ?>">Login to follow</a>
+				<a class="button follow" href="<?= url('account', 'login') ?>" data-ping-follow="<?= $user->_id ?>">Login to follow</a>
 			</div>
 			<div class="material unpadded">
 
@@ -136,7 +136,7 @@
 
 		<!-- Contextual menu-->
 		<div class="span l1 desktop-only" style="text-align: center;">
-			<span style="border: solid 3px #FFF; display: inline-block; border-radius: 3px;"><a class="button follow" href="<?= url('user', 'login') ?>" data-ping-follow="<?= $user->_id ?>">Login to follow</a></span>
+			<span style="border: solid 3px #FFF; display: inline-block; border-radius: 3px;"><a class="button follow" href="<?= url('account', 'login') ?>" data-ping-follow="<?= $user->_id ?>">Login to follow</a></span>
 		</div>
 	</div>
 </div>

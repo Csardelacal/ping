@@ -38,8 +38,8 @@
 					<div class="user-info">
 						<a href="<?= url('user', $user->getUsername()) ?>"><span class="user-name"><?= $user->getUsername() ?></span></a>
 						<div class="user-bio">
-							<a href="<?= url('user', 'following', $user->getUsername()) ?>"><?= db()->table('follow')->get('prey__id', $user->getId())->count() ?></a> followers
-							<a href="<?= url('user', 'follows', $user->getUsername()) ?>"><?= db()->table('follow')->get('follower__id', $user->getId())->count() ?></a> follows
+							<a href="<?= url('people', 'following', $user->getUsername()) ?>"><?= db()->table('follow')->get('prey__id', $user->getId())->count() ?></a> followers
+							<a href="<?= url('poeple', 'follows', $user->getUsername()) ?>"><?= db()->table('follow')->get('follower__id', $user->getId())->count() ?></a> follows
 						</div>
 					</div>
 				</div>

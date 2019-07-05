@@ -22,7 +22,7 @@ class ActivityController extends AppController
 		 * application.
 		 */
 		if (!$this->user) { 
-			$this->response->setBody('Redirect...')->getHeaders()->redirect(url('user', 'login'));
+			$this->response->setBody('Redirect...')->getHeaders()->redirect(url('account', 'login'));
 			return;
 		}
 		

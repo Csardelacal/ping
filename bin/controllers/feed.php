@@ -10,7 +10,7 @@ class FeedController extends AppController
 		 * there is no point in having a public feed that displays contents
 		 */
 		if (!$this->user) {
-			return $this->response->setBody('Redirecting...')->getHeaders()->redirect(url('user', 'login'));
+			return $this->response->setBody('Redirecting...')->getHeaders()->redirect(url('account', 'login'));
 		}
 
 		/*
