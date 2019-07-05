@@ -1,79 +1,10 @@
 <?php 
 
-use spitfire\io\session\Session;
-
 class UserController extends AppController
 {
 	
 	public function index() {
 		
-	}
-	
-	public function login() {
-		
-		#If the user is already logged in we do not re-login him.
-		if ($this->user) {
-			return $this->response->setBody('Redirecting...')
-					  ->getHeaders()->redirect(url('feed'));
-		}
-		
-		#Create and keep the token that we'll need to maintain for the app to work
-		$token = $this->sso->createToken();
-		Session::getInstance()->lock($token);
-		
-		#Send the user to the login server
-		$this->response->setBody('Redirecting...')
-			->getHeaders()->redirect($token->getRedirect((string)url('user', 'login')->absolute()));
-	}
-	
-	public function authorize($token) {
-		$t = $this->sso->makeToken($token);
-		Session::getInstance()->lock($t);
-		
-		return $this->response->setBody('Redirecting...')
-				  ->getHeaders()->redirect(url('feed'));
-	}
-	
-	public function logout() {
-		
-		#If there is a session for this user, we destroy it
-		Session::getInstance()->destroy();
-		
-		return $this->response->setBody('Redirecting...')
-				  ->getHeaders()->redirect(url());
-	}
-	
-	public function follows($username) {
-		$user = $this->sso->getUser($username);
-		
-		$query     = db()->table('follow')->get('follower__id', db()->table('user')->get('authId', $user->getId())->fetch()->_id);
-		$followers = db()->table('user')->get('followers', $query);
-		
-		$paginator = new \spitfire\storage\database\pagination\Paginator($followers);
-		
-		$this->view->set('pagination', $paginator);
-		$this->view->set('followers',  $paginator->records());
-		
-		$this->view->set('user', $user);
-	}
-	
-	/**
-	 * 
-	 * @template user/follows
-	 * @param type $username
-	 */
-	public function following($username) {
-		$user = $this->sso->getUser($username);
-		
-		$query     = db()->table('follow')->get('prey__id', db()->table('user')->get('authId', $user->getId())->fetch()->_id);
-		$followers = db()->table('user')->get('following', $query);
-		
-		$paginator = new \spitfire\storage\database\pagination\Paginator($followers);
-		
-		$this->view->set('pagination', $paginator);
-		$this->view->set('followers',  $paginator->records());
-		
-		$this->view->set('user', $user);
 	}
 	
 	

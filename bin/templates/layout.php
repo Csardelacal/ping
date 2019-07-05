@@ -93,7 +93,7 @@
 					</div>
 					<span class="h-spacer" style="display: inline-block; width: 20px;"></span>
 				<?php else: ?>
-					<a class="menu-item" href="<?= url('user', 'login') ?>">Login</a>
+					<a class="menu-item" href="<?= url('account', 'login') ?>">Login</a>
 				<?php endif; ?>
 			</div>
 		</div>
@@ -123,7 +123,7 @@
 				<div class="menu-entry"><a href="<?= url('settings')         ?>">Settings</a></div>
 				<?php else: ?>
 				<div class="menu-title"> Account</div>
-				<div class="menu-entry"><a href="<?= url('user', 'login') ?>"   >Login</a></div>
+				<div class="menu-entry"><a href="<?= url('account', 'login') ?>"   >Login</a></div>
 				<?php endif; ?>
 
 				<div class="spacer" style="height: 10px"></div>

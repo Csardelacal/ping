@@ -38,8 +38,8 @@
 					<div class="user-info">
 						<a href="<?= url('user', $user->getUsername()) ?>"><span class="user-name"><?= $user->getUsername() ?></span></a>
 						<div class="user-bio">
-							<a href="<?= url('user', 'following', $user->getUsername()) ?>"><?= db()->table('follow')->get('prey', $user)->count() ?></a> followers
-							<a href="<?= url('user', 'follows', $user->getUsername()) ?>"><?= db()->table('follow')->get('follower', $user)->count() ?></a> follows
+							<a href="<?= url('people', 'following', $user->getUsername()) ?>"><?= db()->table('follow')->get('prey', $user)->count() ?></a> followers
+							<a href="<?= url('people', 'follows', $user->getUsername()) ?>"><?= db()->table('follow')->get('follower', $user)->count() ?></a> follows
 						</div>
 					</div>
 				</div>
@@ -49,7 +49,7 @@
 		<!-- Main content-->
 		<div class="span l3">
 			<div class="mobile-only" style="padding: 20px 0; text-align: right">
-				<a class="button follow" href="<?= url('user', 'login') ?>" data-ping-follow="<?= $user->_id ?>">Login to follow</a>
+				<a class="button follow" href="<?= url('account', 'login') ?>" data-ping-follow="<?= $user->_id ?>">Login to follow</a>
 			</div>
 			<div class="material unpadded">
 				<?php if (!$authUser): ?>
@@ -92,7 +92,7 @@
 
 		<!-- Contextual menu-->
 		<div class="span l1 desktop-only">
-			<a class="button follow" href="<?= url('user', 'login') ?>" data-ping-follow="<?= $user->_id ?>">Login to follow</a>
+			<a class="button follow" href="<?= url('account', 'login') ?>" data-ping-follow="<?= $user->_id ?>">Login to follow</a>
 		</div>
 	</div>
 </div>
