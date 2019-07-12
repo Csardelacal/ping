@@ -38,6 +38,7 @@ class FeedbackModel extends Model
 	 */
 	public function definitions(Schema $schema) {
 		$schema->author   = new Reference(AuthorModel::class);
+		$schema->target   = new Reference(AuthorModel::class);
 		$schema->ping     = new Reference(PingModel::class);
 		$schema->guid     = new StringField(250);
 		$schema->appId    = new StringField(50);
