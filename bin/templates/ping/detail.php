@@ -120,7 +120,7 @@
 				
 				<?php if (!$authUser): ?>
 				<p style="color: #777; font-size: .8em; text-align: center; padding: 15px 20px">
-					Log in to reply to <?= $user->getUsername() ?> a ping...
+					<a href="<?= url('account', 'login', ['returnto' => (string)spitfire\core\http\URL::current()]) ?>">Log in</a> to reply to <?= $user->getUsername() ?>...
 				</p>
 				<?php else: ?>
 				<?= current_context()->view->element('ping/editor.lysine.html')->render() ?>
@@ -150,7 +150,7 @@
 }());
 </script>
 
-
+<?php if (isset($me)): ?>
 <script type="text/javascript">
 depend(['ping/editor'], function(editor) {
 	console.log('editor.loaded');
@@ -162,10 +162,15 @@ depend(['ping/editor'], function(editor) {
 	]) ?>);
 });
 </script>
+<?php endif; ?>
+
+<?php $token = null; ?>
+<?php if(isset($_GET['token'])) { $token = $this->sso->makeToken($_GET['token'])->getId(); } ?>
+<?php if(\spitfire\io\session\Session::getInstance()->getUser()) { $token = \spitfire\io\session\Session::getInstance()->getUser()->getId(); } ?>
 
 <script type="text/javascript">
 depend(['ping/ping', 'm3/core/lysine'], function(SDK, Lysine) {
-	var sdk = new SDK('<?= url() ?>', '<?= (isset($_GET['token']) ? $this->sso->makeToken($_GET['token']) : \spitfire\io\session\Session::getInstance()->getUser())->getId() ?>');
+	var sdk = new SDK('<?= url() ?>', '<?= $token ?>');
 	var nextPage = undefined;
 	
 	var height = function () {
