@@ -49,8 +49,8 @@
 							<?= Mention::idToMentions($ping->content) ?>
 						</p>
 
-						<?php $poll = db()->table('poll\option')->get('ping', $ping->original())->all() ?>
-						<?php $resp = $authUser? db()->table('poll\reply')->get('ping', $ping->original())->where('author', AuthorModel::get(db()->table('user')->get('authId', $authUser->id)->first()))->first() : null ?>
+						<?php $poll = db()->table('poll\option')->get('ping__id', $ping->original()->_id)->all() ?>
+						<?php $resp = $authUser? db()->table('poll\reply')->get('ping__id', $ping->original()->_id)->where('author__id', AuthorModel::find($authUser->id)->_id)->first() : null ?>
 						<?php if ($poll->count() > 0): ?>
 							<div data-poll="<?= $ping->_id ?>">
 								<div class="spacer" style="height: 10px"></div>
@@ -85,11 +85,11 @@
 					<div class="span l2" style="text-align: right">
 						<?php if (!$authUser): ?>
 						<?php elseif (db()->table('feedback')->get('ping', $ping)->where('author', AuthorModel::get(db()->table('user')->get('authId', $authUser->id)->first()))->first()): ?>
-							<a href="<?= url('feedback', 'revoke', $ping->_id) ?>" class="like-link like-active" data-ping="<?= $ping->_id ?>"><?= db()->table('feedback')->get('ping', $ping)->count() ?: 'Like' ?></a>
+							<a href="<?= url('feedback', 'revoke', $ping->_id) ?>" class="like-link like-active" data-ping="<?= $ping->_id ?>"><?= db()->table('feedback')->get('ping', $ping)->where('reaction', 1)->where('removed', null)->count() ?: 'Like' ?></a>
 						<?php else: ?>
-							<a href="<?= url('feedback', 'push', $ping->_id) ?>" class="like-link" data-ping="<?= $ping->_id ?>"><?= db()->table('feedback')->get('ping', $ping)->count() ?: 'Like' ?></a>
+							<a href="<?= url('feedback', 'push', $ping->_id) ?>" class="like-link" data-ping="<?= $ping->_id ?>"><?= db()->table('feedback')->get('ping', $ping)->where('reaction', 1)->where('removed', null)->count() ?: 'Like' ?></a>
 						<?php endif; ?>
-						<a href="<?= url('ping', 'detail', $ping->_id) ?>#replies" class="reply-link"><?= $ping->replies->getQuery()->count() ?: 'Reply' ?></a>
+						<a href="<?= url('ping', 'detail', $ping->_id) ?>#replies" class="reply-link"><?= db()->table('ping')->get('irt__id', $ping->_id)->count() ?: 'Reply' ?></a>
 						<a href="<?= url('ping', 'share', $ping->_id); ?>" class="share-link"><?= $ping->original()->shared->getQuery()->count() ?: 'Share' ?></a>
 					</div>
 				</div>

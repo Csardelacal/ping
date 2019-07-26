@@ -20,6 +20,7 @@ use spitfire\core\router\Router;
 
 $router = Router::getInstance();
 
+$router->addRoute('/user/authorize/:token', ['controller' => 'account', 'action' => 'authorize', 'object' => [':token']]);
 $router->addRoute('/followers/', ['controller' => 'people', 'action' => 'following']);
 $router->addRoute('/following/', ['controller' => 'people', 'action' => 'follows']);
 

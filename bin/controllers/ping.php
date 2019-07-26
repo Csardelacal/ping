@@ -68,7 +68,7 @@ class PingController extends AppController
 		
 		#There needs to be a src user. That means that somebody is originating the
 		#notification. There has to be one, and no more than one.
-		$src = AuthorModel::get(db()->table('user')->get('authId', $srcid)->first()? : UserModel::makeFromSSO($this->sso->getUser($srcid)));
+		$src = AuthorModel::get(db()->table('user')->get('_id', $srcid)->first()? : UserModel::makeFromSSO($this->sso->getUser($srcid)));
 		
 		/*
 		 * Check whether the source defined a target for this ping. If the target

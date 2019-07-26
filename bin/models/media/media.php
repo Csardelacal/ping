@@ -39,7 +39,7 @@ class MediaModel extends Model
 	public function preview($size = 'm') {
 		
 		try {
-			return $this->getTable()->getDb()->table('media\thumb')->get('media', $this)->where('aspect', $size)->first(true);
+			return $this->getTable()->getDb()->table('media\thumb')->get('media__id', $this->_id)->where('aspect', $size)->first(true);
 		}
 		catch (Exception$e) {
 			$this->ping->processed = false;

@@ -24,6 +24,8 @@
  * THE SOFTWARE.
  */
 
+current_context()->response->getHeaders()->set('Access-Control-Allow-Origin', '*');
+
 echo json_encode([
 	'status' => 'OK',
 	'payload' => [

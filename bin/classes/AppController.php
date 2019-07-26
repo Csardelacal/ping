@@ -46,7 +46,6 @@ abstract class AppController extends Controller
 		#Create a user
 		$this->sso     = new SSOCache(Environment::get('SSO'));
 		$this->token   = isset($_GET['token'])? $this->sso->makeToken($_GET['token']) : $session->getUser();
-		$this->authapp = isset($_GET['signature'])? $this->sso->authApp($_GET['signature']) : null;
 		
 		#Fetch the user from the cache if necessary
 		$this->user  = $this->token && $this->token instanceof Token? $cache->get('ping_token_' . $this->token->getId(), function () { 
@@ -54,7 +53,7 @@ abstract class AppController extends Controller
 		}) : null;
 		
 		$this->authapp = isset($_GET['signature'])? $this->sso->authApp($_GET['signature']) : 
-			($this->user? $cache->get('ping_token_' . $this->token->getId(), function () { 
+			($this->user? $cache->get('ping_token_app_' . $this->token->getId(), function () { 
 				return $this->token->getTokenInfo()->app->id; 
 			}) : null);
 		

@@ -52,6 +52,7 @@ foreach ($notifications as $n) {
 		'irt'          => $irt,
 		'replies'      => $n->replies->getQuery()->count(),
 		'feedback'     => [
+			'mine'      => !!db()->table('feedback')->get('ping', $n)->where('author',  $me)->where('reaction',  1)->first(),
 			'like'      => db()->table('feedback')->get('ping', $n)->where('reaction',  1)->count(),
 			'dislike'   => db()->table('feedback')->get('ping', $n)->where('reaction', -1)->count(),
 		],

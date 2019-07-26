@@ -8,20 +8,20 @@
 			
 		
 		<?php foreach($notifications as $notification): ?>
-		<?php $user = $sso->getUser($notification->src->user->_id); ?>
+		<?php $user = $notification->src? $sso->getUser($notification->src->user->_id) : null; ?>
 		<div class="material">
 			<div class="row l10 fluid">
 				<div class="span l1" style="text-align: center">
 					<div class="spacer" style="height: 5px"></div>
-					<a href="<?= url('user', $user->getUsername()) ?>" class="notification-avatar">
-						<img src="<?= $user->getAvatar(64) ?>" style="width: 32px; border: solid 1px #777; border-radius: 50%; vertical-align: middle">
+					<a href="<?= $user? url('user', $user->getUsername()) : '#' ?>" class="notification-avatar">
+						<img src="<?= $user? $user->getAvatar(64) : \spitfire\core\http\URL::asset('img/logo.png') ?>" style="width: 32px; border: solid 1px #777; border-radius: 50%; vertical-align: middle">
 						<span class="activity-type <?= array_search($notification->type, NotificationModel::getTypesAvailable()) ?>"></span>
 					</a>
 				</div>
 				<div class="span l7">
 
 					<div>
-						<span style="color: #555; font-size: .8rem;"><?= ucfirst($user->getUsername()) ?></span>
+						<span style="color: #555; font-size: .8rem;"><?= $user? ucfirst($user->getUsername()) : 'Someone' ?></span>
 					</div>
 
 					<div>
@@ -139,7 +139,7 @@ depend(['m3/core/lysine', 'ping/ping'], function (lysine, Ping) {
 			view.setData({
 				userName           : data.user.username,
 				avatar             : data.user.avatar,
-				userURL            : '<?= url('user') ?>/' + data.user.username,
+				userURL            : data.user.id? '<?= url('user') ?>/' + data.user.username : '#',
 				notificationURL    : data.url || '#',
 				notificationContent: data.content,
 				timeRelative       : data.timeRelative

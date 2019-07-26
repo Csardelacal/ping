@@ -13,8 +13,6 @@ class MediaController extends AppController
 	 */
 	public function upload() {
 		
-		sleep(5);
-		
 		if ($_POST['file'] instanceof Upload) {
 			#Store the file and process thumbs
 			$local = $_POST['file']->store();

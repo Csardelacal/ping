@@ -23,7 +23,7 @@ class EmailSender
 		$v = new \spitfire\io\template\Template('bin/templates/email/notification.php');
 		$t = $v->render($a);
 		
-		$this->sso->sendEmail($email, sprintf('[%s] %s: %s', Environment::get('site.name')? : 'Ping', $src->displayName, Strings::ellipsis($content, 80)), $t);
+		$this->sso->sendEmail($email, sprintf('[%s] %s %s', Environment::get('site.name')? : 'Ping', $src? $src->getDisplayName() : 'Someone', Strings::ellipsis($content, 120)), $t);
 	}
 	
 	public function queue($notification) {
