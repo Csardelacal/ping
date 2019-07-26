@@ -149,6 +149,7 @@ depend(['m3/core/lysine'], function(Lysine) {
 						notificationContent: data.payload[i].content,
 						media              : data.payload[i].media,
 						poll               : data.payload[i].poll,
+						feedback           : data.payload[i].feedback,
 						timeRelative       : data.payload[i].timeRelative,
 						replyCount         : data.payload[i].replies || 'Reply',
 						shareCount         : data.payload[i].shares  || 'Share',
@@ -220,7 +221,12 @@ depend(['ping/editor'], function (editor) {
 	]) ?>);
 }); 
 </script>
+
 <?php endif; ?>
+
+<script type="text/javascript">
+depend(['ping/feedback'], function (baseurl) { baseurl('<?= spitfire()->baseUrl() ?>', '<?= (isset($_GET['token']) ? $this->sso->makeToken($_GET['token']) : \spitfire\io\session\Session::getInstance()->getUser())->getId() ?>'); });
+</script>
 
 <script type="text/javascript">
 depend(['m3/ui/sticky'], function (sticky) {

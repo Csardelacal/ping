@@ -91,7 +91,7 @@ class PeopleController extends AppController
 		$users       = db()->table('author')->get('followers', $suggestions)->where('followers', '!=', $exclude)->where('_id', '!=', $me);
 		
 		
-		$this->view->set('authors', $users->range(0, 5));
+		$this->view->set('authors', $users->range(0, 2));
 		
 	}
 	
@@ -104,7 +104,7 @@ class PeopleController extends AppController
 			$q1 = AuthorModel::get(db()->table('user')->get('authId', $this->user->id)->first());
 			$q2 = AuthorModel::get(db()->table('user')->get('authId', $uid)->first());
 
-			$following = db()->table('follow')->get('follower', $q1)->addRestriction('prey', $q2)->fetch();
+			$following = db()->table('follow')->get('follower__id', $q1->_id)->addRestriction('prey__id', $q2->_id)->fetch();
 
 			$this->view->set('following', $following);
 		}

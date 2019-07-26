@@ -47,7 +47,7 @@ class FeedBackController extends AppController
 		$record->ping     = $ping;
 		$record->author   = $author;
 		$record->target   = $ping->src;
-		$record->appId    = $this->authapp? ($this->authapp instanceof \auth\AppAuthentication? $this->authapp->getSrc()->getId() : $this->authapp) : null;
+		$record->appId    = $this->authapp? ($this->authapp instanceof \auth\AppAuthentication? $this->authapp->getSrc()->getId() : strval($this->authapp)) : null;
 		
 		switch($_GET['reaction']?? null) {
 			case 'dislike': 
@@ -82,10 +82,23 @@ class FeedBackController extends AppController
 	
 	public function retrieve(PingModel$ping) {
 		
-		$this->view->set('overall', [
-			'like'    => db()->table('feedback')->get('ping', $ping)->where('reaction',  1)->where('removed', null)->where('biased', 0)->count(),
-			'dislike' => db()->table('feedback')->get('ping', $ping)->where('reaction', -1)->where('removed', null)->where('biased', 0)->count()
-		]);
+		$mc = new \spitfire\cache\MemcachedAdapter;
+		$mc->setTimeout(1800);
+		
+		$overall = $mc->get('ping_like_details_' . $ping->_id, function () use ($ping) {
+			return [
+				'like'    => db()->table('feedback')->get('ping', $ping)->where('reaction',  1)->where('removed', null)->count(),
+				'dislike' => db()->table('feedback')->get('ping', $ping)->where('reaction', -1)->where('removed', null)->count(),
+				'sample'  => db()->table('feedback')->get('ping', $ping)->where('reaction',  1)->where('removed', null)->range(0, 10)->each(function ($e) { return [
+					'author' => $e->author->_id, 
+					'user' => $e->author->user? $e->author->user->_id : null, 
+					'avatar' => $e->author->getAvatar(), 
+					'username' => $e->author->getUsername(), 
+				];})->toArray()
+			];
+		});
+		
+		$this->view->set('overall', $overall);
 		
 		if ($this->user) {
 			$author = AuthorModel::get(db()->table('user')->get('authId', $this->user->id)->first()? : UserModel::makeFromSSO($this->sso->getUser($this->user->id)));

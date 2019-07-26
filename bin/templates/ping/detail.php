@@ -98,15 +98,21 @@
 
 							<div class="spacer" style="height: 20px;"></div>
 
-							<div class="row l2 fluid">
+							<div class="row l3 fluid">
 								<div class="span l1">
 									<p style="margin: 0;">
 										<?php if ($notification->url): ?>
-										<a href="<?= $notification->url ?>" style="font-weight: bold;"><?=  __($notification->url, 50) ?></a>
+										<a href="<?= $notification->url ?>" style="font-weight: bold;">Open</a>
 										<?php endif; ?>
 									</p>
 								</div>
-								<div class="span l1" style="text-align: right">
+								<div class="span l2" style="text-align: right">
+									<?php if (!$authUser): ?>
+									<?php elseif (db()->table('feedback')->get('ping', $ping)->where('author', AuthorModel::get(db()->table('user')->get('authId', $authUser->id)->first()))->first()): ?>
+										<a href="<?= url('feedback', 'revoke', $ping->_id) ?>" class="like-link like-active" data-ping="<?= $ping->_id ?>"><?= db()->table('feedback')->get('ping', $ping)->count() ?: 'Like' ?></a>
+									<?php else: ?>
+										<a href="<?= url('feedback', 'push', $ping->_id) ?>" class="like-link" data-ping="<?= $ping->_id ?>"><?= db()->table('feedback')->get('ping', $ping)->count() ?: 'Like' ?></a>
+									<?php endif; ?>
 									<a href="<?= url('ping', 'detail', $notification->_id) ?>#replies" class="reply-link"><?= $notification->replies->getQuery()->count()? : 'Reply' ?></a>
 									<a href="<?= url('ping', 'share', $notification->_id); ?>" class="share-link"><?= $notification->original()->shared->getQuery()->count()? : 'Share' ?></a>
 								</div>
@@ -224,4 +230,8 @@ depend(['ping/ping', 'm3/core/lysine'], function(SDK, Lysine) {
 	
 	document.addEventListener('scroll', listener, false);
 });
+</script>
+
+<script type="text/javascript">
+depend(['ping/feedback'], function (baseurl) { baseurl('<?= spitfire()->baseUrl() ?>', '<?= (isset($_GET['token']) ? $this->sso->makeToken($_GET['token']) : \spitfire\io\session\Session::getInstance()->getUser())->getId() ?>'); });
 </script>

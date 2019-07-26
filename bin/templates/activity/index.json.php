@@ -4,7 +4,12 @@ $payload = Array();
 
 foreach ($notifications as $n) {
 	
-	$user  = $sso->getUser($n->src->user->authId);
+	if ($n->src) {
+		$user = $sso->getUser($n->src->user->_id);
+	}
+	else {
+		$user = null;
+	}
 	
 	$payload[] = Array(
 		'id'           => $n->_id,
@@ -14,9 +19,10 @@ foreach ($notifications as $n) {
 		'timestamp'    => $n->created,
 		'timeRelative' => Time::relative($n->created),
 		'user'         => Array(
-			'id'        => $n->src->authId,
-			'username'  => $user->getUsername(),
-			'avatar'    => $user->getAvatar(128),
+			'id'        => $n->src? $n->src->user->_id : null,
+			'username'  => $user? $user->getUsername() : null,
+			'display'   => $user? $user->getUsername() : 'Someone',
+			'avatar'    => $user? $user->getAvatar(128) : \spitfire\core\http\URL::asset($asset_name),
 		)
 	);
 }

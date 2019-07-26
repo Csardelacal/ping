@@ -6,7 +6,7 @@
 		<link href="https://fonts.googleapis.com/css?family=Nunito+Sans" rel="stylesheet"> 
 		<link type="text/css" rel="stylesheet" href="<?= \spitfire\core\http\URL::asset('css/app.css') ?>">
 		<meta name="_scss" content="<?= \spitfire\SpitFire::baseUrl() ?>/assets/scss/_/js/">
-		<meta name="ping.endpoint" content="<?= \spitfire\SpitFire::baseUrl() ?>">
+		<meta name="ping.endpoint" content="<?= rtrim(\spitfire\SpitFire::baseUrl(), '/') ?>/">
 		
 		<?php if (\spitfire\core\Environment::get('analytics.id')): ?>
 		<script>
@@ -30,8 +30,8 @@
 				var _SCSS = document.querySelector('meta[name="_scss"]').getAttribute('content') || '/assets/scss/_/js/';
 				var ping  = document.querySelector('meta[name="ping.endpoint"]').getAttribute('content') || '/';
 				
-				router.all().to(function(e) { return ping + '/assets/js/' + e + '.js'; });
-				router.equals('_scss').to( function() { return ping + '/assets/scss/_/js/_.scss.js'; });
+				router.all().to(function(e) { return ping + 'assets/js/' + e + '.js'; });
+				router.equals('_scss').to( function() { return ping + 'assets/scss/_/js/_.scss.js'; });
 				
 
 				router.startsWith('_scss/').to(function(str) {

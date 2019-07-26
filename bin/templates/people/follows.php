@@ -52,7 +52,9 @@
 		
 		<div class="row l3">
 			<?php foreach ($followers as $follower): ?>
-			<?php $user = $sso->getUser($follower->user->authId); ?>
+			<?php try { ?>
+			<?php $user = $sso->getUser($follower->user->_id); ?>
+			<?php } catch (\Exception$e) { continue; } ?>
 			<div class="span l1">
 				<div class=" material unpadded user-card">
 					<a href="<?= url('user', $user->getUsername()) ?>">

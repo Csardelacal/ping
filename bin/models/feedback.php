@@ -43,9 +43,12 @@ class FeedbackModel extends Model
 		$schema->guid     = new StringField(250);
 		$schema->appId    = new StringField(50);
 		$schema->reaction = new IntegerField();
-		$schema->biased   = new BooleanField();
 		$schema->created  = new IntegerField(true);
 		$schema->removed  = new IntegerField(true);
+		
+		$schema->index($schema->author, $schema->created);
+		$schema->index($schema->target, $schema->created);
+		
 	}
 	
 	public function onbeforesave() {

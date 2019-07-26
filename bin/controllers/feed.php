@@ -22,8 +22,8 @@ class FeedController extends AppController
 		 * entity that creates posts and can be followed. Authors can be normalized
 		 * across servers in a process called federation.
 		 */
-		$dbuser  = db()->table('user')->get('authId', $this->user->id)->fetch()? : UserModel::makeFromSSO($this->sso->getUser($this->user->id));
-		$me      = AuthorModel::get($dbuser);
+		$dbuser  = db()->table('user')->get('_id', $this->user->id)->fetch()? : UserModel::makeFromSSO($this->sso->getUser($this->user->id));
+		$me      = AuthorModel::find($dbuser->_id);
 		
 		/*
 		 * Find all the authors and sources the user has subscribed to. These will
@@ -36,11 +36,11 @@ class FeedController extends AppController
 		 * denormalize the users and keep only the ID of the authors we're subscribed
 		 * to.
 		 */
-		$authors   = db()->table('author')->getAll()->where('followers', $follows)->all()->each(function($e) {
+		/*$authors   = db()->table('author')->getAll()->where('followers', $follows)->all()->each(function($e) {
 			return $e->_id;
 		})->toArray();
 		
-		$authors[] = $me->_id;
+		$authors[] = $me->_id;*/
 		
 		/*
 		 * Assemble the query to find all the notifications for the user. Including:
@@ -51,24 +51,38 @@ class FeedController extends AppController
 		 * All the pings shown must be processed and not deleted.
 		 */
 		$query = db()->table('ping')->getAll()
-				->where('src__id', $authors)
+				->where('src', db()->table('author')->getAll()->where('followers', $follows))
 				->where('target', null)
 				->where('processed', true)
 				->where('deleted', null)
 				->setOrder('created', 'DESC');
 
+		$mine = db()->table('ping')->get('src__id', $me->_id)
+				->where('processed', true)
+				->where('deleted', null)
+				->setOrder('created', 'DESC');
+		
 		if (isset($_GET['until'])) {
 			$query->where('_id', '<', $_GET['until']);
+			$mine->where('_id', '<', $_GET['until']);
 		}
 
-		$notifications = $query->range(0, 10);
-
+		$notifications = $query->range(0, 5);
+		$mine->where('created', '>', $notifications->last()->created);
+		
+		
+		
 		#Set the notifications that were unseen as seen
 		$dbuser->lastSeen = time();
 		$dbuser->store();
 
 		$this->view->set('me', $me);
-		$this->view->set('notifications', $notifications);
+		$this->view->set('notifications', $notifications->add($mine->range(0, 100)->toArray())->sort(function ($a, $b) { return $a->created < $b->created? 1 : -1; }));
+		
+		if (isset($_GET['debug'])) {
+			print_r(spitfire()->getMessages());
+			die();
+		}
 	}
 	
 	/**
@@ -106,16 +120,16 @@ class FeedController extends AppController
 		 * query that counts the open notifications.
 		 */
 		$follows = db()->table('follow')->get('follower__id', $me->_id);
-		$users   = db()->table('author')->get('followers', $follows)->all()->each(function($e) {
+		/*$users   = db()->table('author')->get('followers', $follows)->all()->each(function($e) {
 			return $e->_id;
-		})->toArray()? : null;
+		})->toArray()? : null;*/
 		
 		/*
 		 * Create the query to find all the posts from authors that we subscribed 
 		 * to that occurred since we last checked our feed.
 		 */
 		$query = db()->table('ping')->getAll()
-				->where('src__id', $users)
+				->where('src', db()->table('author')->get('followers', $follows))
 				->where('target', null)
 				->where('created', '>', max($dbuser->lastSeen, time() - 168 * 3600));
 

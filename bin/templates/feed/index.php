@@ -13,7 +13,7 @@
 			</noscript>
 		</div>
 
-		<?php if (db()->table('ping')->get('src', db()->table('author')->get('user', db()->table('user')->get('_id', $authUser->id)))->where('processed', 0)->first()): ?>
+		<?php if (db()->table('ping')->get('src__id', AuthorModel::find($authUser->id)->_id)->where('processed', 0)->first()): ?>
 			<div class="spacer" style="height: 10px"></div>
 
 			<div class="material" style="color: #0571B1">

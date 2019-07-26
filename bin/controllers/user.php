@@ -22,16 +22,8 @@ class UserController extends AppController
 		
 		$feed = db()->table('ping')
 			->getAll()
-			->group()
-				->group(spitfire\storage\database\RestrictionGroup::TYPE_AND)
-					->addRestriction('src', $author)
-					->addRestriction('target', null, 'IS')
-				->endGroup()
-				->group(spitfire\storage\database\RestrictionGroup::TYPE_AND)
-					->addRestriction('src', AuthorModel::get(db()->table('user')->get('_id', $this->user? $this->user->id : null)->fetch()))
-					->addRestriction('target', $author)
-				->endGroup()
-			->endGroup()
+			->addRestriction('src__id', $author->_id)
+			->addRestriction('target', null, 'IS')
 			->addRestriction('deleted', null, 'IS')
 			->setOrder('created', 'DESC');
 		
@@ -44,8 +36,9 @@ class UserController extends AppController
 		$this->view->set('user', $author);
 		$this->view->set('notifications', $feed->range(0, 10));
 		
-		$me      = AuthorModel::get($this->user->id);
+		$me      = AuthorModel::find($this->user->id);
 		$this->view->set('me', $me);
+		
 	}
 	
 	public function __call($name, $arguments) {
