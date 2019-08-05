@@ -1,5 +1,9 @@
 <?php
 
+use spitfire\exceptions\PublicException;
+use spitfire\storage\database\AggregateFunction;
+use spitfire\storage\database\pagination\Paginator;
+
 class PeopleController extends AppController
 {
 	
@@ -20,7 +24,7 @@ class PeopleController extends AppController
 		$followers = db()->table('author')->get('following', $query);
 		$followers->setOrder('_id', 'DESC');
 		
-		$paginator = new \spitfire\storage\database\pagination\Paginator($followers);
+		$paginator = new Paginator($followers);
 		
 		$this->view->set('author', $author);
 		$this->view->set('user', $this->sso->getUser($author->user->_id));
@@ -36,7 +40,7 @@ class PeopleController extends AppController
 		
 		$followers->setOrder('_id', 'DESC');
 		
-		$paginator = new \spitfire\storage\database\pagination\Paginator($followers);
+		$paginator = new Paginator($followers);
 		
 		$this->view->set('author', $author);
 		$this->view->set('user', $this->sso->getUser($author->user->_id));
@@ -53,7 +57,7 @@ class PeopleController extends AppController
 		$q2 = AuthorModel::get(db()->table('user')->get('authId', $u->getId())->fetch()? : UserModel::makeFromSSO($u));
 		
 		$following = db()->table('follow')->get('follower', $q1)->addRestriction('prey', $q2)->fetch();
-		if ($following) { throw new \spitfire\exceptions\PublicException('Already following', 400); }
+		if ($following) { throw new PublicException('Already following', 400); }
 		
 		$follow = db()->table('follow')->newRecord();
 		$follow->follower = $q1;
@@ -74,7 +78,7 @@ class PeopleController extends AppController
 		$q2 = AuthorModel::get(db()->table('user')->get('authId', $u->getId())->first());
 		
 		$following = db()->table('follow')->get('follower', $q1)->addRestriction('prey', $q2)->fetch();
-		if (!$following) { throw new \spitfire\exceptions\PublicException('Not yet following', 400); }
+		if (!$following) { throw new PublicException('Not yet following', 400); }
 		
 		$following->delete();
 	}
@@ -90,8 +94,18 @@ class PeopleController extends AppController
 		$suggestions = db()->table('follow')->getAll()->where('follower', db()->table('author')->get('followers', $following));
 		$users       = db()->table('author')->get('followers', $suggestions)->where('followers', '!=', $exclude)->where('_id', '!=', $me);
 		
+		$count = new AggregateFunction($users->getQueryTable()->getField('_id'), AggregateFunction::AGGREGATE_COUNT);
+		$users->aggregateBy($users->getQueryTable()->getField('_id'));
+		$users->setOrder($count, 'DESC');
 		
-		$this->view->set('authors', $users->range(0, 2));
+		$rss = $users->execute([$users->getQueryTable()->getField('_id'), $count], 0, 2);
+		$_ret = collect();
+		
+		while($row = $rss->fetchArray()) {
+			$_ret->push(db()->table('author')->get('_id', $row['_id'])->first());
+		}
+		
+		$this->view->set('authors', $_ret);
 		
 	}
 	
