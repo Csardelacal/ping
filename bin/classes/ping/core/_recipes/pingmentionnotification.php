@@ -33,7 +33,7 @@ $core->feed->push->after()->do(function ($ping) use ($core) {
 		$notification->src     = $ping->src;
 		$notification->target  = $u->user;
 		$notification->content = 'mentioned you';
-		$notification->url     = strval(url('ping', 'detail', $notification->_id)->absolute());
+		$notification->url     = strval(url('ping', 'detail', $ping->_id)->absolute());
 		$notification->type    = NotificationModel::TYPE_MENTION;
 		
 		$core->activity->push->do(function ($notification) {
