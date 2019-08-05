@@ -217,16 +217,17 @@ depend(['ping/editor'], function (editor) {
 	editor(<?= json_encode([
 		'endpoint' => (string)url(), 
 		'placeholder' => 'Message to broadcast...', 
-		'user' => ['avatar' => $me->getAvatar() ]
+		'user' => ['avatar' => $me->getAvatar() ],
+		'target' => $author->_id
 	]) ?>);
 }); 
 </script>
 
-<?php endif; ?>
 
 <script type="text/javascript">
 depend(['ping/feedback'], function (baseurl) { baseurl('<?= spitfire()->baseUrl() ?>', '<?= (isset($_GET['token']) ? $this->sso->makeToken($_GET['token']) : \spitfire\io\session\Session::getInstance()->getUser())->getId() ?>'); });
 </script>
+<?php endif; ?>
 
 <script type="text/javascript">
 depend(['m3/ui/sticky'], function (sticky) {
