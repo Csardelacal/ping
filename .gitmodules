@@ -1,6 +1,6 @@
 [submodule "spitfire"]
 	path = spitfire
-	url = https://github.com/Csardelacal/SpitfireEngine
+	url = ssh://git@phabricator.magic3w.com/source/spitfire.git
 	branch = develop
 [submodule "m3.js"]
 	path = assets/js/m3
