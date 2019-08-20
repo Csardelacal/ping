@@ -1,4 +1,5 @@
 <?php $user = $ping->src->user ? $sso->getUser($ping->src->user->authId) : null; ?>
+<?php $ping = $ping->original(); ?>
 <div class="material unpadded">
 
 	<?php if ($ping->irt): ?>
@@ -49,8 +50,8 @@
 							<?= Mention::idToMentions($ping->content) ?>
 						</p>
 
-						<?php $poll = db()->table('poll\option')->get('ping__id', $ping->original()->_id)->all() ?>
-						<?php $resp = $authUser? db()->table('poll\reply')->get('ping__id', $ping->original()->_id)->where('author__id', AuthorModel::find($authUser->id)->_id)->first() : null ?>
+						<?php $poll = db()->table('poll\option')->get('ping__id', $ping->_id)->all() ?>
+						<?php $resp = $authUser? db()->table('poll\reply')->get('ping__id', $ping->_id)->where('author__id', AuthorModel::find($authUser->id)->_id)->first() : null ?>
 						<?php if ($poll->count() > 0): ?>
 							<div data-poll="<?= $ping->_id ?>">
 								<div class="spacer" style="height: 10px"></div>
@@ -66,7 +67,7 @@
 
 						<div class="spacer" style="height: 10px"></div>
 
-						<?php $media = $ping->original()->attached; ?>
+						<?php $media = $ping->attached; ?>
 						<?= current_context()->view->element('media/preview')->set('media', collect($media->toArray()))->render() ?>
 
 					</div>
@@ -75,22 +76,37 @@
 				<div class="spacer" style="height: 20px;"></div>
 
 				<div class="row l3 fluid">
-					<div class="span l1">
-						<p style="margin: 0;">
-							<?php if ($ping->url): ?>
-								<a href="<?= $ping->url ?>" style="font-weight: bold;">Open</a>
-							<?php endif; ?>
-						</p>
-					</div>
-					<div class="span l2" style="text-align: right">
+					<div class="span l2">
 						<?php if (!$authUser): ?>
 						<?php elseif (db()->table('feedback')->get('ping', $ping)->where('author', AuthorModel::get(db()->table('user')->get('authId', $authUser->id)->first()))->first()): ?>
-							<a href="<?= url('feedback', 'revoke', $ping->_id) ?>" class="like-link like-active" data-ping="<?= $ping->_id ?>"><?= db()->table('feedback')->get('ping', $ping)->where('reaction', 1)->where('removed', null)->count() ?: 'Like' ?></a>
+							<a href="<?= url('feedback', 'revoke', $ping->_id) ?>" class="ping-contextual-link for-likes liked" data-ping="<?= $ping->_id ?>">
+								<i class="im im-heart"></i>
+								<span><?= strval(db()->table('feedback')->get('ping', $ping)->where('reaction', 1)->where('removed', null)->count()) ?></span>
+							</a>
 						<?php else: ?>
-							<a href="<?= url('feedback', 'push', $ping->_id) ?>" class="like-link" data-ping="<?= $ping->_id ?>"><?= db()->table('feedback')->get('ping', $ping)->where('reaction', 1)->where('removed', null)->count() ?: 'Like' ?></a>
+							<a href="<?= url('feedback', 'push', $ping->_id) ?>" class="ping-contextual-link for-likes" data-ping="<?= $ping->_id ?>">
+								<i class="im im-heart"></i>
+								<span><?= strval(db()->table('feedback')->get('ping', $ping)->where('reaction', 1)->where('removed', null)->count())?></span>
+							</a>
 						<?php endif; ?>
-						<a href="<?= url('ping', 'detail', $ping->_id) ?>#replies" class="reply-link"><?= db()->table('ping')->get('irt__id', $ping->_id)->count() ?: 'Reply' ?></a>
-						<a href="<?= url('ping', 'share', $ping->_id); ?>" class="share-link"><?= $ping->original()->shared->getQuery()->count() ?: 'Share' ?></a>
+						<a href="<?= url('ping', 'detail', $ping->_id) ?>#replies" class="ping-contextual-link for-replies">
+							<i class="im im-speech-bubble"></i>
+							<span><?= strval(db()->table('ping')->get('irt__id', $ping->_id)->count()) ?></span>
+						</a>
+						<a href="<?= url('ping', 'share', $ping->_id); ?>" class="ping-contextual-link for-shares">
+							<i class="im im-sync"></i>
+							<span><?= $ping->shared->getQuery()->count() ?: 'Share' ?></span>
+						</a>
+					</div>
+					<div class="span l1" style="text-align: right">
+						<p style="margin: 0;">
+							<?php if ($ping->url): ?>
+							<a href="<?= $ping->url ?>" class="ping-contextual-link">
+								<span>Open</span>
+								<i class="im im-external-link"></i>
+							</a>
+							<?php endif; ?>
+						</p>
 					</div>
 				</div>
 			</div>

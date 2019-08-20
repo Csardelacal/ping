@@ -4,6 +4,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title><?= isset(${'page.title'}) && ${'page.title'}? ${'page.title'} : 'Ping - Notifications' ?></title>
 		<link href="https://fonts.googleapis.com/css?family=Nunito+Sans" rel="stylesheet"> 
+		<link href="https://cdn.iconmonstr.com/1.3.0/css/iconmonstr-iconic-font.min.css" rel="stylesheet"> 
 		<link type="text/css" rel="stylesheet" href="<?= \spitfire\core\http\URL::asset('css/app.css') ?>">
 		<meta name="_scss" content="<?= \spitfire\SpitFire::baseUrl() ?>/assets/scss/_/js/">
 		<meta name="ping.endpoint" content="<?= rtrim(\spitfire\SpitFire::baseUrl(), '/') ?>/">
@@ -211,7 +212,7 @@
 				
 				delegate('click', function (e) {
 					console.log(e);
-					return e.classList.contains('share-link');
+					return e.classList.contains('for-shares');
 				}, function (e) {
 					document.getElementById('share-confirm-link').href = this.href;
 					dialog.show();

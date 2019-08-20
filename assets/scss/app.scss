@@ -292,22 +292,28 @@ p {
 	}
 }
 
-.reply-link {
-	color: #333;
-	font-weight: bold;
+.ping-contextual-link {
+	color: #666;
 	margin: 0 10px;
 	line-height: 14px;
-	font-size: 12px;
 	
-	&:before {
-		content: '';
-		display: inline-block;
-		width: 12px;
-		height: 12px;
-		background: url('../img/reply.png');
-		background-size: 12px 12px;
-		margin: 0 5px;
+	&:hover {
+		color: #333;
+	}
+	
+	&.liked {
+		color: #A33;
+	}
+	
+	span {
 		vertical-align: middle;
+		font-size: 1rem;
+	}
+	
+	.im {
+		vertical-align: middle;
+		font-size: .9rem;
+		line-height: .9rem;
 	}
 }
 
@@ -410,6 +416,9 @@ p {
 	}
 }
 
+.row .span {
+	margin: 0 !important;
+}
 
 @media all and (min-width: $MobileBreakpoint) {
 	.mobile-only { display: none !important; }

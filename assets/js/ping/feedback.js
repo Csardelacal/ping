@@ -64,21 +64,21 @@ depend(['m3/core/delegate', 'm3/core/request', 'm3/core/collection', 'm3/core/pa
 	 * Reaction logic for the interface
 	 */
 	delegate('click', function (e) {
-		return e.classList.contains('like-link');
+		return e.classList.contains('for-likes');
 	}, function (event, element) {
 		
-		var active = element.classList.contains('like-active');
+		var active = element.classList.contains('liked');
 		
 		if (active) {
 			ping.feedback().revoke(element.getAttribute('data-ping'), function () {
-				element.classList.remove('like-active');
-				element.innerHTML = (parseInt(element.innerHTML) || 0) - 1;
+				element.classList.remove('liked');
+				element.querySelector('span').innerHTML = (parseInt(element.querySelector('span').innerHTML) || 0) - 1;
 			});
 		}
 		else {
 			ping.feedback().push(element.getAttribute('data-ping'), 'like', function () {
-				element.classList.add('like-active');
-				element.innerHTML = (parseInt(element.innerHTML) || 0) + 1;
+				element.classList.add('liked');
+				element.querySelector('span').innerHTML = (parseInt(element.querySelector('span').innerHTML) || 0) + 1;
 			});
 		}
 

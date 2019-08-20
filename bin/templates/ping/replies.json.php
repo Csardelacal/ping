@@ -66,6 +66,6 @@ foreach ($notifications as $n) {
 
 echo json_encode(Array(
 	 'payload' => $payload,
-	 'until'   => $n? $n->_id : null,
+	 'until'   => isset($n) && $n? $n->_id : null,
 	 'messages' => spitfire()->getMessages()
 ));
