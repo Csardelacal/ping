@@ -96,12 +96,26 @@
 
 					<div class="spacer" style="height: 20px;"></div>
 
-					<div class="row l1 fluid">
+					<div class="row l3 fluid">
+						<div class="span l2">
+							<a href="#likelink" data-lysine-class="ping-contextual-link for-likes {{feedback.mine?liked}}" data-lysine-data-ping="{{id}}">
+								<i class="im im-heart"></i>
+								<span  data-for="feedback.like"></span>
+							</a>
+							<a data-lysine-href="<?= url('ping', 'detail') ?>{{id}}#replies" class="ping-contextual-link for-replies">
+								<i class="im im-speech-bubble"></i>
+								<span data-for="replyCount"></span>
+							</a>
+							<a data-lysine-href="<?= url('ping', 'share'); ?>{{id}}" class="ping-contextual-link for-shares">
+								<i class="im im-sync"></i>
+								<span  data-for="shareCount"></span>
+							</a>
+						</div>
 						<div class="span l1" style="text-align: right">
-							<a data-lysine-href="{{notificationURL}}" data-condition="value(notificationURL) != #" >Open</a>
-							<a href="#likelink" data-lysine-class="like-link {{feedback.mine?like-active}}" data-lysine-data-ping="{{id}}" data-for="feedback.like"></a>
-							<a data-lysine-href="<?= url('ping', 'detail') ?>{{id}}#replies" class="reply-link" data-for="replyCount"></a>
-							<a data-lysine-href="<?= url('ping', 'share'); ?>{{id}}" class="share-link" data-for="shareCount"></a>
+							<a href="{{notificationURL}}" class="ping-contextual-link">
+								<span>Open</span>
+								<i class="im im-external-link"></i>
+							</a>
 						</div>
 					</div>
 				</div>

@@ -201,21 +201,21 @@ p.small {
     .pagination li.active {
       border-bottom: solid 1px #777; }
 
-.reply-link {
-  color: #333;
-  font-weight: bold;
+.ping-contextual-link {
+  color: #666;
   margin: 0 10px;
-  line-height: 14px;
-  font-size: 12px; }
-  .reply-link:before {
-    content: '';
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    background: url("../img/reply.png");
-    background-size: 12px 12px;
-    margin: 0 5px;
-    vertical-align: middle; }
+  line-height: 14px; }
+  .ping-contextual-link:hover {
+    color: #333; }
+  .ping-contextual-link.liked {
+    color: #A33; }
+  .ping-contextual-link span {
+    vertical-align: middle;
+    font-size: 1rem; }
+  .ping-contextual-link .im {
+    vertical-align: middle;
+    font-size: .9rem;
+    line-height: .9rem; }
 
 .share-link {
   color: #333;
@@ -292,6 +292,9 @@ p.small {
     margin: 0 auto;
     display: block;
     vertical-align: middle; }
+
+.row .span {
+  margin: 0 !important; }
 
 @media all and (min-width: 960px) {
   .mobile-only {

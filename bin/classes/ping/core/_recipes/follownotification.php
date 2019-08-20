@@ -26,13 +26,21 @@
 
 $core->people->follow->after()->do(function ($follow) use ($core) {
 	
-		$notification = db()->table('notification')->newRecord();
-		$notification->src     = $follow->follower;
-		$notification->target  = $follow->prey;
-		$notification->content = "started following you";
-		$notification->type    = NotificationModel::TYPE_FOLLOW;
-		
-		$core->activity->push->do(function ($notification) {
-			$notification->store();
-		}, $notification);
+	/*
+	 * When the user is not on this server, we need to ignore this behavior, since
+	 * we're only sending notifications to users on our own server.
+	 */
+	if(!$follow->prey->user) {
+		return;
+	}
+
+	$notification = db()->table('notification')->newRecord();
+	$notification->src     = $follow->follower;
+	$notification->target  = $follow->prey->user;
+	$notification->content = "started following you";
+	$notification->type    = NotificationModel::TYPE_FOLLOW;
+
+	$core->activity->push->do(function ($notification) {
+		$notification->store();
+	}, $notification);
 });

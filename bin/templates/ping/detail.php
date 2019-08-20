@@ -89,6 +89,21 @@
 									</p>
 
 									<div class="spacer" style="height: 10px"></div>
+									
+									<?php $poll = db()->table('poll\option')->get('ping__id', $notification->original()->_id)->all() ?>
+									<?php $resp = $authUser? db()->table('poll\reply')->get('ping__id', $notification->original()->_id)->where('author__id', AuthorModel::find($authUser->id)->_id)->first() : null ?>
+									<?php if ($poll->count() > 0): ?>
+										<div data-poll="<?= $notification->_id ?>">
+											<div class="spacer" style="height: 10px"></div>
+											<?php foreach ($poll as $option): ?>
+												<a href="<?= url('poll', 'vote', $option->_id) ?>" 
+													data-option="<?= $option->_id ?>" 
+													class="poll-open-response <?= $resp && $resp->option->_id == $option->_id ? 'selected-response' : '' ?>"> 
+														<?= __($option->text ?: "Untitled") ?>
+												</a>
+											<?php endforeach; ?>
+										</div>
+									<?php endif; ?>
 
 									<?php $media = $notification->original()->attached; ?>
 									<?= current_context()->view->element('media/preview')->set('media', collect($media->toArray()))->render() ?>
@@ -99,22 +114,37 @@
 							<div class="spacer" style="height: 20px;"></div>
 
 							<div class="row l3 fluid">
-								<div class="span l1">
+								<div class="span l2">
+									<?php if (!$authUser): ?>
+									<?php elseif (db()->table('feedback')->get('ping', $notification)->where('author', AuthorModel::get(db()->table('user')->get('authId', $authUser->id)->first()))->first()): ?>
+										<a href="<?= url('feedback', 'revoke', $notification->_id) ?>" class="ping-contextual-link for-likes liked" data-ping="<?= $notification->_id ?>">
+											<i class="im im-heart"></i>
+											<span><?= strval(db()->table('feedback')->get('ping', $notification)->where('reaction', 1)->where('removed', null)->count()) ?></span>
+										</a>
+									<?php else: ?>
+										<a href="<?= url('feedback', 'push', $notification->_id) ?>" class="ping-contextual-link for-likes" data-ping="<?= $notification->_id ?>">
+											<i class="im im-heart"></i>
+											<span><?= strval(db()->table('feedback')->get('ping', $notification)->where('reaction', 1)->where('removed', null)->count())?></span>
+										</a>
+									<?php endif; ?>
+									<a href="<?= url('ping', 'detail', $notification->_id) ?>#replies" class="ping-contextual-link for-replies">
+										<i class="im im-speech-bubble"></i>
+										<span><?= strval(db()->table('ping')->get('irt__id', $notification->_id)->count()) ?></span>
+									</a>
+									<a href="<?= url('ping', 'share', $notification->_id); ?>" class="ping-contextual-link for-shares">
+										<i class="im im-sync"></i>
+										<span><?= $notification->original()->shared->getQuery()->count() ?: 'Share' ?></span>
+									</a>
+								</div>
+								<div class="span l1" style="text-align: right">
 									<p style="margin: 0;">
 										<?php if ($notification->url): ?>
-										<a href="<?= $notification->url ?>" style="font-weight: bold;">Open</a>
+										<a href="<?= $notification->url ?>" class="ping-contextual-link">
+											<span>Open</span>
+											<i class="im im-external-link"></i>
+										</a>
 										<?php endif; ?>
 									</p>
-								</div>
-								<div class="span l2" style="text-align: right">
-									<?php if (!$authUser): ?>
-									<?php elseif (db()->table('feedback')->get('ping', $ping)->where('author', AuthorModel::get(db()->table('user')->get('authId', $authUser->id)->first()))->first()): ?>
-										<a href="<?= url('feedback', 'revoke', $ping->_id) ?>" class="like-link like-active" data-ping="<?= $ping->_id ?>"><?= db()->table('feedback')->get('ping', $ping)->count() ?: 'Like' ?></a>
-									<?php else: ?>
-										<a href="<?= url('feedback', 'push', $ping->_id) ?>" class="like-link" data-ping="<?= $ping->_id ?>"><?= db()->table('feedback')->get('ping', $ping)->count() ?: 'Like' ?></a>
-									<?php endif; ?>
-									<a href="<?= url('ping', 'detail', $notification->_id) ?>#replies" class="reply-link"><?= $notification->replies->getQuery()->count()? : 'Reply' ?></a>
-									<a href="<?= url('ping', 'share', $notification->_id); ?>" class="share-link"><?= $notification->original()->shared->getQuery()->count()? : 'Share' ?></a>
 								</div>
 							</div>
 						</div>
