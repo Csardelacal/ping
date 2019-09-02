@@ -211,8 +211,60 @@ class PingController extends AppController
 		 * 
 		 * This way we ensure that the user is not deleting a ping via XSRF.
 		 */
-		if ($salt->verify($confirm)) {
+		if ($confirm && $salt->verify($confirm)) {
 			$notification->deleted = time();
+			
+			$this->core->feed->delete->do(function ($notification) {
+				$notification->store();
+			}, $notification);
+			
+			return $this->response->setBody('OK')->getHeaders()->redirect(url('feed'));
+		}
+		
+		$this->view->set('id', $id);
+		$this->view->set('salt', $salt);
+	}
+	
+	
+	public function disavow($id, $confirm = null) {
+		/**
+		 * Find the ping in question and generate a random hash that the user will
+		 * have to return to confirm they know what they're doing.
+		 * 
+		 * @todo Replace with Spitfire's XSRF token method.
+		 */
+		$notification = db()->table('ping')->get('_id', $id)->fetch();
+		$salt = new XSSToken();
+		
+		if (!$notification) { throw new PublicException('No notification found', 404); }
+		
+		/*
+		 * If the user is not logged in, there is no point to even continue. A guest 
+		 * must never be allowed to delete any ping.
+		 */
+		if (!$this->user) {
+			throw new PublicException('Login required', 403);
+		}
+		
+		/*
+		 * Check if the user deleting the ping is actually the person who generated
+		 * the ping. Users must only be able to delete a ping they actually posted
+		 * themselves.
+		 */
+		if ($notification->src->_id !== AuthorModel::find($this->user->id)->_id) { 
+			throw new PublicException('No notification found', 404); 
+		}
+		
+		/*
+		 * Confirm the user actually wishes to delete the ping in question. To do
+		 * so, the application will generate a random hash that the user will have
+		 * to send back properly.
+		 * 
+		 * This way we ensure that the user is not deleting a ping via XSRF.
+		 */
+		if ($confirm && $salt->verify($confirm)) {
+			$notification->url = url('ping', 'detail', $notification->irt->_id)->absolute();
+			$notification->irt = null;
 			
 			$this->core->feed->delete->do(function ($notification) {
 				$notification->store();

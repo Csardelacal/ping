@@ -253,21 +253,6 @@ p {
 	font-style: italic;
 	cursor: pointer;
 }
-.profile {
-	.delete-link {
-		display: none;
-		font-weight: bold;
-		color: #900;
-		margin-left: 3px;
-		font-size: 12px;
-	}
-	
-	&.mine {
-		.delete-link {
-			display: inline-block;
-		}
-	}
-}
 
 .pagination {
 	list-style: none;
@@ -294,8 +279,12 @@ p {
 
 .ping-contextual-link {
 	color: #666;
-	margin: 0 10px;
+	margin: 0 8px;
 	line-height: 14px;
+	
+	&:first-child {
+		margin-left: 0;
+	}
 	
 	&:hover {
 		color: #333;
@@ -307,60 +296,19 @@ p {
 	
 	span {
 		vertical-align: middle;
-		font-size: 1rem;
+		font-size: .8rem;
+		font-weight: bold;
 	}
 	
 	.im {
-		vertical-align: middle;
-		font-size: .9rem;
-		line-height: .9rem;
+		vertical-align: -.05rem;
+		font-size: .7rem;
+		line-height: .7rem;
 	}
 }
 
-.share-link {
-	color: #333;
-	font-weight: bold;
-	margin: 0 10px;
-	line-height: 14px;
-	font-size: 12px;
-	
-	&:before {
-		content: '';
-		display: inline-block;
-		width: 12px;
-		height: 12px;
-		background: url('../img/share.png');
-		background-size: 12px 12px;
-		margin: 0 5px;
-		vertical-align: middle;
-	}
-}
-
-.like-link {
-	color: #333;
-	font-weight: bold;
-	margin: 0 10px;
-	line-height: 14px;
-	font-size: 12px;
-	
-	&:before {
-		content: '';
-		display: inline-block;
-		width: 12px;
-		height: 12px;
-		background: url('../img/like.png');
-		background-size: 12px 12px;
-		margin: 0 5px;
-		vertical-align: middle;
-	}
-}
-
-.share-link, .reply-link, .like-link {
-	opacity: .6;
-	
-	&:hover {
-		opacity: 1;
-	}
+.delete-link {
+	color: #A33;
 }
 
 #new-ping-content {
@@ -432,7 +380,6 @@ p {
 @import '_navigation';
 @import '_activity';
 @import '_styledSelect';
-@import '_navbar';
 @import '_vars';
 @import '_spinner';
 @import 'ui/_ui.scss';

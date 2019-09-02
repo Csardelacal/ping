@@ -103,6 +103,8 @@
 												</a>
 											<?php endforeach; ?>
 										</div>
+									
+										<div class="spacer" style="height: 30px"></div>
 									<?php endif; ?>
 
 									<?php $media = $notification->original()->attached; ?>
@@ -133,8 +135,18 @@
 									</a>
 									<a href="<?= url('ping', 'share', $notification->_id); ?>" class="ping-contextual-link for-shares">
 										<i class="im im-sync"></i>
-										<span><?= $notification->original()->shared->getQuery()->count() ?: 'Share' ?></span>
+										<span><?= $notification->original()->shared->getQuery()->count() ?></span>
 									</a>
+									<a href="<?= url('ping', 'delete', $notification->_id); ?>" data-visibility="<?= $u->getUsername() ?>" class="ping-contextual-link delete-link">
+										<i class="im im-x-mark-circle"></i>
+										<span>Delete</span>
+									</a>
+									<?php if ($notification->irt): ?>
+									<a href="<?= url('ping', 'disavow', $notification->_id); ?>" data-visibility="<?= $notification->irt->src->getUsername() ?>" class="ping-contextual-link delete-link">
+										<i class="im im-x-mark-circle"></i>
+										<span>Disavow</span>
+									</a>
+									<?php endif; ?>
 								</div>
 								<div class="span l1" style="text-align: right">
 									<p style="margin: 0;">

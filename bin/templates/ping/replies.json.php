@@ -13,8 +13,9 @@ foreach ($notifications as $n) {
 		return [
 			'id' => $e->_id,
 			'body' => $e->text,
+			'url'  => strval(url('poll', 'vote', $e->_id)->absolute()),
 			'responses' => $m->get('responses_' . $e->_id, function () use ($e) { return db()->table('poll\reply')->get('option', $e)->count(); }),
-			'selected'  => !!db()->table('poll\reply')->get('option', $e)->where('author', AuthorModel::get(db()->table('user')->get('_id', $authUser->id)->first()))->first()
+			'selected'  => $authUser? !!db()->table('poll\reply')->get('option', $e)->where('author', AuthorModel::get(db()->table('user')->get('_id', $authUser->id)->first()))->first() : false
 		];
 	});
 	

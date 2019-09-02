@@ -30,21 +30,21 @@
 				<img src="<?= $user->getAvatar(64) ?>" style="width: 100%; border: solid 1px #777; border-radius: 3px;">
 			</div>
 			<div class="span l9">
-				<div class="row l4">
+				<div class="row l4 ng-lr">
 					<div class="span l3">
 						<img src="<?= $user->getAvatar(64) ?>" class="not-desktop" style="width: 32px; border-radius: 50%; vertical-align: middle">
 						<a href="<?= url('user', 'show', $user->getUsername()) ?>" style="color: #000; font-weight: bold; font-size: .8em;"><?= $user->getUsername() ?></a>
 						<?php if ($ping->share): ?>
-							<a href="<?= url('ping', 'detail', $ping->share->_id) ?>" style="font-size: .8em; color: #777;"> from <?= $sso->getUser($ping->share->src->_id)->getUsername() ?></a>
+							<a href="<?= url('ping', 'detail', $ping->share->_id) ?>" style="font-size: .8rem; color: #777;"> from <?= $sso->getUser($ping->share->src->_id)->getUsername() ?></a>
 						<?php endif; ?>
 					</div>
-					<div class="span l1 desktop-only" style="text-align: right; font-size: .8em; color: #777;">
+					<div class="span l1 desktop-only" style="text-align: right; font-size: .8rem; color: #777;">
 						<?= Time::relative($ping->created) ?>
 					</div>
 				</div>
 
 
-				<div class="row l1 fluid" style="margin-top: 5px">
+				<div class="row l1 ng-lr fluid" style="margin-top: 5px">
 					<div class="span l1">
 						<p style="margin: 0;">
 							<?= Mention::idToMentions($ping->content) ?>
@@ -96,6 +96,10 @@
 						<a href="<?= url('ping', 'share', $ping->_id); ?>" class="ping-contextual-link for-shares">
 							<i class="im im-sync"></i>
 							<span><?= $ping->shared->getQuery()->count() ?: 'Share' ?></span>
+						</a>
+						<a href="<?= url('ping', 'delete', $ping->_id); ?>" data-visibility="<?= $user->getUsername() ?>" class="ping-contextual-link delete-link">
+							<i class="im im-x-mark-circle"></i>
+							<span>Delete</span>
 						</a>
 					</div>
 					<div class="span l1" style="text-align: right">
