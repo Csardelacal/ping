@@ -42,6 +42,13 @@
 		}());
 		</script>
 		
+		<?php if ($authUser) : ?>
+		<style type="text/css">
+			*[data-visibility] { display: none; }
+			*[data-visibility="<?= $authUser->username ?>"] { display: inline-block; }
+		</style>
+		<?php endif; ?>
+		
 	</head>
 	<body>
 		<script>
@@ -71,16 +78,12 @@
 		<div class="navbar">
 			<div class="left">
 				<span class="toggle-button dark"></span>
-				<a href="<?= url() ?>">
-					<img src="<?= spitfire\core\http\URL::asset('img/logo.png') ?>" width="17" style="margin-right: 5px; vertical-align: -3px">
-				</a>
 			</div>
 			<div class="right">
 				<?php if(isset($authUser) && $authUser): ?>
-					<span class="h-spacer" style="display: inline-block; width: 10px;"></span>
 					<div class="has-dropdown" style="display: inline-block">
 						<a href="<?= url('user', $authUser->username) ?>" class="app-switcher" data-toggle="app-drawer">
-							<img src="<?= $authUser->avatar ?>" width="24" height="24" style="border-radius: 50%; vertical-align: middle" >
+							<img src="<?= $authUser->avatar ?>" width="32" height="32" style="border-radius: 50%; vertical-align: middle" >
 						</a>
 						<div class="dropdown right-bound unpadded" data-dropdown="app-drawer">
 							<div class="app-drawer" id="app-drawer">
@@ -92,10 +95,15 @@
 							</div>
 						</div>
 					</div>
-					<span class="h-spacer" style="display: inline-block; width: 20px;"></span>
 				<?php else: ?>
 					<a class="menu-item" href="<?= url('account', 'login') ?>">Login</a>
 				<?php endif; ?>
+			</div>
+			<div class="center">
+				<a href="<?= url() ?>">
+					<img src="<?= spitfire\core\http\URL::asset('img/logo.png') ?>" height="32px">
+					<span class="desktop-only" style="vertical-align: .4rem">Ping</span>
+				</a>
 			</div>
 		</div>
 		

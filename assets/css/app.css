@@ -178,15 +178,6 @@ p.small {
   font-style: italic;
   cursor: pointer; }
 
-.profile .delete-link {
-  display: none;
-  font-weight: bold;
-  color: #900;
-  margin-left: 3px;
-  font-size: 12px; }
-.profile.mine .delete-link {
-  display: inline-block; }
-
 .pagination {
   list-style: none;
   text-align: center; }
@@ -203,56 +194,25 @@ p.small {
 
 .ping-contextual-link {
   color: #666;
-  margin: 0 10px;
+  margin: 0 8px;
   line-height: 14px; }
+  .ping-contextual-link:first-child {
+    margin-left: 0; }
   .ping-contextual-link:hover {
     color: #333; }
   .ping-contextual-link.liked {
     color: #A33; }
   .ping-contextual-link span {
     vertical-align: middle;
-    font-size: 1rem; }
+    font-size: .8rem;
+    font-weight: bold; }
   .ping-contextual-link .im {
-    vertical-align: middle;
-    font-size: .9rem;
-    line-height: .9rem; }
+    vertical-align: -.05rem;
+    font-size: .7rem;
+    line-height: .7rem; }
 
-.share-link {
-  color: #333;
-  font-weight: bold;
-  margin: 0 10px;
-  line-height: 14px;
-  font-size: 12px; }
-  .share-link:before {
-    content: '';
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    background: url("../img/share.png");
-    background-size: 12px 12px;
-    margin: 0 5px;
-    vertical-align: middle; }
-
-.like-link {
-  color: #333;
-  font-weight: bold;
-  margin: 0 10px;
-  line-height: 14px;
-  font-size: 12px; }
-  .like-link:before {
-    content: '';
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    background: url("../img/like.png");
-    background-size: 12px 12px;
-    margin: 0 5px;
-    vertical-align: middle; }
-
-.share-link, .reply-link, .like-link {
-  opacity: .6; }
-  .share-link:hover, .reply-link:hover, .like-link:hover {
-    opacity: 1; }
+.delete-link {
+  color: #A33; }
 
 #new-ping-content {
   font-size: 1.05em;
@@ -426,42 +386,6 @@ and open the template in the editor.
   .styled-select option {
     padding: 3px;
     border: none; }
-
-.navbar {
-  background: #FEFEFE;
-  box-shadow: 0 2px 2px #DDD;
-  border-bottom: 1px solid #CCC;
-  width: 100%;
-  white-space: nowrap;
-  overflow: visible;
-  z-index: 5; }
-  .navbar .left,
-  .navbar .right {
-    padding: 15px 10px; }
-  .navbar .right {
-    float: right;
-    text-align: right; }
-  .navbar .left {
-    float: left; }
-  .navbar a {
-    text-decoration: none;
-    color: #444;
-    font-weight: bold;
-    display: inline-block;
-    padding: 0 10px; }
-  .navbar .logo {
-    display: inline-block;
-    float: left;
-    border: none; }
-    .navbar .logo > * {
-      vertical-align: middle; }
-    .navbar .logo img {
-      height: 20px;
-      margin-right: 5px; }
-  .navbar:after {
-    clear: both;
-    content: '';
-    display: table; }
 
 /*
 The MIT License
@@ -788,85 +712,6 @@ form.condensed {
     form.condensed.standalone .message {
       border-left: none;
       border-right: none; }
-
-/*
-The MIT License
-
-Copyright 2018 César de la Cal Bretschneider <cesar@magic3w.com>.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-*/
-/* 
-    Created on : Jun 7, 2018, 2:39:55 PM
-    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
-*/
-/*
-The MIT License
-
-Copyright 2018 César de la Cal Bretschneider <cesar@magic3w.com>.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-*/
-/* 
-    Created on : Jun 7, 2018, 2:39:33 PM
-    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
-*/
-.toggle-button {
-  display: inline-block;
-  position: relative;
-  vertical-align: middle;
-  width: 38px;
-  height: 17px;
-  padding: 0px;
-  background-image: linear-gradient(180deg, #FFF 3px, transparent 3px, transparent 7px, #FFF 7px, #FFF 10px, transparent 10px, transparent 14px, #FFF 14px);
-  background-size: 20px 17px;
-  background-position: center center;
-  background-repeat: no-repeat; }
-  .toggle-button.hidden {
-    display: none; }
-  .toggle-button.medium {
-    background-image: linear-gradient(180deg, #777 3px, transparent 3px, transparent 7px, #777 7px, #777 10px, transparent 10px, transparent 14px, #777 14px); }
-    .toggle-button.medium:after, .toggle-button.medium:before {
-      background: #242424; }
-  .toggle-button.dark {
-    background-image: linear-gradient(180deg, #242424 3px, transparent 3px, transparent 7px, #242424 7px, #242424 10px, transparent 10px, transparent 14px, #242424 14px); }
-    .toggle-button.dark:after, .toggle-button.dark:before {
-      background: #242424; }
-  .toggle-button.narrow {
-    background-size: 3px 17px;
-    width: 20px; }
 
 /*
 The MIT License
@@ -1517,6 +1362,55 @@ and open the template in the editor.
     Created on : May 14, 2019, 11:15:57 AM
     Author     : César de la Cal Bretschneider <cesar@magic3w.com>
 */
+/*
+The MIT License
+
+Copyright 2019 César de la Cal Bretschneider <cesar@magic3w.com>.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+/*
+    Created on : Aug 30, 2019, 4:28:26 PM
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+.toggle-button {
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
+  cursor: pointer;
+  width: 26px;
+  height: 32px;
+  padding: 0px;
+  background-image: linear-gradient(180deg, #FFF 4px, transparent 4px, transparent 8px, #FFF 8px, #FFF 12px, transparent 12px, transparent 16px, #FFF 16px);
+  background-size: 25px 20px;
+  background-position: center center;
+  background-repeat: no-repeat; }
+  .toggle-button.hidden {
+    display: none; }
+  .toggle-button.dark {
+    background-image: linear-gradient(180deg, #777 4px, transparent 4px, transparent 8px, #777 8px, #777 12px, transparent 12px, transparent 16px, #777 16px); }
+    .toggle-button.dark:after, .toggle-button.dark:before {
+      background: #242424; }
+  .toggle-button.narrow {
+    background-size: 3px 17px;
+    width: 20px; }
+
 body {
   overflow-x: hidden; }
 
@@ -1576,28 +1470,6 @@ body {
 
 .sidebar:hover {
   overflow: auto; }
-
-.toggle-button {
-  display: inline-block;
-  position: relative;
-  vertical-align: middle;
-  cursor: pointer;
-  width: 38px;
-  height: 17px;
-  padding: 0px;
-  background-image: linear-gradient(180deg, #FFF 3px, transparent 3px, transparent 7px, #FFF 7px, #FFF 10px, transparent 10px, transparent 14px, #FFF 14px);
-  background-size: 20px 17px;
-  background-position: center center;
-  background-repeat: no-repeat; }
-  .toggle-button.hidden {
-    display: none; }
-  .toggle-button.dark {
-    background-image: linear-gradient(180deg, #242424 3px, transparent 3px, transparent 7px, #242424 7px, #242424 10px, transparent 10px, transparent 14px, #242424 14px); }
-    .toggle-button.dark:after, .toggle-button.dark:before {
-      background: #242424; }
-  .toggle-button.narrow {
-    background-size: 3px 17px;
-    width: 20px; }
 
 .contains-sidebar {
   display: none;
@@ -1720,27 +1592,28 @@ and open the template in the editor.
   z-index: 9; }
 
 .navbar {
-  background: #FEFEFE;
-  box-shadow: 0 2px 2px #DDD;
-  border-bottom: 1px solid #CCC;
   width: 100%;
   white-space: nowrap;
   overflow: visible;
+  padding: 0 .4rem;
   z-index: 5; }
   .navbar .left,
-  .navbar .right {
-    padding: 10px 6.6666666667px; }
+  .navbar .right,
+  .navbar .center {
+    padding: 20px 0; }
   .navbar .right {
     float: right;
     text-align: right; }
   .navbar .left {
     float: left; }
+  .navbar .center {
+    text-align: center; }
   .navbar a {
     text-decoration: none;
     color: #444;
     font-weight: bold;
     display: inline-block;
-    padding: 0 6.6666666667px; }
+    padding: 0 13.3333333333px; }
   .navbar .logo {
     display: inline-block;
     float: left;
@@ -1748,7 +1621,7 @@ and open the template in the editor.
     .navbar .logo > * {
       vertical-align: middle; }
     .navbar .logo img {
-      height: 30px;
+      height: 10px;
       width: auto;
       margin-right: 5px; }
   .navbar:after {

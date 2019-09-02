@@ -4,7 +4,7 @@
 	branch = develop
 [submodule "m3.js"]
 	path = assets/js/m3
-	url = https://github.com/Csardelacal/m3.js.git
+	url = ssh://git@phabricator.magic3w.com/source/M3JS.git
 [submodule "underscoreSCSS"]
 	path = assets/scss/_
-	url = https://github.com/Csardelacal/underscoreSCSS.git
+	url = ssh://git@phabricator.magic3w.com/source/underscoreSCSS.git

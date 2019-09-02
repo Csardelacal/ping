@@ -27,18 +27,18 @@
 					<img data-lysine-src="{{avatar}}" style="width: 100%; border: solid 1px #777; border-radius: 3px;">
 				</div>
 				<div class="span l9">
-					<div class="row l4">
+					<div class="row l4 ng-lr">
 						<div class="span l3">
 							<img class="mobile-only" data-lysine-src="{{avatar}}" style="width: 16px; border: solid 1px #777; border-radius: 3px; vertical-align: middle">
-							<a data-for="userName" data-lysine-href="{{userURL}}" style="color: #000; font-weight: bold; font-size: .8em;"></a>
+							<a data-for="userName" data-lysine-href="{{userURL}}" style="color: #000; font-weight: bold; font-size: .8rem;"></a>
 						</div>
-						<div class="span l1 desktop-only" style="text-align: right; font-size: .8em; color: #777;" data-for="timeRelative"></div>
+						<div class="span l1 desktop-only" style="text-align: right; font-size: .8rem; color: #777;" data-for="timeRelative"></div>
 					</div>
 
 
 
-					<div class="row1" style="margin-top: 5px">
-						<div class="span1">
+					<div class="row l1 ng-lr" style="margin-top: 5px">
+						<div class="span l1">
 							<p style="margin: 0;" style="color: #000;" data-for="notificationContent"></p>
 
 
@@ -109,6 +109,10 @@
 							<a data-lysine-href="<?= url('ping', 'share'); ?>{{id}}" class="ping-contextual-link for-shares">
 								<i class="im im-sync"></i>
 								<span  data-for="shareCount"></span>
+							</a>
+							<a data-lysine-href="<?= url('ping', 'delete'); ?>{{id}}" data-lysine-data-visibility="{{userName}}" class="ping-contextual-link delete-link">
+								<i class="im im-x-mark-circle"></i>
+								<span>Delete</span>
 							</a>
 						</div>
 						<div class="span l1" style="text-align: right">

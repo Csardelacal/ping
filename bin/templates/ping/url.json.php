@@ -7,8 +7,18 @@ $n = null;
 
 foreach ($notifications as $n) {
 	
-	$user  = $sso->getUser($n->src->user->authId);
+	/*
+	 * TEMPORARY FIX. When a user is no longer in the database, this iteration will
+	 * fail, because the user is no longer there. This is not an elegant solution 
+	 * but it patches the app for now.
+	 */
+	try {
+		$user  = $sso->getUser($n->src->user->authId);
+	} catch (\Exception$e) {
+		continue;
+	}
 	
+	if (!$user) { continue; }
 	
 	$poll = db()->table('poll\option')->get('ping', $n->original())->all()->each(function ($e) use ($authUser) {
 		$m = new spitfire\cache\MemcachedAdapter();
@@ -50,7 +60,7 @@ foreach ($notifications as $n) {
 					],
 					'user'         => Array(
 						'id'        => $n->src->user->authId,
-						'url'       => strval(url('user', $sso->getUser($n->src->user->authId)->getUsername())->absolute()),
+						'url'       => strval(url('user', $user->getUsername())->absolute()),
 						'username'  => $user->getUsername(),
 						'avatar'    => $user->getAvatar(128),
 					)
