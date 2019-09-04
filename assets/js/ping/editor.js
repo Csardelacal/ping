@@ -47,7 +47,7 @@ depend([
 				var form = parent(self, function (e) { return e.tagName.toLowerCase() === 'form';});
 
 				self.style.height = height + 'px';
-				form.querySelector('.new-ping-character-count').innerHTML = 250 - length;
+				form.querySelector('.new-ping-character-count').innerHTML = 500 - length;
 			});
 		}, 1);
 

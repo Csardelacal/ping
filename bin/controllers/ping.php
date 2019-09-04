@@ -29,7 +29,7 @@ class PingController extends AppController
 	 * 
 	 * @validate >> POST#src (positive number)
 	 * @validate >> POST#target (positive number)
-	 * @validate >> POST#msg (required string length[0, 250])
+	 * @validate >> POST#msg (required string length[0, 500])
 	 * @validate >> POST#url (string url)
 	 * @validate >> POST#irt (positive number)
 	 * 
