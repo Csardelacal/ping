@@ -21,21 +21,35 @@ class CommentsImporter extends Importer
 	public function process($data) {
 		$user = db()->table('user')->get('_id', $data['userID'])->first();
 		$author = \AuthorModel::get($user);
-
-		$ping = db()->table('ping')->newRecord();
-		$ping->src = $author;
-		$ping->irt = db()->table('ping')->get('_id', substr($data['socialID'], 3))->first();
-		$ping->content = substr($data['content'], 0, 500);
-		$ping->created = strtotime($data['created']);
-		$ping->store();
+		
+		$ping = db()->table('ping')
+			->get('irt', db()->table('ping')->get('_id', substr($data['socialID'], 3))->first())
+			->where('content', substr($data['content'], 0, 500))
+			->first();
 
 		if (array_key_exists('responses', $data)) {
 			foreach ($data['responses'] as $raw) {
-				$response = db()->table('ping')->newRecord();
-				$response->irt = $ping;
-				$response->content = substr($raw['content'], 0, 500);
-				$response->created = strtotime($raw['created']);
+				
+				
+				$user = db()->table('user')->get('_id', $raw['user'])->first();
+				$author = \AuthorModel::get($user);
+				
+				
+				$response = db()->table('ping')
+					->get('irt', $ping)
+					->where('content', substr($raw['content'], 0, 500))
+					->first();
+				
+				if (!$response) {
+					console()->error('Did not find record ')->ln();
+					continue;
+				}
+				
+				$response->src = $author;
+				$response->deleted = null;
 				$response->store();
+				
+				console()->success('Fixed record ' . $response->_id)->ln();
 			}
 		}
 	}

@@ -35,7 +35,7 @@ depend(['m3/core/request'], function (request) {
 			var fd = new FormData();
 			fd.append('file', payload);
 			
-			var uri = this._ctx.endpoint().trim('/') + '/media/upload.json?token=' + encodeURIComponent(this._ctx.token());
+			var uri = this._ctx.endpoint().replace(/\/$/, '') + '/media/upload.json?token=' + encodeURIComponent(this._ctx.token());
 
 			request(uri, fd)
 				.then(JSON.parse)

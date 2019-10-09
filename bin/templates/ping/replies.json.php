@@ -1,5 +1,8 @@
 <?php
 
+current_context()->response->getHeaders()->set('Access-Control-Allow-Origin', '*');
+current_context()->response->getHeaders()->set('Access-Control-Allow-Headers', 'Content-Type');
+
 $payload = Array();
 
 foreach ($notifications as $n) {
@@ -35,8 +38,8 @@ foreach ($notifications as $n) {
 		'shares'       => $n->shared->getQuery()->count(),
 		'replies'      => [
 			'count'  => $n->replies->getQuery()->count(),
-			'sample' => $n->replies->getQuery()->setOrder('created', 'DESC')->range(0, 5)->each(function ($n) use ($sso) {
-				$user  = $sso->getUser($n->src->user->authId);
+			'sample' => $n->replies->getQuery()->where('deleted', NULL)->setOrder('created', 'DESC')->range(0, 5)->each(function ($n) use ($sso) {
+				$user  = $sso->getUser($n->src->user->_id);
 				return [
 					'id'           => $n->_id,
 					'url'          => $n->url,
@@ -49,7 +52,7 @@ foreach ($notifications as $n) {
 					],
 					'user'         => Array(
 						'id'        => $n->src->user->authId,
-						'url'       => strval(url('user', $sso->getUser($n->src->user->authId)->getUsername())->absolute()),
+						'url'       => strval(url('user', $user->getUsername())->absolute()),
 						'username'  => $user->getUsername(),
 						'avatar'    => $user->getAvatar(128),
 					)

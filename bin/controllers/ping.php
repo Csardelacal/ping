@@ -372,6 +372,7 @@ class PingController extends AppController
 		}
 		
 		$query->where('share', null);
+		$query->where('deleted', null);
 		$query->setOrder('_id', 'desc');
 		
 		if (isset($_GET['until'])) { $query->addRestriction('_id', $_GET['until'], '<'); }

@@ -37,7 +37,7 @@ depend(['m3/core/request'], function (request) {
 	Query.prototype = {
 		
 		get : function (id, callback) { 
-			var uri = this.ctx.endpoint().trim('/') + '/ping/detail/' + id +'.json?token=' + encodeURIComponent(this.ctx.token());
+			var uri = this.ctx.endpoint().replace(/\/$/, '') + '/ping/detail/' + id +'.json?token=' + encodeURIComponent(this.ctx.token());
 			var ctx = this.ctx;
 			
 			request(uri, null)
@@ -52,7 +52,7 @@ depend(['m3/core/request'], function (request) {
 		},
 		
 		author : function (author, callback, offset) { 
-			var uri = this.ctx.endpoint().trim('/') + '/user/show/' + author + '.json' + (offset !== undefined? '?until=' + offset : '');
+			var uri = this.ctx.endpoint().replace(/\/$/, '') + '/user/show/' + author + '.json' + (offset !== undefined? '?until=' + offset : '');
 			var ctx = this.ctx;
 			var slf = this;
 			
@@ -75,7 +75,7 @@ depend(['m3/core/request'], function (request) {
 		},
 		
 		replies : function (parent, callback, offset) { 
-			var uri = this.ctx.endpoint().trim('/') + '/ping/replies/' + parent + '.json' + (offset !== undefined? '?until=' + offset : '');
+			var uri = this.ctx.endpoint().replace(/\/$/, '') + '/ping/replies/' + parent + '.json' + (offset !== undefined? '?until=' + offset : '');
 			var ctx = this.ctx;
 			var slf = this;
 			

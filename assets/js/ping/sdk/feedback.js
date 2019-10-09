@@ -32,7 +32,7 @@ depend(['m3/core/request'], function (request) {
 			
 		push : function (pingId, reaction, cb) {
 
-			var uri = this._ctx.endpoint().trim('/') + '/feedback/push/' + pingId +'.json?reaction=' + reaction + 'token=' + encodeURIComponent(this._ctx.token());
+			var uri = this._ctx.endpoint().replace(/\/$/, '') + '/feedback/push/' + pingId +'.json?reaction=' + reaction + 'token=' + encodeURIComponent(this._ctx.token());
 
 			request(uri, null)
 				.then(JSON.parse)
