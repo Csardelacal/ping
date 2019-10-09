@@ -74,7 +74,7 @@ depend(['m3/core/request'], function (request) {
 			 * soon as it is, this should transparently become operational - only
 			 * breaking non compliant applications.
 			 */
-			var uri = this._ctx.endpoint().trim('/') + '/feed.json?token=' + this._ctx.token() + (offset !== undefined? '&until=' + offset : '');
+			var uri = this._ctx.endpoint().replace(/\/$/, '') + '/feed.json?token=' + this._ctx.token() + (offset !== undefined? '&until=' + offset : '');
 			var ctx = this._ctx;
 			var slf = this;
 			
