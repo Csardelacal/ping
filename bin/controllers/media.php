@@ -8,12 +8,19 @@ class MediaController extends AppController
 	
 	/**
 	 * 
-	 * @validate POST#file (required)
 	 * @throws PublicException
 	 */
 	public function upload() {
 		
-		if ($_POST['file'] instanceof Upload) {
+		current_context()->response->getHeaders()->set('Access-Control-Allow-Origin', '*');
+		current_context()->response->getHeaders()->set('Access-Control-Allow-Headers', 'Content-Type');
+		
+		if (!$this->request->isPost()) {
+			$this->response->setBody('This endpoint accepts only POST requests');
+			return;
+		}
+		
+		if (isset($_POST['file']) && $_POST['file'] instanceof Upload) {
 			#Store the file and process thumbs
 			$local = $_POST['file']->store();
 			$source = null;

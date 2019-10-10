@@ -47,6 +47,7 @@ depend(['queue', 'm3/core/array/iterate' ], function (Queue, iterate) {
 				var meta = undefined;
 				
 				var fd = new FormData();
+				console.log(e);
 				fd.append('file', e);
 				
 				/*

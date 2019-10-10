@@ -61,14 +61,21 @@ class FeedController extends AppController
 				->where('processed', true)
 				->where('deleted', null)
 				->setOrder('created', 'DESC');
+
+		$atme = db()->table('ping')->get('target__id', $me->_id)
+				->where('processed', true)
+				->where('deleted', null)
+				->setOrder('created', 'DESC');
 		
 		if (isset($_GET['until'])) {
 			$query->where('_id', '<', $_GET['until']);
 			$mine->where('_id', '<', $_GET['until']);
+			$atme->where('_id', '<', $_GET['until']);
 		}
 
 		$notifications = $query->range(0, 5);
 		$mine->where('created', '>', $notifications->last()->created);
+		$atme->where('created', '>', $notifications->last()->created);
 		
 		
 		
@@ -77,7 +84,7 @@ class FeedController extends AppController
 		$dbuser->store();
 
 		$this->view->set('me', $me);
-		$this->view->set('notifications', $notifications->add($mine->range(0, 100)->toArray())->sort(function ($a, $b) { return $a->created < $b->created? 1 : -1; }));
+		$this->view->set('notifications', $notifications->add($mine->range(0, 100)->toArray())->add($atme->range(0, 100)->toArray())->sort(function ($a, $b) { return $a->created < $b->created? 1 : -1; }));
 		
 		if (isset($_GET['debug'])) {
 			print_r(spitfire()->getMessages());

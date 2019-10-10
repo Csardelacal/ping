@@ -85,7 +85,7 @@ depend([
 	 * This listener "catches" the user's intention to 
 	 */
 	delegate('submit', function (e) { return e.classList.contains('ping-editor'); }, function (e, found) {
-		request(found.action.trim('/') + '.json', new FormData(found))
+		request(found.getAttribute('data-action-api'), new FormData(found))
 		.then(function (resp) {
 			//Clean up the editor and refresh the pings on the page.
 			window.location.reload();
@@ -150,7 +150,7 @@ depend([
 				return;
 			}
 			
-			request('/ping/media/upload.json', fd)
+			request( (data.endpoint || '/') + 'media/upload.json', fd)
 			.then(function (response) {
 				var json = JSON.parse(response);
 				v.set('id', json.id + ':' + json.secret);
