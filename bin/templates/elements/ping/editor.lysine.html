@@ -1,7 +1,7 @@
 
 <!-- This should not have any ID, since ID are expected to be unique-->
 <div data-lysine-view="ping-editor">
-	<form method="POST" data-lysine-action="{{endpoint}}ping/push" enctype="multipart/form-data" class="ping-editor">
+	<form method="POST" data-lysine-action="{{endpoint}}ping/push"  data-lysine-data-action-api="{{endpoint}}ping/push.json" enctype="multipart/form-data" class="ping-editor">
 		<input type="hidden" name="target" data-lysine-value="{{target}}" data-condition="null(target) == false">
 		<input type="hidden" name="irt" data-lysine-value="{{irt}}" data-condition="null(irt) == false">
 
