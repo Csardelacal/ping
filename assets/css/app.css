@@ -859,6 +859,40 @@ THE SOFTWARE.
 	 fallbacks while the JS is either not loaded, or failed loading.
 */
 /*
+The MIT License
+
+Copyright 2019 César de la Cal Bretschneider <cesar@magic3w.com>.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+/*
+    Created on : Aug 20, 2019, 5:06:55 PM
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+html {
+  /*
+   * Resets the system to use a known good system font.
+   * See: https://furbo.org/2018/03/28/system-fonts-in-css/
+   */
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif; }
+
+/*
 To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
 and open the template in the editor.
@@ -1742,6 +1776,29 @@ input, textarea {
 textarea {
   resize: vertical; }
 
+input[type="text"],
+textarea {
+  border-radius: 3px;
+  border: solid 1px #CCC;
+  box-shadow: 0 0 0 transparent;
+  transition: box-shadow .15s ease; }
+  input[type="text"]:focus,
+  textarea:focus {
+    border-color: #279af1;
+    box-shadow: 0px 0px 2px #279af1;
+    outline: none; }
+
+select {
+  border-radius: 3px;
+  border: solid 1px #CCC;
+  box-shadow: 0 0 0 transparent;
+  transition: box-shadow .15s ease;
+  background: #FFF; }
+  select:focus {
+    border-color: #279af1;
+    box-shadow: 0px 0px 2px #279af1;
+    outline: none; }
+
 fieldset {
   border: none;
   padding: 0;
@@ -1752,7 +1809,7 @@ legend {
   margin-bottom: .3rem; }
 
 input[type="submit"]:not(.disabled), button:not(.disabled) {
-  curosr: pointer; }
+  cursor: pointer; }
 
 /*
 The MIT License
@@ -1784,6 +1841,8 @@ THE SOFTWARE.
 .frm-ctrl {
   display: block;
   width: 100%; }
+  .frm-ctrl.right {
+    text-align: right; }
 
 .frm-group {
   margin-bottom: 1rem; }
@@ -1795,7 +1854,185 @@ THE SOFTWARE.
     display: inline-block;
     width: auto; }
 
-input[type="text"] {
+.frm-lbl {
+  padding: .75rem .4rem;
+  color: #444;
+  font-size: .9rem; }
+
+input[type="text"].frm-ctrl,
+textarea.frm-ctrl {
   padding: .75rem .5rem; }
+
+/*
+ * Checkbox specific styling
+ */
+input[type="checkbox"].frm-ctrl {
+  display: none; }
+
+span.frm-ctrl-chk {
+  display: inline-block;
+  width: 2rem;
+  height: 1.3rem;
+  border-radius: .65rem;
+  background-color: #CCC;
+  position: relative;
+  margin-right: .2rem;
+  vertical-align: -.4rem;
+  transition: background-color .3s ease; }
+  span.frm-ctrl-chk:before {
+    position: absolute;
+    top: .15rem;
+    left: .15rem;
+    height: 1rem;
+    width: 1rem;
+    background: #FFF;
+    content: '';
+    border-radius: 50%;
+    transition: left .3s ease; }
+
+input[type="checkbox"].frm-ctrl:checked + span.frm-ctrl-chk {
+  background-color: #56a1d6; }
+  input[type="checkbox"].frm-ctrl:checked + span.frm-ctrl-chk:before {
+    left: .9rem; }
+
+/*
+ * Radio specific styling
+ */
+input[type="radio"].frm-ctrl {
+  display: none; }
+
+span.frm-ctrl-rad {
+  display: inline-block;
+  border: solid .05rem #777;
+  width: 1.3rem;
+  height: 1.3rem;
+  border-radius: .65rem;
+  background-color: #DDD;
+  position: relative;
+  margin-right: .2rem;
+  vertical-align: -.4rem;
+  transition: background-color .3s ease; }
+  span.frm-ctrl-rad:before {
+    position: absolute;
+    background: #FFF;
+    top: .65rem;
+    left: .65rem;
+    height: .0rem;
+    width: .0rem;
+    content: '';
+    border-radius: 50%;
+    transition: left .3s ease, top .3s ease, width .3s ease, height .3s ease, opacity .3s ease; }
+
+input[type="radio"].frm-ctrl:checked + span.frm-ctrl-rad {
+  background-color: #56a1d6; }
+  input[type="radio"].frm-ctrl:checked + span.frm-ctrl-rad:before {
+    top: .3rem;
+    left: .3rem;
+    height: .6rem;
+    width: .6rem;
+    background-color: #FFF;
+    color: #FFF;
+    line-height: .9rem;
+    font-size: .9rem;
+    text-align: center;
+    font-weight: bold; }
+
+/*
+The MIT License
+
+Copyright 2019 César de la Cal Bretschneider <cesar@magic3w.com>.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+/*
+    Created on : Aug 22, 2019, 4:19:27 PM
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+select.frm-ctrl {
+  padding: .75rem .4rem;
+  background-repeat: no-repeat;
+  background-position: center right 1.1rem;
+  background-size: .8rem .8rem;
+  padding-right: 2.4rem;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E"); }
+
+/*
+The MIT License
+
+Copyright 2019 César de la Cal Bretschneider <cesar@magic3w.com>.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+/*
+    Created on : Aug 22, 2019, 4:33:17 PM
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+.frm-ctrl-grp {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  transition: box-shadow .2s ease; }
+  .frm-ctrl-grp .frm-ctrl {
+    width: 1px;
+    flex-grow: 1;
+    flex-shrink: 1;
+    border-radius: 0;
+    border-left-style: none;
+    border-right-style: none; }
+    .frm-ctrl-grp .frm-ctrl:first-child {
+      border-radius: 3px 0 0 3px;
+      border-left-style: solid; }
+    .frm-ctrl-grp .frm-ctrl:last-child {
+      border-radius: 0 3px 3px 0;
+      border-right-style: solid; }
+    .frm-ctrl-grp .frm-ctrl.fixed-width {
+      flex-grow: 0;
+      flex-shrink: 0; }
+    .frm-ctrl-grp .frm-ctrl.narrow {
+      width: 7rem; }
+    .frm-ctrl-grp .frm-ctrl.medium {
+      width: 12rem; }
+    .frm-ctrl-grp .frm-ctrl:focus {
+      box-shadow: none;
+      border-color: #CCC; }
+  .frm-ctrl-grp:focus-within {
+    box-shadow: 0px 0px 2px #279af1; }
+    .frm-ctrl-grp:focus-within .frm-ctrl {
+      border-color: #279af1; }
 
 /*# sourceMappingURL=app.css.map */

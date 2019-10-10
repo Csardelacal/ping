@@ -296,7 +296,7 @@ class PingController extends AppController
 		 * the contents any more. The ping will be deleted sooner or later by the 
 		 * garbage collector.
 		 */
-		if (!$ping || $ping->deleted) { throw new PublicException('Ping does not exist', 404);}
+		if (!$ping || $ping->deleted || !$ping->processed) { throw new PublicException('Ping does not exist', 404);}
 		if ($ping->target && $ping->src->_id !== $me->_id && $ping->target->_id !== $me->_id) { throw new PublicException('Ping does not exist', 404); }
 		
 		/*
@@ -359,8 +359,8 @@ class PingController extends AppController
 		 * me and the ones directed at me.
 		 */
 		if ($ping->target) {
-			$g->addRestriction('target', AuthorModel::get(db()->table('user')->get('authId', $this->user? $this->user->id : null)->first()));
-			$g->addRestriction('src', AuthorModel::get(db()->table('user')->get('authId', $this->user->id)->first()));
+			$g->where('target', AuthorModel::get(db()->table('user')->get('authId', $this->user? $this->user->id : null)->first()));
+			$g->where('src', AuthorModel::get(db()->table('user')->get('authId', $this->user->id)->first()));
 		}
 		/*
 		 * Otherwise we include the ones that were not sent to a specifid user.
@@ -372,6 +372,7 @@ class PingController extends AppController
 		}
 		
 		$query->where('share', null);
+		$query->where('processed', '!=',  null);
 		$query->where('deleted', null);
 		$query->setOrder('_id', 'desc');
 		
