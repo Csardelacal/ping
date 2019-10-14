@@ -34,7 +34,7 @@ $core->feed->push->after()->do(function ($ping) use ($core) {
 	$notification->target  = $ping->irt->src->user;
 	$notification->content = "replied to your ping";
 	$notification->type    = NotificationModel::TYPE_COMMENT;
-	$notification->url     = strval(url('ping', 'detail', $notification->_id)->absolute());
+	$notification->url     = strval(url('ping', 'detail', $ping->_id)->absolute());
 
 	$core->activity->push->do(function ($notification) {
 		$notification->store();
