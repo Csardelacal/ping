@@ -33,7 +33,7 @@
 					<?php elseif (!empty($media) && !empty($url)): ?>
 					<a href="<?= $url ?>"><img src="<?= $media ?>" style="width: 100%"></a>
 					<?php elseif(empty($url) && empty($media)): ?>
-					<a href="<?= url('user', $src->user->displayName)->absolute() ?>" style="background: #3167f1; color: #FFF; border-radius: 5px; padding: 10px; text-decoration: none; font-weight: bold;">Reply to <?= $src->displayName ?></a>
+					<a href="<?= url('user', $src->getDisplayName())->absolute() ?>" style="background: #3167f1; color: #FFF; border-radius: 5px; padding: 10px; text-decoration: none; font-weight: bold;">Reply to <?= $src->displayName ?></a>
 					<?php endif; ?>
 				</p>
 			</div>
