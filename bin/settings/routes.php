@@ -36,6 +36,7 @@ $router->request('', function (Parameters$params, Parameters$server, $extension)
 	$args = array_values($params->getUnparsed());
 	
 	if (isset($args[1])) { return false; }
+	if (!isset($args[0])) { return false; }
 	if (!Strings::startsWith($args[0], '@')) { return false; }
 	
 	return new Path(spitfire(), ['user'], 'show', $args[0], $extension);
