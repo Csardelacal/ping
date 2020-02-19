@@ -50,22 +50,24 @@
 		<div class="spacer" style="height: 10px;"></div>
 		
 		<div class="row l2 ng-lr">
-			<div class="span l1" data-lysine-view="whotofollow">
-				<div class="material unpadded user-card">
-					<a data-lysine-href="<?= url('user', 'show', '{{username}}') ?>?ref=whotofollow">
-						<div class="banner" style="height: 127px">
-							<img src="about:blank" data-lysine-src="{{banner}}" width="275" height="64">
-						</div>
-						<div class="padded" style="margin-top: -35px;">
-							<img class="avatar" data-lysine-src="{{avatar}}">
-							<div class="user-info">
-								<span class="user-name" data-for="username"></span>
-								<span class="user-bio"><span data-for="followers"></span> followers</span>
+			<template data-lysine-view="whotofollow">
+				<div class="span l1">
+					<div class="material unpadded user-card">
+						<a data-lysine-href="<?= url('user', 'show', '{{username}}') ?>?ref=whotofollow">
+							<div class="banner" style="height: 127px">
+								<img src="about:blank" data-lysine-src="{{banner}}" width="275" height="64">
 							</div>
-						</div>
-					</a>
+							<div class="padded" style="margin-top: -35px;">
+								<img class="avatar" data-lysine-src="{{avatar}}">
+								<div class="user-info">
+									<span class="user-name" data-for="username"></span>
+									<span class="user-bio"><span data-for="followers"></span> followers</span>
+								</div>
+							</div>
+						</a>
+					</div>
 				</div>
-			</div>
+			</template>
 
 		</div>
 		<div class="spacer" style="height: 30px;"></div>

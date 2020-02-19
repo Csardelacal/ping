@@ -43,32 +43,34 @@
 			Nothing here yet. Follow or interact with users to build your feed!
 		</div>
 		<?php endif; ?>
-
-		<div data-lysine-view="ping">
-			<div class="material">
-				<div class="row l10 fluid">
-					<div class="span l1" style="text-align: center">
-						<div class="spacer" style="height: 5px"></div>
-						<a data-lysine-href="{{userURL}}" class="notification-avatar">
-							<img data-lysine-src="{{avatar}}" style="width: 32px; border: solid 1px #777; border-radius: 50%; vertical-align: middle">
-							<span class="activity-type other" data-lysine-class="activity-type {{type}}"></span>
-						</a>
-					</div>
-					<div class="span l7">
-						<div>
-							<a data-for="userName" data-lysine-href="{{userURL}}" style="color: #555; font-size: .8rem;"></a>
-							<span data-for="userName" style="color: #555; font-size: .8rem;"></span>
+		
+		<template data-lysine-view="ping">
+			<div>
+				<div class="material">
+					<div class="row l10 fluid">
+						<div class="span l1" style="text-align: center">
+							<div class="spacer" style="height: 5px"></div>
+							<a data-lysine-href="{{userURL}}" class="notification-avatar">
+								<img data-lysine-src="{{avatar}}" style="width: 32px; border: solid 1px #777; border-radius: 50%; vertical-align: middle">
+								<span class="activity-type other" data-lysine-class="activity-type {{type}}"></span>
+							</a>
 						</div>
-						<div>
-							<a data-lysine-href="{{notificationURL}}" style="color: #000; padding: .2rem 0" data-for="notificationContent"></a>
+						<div class="span l7">
+							<div>
+								<a data-for="userName" data-lysine-href="{{userURL}}" style="color: #555; font-size: .8rem;"></a>
+								<span data-for="userName" style="color: #555; font-size: .8rem;"></span>
+							</div>
+							<div>
+								<a data-lysine-href="{{notificationURL}}" style="color: #000; padding: .2rem 0" data-for="notificationContent"></a>
+							</div>
 						</div>
+						<div class="span l2 desktop-only" style="color: #666; font-size: .8rem; text-align: right" data-for="timeRelative"></div>
 					</div>
-					<div class="span l2 desktop-only" style="color: #666; font-size: .8rem; text-align: right" data-for="timeRelative"></div>
 				</div>
-			</div>
 
-			<div class="spacer" style="height: 10px;"></div>
-		</div>
+				<div class="spacer" style="height: 10px;"></div>
+			</div>
+		</template>
 		
 		<div class="spacer" style="height: 50px;"></div>
 	</div>
