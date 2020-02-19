@@ -275,5 +275,8 @@ depend(['ping/ping', 'm3/core/lysine'], function(SDK, Lysine) {
 </script>
 
 <script type="text/javascript">
-depend(['ping/feedback'], function (baseurl) { baseurl('<?= spitfire()->baseUrl() ?>', '<?= (isset($_GET['token']) ? $this->sso->makeToken($_GET['token']) : \spitfire\io\session\Session::getInstance()->getUser())->getId() ?>'); });
+depend(['ping/feedback'], function (baseurl) { 
+	baseurl(
+		'<?= spitfire()->baseUrl() ?>', 
+		'<?= $token? $token->getId() : null ?>'); });
 </script>
