@@ -278,5 +278,5 @@ depend(['ping/ping', 'm3/core/lysine'], function(SDK, Lysine) {
 depend(['ping/feedback'], function (baseurl) { 
 	baseurl(
 		'<?= spitfire()->baseUrl() ?>', 
-		'<?= $token? $token->getId() : null ?>'); });
+		'<?= $token? $token : null ?>'); });
 </script>

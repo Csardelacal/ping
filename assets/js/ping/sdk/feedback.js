@@ -30,9 +30,20 @@ depend(['m3/core/request'], function (request) {
 	
 	Feedback.prototype = {
 			
+		retrieve : function (pingId, cb) {
+
+			var uri = this._ctx.endpoint().replace(/\/$/, '') + '/feedback/retrieve/' + pingId +'.json?token=' + encodeURIComponent(this._ctx.token());
+
+			request(uri, null)
+				.then(JSON.parse)
+				.then(function (resp) {
+					cb(resp);
+				});
+		},
+		
 		push : function (pingId, reaction, cb) {
 
-			var uri = this._ctx.endpoint().replace(/\/$/, '') + '/feedback/push/' + pingId +'.json?reaction=' + reaction + 'token=' + encodeURIComponent(this._ctx.token());
+			var uri = this._ctx.endpoint().replace(/\/$/, '') + '/feedback/push/' + pingId +'.json?reaction=' + reaction + '&token=' + encodeURIComponent(this._ctx.token());
 
 			request(uri, null)
 				.then(JSON.parse)
