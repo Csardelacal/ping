@@ -9,6 +9,7 @@ class Token
 	private $token;
 	private $expires;
 	private $redirect;
+	private $cache = null;
 	
 	public function __construct($sso, $token, $expires, $redirect) {
 		$this->sso = $sso;
@@ -26,16 +27,15 @@ class Token
 	}
 	
 	public function getTokenInfo() {
-		static $cache = null;
 		
-		if ($cache !== null) { return $cache; }
+		if ($this->cache !== null) { return $this->cache; }
 		
 		$response = file_get_contents($this->sso->getEndpoint() . '/auth/index/' . $this->token . '.json?signature=' . urlencode($this->sso->makeSignature()));
 		
 		if (!isset($http_response_header))            { throw new Exception('SSO connection failed'); }
 		if (!strstr($http_response_header[0], '200')) { throw new Exception('SSO error'); }
 		
-		return $cache = json_decode($response);
+		return $this->cache = json_decode($response);
 	}
 	
 	public function isAuthenticated() {
