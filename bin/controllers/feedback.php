@@ -60,7 +60,9 @@ class FeedBackController extends AppController
 				break;
 		}
 		
-		$record->store();
+		$this->core->feedback->push->do(function ($feedback) {
+			$feedback->store();
+		}, $record);
 		
 		$this->view->set('feedback', $record);
 	}

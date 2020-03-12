@@ -17,6 +17,13 @@ abstract class AppController extends Controller
 	 * @var SSO
 	 */
 	public $sso;
+	
+	/**
+	 *
+	 * @var \hook\Hook
+	 */
+	public $hook;
+	
 	protected $user;
 	
 	/**
@@ -46,6 +53,9 @@ abstract class AppController extends Controller
 		#Create a user
 		$this->sso     = new SSOCache(Environment::get('SSO'));
 		$this->token   = isset($_GET['token'])? $this->sso->makeToken($_GET['token']) : $session->getUser();
+		
+		#Check if hook is enabled and start it
+		$this->hook    = Environment::get('hook.url') ? new \hook\Hook(Environment::get('hook.url'), $this->sso->makeSignature(Environment::get('hook.id'))) : null;
 		
 		#Fetch the user from the cache if necessary
 		$this->user  = $this->token && $this->token instanceof Token? $cache->get('ping_token_' . $this->token->getId(), function () { 
