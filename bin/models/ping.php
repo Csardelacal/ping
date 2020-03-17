@@ -34,6 +34,7 @@ class PingModel extends spitfire\Model
 		
 		$schema->replies = new ChildrenField('ping', 'irt');
 		$schema->shared  = new ChildrenField('ping', 'share');
+		$schema->embed   = new ChildrenField('embed', 'ping');
 	}
 	
 	public function onbeforesave() {

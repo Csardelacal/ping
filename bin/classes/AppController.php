@@ -41,12 +41,17 @@ abstract class AppController extends Controller
 	 */
 	protected $token;
 	
+	protected $shortener;
+	
 	public function _onload() {
 		$session     = Session::getInstance();
 		
 		#Create a brief cache for the sessions.
 		$cache       = new MemcachedAdapter();
 		$cache->setTimeout(120);
+		
+		#Set up the link shortener
+		$this->shortener = new \ping\embed\PssmsShortener('shortener.url');
 		
 		#Create a user
 		$this->sso     = new SSOCache(Environment::get('SSO'));
