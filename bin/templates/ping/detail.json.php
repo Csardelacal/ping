@@ -56,6 +56,9 @@ $payload = Array(
 	'poll'         => $poll->toArray(),
 	'feedback'     => $feedback,
 	'shares'       => $n->shared->getQuery()->count(),
+	'embed'        => collect($ping->embed->toArray())->each(function ($e) {
+			return ['short' => $e->short, 'extended' => $e->url, 'title' => $e->title, 'description' => $e->description, 'image' => $e->image];
+		})->toArray(),
 	'replies'      => [
 		'count'  => $n->replies->getQuery()->count(),
 		'sample' => $n->replies->getQuery()->setOrder('created', 'ASC')->range(0, 5)->each(function ($n) use ($sso) {

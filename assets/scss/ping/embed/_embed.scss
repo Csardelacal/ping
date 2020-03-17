@@ -1,7 +1,7 @@
 /*
 The MIT License
 
-Copyright 2019 César de la Cal Bretschneider <cesar@magic3w.com>.
+Copyright 2020 César de la Cal Bretschneider <cesar@magic3w.com>.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,10 +22,31 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 /*
-    Created on : Apr 2, 2019, 10:23:35 AM
+    Created on : Mar 10, 2020, 1:52:24 PM
     Author     : César de la Cal Bretschneider <cesar@magic3w.com>
 */
 
-@import "poll/_poll.scss";
-@import "feedback/_feedback.scss";
-@import "embed/_embed.scss";
+.ping-embed {
+	
+	border-radius: 5px;
+	border: solid 1px #EEE;
+	
+	img {
+		width: 100%;
+		border-radius: 5px 5px 0 0;
+	}
+	
+	.ping-embed-caption {
+		padding: .15rem 1rem .8rem;
+	}
+	
+	a {
+		font-weight: bold;
+	}
+	
+	p {
+		margin: 0;
+		color: #999;
+	}
+	
+}

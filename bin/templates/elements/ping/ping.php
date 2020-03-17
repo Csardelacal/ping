@@ -74,7 +74,24 @@
 
 						<?php $media = $ping->attached; ?>
 						<?= current_context()->view->element('media/preview')->set('media', collect($media->toArray()))->render() ?>
+						
+						
+						<?php foreach ($ping->embed as $embed): ?>
+						<?php if ($embed->title === null) { continue; } ?>
+						<div class="spacer" style="height: 20px;"></div>
 
+						<div class="ping-embed" onclick="window.location = '<?= $embed->short ?>'">
+							<?php if ($embed->image): ?>
+							<img src="<?= $embed->image ?>" style="width: 100%">
+							<?php else :?>
+							<div class="spacer" style="height: .5rem;"></div>
+							<?php endif; ?>
+							<div class="ping-embed-caption">
+								<a href="<?= $embed->short ?>"><?= __($embed->title) ?></a>
+								<p><?= __($embed->description) ?></p>
+							</div>
+						</div>
+						<?php endforeach; ?>
 					</div>
 				</div>
 

@@ -148,6 +148,7 @@
 					userName: current.user.username,
 					avatar: current.user.avatar,
 					userURL: current.user.url,
+					embed: current.embed,
 					notificationURL: current.url || '#',
 					notificationContent: current.content,
 					media: current.media,

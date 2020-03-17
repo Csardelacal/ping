@@ -147,6 +147,7 @@ depend(['m3/core/lysine'], function(Lysine) {
 						userName           : data.payload[i].user.username,
 						avatar             : data.payload[i].user.avatar,
 						userURL            : data.payload[i].user.url,
+						embed              : data.payload[i].embed,
 						notificationURL    : data.payload[i].url || '#',
 						notificationContent: data.payload[i].content,
 						media              : data.payload[i].media,

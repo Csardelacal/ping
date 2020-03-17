@@ -50,6 +50,9 @@ foreach ($notifications as $n) {
 		'userURL'      => strval(url('user', 'show', $sso->getUser($n->irt->src->user->authId)->getUsername())->absolute()),
 		'avatar'       => $sso->getUser($n->irt->src->user->authId)->getAvatar(32),
 		'url'          => $n->irt->deleted? null : $n->irt->url,
+		'embed'        => collect($n->irt->embed->toArray())->each(function ($e) {
+				return ['short' => $e->short, 'extended' => $e->url, 'title' => $e->title, 'description' => $e->description, 'image' => $e->image];
+			})->toArray(),
 		'media'        => $n->irt->deleted || $n->irt->attached->getQuery()->count() == 0? null : $n->irt->attachmentsPreview(),
 		'content'      => $n->irt->deleted? '[Deleted]' : Mention::idToMentions($n->irt->content),
 		'timestamp'    => $n->irt->created,
@@ -77,6 +80,9 @@ foreach ($notifications as $n) {
 	$payload[] = Array(
 		'id'           => $n->_id,
 		'url'          => $n->url,
+		'embed'        => collect($n->embed->toArray())->each(function ($e) {
+				return ['short' => $e->short, 'extended' => $e->url, 'title' => $e->title, 'description' => $e->description, 'image' => $e->image];
+			})->toArray(),
 		'media'        => $n->original()->attachmentsPreview(),
 		'content'      => Mention::idToMentions($n->content),
 		'timestamp'    => $n->created,
