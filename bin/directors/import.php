@@ -7,7 +7,8 @@ class ImportDirector extends Director
 	
 	public function all() {
 		$importers = [
-			new \ping\import\CommentsImporter('./bin/data/results.json')
+			new \ping\import\CommentsImporter('./bin/data/results.json'),
+			//new \ping\import\FeedbackImporter('./bin/data/like.csv')
 		];
 		
 		foreach ($importers as $importer) {

@@ -42,7 +42,6 @@ class ActivityController extends AppController
 	/**
 	 * 
 	 * @validate GET#signature (required)
-	 * @validate POST#src (required)
 	 * @validate POST#target (required)
 	 * @validate POST#content(required string length[1, 250])
 	 * @validate POST#url(required string url)
