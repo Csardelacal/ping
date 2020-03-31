@@ -157,7 +157,7 @@ depend(['m3/core/lysine'], function(Lysine) {
 						irt                : data.payload[i].irt? [data.payload[i].irt] : []
 					});
 					
-					if (!data.payload[i].irt) {
+					if (!data.payload[i].irt && view.getHTML().querySelector('.irt')) {
 						var child = view.getHTML().querySelector('.irt');
 						child.parentNode.removeChild(child);
 					}

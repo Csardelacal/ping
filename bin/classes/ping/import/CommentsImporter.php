@@ -19,38 +19,37 @@ class CommentsImporter extends Importer
 	 * @param array $data
 	 */
 	public function process($data) {
-		$user = db()->table('user')->get('_id', $data['userID'])->first();
-		$author = \AuthorModel::get($user);
-		
-		$ping = db()->table('ping')
-			->get('irt', db()->table('ping')->get('_id', substr($data['socialID'], 3))->first())
-			->where('content', substr($data['content'], 0, 500))
-			->first();
+		try {
+			$user = db()->table('user')->get('_id', $data['userID'])->first();
+			$author = \AuthorModel::get($user);
 
-		if (array_key_exists('responses', $data)) {
-			foreach ($data['responses'] as $raw) {
-				
-				
-				$user = db()->table('user')->get('_id', $raw['user'])->first();
-				$author = \AuthorModel::get($user);
-				
-				
-				$response = db()->table('ping')
-					->get('irt', $ping)
-					->where('content', substr($raw['content'], 0, 500))
-					->first();
-				
-				if (!$response) {
-					console()->error('Did not find record ')->ln();
-					continue;
+			$ping = db()->table('ping')->newRecord();
+			$ping->src = $author;
+			$ping->irt = db()->table('ping')->get('_id', substr($data['socialID'], 3))->first();
+			$ping->content = substr($data['content'], 0, 500);
+			$ping->created = $data['created'];
+			$ping->store();
+
+			if (array_key_exists('responses', $data)) {
+				foreach ($data['responses'] as $raw) {
+
+					$ruser = db()->table('user')->get('_id', $raw['user'])->first();
+					$rauthor = \AuthorModel::get($ruser);
+
+					$response = db()->table('ping')->newRecord();
+					$response->irt = $ping;
+					$response->content = substr($raw['content'], 0, 500);
+					$response->created = $raw['created'];
+					$response->src = $rauthor;
+					$response->deleted = null;
+					$response->store();
+
+					console()->success('Inserted record ' . $response->_id)->ln();
 				}
-				
-				$response->src = $author;
-				$response->deleted = null;
-				$response->store();
-				
-				console()->success('Fixed record ' . $response->_id)->ln();
 			}
+		}
+		catch (\Exception$e) {
+			console()->error('Skipped a record')->ln();
 		}
 	}
 }
