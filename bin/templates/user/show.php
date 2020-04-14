@@ -149,6 +149,7 @@ depend(['m3/core/lysine'], function(Lysine) {
 						notificationURL    : data.payload[i].url || '#',
 						notificationContent: data.payload[i].content,
 						media              : data.payload[i].media,
+						share              : data.payload[i].share,
 						poll               : data.payload[i].poll,
 						feedback           : data.payload[i].feedback,
 						timeRelative       : data.payload[i].timeRelative,

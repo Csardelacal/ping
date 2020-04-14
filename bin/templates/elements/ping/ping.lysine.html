@@ -34,6 +34,10 @@
 							<div class="span l3">
 								<img class="mobile-only" data-lysine-src="{{avatar}}" style="width: 16px; border: solid 1px #777; border-radius: 3px; vertical-align: middle">
 								<a data-for="userName" data-lysine-href="{{userURL}}" style="color: #000; font-weight: bold; font-size: .8rem;"></a>
+								
+								<a data-lysine-href="{{share.url}}" style="color: #555; font-size: .8em;" data-condition="null(share) == false">
+									shared by <span data-for="share.username"></span> 
+								</a>
 							</div>
 							<div class="span l1 desktop-only" style="text-align: right; font-size: .8rem; color: #777;" data-for="timeRelative"></div>
 						</div>
@@ -42,7 +46,7 @@
 
 						<div class="row l1 ng-lr" style="margin-top: 5px">
 							<div class="span l1">
-								<p style="margin: 0;" style="color: #000;" data-for="notificationContent"></p>
+								<p style="margin: 0; color: #000;" data-for="notificationContent"></p>
 
 
 								<div data-condition="count(poll) !== 0" data-poll="{{id}}">

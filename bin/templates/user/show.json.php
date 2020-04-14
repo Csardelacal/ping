@@ -58,10 +58,17 @@ foreach ($notifications as $n) {
 		],
 		'poll'         => $poll->toArray(),
 		'user'         => Array(
+			'id'        => $n->original()->src->user->authId,
+			'url'       => strval(url('user', 'show', $sso->getUser($n->original()->src->user->authId)->getUsername())->absolute()),
+			'username'  => $sso->getUser($n->original()->src->user->authId)->getUsername(),
+			'avatar'    => $sso->getUser($n->original()->src->user->authId)->getAvatar(128),
+		),
+		'share'        => $n->share? [
 			'id'        => $n->src->user->authId,
+			'url'       => strval(url('user', 'show', $sso->getUser($n->src->user->authId)->getUsername())->absolute()),
 			'username'  => $user->getUsername(),
-			'avatar'    => $user->getAvatar(128),
-		)
+			'avatar'    => $user->getAvatar(128)
+		] : null
 	);
 }
 
