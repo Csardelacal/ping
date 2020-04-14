@@ -107,4 +107,32 @@ class FeedBackController extends AppController
 			$this->view->set('mine', db()->table('feedback')->get('ping', $ping)->where('author', $author)->where('removed', null)->first()->reaction );
 		}
 	}
+	
+	public function liked($username = null) {
+		if (!$username) {
+			$author = AuthorModel::get(db()->table('user')->get('_id', $this->user->id)->first(true));
+		}
+		else {
+			$author = AuthorModel::find('@' . $username);
+		}
+		
+		$query = db()
+			->table('feedback')
+			->get('author', $author)
+			->where('reaction', 1)
+			->where('removed', null)
+			->setOrder('created', 'DESC');
+		
+		if (isset($_GET['until'])) {
+			$query->where('_id', '<', $_GET['until']);
+		}
+		
+		$feedback = $query->range(0, 20);
+		
+		$this->view->set('notifications', $feedback->extract('ping'));
+		$this->view->set('until', $feedback->last()->_id);
+		$this->view->set('author', $author);
+		$this->view->set('user', $author);
+		$this->view->set('me', AuthorModel::get(db()->table('user')->get('_id', $this->user->id)->first(true)));
+	}
 }

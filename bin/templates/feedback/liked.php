@@ -52,24 +52,6 @@
 			<div class="mobile-only" style="padding: 20px 0; text-align: right">
 				<a class="button follow" href="<?= url('account', 'login') ?>" data-ping-follow="<?= $user->_id ?>">Login to follow</a>
 			</div>
-			<div class="material unpadded">
-				<?php if (!$authUser): ?>
-				<p style="color: #777; font-size: .8em; text-align: center; padding: 15px 20px">
-					Log in to send <?= $user->getUsername() ?> a ping...
-				</p>
-				<?php elseif ($user->_id !== $authUser->id): ?>
-					
-				<?= current_context()->view->element('ping/editor.lysine.html')->set('target', $author->_id)->render() ?>
-				<?php else: ?>
-
-				<p style="color: #777; font-size: .8em; text-align: center; padding: 15px 20px">
-					This is your own profile. You cannot send notifications to yourself.
-				</p>
-
-				<?php endif; ?>
-			</div>
-			
-			<div class="spacer" style="height: 30px"></div>
 			
 			<?php foreach($notifications as $notification): ?>
 			
@@ -112,7 +94,7 @@
 <script type="text/javascript">
 depend(['m3/core/lysine'], function(Lysine) {
 	var xhr = null;
-	var current = <?= json_encode(isset($notification) && $notification? $notification->_id : null) ?>;
+	var current = <?= $until ?>;
 	var notifications = [];
 	
 	var request = function (callback) {
@@ -123,7 +105,7 @@ depend(['m3/core/lysine'], function(Lysine) {
 		}
 		
 		xhr = new XMLHttpRequest();
-		xhr.open('GET', '<?= url('user', 'show', $user->getUsername())->setExtension('json') ?>?until=' + current);
+		xhr.open('GET', '<?= url('feedback', 'liked', $user->getUsername())->setExtension('json') ?>?until=' + current);
 		
 		document.getElementById('loading-spinner').style.display = 'block';
 		
@@ -157,10 +139,6 @@ depend(['m3/core/lysine'], function(Lysine) {
 						irt                : data.payload[i].irt? [data.payload[i].irt] : []
 					});
 					
-					if (!data.payload[i].irt) {
-						var child = view.getHTML().querySelector('.irt');
-						child.parentNode.removeChild(child);
-					}
 					
 					var media = view.getHTML().querySelector('.media-preview');
 					
@@ -212,19 +190,6 @@ depend(['m3/core/lysine'], function(Lysine) {
 </script>
 
 <?php if ($authUser && $user->_id !== $authUser->id): ?>
-<script type="text/javascript">
-depend(['ping/editor'], function (editor) {
-	console.log('Editor initialized');
-	editor(<?= json_encode([
-		'endpoint' => (string)url(), 
-		'placeholder' => 'Message to broadcast...', 
-		'user' => ['avatar' => $me->getAvatar() ],
-		'target' => $author->_id
-	]) ?>);
-}); 
-</script>
-
-
 <script type="text/javascript">
 depend(['ping/feedback'], function (baseurl) { baseurl('<?= spitfire()->baseUrl() ?>', '<?= (isset($_GET['token']) ? $this->sso->makeToken($_GET['token']) : \spitfire\io\session\Session::getInstance()->getUser())->getId() ?>'); });
 </script>

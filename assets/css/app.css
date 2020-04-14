@@ -147,6 +147,7 @@ p.small {
   border-radius: 10px; }
 .profile-resume .bio,
 .profile-resume .follow-count,
+.profile-resume .liked-count,
 .profile-resume .follower-count,
 .profile-resume .ping-count {
   display: block;
@@ -154,6 +155,7 @@ p.small {
   font-size: .8em; }
 .profile-resume .follow-count,
 .profile-resume .follower-count,
+.profile-resume .liked-count,
 .profile-resume .ping-count {
   text-align: right; }
 .profile-resume .user-name {

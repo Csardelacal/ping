@@ -23,6 +23,7 @@
 				
 				<span class="follower-count"><a href="<?= url('people', 'following', $user->getUsername()) ?>"><strong><?= db()->table('follow')->get('prey__id', $user->getId())->count() ?></strong> followers</a></span>
 				<span class="follow-count"><a href="<?= url('people', 'follows', $user->getUsername()) ?>"><strong><?= db()->table('follow')->get('follower__id', $user->getId())->count() ?></strong> follows</a></span>
+				<span class="liked-count"><a href="<?= url('feedback', 'liked', $user->getUsername()) ?>"><strong><?= db()->table('feedback')->get('author', $author)->count() ?></strong> liked</a></span>
 				<span class="ping-count"><strong><?= db()->table('ping')->get('src__id', $user->getId())->addRestriction('target__id', null, 'IS')->count() ?></strong> posts</span>
 			</div>
 			
