@@ -154,6 +154,7 @@
 					notificationURL: current.url || '#',
 					notificationContent: current.content,
 					media: current.media,
+					share: current.share,
 					poll: current.poll,
 					timeRelative: current.timeRelative,
 					feedback : current.feedback,

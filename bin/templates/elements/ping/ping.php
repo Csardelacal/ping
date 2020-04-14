@@ -1,5 +1,6 @@
-<?php $user = $ping->src->user ? $sso->getUser($ping->src->user->authId) : null; ?>
-<?php $ping = $ping->original(); ?>
+<?php $share = $ping->share? $sso->getUser($ping->src->user->authId) : false; ?>
+<?php $ping  = $ping->original(); ?>
+<?php $user  = $ping->src->user ? $sso->getUser($ping->src->user->authId) : null; ?>
 <div class="material unpadded">
 
 	<?php if ($ping->irt): ?>
@@ -32,10 +33,14 @@
 			<div class="span l9">
 				<div class="row l4 ng-lr">
 					<div class="span l3">
+						
 						<img src="<?= $user->getAvatar(64) ?>" class="not-desktop" style="width: 32px; border-radius: 50%; vertical-align: middle">
 						<a href="<?= url('user', 'show', $user->getUsername()) ?>" style="color: #000; font-weight: bold; font-size: .8em;"><?= $user->getUsername() ?></a>
-						<?php if ($ping->share): ?>
-							<a href="<?= url('ping', 'detail', $ping->share->_id) ?>" style="font-size: .8rem; color: #777;"> from <?= $sso->getUser($ping->share->src->_id)->getUsername() ?></a>
+						
+						<?php if ($share): ?>
+						<a href="<?= url('user', 'show', $share->getUsername()) ?>" style="color: #555; font-size: .8em;">
+							shared by <?= $share->getUsername() ?> 
+						</a>
 						<?php endif; ?>
 					</div>
 					<div class="span l1 desktop-only" style="text-align: right; font-size: .8rem; color: #777;">
@@ -97,7 +102,7 @@
 							<i class="im im-sync"></i>
 							<span><?= $ping->shared->getQuery()->count() ?: 'Share' ?></span>
 						</a>
-						<a href="<?= url('ping', 'delete', $ping->_id); ?>" data-visibility="<?= $user->getUsername() ?>" class="ping-contextual-link delete-link">
+						<a href="<?= url('ping', 'delete', $ping->_id); ?>" data-visibility="<?= $share? $share->getUsername() : $user->getUsername() ?>" class="ping-contextual-link delete-link">
 							<i class="im im-x-mark-circle"></i>
 							<span>Delete</span>
 						</a>

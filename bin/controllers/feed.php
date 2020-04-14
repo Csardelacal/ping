@@ -73,7 +73,7 @@ class FeedController extends AppController
 			$atme->where('_id', '<', $_GET['until']);
 		}
 
-		$notifications = $query->range(0, 5);
+		$notifications = $query->range(0, 3);
 		$mine->where('created', '>', $notifications->last()->created);
 		$atme->where('created', '>', $notifications->last()->created);
 		
