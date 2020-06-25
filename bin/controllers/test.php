@@ -4,6 +4,7 @@ class TestController extends AppController
 {
 	
 	public function test() {
+		var_dump($this->sso->sendEmail(1, 'Test email', 'Test body'));
 		die(($this->sso->makeSignature('1768757879')));
 	}
 	

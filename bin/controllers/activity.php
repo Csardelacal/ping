@@ -72,7 +72,19 @@ class ActivityController extends AppController
 			$src = null;
 		}
 		
-		$targets = array_filter(array_map(function ($tgtid) use ($srcid) {
+		$targets = collect($tgtid)->filter(function ($tgtid) use ($src, $content, $url) {
+			
+			#In the event the user is not registered, and the application is notifying 
+			#a guest with just an email address.
+			if (filter_var($tgtid, FILTER_VALIDATE_EMAIL)) {
+				$email   = new \EmailSender($this->sso);
+				$email->push($tgtid, $src, $content, $url);
+				return false;
+			}
+			
+			return true;
+		})
+		->each(function ($tgtid) use ($srcid) {
 			
 			#If sourceID and target are identical, we skip the sending of the notification
 			#This requires the application to check whether the user is visiting his own profile
@@ -82,7 +94,7 @@ class ActivityController extends AppController
 			try { return db()->table('user')->get('_id', $tgtid)->fetch()? : UserModel::makeFromSSO($this->sso->getUser($tgtid)); } 
 			catch (\Exception$e) { return null; }
 			
-		}, $tgtid));
+		})->filter()->toArray();
 		
 		
 		#It could happen that the target is established as an email and therefore
