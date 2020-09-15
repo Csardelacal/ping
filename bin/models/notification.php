@@ -21,6 +21,21 @@ class NotificationModel extends spitfire\Model
 		$schema->created = new IntegerField(true);
 		$schema->type    = new IntegerField(true);
 		
+		/*
+		 * Silent notifications allow an application to notify a user without sending
+		 * any email or push notification through other channels. This is usually done
+		 * because the application sending the notification wishes to further customize
+		 * the email or push notification.
+		 * 
+		 * For example, in a ticketing system that wishes to notify a user that a 
+		 * response was sent will usually include the message in the email and allow
+		 * the user to respond to the mail.
+		 * 
+		 * To do so, it needs to set ping to not send an email to prevent the emails
+		 * from being duplicated.
+		 */
+		$schema->silent  = new BooleanField();
+		
 		$schema->type->setNullable(false);
 	}
 	
