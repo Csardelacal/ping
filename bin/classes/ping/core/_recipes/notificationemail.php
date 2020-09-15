@@ -43,6 +43,14 @@ $core->activity->push->after()->do(function ($parameter) {
 	$content = $parameter->content;
 	$type    = $parameter->type;
 	
+	/**
+	 * If the notification is silent, we do not send an email to the user, that
+	 * would be kind of double tapping.
+	 */
+	if ($parameter->silent) {
+		return;
+	}
+	
 	if ((!$target instanceof UserModel) || $target->notify($type, NotificationSetting::NOTIFY_EMAIL)) {
 		//TODO This code deserves to go, it's broken
 		$email->push($target->_id, $src, $content, $url);
