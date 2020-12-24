@@ -1,12 +1,11 @@
-<?php 
+<?php
 
-use spitfire\Model;
-use spitfire\storage\database\Schema;
+use spitfire\io\XSSToken;
 
 /* 
  * The MIT License
  *
- * Copyright 2019 César de la Cal Bretschneider <cesar@magic3w.com>.
+ * Copyright 2020 César de la Cal Bretschneider <cesar@magic3w.com>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,39 +26,23 @@ use spitfire\storage\database\Schema;
  * THE SOFTWARE.
  */
 
-class FeedbackModel extends Model
+/**
+ * 
+ * @author César de la Cal Bretschneider <cesar@magic3w.com>
+ */
+class XsrfController extends AppController
 {
 	
-	
 	/**
+	 * Returns the user's current XSRF token. This allows certain calls to be made
+	 * to the system without a third party being able to perform a redirection or 
+	 * form-submission attack, but without the need to have the user perform an
+	 * explicit thing.
 	 * 
-	 * @param Schema $schema
-	 * @return Schema
+	 * This method MUST never issue an access control allow header that allows third
+	 * parties to 
 	 */
-	public function definitions(Schema $schema) {
-		$schema->author   = new Reference(AuthorModel::class);
-		$schema->target   = new Reference(AuthorModel::class);
-		$schema->ping     = new Reference(PingModel::class);
-		$schema->guid     = new StringField(250);
-		$schema->appId    = new StringField(50);
-		$schema->reaction = new StringField(10);
-		$schema->created  = new IntegerField(true);
-		$schema->removed  = new IntegerField(true);
-		
-		$schema->index($schema->author, $schema->created);
-		$schema->index($schema->target, $schema->created);
-		
+	public function token() {
+		$this->view->set('xsrf', new XSSToken());
 	}
-	
-	public function onbeforesave() {
-		
-		if (!$this->guid) {
-			$this->guid = 'f' . strtolower(substr(str_replace(['+', '/', '='], '', base64_encode(random_bytes(200))), 0, 100));
-		}
-		
-		if (!$this->created) {
-			$this->created = time();
-		}
-	}
-
 }

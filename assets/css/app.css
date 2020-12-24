@@ -258,6 +258,15 @@ p.small {
 .row .span {
   margin: 0 !important; }
 
+.reactions-container {
+  padding: .35rem; }
+  .reactions-container a {
+    display: inline-block;
+    padding: .35rem .35rem;
+    border-radius: .2rem; }
+    .reactions-container a:hover {
+      background-color: #DDD; }
+
 @media all and (min-width: 960px) {
   .mobile-only {
     display: none !important; } }
@@ -1465,7 +1474,6 @@ body {
   max-width: 90%;
   transform: translate(-300px, 0);
   background: #FFF;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
   border-right: 1px solid #DDD; }
   .sidebar .menu-title {
     display: block;

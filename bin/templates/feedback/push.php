@@ -1,12 +1,9 @@
-<?php 
-
-use spitfire\Model;
-use spitfire\storage\database\Schema;
+<?php
 
 /* 
  * The MIT License
  *
- * Copyright 2019 César de la Cal Bretschneider <cesar@magic3w.com>.
+ * Copyright 2020 César de la Cal Bretschneider <cesar@magic3w.com>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,39 +24,20 @@ use spitfire\storage\database\Schema;
  * THE SOFTWARE.
  */
 
-class FeedbackModel extends Model
-{
-	
-	
-	/**
-	 * 
-	 * @param Schema $schema
-	 * @return Schema
-	 */
-	public function definitions(Schema $schema) {
-		$schema->author   = new Reference(AuthorModel::class);
-		$schema->target   = new Reference(AuthorModel::class);
-		$schema->ping     = new Reference(PingModel::class);
-		$schema->guid     = new StringField(250);
-		$schema->appId    = new StringField(50);
-		$schema->reaction = new StringField(10);
-		$schema->created  = new IntegerField(true);
-		$schema->removed  = new IntegerField(true);
-		
-		$schema->index($schema->author, $schema->created);
-		$schema->index($schema->target, $schema->created);
-		
-	}
-	
-	public function onbeforesave() {
-		
-		if (!$this->guid) {
-			$this->guid = 'f' . strtolower(substr(str_replace(['+', '/', '='], '', base64_encode(random_bytes(200))), 0, 100));
-		}
-		
-		if (!$this->created) {
-			$this->created = time();
-		}
-	}
+/*
+ * There's only one known reason for a user accessing this endpoint like this: the
+ * user does not have javscript enabled. In this case we need to redirect the user
+ * to either a known good destination or back to the ping they liked.
+ * 
+ * While this does not provide an amazing user experience, it's pretty much the
+ * best we can do without javascript being enabled.
+ */
 
+if ($_GET['returnto'] && Strings::startsWith($_GET['returnto'], '/') && ! Strings::startsWith($_GET['returnto'], '//')) {
+	$returnto = $_GET['returnto'];
 }
+else {
+	$returnto = url('ping', 'detail', $feedback->ping->_id);
+}
+
+current_context()->response->getHeaders()->redirect($returnto);

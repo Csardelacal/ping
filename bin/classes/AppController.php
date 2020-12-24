@@ -41,8 +41,6 @@ abstract class AppController extends Controller
 	 */
 	protected $token;
 	
-	protected $secondaryNav;
-	
 	public function _onload() {
 		$session     = Session::getInstance();
 		

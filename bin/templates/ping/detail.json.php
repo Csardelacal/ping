@@ -1,5 +1,9 @@
 <?php
 
+current_context()->response->getHeaders()->set('Access-Control-Allow-Origin', '*');
+current_context()->response->getHeaders()->set('Access-Control-Allow-Headers', 'Content-type');
+current_context()->response->getHeaders()->contentType('json');
+
 $n = $ping;
 $user  = $sso->getUser($n->src->user->_id);
 	
@@ -15,6 +19,33 @@ $poll = db()->table('poll\option')->get('ping', $n->original())->all()->each(fun
 	];
 });
 
+
+$mc = new \spitfire\cache\MemcachedAdapter;
+$mc->setTimeout(60);
+$myreaction = db()->table('feedback')->get('ping', $n)->where('author',  $me)->first();
+$feedback = $mc->get('ping_like_details_' . $ping->_id, function () use ($ping) {
+	$reactions = ping\Reaction::all();
+	$_ret = [
+		'count' => []
+	];
+
+	foreach ($reactions as $reaction) {
+		$_ret['count'][$reaction->getIdentifier()] = db()->table('feedback')->get('ping', $ping)->where('reaction',  $reaction->getIdentifier())->where('removed', null)->count();
+	}
+
+	$_ret['sample'] = db()->table('feedback')->get('ping', $ping)->where('removed', null)->range(0, 10)->each(function ($e) { return [
+		'author' => $e->author->_id,
+		'reaction' => $e->reaction,
+		'user' => $e->author->user? $e->author->user->_id : null, 
+		'avatar' => $e->author->getAvatar(), 
+		'username' => $e->author->getUsername(), 
+	];})->toArray();
+
+	return $_ret;
+});
+
+$feedback['mine'] = $myreaction? $myreaction->reaction : null;
+
 $payload = Array(
 	'id'           => $n->_id,
 	'url'          => $n->url,
@@ -23,11 +54,7 @@ $payload = Array(
 	'timestamp'    => $n->created,
 	'timeRelative' => Time::relative($n->created),
 	'poll'         => $poll->toArray(),
-	'feedback'     => [
-		'mine'      => !!db()->table('feedback')->get('ping', $n)->where('author',  $me)->where('reaction',  1)->first(),
-		'like'      => db()->table('feedback')->get('ping', $n)->where('reaction',  1)->count(),
-		'dislike'   => db()->table('feedback')->get('ping', $n)->where('reaction', -1)->count(),
-	],
+	'feedback'     => $feedback,
 	'shares'       => $n->shared->getQuery()->count(),
 	'replies'      => [
 		'count'  => $n->replies->getQuery()->count(),

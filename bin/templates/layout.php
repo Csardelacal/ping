@@ -255,5 +255,7 @@
 		</script>
 		
 		<script type="text/javascript" src="<?= url('feed', 'counter')->setExtension('js')->setParam('nonce', 60 * (int)(time() / 60)) ?>"></script>
+		
+		<script src="https://cdn.jsdelivr.net/npm/m3w-dropdown@latest" type="text/javascript"></script>
 	</body>
 </html>

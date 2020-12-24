@@ -29,4 +29,18 @@ class TestController extends AppController
 		die();
 	}
 	
+	public function permissions() {
+		$url = 'http://localhost/permission/resource/create.json';
+		
+		echo request($url)
+			->get('signature', (string)$this->sso->makeSignature('1167085183'))
+			->post('key', sprintf('app%s.test', $this->sso->getAppId()))
+			->send()
+			->expect(200)
+			->html();
+		
+		die();
+		
+	}
+	
 }

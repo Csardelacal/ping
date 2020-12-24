@@ -8,7 +8,7 @@
 			
 		
 		<?php foreach($notifications as $notification): ?>
-		<?php $user = $notification->src? $sso->getUser($notification->src->user->_id) : null; ?>
+		<?php try { $user = $notification->src? $sso->getUser($notification->src->user->_id) : null; } catch (\Exception$e) { $user = null; } ?>
 		<div class="material">
 			<div class="row l10 fluid">
 				<div class="span l1" style="text-align: center">

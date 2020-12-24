@@ -117,18 +117,38 @@
 
 							<div class="row l3 fluid">
 								<div class="span l2">
-									<?php if (!$authUser): ?>
-									<?php elseif (db()->table('feedback')->get('ping', $notification)->where('author', AuthorModel::get(db()->table('user')->get('authId', $authUser->id)->first()))->first()): ?>
-										<a href="<?= url('feedback', 'revoke', $notification->_id) ?>" class="ping-contextual-link for-likes liked" data-ping="<?= $notification->_id ?>">
-											<i class="im im-heart"></i>
-											<span><?= strval(db()->table('feedback')->get('ping', $notification)->where('reaction', 1)->where('removed', null)->count()) ?></span>
-										</a>
-									<?php else: ?>
-										<a href="<?= url('feedback', 'push', $notification->_id) ?>" class="ping-contextual-link for-likes" data-ping="<?= $notification->_id ?>">
-											<i class="im im-heart"></i>
-											<span><?= strval(db()->table('feedback')->get('ping', $notification)->where('reaction', 1)->where('removed', null)->count())?></span>
-										</a>
-									<?php endif; ?>
+									<div class="reactions-container" data-ping="<?= $notification->_id ?>">
+										<?php $reactions = \ping\Reaction::all() ?>
+										<?php foreach ($reactions as $reaction): ?>
+
+											<?php if (!$authUser): ?>
+												<?= $reaction->getEmoji() ?>
+												<span><?= strval(db()->table('feedback')->get('ping', $notification)->where('reaction', $reaction->getIdentifier())->where('removed', null)->count()) ?></span>
+											<?php elseif (db()->table('feedback')->get('ping', $notification)->where('reaction', $reaction->getIdentifier())->where('author', AuthorModel::get(db()->table('user')->get('authId', $authUser->id)->first()))->first()): ?>
+												<a href="<?= url('feedback', 'revoke', $notification->_id) ?>" class="ping-contextual-link for-likes liked" data-ping="<?= $notification->_id ?>">
+													<?= $reaction->getEmoji() ?>
+													<span><?= strval(db()->table('feedback')->get('ping', $notification)->where('reaction', $reaction->getIdentifier())->where('removed', null)->count()) ?></span>
+												</a>
+											<?php elseif (db()->table('feedback')->get('ping', $notification)->where('reaction', $reaction->getIdentifier())->first()): ?>
+												<a href="<?= url('feedback', 'push', $notification->_id) ?>" class="ping-contextual-link for-likes" data-ping="<?= $notification->_id ?>">
+													<?= $reaction->getEmoji() ?>
+													<span><?= strval(db()->table('feedback')->get('ping', $notification)->where('reaction', $reaction->getIdentifier())->where('removed', null)->count())?></span>
+												</a>
+											<?php else: ?>
+												<!-- The reaction was omitted due to not having any reactions of this type -->
+												<noscript>
+													<a href="<?= url('feedback', 'push', $notification->_id, ['reaction' => $reaction->getIdentifier(), 'returnto' => strval(spitfire\core\http\URL::current())]) ?>" class="ping-contextual-link for-likes" data-ping="<?= $ping->_id ?>">
+														<?= $reaction->getEmoji() ?>
+														<span><?= strval(db()->table('feedback')->get('ping', $ping)->where('reaction', $reaction->getIdentifier())->where('removed', null)->count())?></span>
+													</a>
+												</noscript>
+											<?php endif; ?>
+										<?php endforeach ?>
+										<span class="add-reaction">
+											<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+										</span>
+									</div>
+									
 									<a href="<?= url('ping', 'detail', $notification->_id) ?>#replies" class="ping-contextual-link for-replies">
 										<i class="im im-speech-bubble"></i>
 										<span><?= strval(db()->table('ping')->get('irt__id', $notification->_id)->count()) ?></span>
@@ -271,6 +291,35 @@ depend(['ping/ping', 'm3/core/lysine'], function(SDK, Lysine) {
 	});
 	
 	document.addEventListener('scroll', listener, false);
+});
+</script>
+
+<script type="text/javascript">
+depend(['m3/core/delegate', 'm3/core/request'], function (delegate, request) {
+	var tokenurl = "<?= url('xsrf', 'token')->setExtension('json') ?>";
+	
+	delegate(
+		'click', 
+		function (e) { return e.classList.contains('delete-link'); },
+		function (e) { 
+			var target = this;
+			
+			request(tokenurl)
+				.then(JSON.parse)
+				.then(function (payload) {
+					var token = payload.token;
+					
+					if (!confirm('Delete this ping?')) { throw 'User aborted the deletion'; }
+					return request(target.href + token + '.json');
+				})
+				.then(JSON.parse)
+				.then(function (e) { if (e.status === 'OK') { window.location = '/feed'; } })
+				.catch (function (e) { console.error(e); });
+	 
+			e.stopPropagation(); 
+			e.preventDefault();
+		}
+	)
 });
 </script>
 

@@ -82,18 +82,6 @@
 
 				<div class="row l3 fluid">
 					<div class="span l2">
-						<?php if (!$authUser): ?>
-						<?php elseif (db()->table('feedback')->get('ping', $ping)->where('author', AuthorModel::get(db()->table('user')->get('authId', $authUser->id)->first()))->first()): ?>
-							<a href="<?= url('feedback', 'revoke', $ping->_id) ?>" class="ping-contextual-link for-likes liked" data-ping="<?= $ping->_id ?>">
-								<i class="im im-heart"></i>
-								<span><?= strval(db()->table('feedback')->get('ping', $ping)->where('reaction', 1)->where('removed', null)->count()) ?></span>
-							</a>
-						<?php else: ?>
-							<a href="<?= url('feedback', 'push', $ping->_id) ?>" class="ping-contextual-link for-likes" data-ping="<?= $ping->_id ?>">
-								<i class="im im-heart"></i>
-								<span><?= strval(db()->table('feedback')->get('ping', $ping)->where('reaction', 1)->where('removed', null)->count())?></span>
-							</a>
-						<?php endif; ?>
 						<a href="<?= url('ping', 'detail', $ping->_id) ?>#replies" class="ping-contextual-link for-replies">
 							<i class="im im-speech-bubble"></i>
 							<span><?= strval(db()->table('ping')->get('irt__id', $ping->_id)->count()) ?></span>
@@ -102,6 +90,62 @@
 							<i class="im im-sync"></i>
 							<span><?= $ping->shared->getQuery()->count() ?: 'Share' ?></span>
 						</a>
+						<?php $reactions = \ping\Reaction::all() ?>
+						<?php foreach ($reactions as $reaction): ?>
+						
+							<?php if (!$authUser): ?>
+								<?= $reaction->getEmoji() ?>
+								<span><?= strval(db()->table('feedback')->get('ping', $ping)->where('reaction', $reaction->getIdentifier())->where('removed', null)->count()) ?></span>
+							<?php elseif (db()->table('feedback')->get('ping', $ping)->where('reaction', $reaction->getIdentifier())->where('author', AuthorModel::get(db()->table('user')->get('authId', $authUser->id)->first()))->where('removed', null)->first()): ?>
+								<a href="<?= url('feedback', 'revoke', $ping->_id) ?>" class="ping-contextual-link for-likes liked" data-ping="<?= $ping->_id ?>">
+									<?= $reaction->getEmoji() ?>
+									<span><?= strval(db()->table('feedback')->get('ping', $ping)->where('reaction', $reaction->getIdentifier())->where('removed', null)->count()) ?></span>
+								</a>
+							<?php elseif (db()->table('feedback')->get('ping', $ping)->where('reaction', $reaction->getIdentifier())->where('removed', null)->first()): ?>
+								<a href="<?= url('feedback', 'push', $ping->_id) ?>" class="ping-contextual-link for-likes" data-ping="<?= $ping->_id ?>">
+									<?= $reaction->getEmoji() ?>
+									<span><?= strval(db()->table('feedback')->get('ping', $ping)->where('reaction', $reaction->getIdentifier())->where('removed', null)->count())?></span>
+								</a>
+								<?php else: ?>
+								<!-- The reaction was omitted due to not having any reactions of this type -->
+								<noscript>
+									<a href="<?= url('feedback', 'push', $ping->_id, ['reaction' => $reaction->getIdentifier(), 'returnto' => strval(spitfire\core\http\URL::current())]) ?>" class="ping-contextual-link for-likes" data-ping="<?= $ping->_id ?>">
+										<?= $reaction->getEmoji() ?>
+										<span><?= strval(db()->table('feedback')->get('ping', $ping)->where('reaction', $reaction->getIdentifier())->where('removed', null)->count())?></span>
+									</a>
+								</noscript>
+							<?php endif; ?>
+						<?php endforeach; ?>
+						<a id="reactions-toggle-<?= $ping->_id ?>" href="#add-reaction" data-role="add-reaction" data-ping="<?= $ping->_id ?>">
+							Add reaction
+						</a>
+						<div id="reactions-for-<?= $ping->_id ?>" style="display: none">
+							<div class="reactions-container">
+								<?php foreach ($reactions as $reaction): ?>
+								<a href="<?= url('feedback', 'push', $ping->_id, ['reaction' => $reaction->getIdentifier(), 'returnto' => strval(spitfire\core\http\URL::current())]) ?>" class="ping-contextual-link for-likes" data-ping="<?= $ping->_id ?>" data-reaction="<?= $reaction->getIdentifier() ?>">
+									<?= $reaction->getEmoji() ?>
+								</a>
+								<?php endforeach; ?>
+							</div>
+						</div>
+						<script>
+						(function () {
+							window.addEventListener('load', function () {
+								depend(['m3/core/delegate'], function (delegate) {
+									delegate(
+										'click', 
+										function (e) { return e.dataset.role === 'add-reaction' && e.dataset.ping === '<?= $ping->_id ?>'; }, 
+										function () {
+											var clone = document.querySelector('#reactions-for-<?= $ping->_id ?> .reactions-container').cloneNode(true);
+											console.log(clone);
+											var drop = new Dropdown.Dropdown(clone, document.querySelector('#reactions-toggle-<?= $ping->_id ?>'));
+											setTimeout(function () { drop.show(); }, 150);
+										}
+									);
+								});
+							});
+						}())
+						</script>
 						<a href="<?= url('ping', 'delete', $ping->_id); ?>" data-visibility="<?= $share? $share->getUsername() : $user->getUsername() ?>" class="ping-contextual-link delete-link">
 							<i class="im im-x-mark-circle"></i>
 							<span>Delete</span>

@@ -25,15 +25,25 @@
  */
 
 current_context()->response->getHeaders()->set('Access-Control-Allow-Origin', '*');
+current_context()->response->getHeaders()->set('Access-Control-Allow-Headers', 'Content-type');
+current_context()->response->getHeaders()->contentType('json');
+
+$reactions = ping\Reaction::all();
+$_available = [];
+
+foreach ($reactions as $reaction) {
+	$_available[$reaction->getIdentifier()] = [
+		'identifier' => $reaction->getIdentifier(),
+		'emoji'      => $reaction->getEmoji(),
+		'caption'    => $reaction->getCaption()
+	];
+}
 
 echo json_encode([
 	'status' => 'OK',
 	'payload' => [
 		'overall' => $overall,
 		'mine'    => $mine?? null,
-		'available' => [
-			'like' => 1,
-			'dislike' => -1
-		]
+		'available' => $_available
 	]
 ]);
