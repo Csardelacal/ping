@@ -11,6 +11,31 @@ $apps = collect($m->get('ping.app.list', function () use ($sso) {
 
 foreach ($notifications as $n) {
 	
+	
+	$myreaction = db()->table('feedback')->get('ping', $n)->where('author',  $me)->first();
+	$feedback = $m->get('ping_like_details_' . $n->_id, function () use ($n) {
+		$reactions = ping\Reaction::all();
+		$_ret = [
+			'count' => []
+		];
+
+		foreach ($reactions as $reaction) {
+			$_ret['count'][$reaction->getIdentifier()] = db()->table('feedback')->get('ping', $n)->where('reaction',  $reaction->getIdentifier())->where('removed', null)->count();
+		}
+
+		$_ret['sample'] = db()->table('feedback')->get('ping', $n)->where('removed', null)->range(0, 10)->each(function ($e) { return [
+			'author' => $e->author->_id,
+			'reaction' => $e->reaction,
+			'user' => $e->author->user? $e->author->user->_id : null, 
+			'avatar' => $e->author->getAvatar(), 
+			'username' => $e->author->getUsername(), 
+		];})->toArray();
+
+		return $_ret;
+	});
+
+	$feedback['mine'] = $myreaction? $myreaction->reaction : null;
+	
 	$user  = $sso->getUser($n->src->user->authId);
 	$app   = $apps->filter(function ($e) use ($n) { return $e->id === $n->authapp; })->rewind();
 	
@@ -59,11 +84,7 @@ foreach ($notifications as $n) {
 		'irt'          => $irt,
 		'replies'      => $n->replies->getQuery()->count(),
 		'shares'       => $n->shared->getQuery()->count(),
-		'feedback'     => [
-			'mine'      => !!db()->table('feedback')->get('ping', $n)->where('author',  $me)->where('reaction',  1)->first(),
-			'like'      => db()->table('feedback')->get('ping', $n)->where('reaction',  1)->count(),
-			'dislike'   => db()->table('feedback')->get('ping', $n)->where('reaction', -1)->count(),
-		],
+		'feedback'     => $feedback,
 		'app'          => [
 			'id' => $n->authapp,
 			'icon' => $app? $app->icon : null,

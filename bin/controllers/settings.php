@@ -51,4 +51,13 @@ class SettingsController extends AppController
 		$this->view->set('calculated', $calculated);
 	}
 	
+	public function generate() {
+		$appid = $this->sso->getAppId();
+		$self  = collect($this->sso->getAppList())->filter(function ($e) use ($appid) { return $e->id == $appid; })->rewind();
+		
+		$this->view->set('appid', $appid);
+		$this->view->set('name', $self->name);
+		$this->view->set('icon', $self->icon);
+	}
+	
 }

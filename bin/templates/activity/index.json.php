@@ -5,7 +5,8 @@ $payload = Array();
 foreach ($notifications as $n) {
 	
 	if ($n->src) {
-		$user = $sso->getUser($n->src->user->_id);
+		try { $user = $sso->getUser($n->src->user->_id); }
+		catch (\Exception$e) { $user = null; }
 	}
 	else {
 		$user = null;

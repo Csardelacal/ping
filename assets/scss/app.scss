@@ -370,6 +370,20 @@ p {
 	margin: 0 !important;
 }
 
+.reactions-container { 
+	padding: .35rem;
+	
+	a {
+		display: inline-block;
+		padding: .35rem .35rem;
+		border-radius: .2rem;
+		
+		&:hover {
+			background-color: #DDD;
+		}
+	}
+}
+
 @media all and (min-width: $MobileBreakpoint) {
 	.mobile-only { display: none !important; }
 }

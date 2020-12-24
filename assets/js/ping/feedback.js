@@ -76,13 +76,52 @@ depend(['m3/core/delegate', 'm3/core/request', 'm3/core/collection', 'm3/core/pa
 			});
 		}
 		else {
-			ping.feedback().push(element.getAttribute('data-ping'), 'like', function () {
+			ping.feedback().push(element.getAttribute('data-ping'), element.dataset.reaction || 'like', function () {
 				element.classList.add('liked');
 				element.querySelector('span').innerHTML = (parseInt(element.querySelector('span').innerHTML) || 0) + 1;
 			});
 		}
 
 		event.preventDefault();
+	});
+	
+	/**
+	 * This is heavy prototyping code and will be refactored heavily in the coming
+	 * weeks.
+	 * 
+	 * @param {type} e
+	 * @returns {unresolved}
+	 */
+	delegate('click', function (e) {
+		return e.classList.contains('add-reaction');
+	}, function (event, self) {
+		var t = document.createElement('div');
+		var container = parent(self, function (e) { return e.classList.contains('reactions-container'); });
+		
+		t.innerHTML = 'Loading...';
+		t.style.position = 'fixed';
+		t.style.top = 0;
+		t.style.left = 0;
+		t.dataset.ping = container.dataset.ping;
+		document.body.appendChild(t);
+		
+		request(ping.endpoint() + '/feedback/available.json')
+			.then(JSON.parse)
+			.then(function (json) {
+				var payload = json.payload;
+				t.innerHTML = '';
+				for (var i in payload) {
+					var s = document.createElement('span');
+					s.innerHTML = payload[i].emoji;
+					s.title = payload[i].caption;
+					s.dataset.reaction = payload[i].identifier;
+					s.addEventListener('click', function (e) { 
+						
+						alert('Add reaction ' + this.dataset.reaction + ' to ping # ' + this.parentNode.dataset.ping); 
+					});
+					t.appendChild(s);
+				}
+			})
 	});
 	
 	return function (bu, t) { baseurl = bu; ping = new Ping(bu, t); };

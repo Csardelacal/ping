@@ -88,7 +88,7 @@ class PingController extends AppController
 		$notification = db()->table('ping')->newRecord();
 		$notification->src = $src;
 		$notification->authapp = $authapp;
-		$notification->target = $target;
+		$notification->target  = $target;
 		$notification->content = Mention::mentionsToId($content);
 		$notification->url     = $url;
 		$notification->explicit= $explicit;
@@ -179,8 +179,6 @@ class PingController extends AppController
 		/**
 		 * Find the ping in question and generate a random hash that the user will
 		 * have to return to confirm they know what they're doing.
-		 * 
-		 * @todo Replace with Spitfire's XSRF token method.
 		 */
 		$notification = db()->table('ping')->get('_id', $id)->fetch();
 		$salt = new XSSToken();
@@ -210,15 +208,20 @@ class PingController extends AppController
 		 * to send back properly.
 		 * 
 		 * This way we ensure that the user is not deleting a ping via XSRF.
+		 * 
+		 * If an application is deleting a ping, we need to reasses the issue. Applications
+		 * do not fall for XSS attacks the same way users do. This means, that if the
+		 * application provided a token, it knows the user's credentials and can
+		 * perform the deletion without worry.
 		 */
-		if ($confirm && $salt->verify($confirm)) {
+		if (isset($_GET['token']) || ($confirm && $salt->verify($confirm))) {
 			$notification->deleted = time();
 			
 			$this->core->feed->delete->do(function ($notification) {
 				$notification->store();
 			}, $notification);
 			
-			return $this->response->setBody('OK')->getHeaders()->redirect(url('feed'));
+			$this->view->set('deleted', true);
 		}
 		
 		$this->view->set('id', $id);
