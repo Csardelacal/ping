@@ -84,6 +84,7 @@ class Media implements EmbedInterface
 		
 		$this->media = $this->parent->getBucket()->upload($filename, $this->basename());
 		$this->body = $data;
+		unlink($tmp);
 		return true;
 	}
 
