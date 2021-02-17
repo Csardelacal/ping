@@ -6,11 +6,8 @@
 	<div class="span l2">
 
 		<div class="material unpadded">
-			<?= current_context()->view->element('ping/editor.lysine.html')->render() ?>
-			
-			<noscript>
-			<?= current_context()->view->element('ping/editor.php')->set('authUser', $authUser)->render() ?>
-			</noscript>
+			<div class="editor"></div>
+			<noscript>(Javascript is required to add a ping)</noscript>
 		</div>
 
 		<?php if (db()->table('ping')->get('src__id', AuthorModel::find($authUser->id)->_id)->where('processed', 0)->first()): ?>

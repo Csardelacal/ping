@@ -1,0 +1,27 @@
+{
+  "name": "ping",
+  "version": "0.1.0",
+  "description": "Ping is a social dashboard for a micro-service application environment",
+  "main": "resources/assets/src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "mix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@phabricator.magic3w.com/source/ping.git"
+  },
+  "keywords": [
+    "social",
+    "microservice"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "laravel-mix": "^6.0.6",
+    "postcss": "^8.2.2"
+  },
+  "dependencies": {
+    "lysine": "0.1.0-dev4"
+  }
+}

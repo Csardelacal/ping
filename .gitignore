@@ -1,6 +1,6 @@
 Documentation/*
 nbproject/private
-
+node_modules/
 bin/settings/environments.php
 
 
