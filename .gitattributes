@@ -1,7 +1,19 @@
 # Auto detect text files and perform LF normalization
 * text=auto
 
+# Generated files do not need to be imported
+*.min.js  -diff
+*.min.css -diff
+
+# The public directories should default to not having a diff,
+# your resources should be located in the resources folder, 
+# and should only be built to the public folder.
+#
+# Therefore, all the files in public should be generated.
+public/   -diff
+
 # Custom for Visual Studio
+*.php    diff=php
 *.cs     diff=csharp
 *.sln    merge=union
 *.csproj merge=union
