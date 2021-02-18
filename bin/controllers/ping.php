@@ -241,6 +241,8 @@ class PingController extends AppController
 		
 		if (!$notification) { throw new PublicException('No notification found', 404); }
 		
+		if (!$notification->irt) { throw new PublicException('No notification found', 404); }
+		
 		/*
 		 * If the user is not logged in, there is no point to even continue. A guest 
 		 * must never be allowed to delete any ping.
@@ -253,8 +255,12 @@ class PingController extends AppController
 		 * Check if the user deleting the ping is actually the person who generated
 		 * the ping. Users must only be able to delete a ping they actually posted
 		 * themselves.
+		 * 
+		 * We need to make sure that it actually refers to the person that is being
+		 * responded to, since the disavow method is invoked by the author of the 
+		 * ping receiving a response.
 		 */
-		if ($notification->src->_id !== AuthorModel::find($this->user->id)->_id) { 
+		if ($notification->irt->src->_id !== AuthorModel::find($this->user->id)->_id) { 
 			throw new PublicException('No notification found', 404); 
 		}
 		
@@ -268,10 +274,7 @@ class PingController extends AppController
 		if ($confirm && $salt->verify($confirm)) {
 			$notification->url = url('ping', 'detail', $notification->irt->_id)->absolute();
 			$notification->irt = null;
-			
-			$this->core->feed->delete->do(function ($notification) {
-				$notification->store();
-			}, $notification);
+			$notification->store();
 			
 			return $this->response->setBody('OK')->getHeaders()->redirect(url('feed'));
 		}
