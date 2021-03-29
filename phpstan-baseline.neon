@@ -1,0 +1,1737 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Property AppController\\:\\:\\$sso \\(auth\\\\SSO\\) does not accept auth\\\\SSOCache\\.$#"
+			count: 1
+			path: bin/classes/AppController.php
+
+		-
+			message: "#^Call to an undefined method auth\\\\SSOCache\\:\\:makeToken\\(\\)\\.$#"
+			count: 1
+			path: bin/classes/AppController.php
+
+		-
+			message: "#^Call to an undefined method auth\\\\SSOCache\\:\\:makeSignature\\(\\)\\.$#"
+			count: 1
+			path: bin/classes/AppController.php
+
+		-
+			message: "#^Call to an undefined method auth\\\\SSOCache\\:\\:authApp\\(\\)\\.$#"
+			count: 1
+			path: bin/classes/AppController.php
+
+		-
+			message: "#^Call to an undefined method auth\\\\AppAuthentication\\:\\:isAuthenticated\\(\\)\\.$#"
+			count: 1
+			path: bin/classes/AuthUtil.php
+
+		-
+			message: "#^Class publicException referenced with incorrect case\\: PublicException\\.$#"
+			count: 1
+			path: bin/classes/AuthUtil.php
+
+		-
+			message: "#^Variable \\$signatures might not be defined\\.$#"
+			count: 1
+			path: bin/classes/auth/AppAuthentication.php
+
+		-
+			message: "#^Call to method getPath\\(\\) on an unknown class auth\\\\Settings\\.$#"
+			count: 1
+			path: bin/classes/auth/SSO.php
+
+		-
+			message: "#^Call to method getPort\\(\\) on an unknown class auth\\\\Settings\\.$#"
+			count: 1
+			path: bin/classes/auth/SSO.php
+
+		-
+			message: "#^Call to method getProtocol\\(\\) on an unknown class auth\\\\Settings\\.$#"
+			count: 1
+			path: bin/classes/auth/SSO.php
+
+		-
+			message: "#^Call to method getServer\\(\\) on an unknown class auth\\\\Settings\\.$#"
+			count: 1
+			path: bin/classes/auth/SSO.php
+
+		-
+			message: "#^Call to method getUser\\(\\) on an unknown class auth\\\\Settings\\.$#"
+			count: 1
+			path: bin/classes/auth/SSO.php
+
+		-
+			message: "#^Call to method getPassword\\(\\) on an unknown class auth\\\\Settings\\.$#"
+			count: 1
+			path: bin/classes/auth/SSO.php
+
+		-
+			message: "#^Instanceof between string\\|null and auth\\\\Token will always evaluate to false\\.$#"
+			count: 1
+			path: bin/classes/auth/SSO.php
+
+		-
+			message: "#^Variable \\$http_response_header in isset\\(\\) always exists and is not nullable\\.$#"
+			count: 1
+			path: bin/classes/auth/Token.php
+
+		-
+			message: "#^Parameter \\$url of method auth\\\\URLReflection\\:\\:fromURL\\(\\) has invalid typehint type auth\\\\Settings\\.$#"
+			count: 1
+			path: bin/classes/auth/URLReflection.php
+
+		-
+			message: "#^Return typehint of method auth\\\\URLReflection\\:\\:fromURL\\(\\) has invalid type auth\\\\Settings\\.$#"
+			count: 1
+			path: bin/classes/auth/URLReflection.php
+
+		-
+			message: "#^Class auth\\\\URLReflection constructor invoked with 8 parameters, 7 required\\.$#"
+			count: 1
+			path: bin/classes/auth/URLReflection.php
+
+		-
+			message: "#^Call to method getPath\\(\\) on an unknown class cloudy\\\\Settings\\.$#"
+			count: 1
+			path: bin/classes/cloudy/Cloudy.php
+
+		-
+			message: "#^Call to method getPort\\(\\) on an unknown class cloudy\\\\Settings\\.$#"
+			count: 1
+			path: bin/classes/cloudy/Cloudy.php
+
+		-
+			message: "#^Call to method getProtocol\\(\\) on an unknown class cloudy\\\\Settings\\.$#"
+			count: 1
+			path: bin/classes/cloudy/Cloudy.php
+
+		-
+			message: "#^Call to method getServer\\(\\) on an unknown class cloudy\\\\Settings\\.$#"
+			count: 1
+			path: bin/classes/cloudy/Cloudy.php
+
+		-
+			message: "#^Call to method getUser\\(\\) on an unknown class cloudy\\\\Settings\\.$#"
+			count: 1
+			path: bin/classes/cloudy/Cloudy.php
+
+		-
+			message: "#^Anonymous function should return object but returns object\\.$#"
+			count: 1
+			path: bin/classes/cloudy/Cloudy.php
+
+		-
+			message: "#^Cannot access property \\$payload on bool\\.$#"
+			count: 1
+			path: bin/classes/cloudy/Cloudy.php
+
+		-
+			message: "#^Parameter \\$url of method cloudy\\\\URLReflection\\:\\:fromURL\\(\\) has invalid typehint type cloudy\\\\Settings\\.$#"
+			count: 1
+			path: bin/classes/cloudy/URLReflection.php
+
+		-
+			message: "#^Return typehint of method cloudy\\\\URLReflection\\:\\:fromURL\\(\\) has invalid type cloudy\\\\Settings\\.$#"
+			count: 1
+			path: bin/classes/cloudy/URLReflection.php
+
+		-
+			message: "#^Class cloudy\\\\URLReflection constructor invoked with 8 parameters, 7 required\\.$#"
+			count: 1
+			path: bin/classes/cloudy/URLReflection.php
+
+		-
+			message: "#^Return typehint of method cloudy\\\\sf\\\\Bucket\\:\\:all\\(\\) has invalid type spitfire\\\\core\\\\CollectionInterface\\.$#"
+			count: 1
+			path: bin/classes/cloudy/sf/Bucket.php
+
+		-
+			message: "#^Method cloudy\\\\sf\\\\Bucket\\:\\:all\\(\\) should return spitfire\\\\core\\\\CollectionInterface but returns array\\.$#"
+			count: 1
+			path: bin/classes/cloudy/sf/Bucket.php
+
+		-
+			message: "#^Method cloudy\\\\sf\\\\Media\\:\\:move\\(\\) should return spitfire\\\\storage\\\\objectStorage\\\\FileInterface but return statement is missing\\.$#"
+			count: 1
+			path: bin/classes/cloudy/sf/Media.php
+
+		-
+			message: "#^Parameter \\#1 \\$filename of function unlink expects string, resource\\|false given\\.$#"
+			count: 1
+			path: bin/classes/cloudy/sf/Media.php
+
+		-
+			message: "#^Return typehint of method cloudy\\\\sf\\\\Mount\\:\\:all\\(\\) has invalid type spitfire\\\\core\\\\CollectionInterface\\.$#"
+			count: 1
+			path: bin/classes/cloudy/sf/Mount.php
+
+		-
+			message: "#^Method cloudy\\\\sf\\\\Mount\\:\\:make\\(\\) should return spitfire\\\\storage\\\\objectStorage\\\\FileInterface but returns false\\.$#"
+			count: 1
+			path: bin/classes/cloudy/sf/Mount.php
+
+		-
+			message: "#^Method cloudy\\\\sf\\\\Mount\\:\\:mkdir\\(\\) should return spitfire\\\\storage\\\\objectStorage\\\\NodeInterface but returns false\\.$#"
+			count: 1
+			path: bin/classes/cloudy/sf/Mount.php
+
+		-
+			message: "#^Parameter \\#2 \\$proj of function ftok expects string, int given\\.$#"
+			count: 1
+			path: bin/classes/cron/FlipFlop.php
+
+		-
+			message: "#^Constructor of class cron\\\\TimerFlipFlop has an unused parameter \\$filename\\.$#"
+			count: 1
+			path: bin/classes/cron/TimerFlipFlop.php
+
+		-
+			message: "#^Access to an undefined property media\\\\MediaModel\\:\\:\\$file\\.$#"
+			count: 1
+			path: bin/classes/media/Compressor.php
+
+		-
+			message: "#^Call to method get\\(\\) on an unknown class spitfire\\\\SpitFire\\\\storage\\\\objectStorage\\\\NodeInterface\\.$#"
+			count: 1
+			path: bin/classes/media/Compressor.php
+
+		-
+			message: "#^Call to method dir\\(\\) on an unknown class spitfire\\\\SpitFire\\\\storage\\\\objectStorage\\\\NodeInterface\\.$#"
+			count: 1
+			path: bin/classes/media/Compressor.php
+
+		-
+			message: "#^Call to an undefined method spitfire\\\\storage\\\\objectStorage\\\\NodeInterface\\:\\:basename\\(\\)\\.$#"
+			count: 1
+			path: bin/classes/media/Compressor.php
+
+		-
+			message: "#^Call to an undefined method spitfire\\\\storage\\\\objectStorage\\\\NodeInterface\\:\\:make\\(\\)\\.$#"
+			count: 3
+			path: bin/classes/media/Compressor.php
+
+		-
+			message: "#^Call to an undefined method spitfire\\\\storage\\\\objectStorage\\\\NodeInterface\\:\\:filename\\(\\)\\.$#"
+			count: 2
+			path: bin/classes/media/Compressor.php
+
+		-
+			message: "#^Method ping\\\\Locale\\:\\:getCurrency\\(\\) should return spitfire\\\\locale\\\\CurrencyLocalizer but returns null\\.$#"
+			count: 1
+			path: bin/classes/ping/Locale.php
+
+		-
+			message: "#^Return typehint of method ping\\\\Locale\\:\\:getDateFormatter\\(\\) has invalid type spitfire\\\\locale\\\\DateFormatter\\.$#"
+			count: 1
+			path: bin/classes/ping/Locale.php
+
+		-
+			message: "#^Method ping\\\\Locale\\:\\:getDateFormatter\\(\\) should return spitfire\\\\locale\\\\DateFormatter but returns null\\.$#"
+			count: 1
+			path: bin/classes/ping/Locale.php
+
+		-
+			message: "#^Variable \\$core might not be defined\\.$#"
+			count: 2
+			path: bin/classes/ping/core/_recipes/follownotification.php
+
+		-
+			message: "#^Variable \\$core might not be defined\\.$#"
+			count: 1
+			path: bin/classes/ping/core/_recipes/notificationemail.php
+
+		-
+			message: "#^Variable \\$core might not be defined\\.$#"
+			count: 2
+			path: bin/classes/ping/core/_recipes/pingdirectmessagenotification.php
+
+		-
+			message: "#^Anonymous function has an unused use \\$core\\.$#"
+			count: 1
+			path: bin/classes/ping/core/_recipes/pinglikehook.php
+
+		-
+			message: "#^Variable \\$core might not be defined\\.$#"
+			count: 2
+			path: bin/classes/ping/core/_recipes/pinglikehook.php
+
+		-
+			message: "#^Variable \\$core might not be defined\\.$#"
+			count: 2
+			path: bin/classes/ping/core/_recipes/pinglikenotification.php
+
+		-
+			message: "#^Variable \\$core might not be defined\\.$#"
+			count: 2
+			path: bin/classes/ping/core/_recipes/pingmentionnotification.php
+
+		-
+			message: "#^Anonymous function has an unused use \\$core\\.$#"
+			count: 1
+			path: bin/classes/ping/core/_recipes/pingreplyhook.php
+
+		-
+			message: "#^Variable \\$core might not be defined\\.$#"
+			count: 2
+			path: bin/classes/ping/core/_recipes/pingreplyhook.php
+
+		-
+			message: "#^Variable \\$core might not be defined\\.$#"
+			count: 1
+			path: bin/classes/ping/core/_recipes/pingreplynormalize.php
+
+		-
+			message: "#^Variable \\$core might not be defined\\.$#"
+			count: 2
+			path: bin/classes/ping/core/_recipes/pingreplynotification.php
+
+		-
+			message: "#^Variable \\$core might not be defined\\.$#"
+			count: 1
+			path: bin/classes/ping/core/_recipes/pingsharenormalize.php
+
+		-
+			message: "#^Variable \\$core might not be defined\\.$#"
+			count: 2
+			path: bin/classes/ping/core/_recipes/pingsharenotification.php
+
+		-
+			message: "#^Instantiated class exceptions\\\\FileNotFoundException not found\\.$#"
+			count: 1
+			path: bin/classes/ping/import/Importer.php
+
+		-
+			message: "#^Throwing object of an unknown class exceptions\\\\FileNotFoundException\\.$#"
+			count: 1
+			path: bin/classes/ping/import/Importer.php
+
+		-
+			message: "#^Negated boolean expression is always true\\.$#"
+			count: 1
+			path: bin/classes/signature/Signature.php
+
+		-
+			message: "#^Result of \\|\\| is always true\\.$#"
+			count: 1
+			path: bin/classes/signature/Signature.php
+
+		-
+			message: "#^Parameter \\#5 \\$context of class signature\\\\Signature constructor expects string, array\\<int, string\\> given\\.$#"
+			count: 1
+			path: bin/classes/signature/Signature.php
+
+		-
+			message: "#^Parameter \\#7 \\$salt of class signature\\\\Signature constructor expects string\\|null, signature\\\\Checksum given\\.$#"
+			count: 1
+			path: bin/classes/signature/Signature.php
+
+		-
+			message: "#^Access to an undefined property AccountController\\:\\:\\$session\\.$#"
+			count: 1
+			path: bin/controllers/account.php
+
+		-
+			message: "#^Class publicException referenced with incorrect case\\: PublicException\\.$#"
+			count: 1
+			path: bin/controllers/account.php
+
+		-
+			message: "#^Negated boolean expression is always false\\.$#"
+			count: 1
+			path: bin/controllers/activity.php
+
+		-
+			message: "#^Result of method spitfire\\\\core\\\\collection\\\\DefinedCollection\\:\\:rewind\\(\\) \\(void\\) is used\\.$#"
+			count: 1
+			path: bin/controllers/feedback.php
+
+		-
+			message: "#^Negated boolean expression is always true\\.$#"
+			count: 1
+			path: bin/controllers/feedback.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 1
+			path: bin/controllers/feedback.php
+
+		-
+			message: "#^Access to an undefined property PingModel\\:\\:\\$_id\\.$#"
+			count: 1
+			path: bin/controllers/feedback.php
+
+		-
+			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
+			count: 1
+			path: bin/controllers/ping.php
+
+		-
+			message: "#^Return typehint of method PingController\\:\\:delete\\(\\) has invalid type type\\.$#"
+			count: 1
+			path: bin/controllers/ping.php
+
+		-
+			message: "#^Method PingController\\:\\:delete\\(\\) should return type but return statement is missing\\.$#"
+			count: 1
+			path: bin/controllers/ping.php
+
+		-
+			message: "#^PHPDoc tag @param references unknown parameter\\: \\$pingid$#"
+			count: 1
+			path: bin/controllers/ping.php
+
+		-
+			message: "#^Access to an undefined property poll\\\\OptionModel\\:\\:\\$ping\\.$#"
+			count: 4
+			path: bin/controllers/poll.php
+
+		-
+			message: "#^Access to an undefined property PingModel\\:\\:\\$src\\.$#"
+			count: 1
+			path: bin/controllers/poll.php
+
+		-
+			message: "#^Access to an undefined property PingModel\\:\\:\\$pollEnd\\.$#"
+			count: 1
+			path: bin/controllers/poll.php
+
+		-
+			message: "#^Result of method spitfire\\\\core\\\\collection\\\\DefinedCollection\\:\\:rewind\\(\\) \\(void\\) is used\\.$#"
+			count: 1
+			path: bin/controllers/settings.php
+
+		-
+			message: "#^Cannot access property \\$name on void\\.$#"
+			count: 1
+			path: bin/controllers/settings.php
+
+		-
+			message: "#^Cannot access property \\$icon on void\\.$#"
+			count: 1
+			path: bin/controllers/settings.php
+
+		-
+			message: "#^Parameter \\#1 \\$str of function md5 expects string, int given\\.$#"
+			count: 1
+			path: bin/controllers/test.php
+
+		-
+			message: "#^PHPDoc tag @param references unknown parameter\\: \\$args$#"
+			count: 1
+			path: bin/controllers/user.php
+
+		-
+			message: "#^Parameter \\$username of method UserController\\:\\:show\\(\\) has invalid typehint type type\\.$#"
+			count: 1
+			path: bin/controllers/user.php
+
+		-
+			message: "#^Variable \\$me might not be defined\\.$#"
+			count: 1
+			path: bin/controllers/user.php
+
+		-
+			message: "#^Access to an undefined property CronDirector\\:\\:\\$sso\\.$#"
+			count: 3
+			path: bin/directors/cron.php
+
+		-
+			message: "#^Call to an undefined method spitfire\\\\storage\\\\objectStorage\\\\NodeInterface\\:\\:make\\(\\)\\.$#"
+			count: 1
+			path: bin/directors/cron.php
+
+		-
+			message: "#^Call to method dir\\(\\) on an unknown class spitfire\\\\SpitFire\\\\storage\\\\objectStorage\\\\NodeInterface\\.$#"
+			count: 1
+			path: bin/directors/cron.php
+
+		-
+			message: "#^Call to an undefined method spitfire\\\\storage\\\\objectStorage\\\\NodeInterface\\:\\:read\\(\\)\\.$#"
+			count: 1
+			path: bin/directors/cron.php
+
+		-
+			message: "#^Call to method get\\(\\) on an unknown class spitfire\\\\SpitFire\\\\storage\\\\objectStorage\\\\NodeInterface\\.$#"
+			count: 1
+			path: bin/directors/cron.php
+
+		-
+			message: "#^If condition is always true\\.$#"
+			count: 2
+			path: bin/directors/cron.php
+
+		-
+			message: "#^Variable \\$code might not be defined\\.$#"
+			count: 2
+			path: bin/error_pages/default.json.php
+
+		-
+			message: "#^Variable \\$exception might not be defined\\.$#"
+			count: 1
+			path: bin/error_pages/default.json.php
+
+		-
+			message: "#^Variable \\$message might not be defined\\.$#"
+			count: 2
+			path: bin/error_pages/default.json.php
+
+		-
+			message: "#^Variable \\$code might not be defined\\.$#"
+			count: 1
+			path: bin/error_pages/default.php
+
+		-
+			message: "#^Variable \\$message might not be defined\\.$#"
+			count: 2
+			path: bin/error_pages/default.php
+
+		-
+			message: "#^Parameter \\#2 \\$newvalue of function ini_set expects string, true given\\.$#"
+			count: 1
+			path: bin/error_pages/default.php
+
+		-
+			message: "#^Variable \\$exception might not be defined\\.$#"
+			count: 1
+			path: bin/error_pages/default.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$user\\.$#"
+			count: 1
+			path: bin/models/author.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$public\\.$#"
+			count: 1
+			path: bin/models/author.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$server\\.$#"
+			count: 1
+			path: bin/models/author.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$displayName\\.$#"
+			count: 1
+			path: bin/models/author.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$userName\\.$#"
+			count: 1
+			path: bin/models/author.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$bio\\.$#"
+			count: 1
+			path: bin/models/author.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$guid\\.$#"
+			count: 1
+			path: bin/models/author.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$avatar\\.$#"
+			count: 1
+			path: bin/models/author.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$banner\\.$#"
+			count: 1
+			path: bin/models/author.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$followers\\.$#"
+			count: 1
+			path: bin/models/author.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$following\\.$#"
+			count: 1
+			path: bin/models/author.php
+
+		-
+			message: "#^Method AuthorModel\\:\\:definitions\\(\\) should return spitfire\\\\storage\\\\database\\\\Schema but return statement is missing\\.$#"
+			count: 1
+			path: bin/models/author.php
+
+		-
+			message: "#^Access to an undefined property AuthorModel\\:\\:\\$guid\\.$#"
+			count: 1
+			path: bin/models/author.php
+
+		-
+			message: "#^Access to an undefined property AuthorModel\\:\\:\\$banner\\.$#"
+			count: 1
+			path: bin/models/author.php
+
+		-
+			message: "#^Access to an undefined property AuthorModel\\:\\:\\$user\\.$#"
+			count: 5
+			path: bin/models/author.php
+
+		-
+			message: "#^Access to an undefined property AuthorModel\\:\\:\\$avatar\\.$#"
+			count: 1
+			path: bin/models/author.php
+
+		-
+			message: "#^Access to an undefined property AuthorModel\\:\\:\\$displayName\\.$#"
+			count: 1
+			path: bin/models/author.php
+
+		-
+			message: "#^Access to an undefined property AuthorModel\\:\\:\\$userName\\.$#"
+			count: 1
+			path: bin/models/author.php
+
+		-
+			message: "#^Access to an undefined property AuthorModel\\:\\:\\$bio\\.$#"
+			count: 1
+			path: bin/models/author.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$notification\\.$#"
+			count: 1
+			path: bin/models/email/digestqueue.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$created\\.$#"
+			count: 1
+			path: bin/models/email/digestqueue.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$user\\.$#"
+			count: 1
+			path: bin/models/email/digestqueue.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$type\\.$#"
+			count: 1
+			path: bin/models/email/digestqueue.php
+
+		-
+			message: "#^Method email\\\\DigestQueueModel\\:\\:definitions\\(\\) should return spitfire\\\\storage\\\\database\\\\Schema but return statement is missing\\.$#"
+			count: 1
+			path: bin/models/email/digestqueue.php
+
+		-
+			message: "#^Access to an undefined property email\\\\DigestQueueModel\\:\\:\\$created\\.$#"
+			count: 1
+			path: bin/models/email/digestqueue.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$ping\\.$#"
+			count: 1
+			path: bin/models/embed.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$url\\.$#"
+			count: 1
+			path: bin/models/embed.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$short\\.$#"
+			count: 1
+			path: bin/models/embed.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$title\\.$#"
+			count: 1
+			path: bin/models/embed.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$description\\.$#"
+			count: 1
+			path: bin/models/embed.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$image\\.$#"
+			count: 1
+			path: bin/models/embed.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$created\\.$#"
+			count: 1
+			path: bin/models/embed.php
+
+		-
+			message: "#^Method EmbedModel\\:\\:definitions\\(\\) should return spitfire\\\\storage\\\\database\\\\Schema but return statement is missing\\.$#"
+			count: 1
+			path: bin/models/embed.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$author\\.$#"
+			count: 1
+			path: bin/models/feedback.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$target\\.$#"
+			count: 1
+			path: bin/models/feedback.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$ping\\.$#"
+			count: 1
+			path: bin/models/feedback.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$guid\\.$#"
+			count: 1
+			path: bin/models/feedback.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$appId\\.$#"
+			count: 1
+			path: bin/models/feedback.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$reaction\\.$#"
+			count: 1
+			path: bin/models/feedback.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$created\\.$#"
+			count: 1
+			path: bin/models/feedback.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$removed\\.$#"
+			count: 1
+			path: bin/models/feedback.php
+
+		-
+			message: "#^Method FeedbackModel\\:\\:definitions\\(\\) should return spitfire\\\\storage\\\\database\\\\Schema but return statement is missing\\.$#"
+			count: 1
+			path: bin/models/feedback.php
+
+		-
+			message: "#^Access to an undefined property FeedbackModel\\:\\:\\$guid\\.$#"
+			count: 1
+			path: bin/models/feedback.php
+
+		-
+			message: "#^Access to an undefined property FeedbackModel\\:\\:\\$created\\.$#"
+			count: 1
+			path: bin/models/feedback.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$follower\\.$#"
+			count: 1
+			path: bin/models/follow.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$prey\\.$#"
+			count: 1
+			path: bin/models/follow.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$created\\.$#"
+			count: 1
+			path: bin/models/follow.php
+
+		-
+			message: "#^Method FollowModel\\:\\:definitions\\(\\) should return spitfire\\\\storage\\\\database\\\\Schema but return statement is missing\\.$#"
+			count: 1
+			path: bin/models/follow.php
+
+		-
+			message: "#^Access to an undefined property FollowModel\\:\\:\\$created\\.$#"
+			count: 1
+			path: bin/models/follow.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$ping\\.$#"
+			count: 1
+			path: bin/models/media/media.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$type\\.$#"
+			count: 1
+			path: bin/models/media/media.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$file\\.$#"
+			count: 1
+			path: bin/models/media/media.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$secret\\.$#"
+			count: 1
+			path: bin/models/media/media.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$source\\.$#"
+			count: 1
+			path: bin/models/media/media.php
+
+		-
+			message: "#^Method media\\\\MediaModel\\:\\:definitions\\(\\) should return spitfire\\\\storage\\\\database\\\\Schema but return statement is missing\\.$#"
+			count: 1
+			path: bin/models/media/media.php
+
+		-
+			message: "#^Access to an undefined property media\\\\MediaModel\\:\\:\\$_id\\.$#"
+			count: 1
+			path: bin/models/media/media.php
+
+		-
+			message: "#^Access to an undefined property media\\\\MediaModel\\:\\:\\$ping\\.$#"
+			count: 3
+			path: bin/models/media/media.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$media\\.$#"
+			count: 1
+			path: bin/models/media/thumb.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$aspect\\.$#"
+			count: 1
+			path: bin/models/media/thumb.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$mime\\.$#"
+			count: 1
+			path: bin/models/media/thumb.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$file\\.$#"
+			count: 1
+			path: bin/models/media/thumb.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$poster\\.$#"
+			count: 1
+			path: bin/models/media/thumb.php
+
+		-
+			message: "#^Method media\\\\ThumbModel\\:\\:definitions\\(\\) should return spitfire\\\\storage\\\\database\\\\Schema but return statement is missing\\.$#"
+			count: 1
+			path: bin/models/media/thumb.php
+
+		-
+			message: "#^Access to an undefined property media\\\\ThumbModel\\:\\:\\$media\\.$#"
+			count: 2
+			path: bin/models/media/thumb.php
+
+		-
+			message: "#^Access to an undefined property media\\\\ThumbModel\\:\\:\\$aspect\\.$#"
+			count: 2
+			path: bin/models/media/thumb.php
+
+		-
+			message: "#^Parameter \\#1 \\$variable_representation of function unserialize expects string, bool given\\.$#"
+			count: 2
+			path: bin/models/media/thumb.php
+
+		-
+			message: "#^Access to an undefined property media\\\\ThumbModel\\:\\:\\$file\\.$#"
+			count: 3
+			path: bin/models/media/thumb.php
+
+		-
+			message: "#^Access to an undefined property media\\\\ThumbModel\\:\\:\\$poster\\.$#"
+			count: 2
+			path: bin/models/media/thumb.php
+
+		-
+			message: "#^Call to method get\\(\\) on an unknown class spitfire\\\\SpitFire\\\\storage\\\\objectStorage\\\\NodeInterface\\.$#"
+			count: 3
+			path: bin/models/media/thumb.php
+
+		-
+			message: "#^Access to an undefined property media\\\\ThumbModel\\:\\:\\$_id\\.$#"
+			count: 2
+			path: bin/models/media/thumb.php
+
+		-
+			message: "#^Call to an undefined method \\(spitfire\\\\SpitFire\\\\storage\\\\objectStorage\\\\NodeInterface&spitfire\\\\storage\\\\objectStorage\\\\NodeInterface\\)\\|\\(spitfire\\\\storage\\\\objectStorage\\\\DriveDispatcher&spitfire\\\\storage\\\\objectStorage\\\\NodeInterface\\)\\:\\:mime\\(\\)\\.$#"
+			count: 3
+			path: bin/models/media/thumb.php
+
+		-
+			message: "#^Instantiated class media\\\\spitfire\\\\exceptions\\\\PrivateException not found\\.$#"
+			count: 1
+			path: bin/models/media/thumb.php
+
+		-
+			message: "#^Throwing object of an unknown class media\\\\spitfire\\\\exceptions\\\\PrivateException\\.$#"
+			count: 1
+			path: bin/models/media/thumb.php
+
+		-
+			message: "#^Access to an undefined property \\$this\\(media\\\\ThumbModel\\)\\:\\:\\$poster\\.$#"
+			count: 1
+			path: bin/models/media/thumb.php
+
+		-
+			message: "#^Caught class media\\\\Exception not found\\.$#"
+			count: 1
+			path: bin/models/media/thumb.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$src\\.$#"
+			count: 1
+			path: bin/models/notification.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$target\\.$#"
+			count: 1
+			path: bin/models/notification.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$content\\.$#"
+			count: 1
+			path: bin/models/notification.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$url\\.$#"
+			count: 1
+			path: bin/models/notification.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$created\\.$#"
+			count: 1
+			path: bin/models/notification.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$type\\.$#"
+			count: 1
+			path: bin/models/notification.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$silent\\.$#"
+			count: 1
+			path: bin/models/notification.php
+
+		-
+			message: "#^Method NotificationModel\\:\\:definitions\\(\\) should return spitfire\\\\storage\\\\database\\\\Schema but return statement is missing\\.$#"
+			count: 1
+			path: bin/models/notification.php
+
+		-
+			message: "#^Access to an undefined property NotificationModel\\:\\:\\$created\\.$#"
+			count: 1
+			path: bin/models/notification.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$guid\\.$#"
+			count: 1
+			path: bin/models/ping.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$authapp\\.$#"
+			count: 1
+			path: bin/models/ping.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$src\\.$#"
+			count: 1
+			path: bin/models/ping.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$target\\.$#"
+			count: 1
+			path: bin/models/ping.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$content\\.$#"
+			count: 1
+			path: bin/models/ping.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$url\\.$#"
+			count: 1
+			path: bin/models/ping.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$media\\.$#"
+			count: 1
+			path: bin/models/ping.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$explicit\\.$#"
+			count: 1
+			path: bin/models/ping.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$deleted\\.$#"
+			count: 1
+			path: bin/models/ping.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$created\\.$#"
+			count: 1
+			path: bin/models/ping.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$irt\\.$#"
+			count: 1
+			path: bin/models/ping.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$share\\.$#"
+			count: 1
+			path: bin/models/ping.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$attached\\.$#"
+			count: 1
+			path: bin/models/ping.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$pollEnd\\.$#"
+			count: 1
+			path: bin/models/ping.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$processed\\.$#"
+			count: 1
+			path: bin/models/ping.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$locked\\.$#"
+			count: 1
+			path: bin/models/ping.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$replies\\.$#"
+			count: 1
+			path: bin/models/ping.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$shared\\.$#"
+			count: 1
+			path: bin/models/ping.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$embed\\.$#"
+			count: 1
+			path: bin/models/ping.php
+
+		-
+			message: "#^Method PingModel\\:\\:definitions\\(\\) should return spitfire\\\\storage\\\\database\\\\Schema but return statement is missing\\.$#"
+			count: 1
+			path: bin/models/ping.php
+
+		-
+			message: "#^Access to an undefined property PingModel\\:\\:\\$created\\.$#"
+			count: 1
+			path: bin/models/ping.php
+
+		-
+			message: "#^Access to an undefined property PingModel\\:\\:\\$guid\\.$#"
+			count: 1
+			path: bin/models/ping.php
+
+		-
+			message: "#^Return typehint of method PingModel\\:\\:getMediaURI\\(\\) has invalid type type\\.$#"
+			count: 1
+			path: bin/models/ping.php
+
+		-
+			message: "#^Access to an undefined property PingModel\\:\\:\\$_id\\.$#"
+			count: 1
+			path: bin/models/ping.php
+
+		-
+			message: "#^Access to an undefined property PingModel\\:\\:\\$media\\.$#"
+			count: 2
+			path: bin/models/ping.php
+
+		-
+			message: "#^Return typehint of method PingModel\\:\\:getMediaEmbed\\(\\) has invalid type type\\.$#"
+			count: 1
+			path: bin/models/ping.php
+
+		-
+			message: "#^Call to method mime\\(\\) on an unknown class spitfire\\\\SpitFire\\\\storage\\\\objectStorage\\\\NodeInterface\\.$#"
+			count: 1
+			path: bin/models/ping.php
+
+		-
+			message: "#^Method PingModel\\:\\:getMediaEmbed\\(\\) should return type but returns string\\.$#"
+			count: 3
+			path: bin/models/ping.php
+
+		-
+			message: "#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, type given\\.$#"
+			count: 1
+			path: bin/models/ping.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 1
+			path: bin/models/ping.php
+
+		-
+			message: "#^Access to an undefined property PingModel\\:\\:\\$share\\.$#"
+			count: 1
+			path: bin/models/ping.php
+
+		-
+			message: "#^Access to an undefined property PingModel\\:\\:\\$attached\\.$#"
+			count: 1
+			path: bin/models/ping.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$ping\\.$#"
+			count: 1
+			path: bin/models/poll/option.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$text\\.$#"
+			count: 1
+			path: bin/models/poll/option.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$guid\\.$#"
+			count: 1
+			path: bin/models/poll/option.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$created\\.$#"
+			count: 1
+			path: bin/models/poll/option.php
+
+		-
+			message: "#^Method poll\\\\OptionModel\\:\\:definitions\\(\\) should return spitfire\\\\storage\\\\database\\\\Schema but return statement is missing\\.$#"
+			count: 1
+			path: bin/models/poll/option.php
+
+		-
+			message: "#^Access to an undefined property poll\\\\OptionModel\\:\\:\\$guid\\.$#"
+			count: 1
+			path: bin/models/poll/option.php
+
+		-
+			message: "#^Access to an undefined property poll\\\\OptionModel\\:\\:\\$created\\.$#"
+			count: 1
+			path: bin/models/poll/option.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$ping\\.$#"
+			count: 1
+			path: bin/models/poll/reply.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$option\\.$#"
+			count: 1
+			path: bin/models/poll/reply.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$author\\.$#"
+			count: 1
+			path: bin/models/poll/reply.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$guid\\.$#"
+			count: 1
+			path: bin/models/poll/reply.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$created\\.$#"
+			count: 1
+			path: bin/models/poll/reply.php
+
+		-
+			message: "#^Method poll\\\\ReplyModel\\:\\:definitions\\(\\) should return spitfire\\\\storage\\\\database\\\\Schema but return statement is missing\\.$#"
+			count: 1
+			path: bin/models/poll/reply.php
+
+		-
+			message: "#^Access to an undefined property poll\\\\ReplyModel\\:\\:\\$guid\\.$#"
+			count: 1
+			path: bin/models/poll/reply.php
+
+		-
+			message: "#^Access to an undefined property poll\\\\ReplyModel\\:\\:\\$created\\.$#"
+			count: 1
+			path: bin/models/poll/reply.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$hostname\\.$#"
+			count: 1
+			path: bin/models/server.php
+
+		-
+			message: "#^Method ServerModel\\:\\:definitions\\(\\) should return spitfire\\\\storage\\\\database\\\\Schema but return statement is missing\\.$#"
+			count: 1
+			path: bin/models/server.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$user\\.$#"
+			count: 1
+			path: bin/models/settings/notification.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$type\\.$#"
+			count: 1
+			path: bin/models/settings/notification.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$setting\\.$#"
+			count: 1
+			path: bin/models/settings/notification.php
+
+		-
+			message: "#^Method settings\\\\NotificationModel\\:\\:definitions\\(\\) should return spitfire\\\\storage\\\\database\\\\Schema but return statement is missing\\.$#"
+			count: 1
+			path: bin/models/settings/notification.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$authId\\.$#"
+			count: 1
+			path: bin/models/user.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$lastSeen\\.$#"
+			count: 1
+			path: bin/models/user.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$lastSeenActivity\\.$#"
+			count: 1
+			path: bin/models/user.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$digested\\.$#"
+			count: 1
+			path: bin/models/user.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$followers\\.$#"
+			count: 1
+			path: bin/models/user.php
+
+		-
+			message: "#^Access to an undefined property spitfire\\\\storage\\\\database\\\\Schema\\:\\:\\$following\\.$#"
+			count: 1
+			path: bin/models/user.php
+
+		-
+			message: "#^Method UserModel\\:\\:definitions\\(\\) should return spitfire\\\\storage\\\\database\\\\Schema but return statement is missing\\.$#"
+			count: 1
+			path: bin/models/user.php
+
+		-
+			message: "#^Parameter \\#2 \\$target of method spitfire\\\\core\\\\router\\\\Routable\\:\\:addRoute\\(\\) expects string, array\\<string, array\\<int, string\\>\\|string\\> given\\.$#"
+			count: 1
+			path: bin/settings/routes.php
+
+		-
+			message: "#^Parameter \\#2 \\$target of method spitfire\\\\core\\\\router\\\\Routable\\:\\:addRoute\\(\\) expects string, array\\<string, string\\> given\\.$#"
+			count: 2
+			path: bin/settings/routes.php
+
+		-
+			message: "#^Parameter \\#2 \\$target of method spitfire\\\\core\\\\router\\\\Routable\\:\\:addRoute\\(\\) expects string, Closure\\(spitfire\\\\core\\\\router\\\\Parameters, spitfire\\\\core\\\\router\\\\Parameters, mixed\\)\\: spitfire\\\\core\\\\Path\\|false given\\.$#"
+			count: 2
+			path: bin/settings/routes.php
+
+		-
+			message: "#^Variable \\$id might not be defined\\.$#"
+			count: 1
+			path: bin/templates/activity/delete.php
+
+		-
+			message: "#^Variable \\$salt might not be defined\\.$#"
+			count: 1
+			path: bin/templates/activity/delete.php
+
+		-
+			message: "#^Variable \\$notifications might not be defined\\.$#"
+			count: 1
+			path: bin/templates/activity/index.json.php
+
+		-
+			message: "#^Variable \\$sso might not be defined\\.$#"
+			count: 1
+			path: bin/templates/activity/index.json.php
+
+		-
+			message: "#^Variable \\$asset_name might not be defined\\.$#"
+			count: 1
+			path: bin/templates/activity/index.json.php
+
+		-
+			message: "#^Variable \\$notifications might not be defined\\.$#"
+			count: 1
+			path: bin/templates/activity/index.php
+
+		-
+			message: "#^Variable \\$sso might not be defined\\.$#"
+			count: 2
+			path: bin/templates/activity/index.php
+
+		-
+			message: "#^Variable \\$authUser might not be defined\\.$#"
+			count: 1
+			path: bin/templates/activity/index.php
+
+		-
+			message: "#^Variable \\$this might not be defined\\.$#"
+			count: 1
+			path: bin/templates/activity/index.php
+
+		-
+			message: "#^Variable \\$this might not be defined\\.$#"
+			count: 1
+			path: bin/templates/activity/push.php
+
+		-
+			message: "#^Variable \\$media might not be defined\\.$#"
+			count: 11
+			path: bin/templates/elements/media/preview.php
+
+		-
+			message: "#^Variable \\$authUser might not be defined\\.$#"
+			count: 1
+			path: bin/templates/elements/ping/editor.php
+
+		-
+			message: "#^Variable \\$sso might not be defined\\.$#"
+			count: 1
+			path: bin/templates/elements/ping/editor.php
+
+		-
+			message: "#^Variable \\$ping might not be defined\\.$#"
+			count: 3
+			path: bin/templates/elements/ping/ping.php
+
+		-
+			message: "#^Variable \\$sso might not be defined\\.$#"
+			count: 5
+			path: bin/templates/elements/ping/ping.php
+
+		-
+			message: "#^Variable \\$authUser might not be defined\\.$#"
+			count: 1
+			path: bin/templates/elements/ping/ping.php
+
+		-
+			message: "#^Variable \\$tgt might not be defined\\.$#"
+			count: 3
+			path: bin/templates/email/digest.php
+
+		-
+			message: "#^Variable \\$sso might not be defined\\.$#"
+			count: 1
+			path: bin/templates/email/digest.php
+
+		-
+			message: "#^Variable \\$src might not be defined\\.$#"
+			count: 1
+			path: bin/templates/email/notification.php
+
+		-
+			message: "#^Variable \\$content might not be defined\\.$#"
+			count: 1
+			path: bin/templates/email/notification.php
+
+		-
+			message: "#^Variable \\$activity might not be defined\\.$#"
+			count: 2
+			path: bin/templates/feed/counter.js.php
+
+		-
+			message: "#^Variable \\$count might not be defined\\.$#"
+			count: 2
+			path: bin/templates/feed/counter.js.php
+
+		-
+			message: "#^Variable \\$sso might not be defined\\.$#"
+			count: 12
+			path: bin/templates/feed/index.json.php
+
+		-
+			message: "#^Variable \\$notifications might not be defined\\.$#"
+			count: 1
+			path: bin/templates/feed/index.json.php
+
+		-
+			message: "#^Variable \\$me might not be defined\\.$#"
+			count: 1
+			path: bin/templates/feed/index.json.php
+
+		-
+			message: "#^Cannot access offset 'mine' on bool\\.$#"
+			count: 1
+			path: bin/templates/feed/index.json.php
+
+		-
+			message: "#^Result of method spitfire\\\\core\\\\collection\\\\DefinedCollection\\:\\:rewind\\(\\) \\(void\\) is used\\.$#"
+			count: 1
+			path: bin/templates/feed/index.json.php
+
+		-
+			message: "#^Variable \\$authUser might not be defined\\.$#"
+			count: 1
+			path: bin/templates/feed/index.json.php
+
+		-
+			message: "#^Cannot access property \\$icon on void\\.$#"
+			count: 1
+			path: bin/templates/feed/index.json.php
+
+		-
+			message: "#^Ternary operator condition is always false\\.$#"
+			count: 3
+			path: bin/templates/feed/index.json.php
+
+		-
+			message: "#^Cannot access property \\$name on void\\.$#"
+			count: 1
+			path: bin/templates/feed/index.json.php
+
+		-
+			message: "#^Cannot access property \\$url on void\\.$#"
+			count: 1
+			path: bin/templates/feed/index.json.php
+
+		-
+			message: "#^Variable \\$authUser might not be defined\\.$#"
+			count: 2
+			path: bin/templates/feed/index.php
+
+		-
+			message: "#^Variable \\$notifications might not be defined\\.$#"
+			count: 1
+			path: bin/templates/feed/index.php
+
+		-
+			message: "#^Variable \\$notification might not be defined\\.$#"
+			count: 1
+			path: bin/templates/feed/index.php
+
+		-
+			message: "#^Variable \\$sso might not be defined\\.$#"
+			count: 1
+			path: bin/templates/feed/index.php
+
+		-
+			message: "#^Variable \\$this might not be defined\\.$#"
+			count: 2
+			path: bin/templates/feed/index.php
+
+		-
+			message: "#^Variable \\$me might not be defined\\.$#"
+			count: 1
+			path: bin/templates/feed/index.php
+
+		-
+			message: "#^Variable \\$reactions might not be defined\\.$#"
+			count: 1
+			path: bin/templates/feedback/available.json.php
+
+		-
+			message: "#^Variable \\$feedback might not be defined\\.$#"
+			count: 1
+			path: bin/templates/feedback/push.json.php
+
+		-
+			message: "#^Variable \\$feedback might not be defined\\.$#"
+			count: 1
+			path: bin/templates/feedback/push.php
+
+		-
+			message: "#^Variable \\$overall might not be defined\\.$#"
+			count: 1
+			path: bin/templates/feedback/retrieve.json.php
+
+		-
+			message: "#^Variable \\$authUser might not be defined\\.$#"
+			count: 1
+			path: bin/templates/layout.php
+
+		-
+			message: "#^Variable \\$this might not be defined\\.$#"
+			count: 1
+			path: bin/templates/layout.php
+
+		-
+			message: "#^Variable \\$sso might not be defined\\.$#"
+			count: 1
+			path: bin/templates/layout.php
+
+		-
+			message: "#^Variable \\$record might not be defined\\.$#"
+			count: 3
+			path: bin/templates/media/upload.json.php
+
+		-
+			message: "#^Variable \\$authUser might not be defined\\.$#"
+			count: 1
+			path: bin/templates/people/following.php
+
+		-
+			message: "#^Variable \\$user might not be defined\\.$#"
+			count: 19
+			path: bin/templates/people/following.php
+
+		-
+			message: "#^Variable \\$author might not be defined\\.$#"
+			count: 2
+			path: bin/templates/people/following.php
+
+		-
+			message: "#^Variable \\$followers might not be defined\\.$#"
+			count: 1
+			path: bin/templates/people/following.php
+
+		-
+			message: "#^Variable \\$sso might not be defined\\.$#"
+			count: 1
+			path: bin/templates/people/following.php
+
+		-
+			message: "#^Variable \\$pagination might not be defined\\.$#"
+			count: 1
+			path: bin/templates/people/following.php
+
+		-
+			message: "#^Variable \\$authUser might not be defined\\.$#"
+			count: 1
+			path: bin/templates/people/follows.php
+
+		-
+			message: "#^Variable \\$user might not be defined\\.$#"
+			count: 19
+			path: bin/templates/people/follows.php
+
+		-
+			message: "#^Variable \\$author might not be defined\\.$#"
+			count: 2
+			path: bin/templates/people/follows.php
+
+		-
+			message: "#^Variable \\$followers might not be defined\\.$#"
+			count: 1
+			path: bin/templates/people/follows.php
+
+		-
+			message: "#^Variable \\$sso might not be defined\\.$#"
+			count: 1
+			path: bin/templates/people/follows.php
+
+		-
+			message: "#^Variable \\$pagination might not be defined\\.$#"
+			count: 1
+			path: bin/templates/people/follows.php
+
+		-
+			message: "#^Variable \\$following might not be defined\\.$#"
+			count: 1
+			path: bin/templates/people/isFollowing.json.php
+
+		-
+			message: "#^Variable \\$authors might not be defined\\.$#"
+			count: 1
+			path: bin/templates/people/whoToFollow.json.php
+
+		-
+			message: "#^Variable \\$sso might not be defined\\.$#"
+			count: 1
+			path: bin/templates/people/whoToFollow.json.php
+
+		-
+			message: "#^Variable \\$id might not be defined\\.$#"
+			count: 1
+			path: bin/templates/ping/delete.json.php
+
+		-
+			message: "#^Variable \\$id might not be defined\\.$#"
+			count: 1
+			path: bin/templates/ping/delete.php
+
+		-
+			message: "#^Variable \\$salt might not be defined\\.$#"
+			count: 1
+			path: bin/templates/ping/delete.php
+
+		-
+			message: "#^Variable \\$ping might not be defined\\.$#"
+			count: 4
+			path: bin/templates/ping/detail.json.php
+
+		-
+			message: "#^Variable \\$sso might not be defined\\.$#"
+			count: 3
+			path: bin/templates/ping/detail.json.php
+
+		-
+			message: "#^Variable \\$authUser might not be defined\\.$#"
+			count: 1
+			path: bin/templates/ping/detail.json.php
+
+		-
+			message: "#^Variable \\$me might not be defined\\.$#"
+			count: 1
+			path: bin/templates/ping/detail.json.php
+
+		-
+			message: "#^Cannot access offset 'mine' on bool\\.$#"
+			count: 1
+			path: bin/templates/ping/detail.json.php
+
+		-
+			message: "#^Variable \\$me might not be defined\\.$#"
+			count: 1
+			path: bin/templates/ping/detail.php
+
+		-
+			message: "#^Variable \\$user might not be defined\\.$#"
+			count: 25
+			path: bin/templates/ping/detail.php
+
+		-
+			message: "#^Variable \\$ping might not be defined\\.$#"
+			count: 5
+			path: bin/templates/ping/detail.php
+
+		-
+			message: "#^Variable \\$sso might not be defined\\.$#"
+			count: 1
+			path: bin/templates/ping/detail.php
+
+		-
+			message: "#^Variable \\$authUser might not be defined\\.$#"
+			count: 1
+			path: bin/templates/ping/detail.php
+
+		-
+			message: "#^Ternary operator condition is always true\\.$#"
+			count: 1
+			path: bin/templates/ping/detail.php
+
+		-
+			message: "#^Variable \\$this might not be defined\\.$#"
+			count: 1
+			path: bin/templates/ping/detail.php
+
+		-
+			message: "#^Variable \\$id might not be defined\\.$#"
+			count: 1
+			path: bin/templates/ping/disavow.php
+
+		-
+			message: "#^Variable \\$salt might not be defined\\.$#"
+			count: 1
+			path: bin/templates/ping/disavow.php
+
+		-
+			message: "#^Variable \\$ping might not be defined\\.$#"
+			count: 2
+			path: bin/templates/ping/push.json.php
+
+		-
+			message: "#^Variable \\$notifications might not be defined\\.$#"
+			count: 1
+			path: bin/templates/ping/replies.json.php
+
+		-
+			message: "#^Variable \\$sso might not be defined\\.$#"
+			count: 3
+			path: bin/templates/ping/replies.json.php
+
+		-
+			message: "#^Variable \\$authUser might not be defined\\.$#"
+			count: 1
+			path: bin/templates/ping/replies.json.php
+
+		-
+			message: "#^Variable \\$me might not be defined\\.$#"
+			count: 1
+			path: bin/templates/ping/replies.json.php
+
+		-
+			message: "#^Variable \\$notifications might not be defined\\.$#"
+			count: 1
+			path: bin/templates/ping/url.json.php
+
+		-
+			message: "#^Variable \\$sso might not be defined\\.$#"
+			count: 3
+			path: bin/templates/ping/url.json.php
+
+		-
+			message: "#^Variable \\$authUser might not be defined\\.$#"
+			count: 1
+			path: bin/templates/ping/url.json.php
+
+		-
+			message: "#^Variable \\$appid might not be defined\\.$#"
+			count: 7
+			path: bin/templates/settings/generate.json.php
+
+		-
+			message: "#^Variable \\$icon might not be defined\\.$#"
+			count: 1
+			path: bin/templates/settings/generate.json.php
+
+		-
+			message: "#^Variable \\$name might not be defined\\.$#"
+			count: 1
+			path: bin/templates/settings/generate.json.php
+
+		-
+			message: "#^Variable \\$types might not be defined\\.$#"
+			count: 1
+			path: bin/templates/settings/notification.php
+
+		-
+			message: "#^Variable \\$notifications might not be defined\\.$#"
+			count: 1
+			path: bin/templates/user/show.json.php
+
+		-
+			message: "#^Variable \\$sso might not be defined\\.$#"
+			count: 11
+			path: bin/templates/user/show.json.php
+
+		-
+			message: "#^Variable \\$authUser might not be defined\\.$#"
+			count: 1
+			path: bin/templates/user/show.json.php
+
+		-
+			message: "#^Variable \\$me might not be defined\\.$#"
+			count: 1
+			path: bin/templates/user/show.json.php
+
+		-
+			message: "#^Variable \\$authUser might not be defined\\.$#"
+			count: 2
+			path: bin/templates/user/show.php
+
+		-
+			message: "#^Variable \\$user might not be defined\\.$#"
+			count: 28
+			path: bin/templates/user/show.php
+
+		-
+			message: "#^Variable \\$author might not be defined\\.$#"
+			count: 2
+			path: bin/templates/user/show.php
+
+		-
+			message: "#^Variable \\$notifications might not be defined\\.$#"
+			count: 1
+			path: bin/templates/user/show.php
+
+		-
+			message: "#^Variable \\$me might not be defined\\.$#"
+			count: 1
+			path: bin/templates/user/show.php
+
+		-
+			message: "#^Variable \\$this might not be defined\\.$#"
+			count: 1
+			path: bin/templates/user/show.php
+
+		-
+			message: "#^Variable \\$xsrf might not be defined\\.$#"
+			count: 1
+			path: bin/templates/xsrf/token.json.php
+

@@ -1,0 +1,22 @@
+{
+    "name": "magic3w/ping",
+    "description": "Micro service social network and notification manager",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "cesar",
+            "email": "cesar@magic3w.com"
+        }
+    ],
+	"scripts": {
+		"test" : [
+			"./vendor/bin/phpstan analyse bin/ --level 5"
+		]
+	},
+    "minimum-stability": "dev",
+	"prefer-stable": true,
+    "require-dev": {
+        "phpstan/phpstan": "^0.12.82"
+    }
+}
