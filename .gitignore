@@ -9,3 +9,5 @@ bin/settings/environments.php
 *.sublime-project
 
 *.sublime-workspace
+
+/vendor/
