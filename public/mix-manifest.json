@@ -1,3 +1,5 @@
 {
-    "/assets/js/feed/index.js": "/assets/js/feed/index.js"
+    "/js/feed/index.js": "/js/feed/index.js",
+    "/js/index.js": "/js/index.js",
+    "/css/app.css": "/css/app.css"
 }

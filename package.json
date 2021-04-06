@@ -19,10 +19,14 @@
   "license": "MIT",
   "devDependencies": {
     "laravel-mix": "^6.0.6",
+    "ping-sdk-js": "^0.0.1-alpha1",
     "postcss": "^8.2.2",
-    "ping-sdk-js": "^0.0.1-alpha1"
+    "resolve-url-loader": "^3.1.0",
+    "sass": "^1.32.8",
+    "sass-loader": "^11.0.1"
   },
   "dependencies": {
-    "lysine": "0.1.0-dev4"
+    "lysine": "0.1.0-dev4",
+    "m3w-_scss": "^0.0.1-alpha1"
   }
 }
