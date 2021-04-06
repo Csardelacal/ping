@@ -1,0 +1,4812 @@
+@charset "UTF-8";
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Nov 16, 2016, 4:02:35 PM
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #FAFAFA;
+  font-family: "Nunito Sans", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+
+a {
+  color: #25A9F8;
+  text-decoration: none;
+}
+
+p.secondary {
+  color: #777;
+}
+p.secondary.very {
+  color: #999;
+}
+p.small {
+  font-size: 0.8rem;
+}
+
+*[disabled] {
+  pointer-events: none;
+}
+
+.button, .add-ping input[type=submit] {
+  background: #3191f1 none repeat scroll 0 0;
+  border: medium none;
+  border-radius: 3px;
+  box-shadow: -2px -2px 1px #3167f1 inset;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-weight: 700;
+  padding: 0.5em 1.2em;
+  text-decoration: none;
+}
+.button.follow, .add-ping input.follow[type=submit] {
+  /*Follow button specific styles*/
+}
+.button.unfollow, .add-ping input.unfollow[type=submit] {
+  /*Follow button specific styles*/
+}
+.button[disabled], .add-ping input[disabled][type=submit] {
+  background: #AAAAAA;
+  box-shadow: -2px -2px 1px #888 inset;
+}
+
+.material {
+  background: #FFF;
+  border-radius: 2px;
+  border: solid 1px #CCC;
+  padding: 20px 15px 15px;
+}
+.material.unpadded {
+  padding: 0px;
+}
+.material .padded {
+  padding: 15px 10px 10px;
+}
+
+.add-ping {
+  background: #fff;
+}
+.add-ping textarea,
+.add-ping .textarea {
+  width: 100%;
+  padding: 5px 10px;
+  border: none;
+  font-size: 10px;
+  max-width: 100%;
+  min-width: 100%;
+  resize: none;
+}
+.add-ping textarea::-webkit-placeholder,
+.add-ping .textarea::-webkit-placeholder {
+  color: #1f567d;
+}
+.add-ping textarea::-moz-placeholder,
+.add-ping .textarea::-moz-placeholder {
+  color: #1f567d;
+}
+.separator {
+  border-top: solid 1px #c0d9eb;
+}
+
+.badge {
+  background: #F00;
+  color: #FFF;
+  border-radius: 1em;
+  padding: 0 0.5em;
+  font-weight: bold;
+}
+.badge[data-ping-amt="0"], .badge[data-ping-amt=""] {
+  background: #BBB;
+}
+
+.notification-indicator {
+  display: inline-block;
+  width: 0.3rem;
+  height: 0.3rem;
+  background: #F00;
+  color: #FFF;
+  border-radius: 50%;
+  font-size: 0;
+  vertical-align: 0.4rem;
+  margin: 0 0.3rem;
+}
+.notification-indicator[data-ping-amt="0"], .notification-indicator[data-ping-amt=""] {
+  background: #BBB;
+}
+
+.user-card .banner {
+  overflow: hidden;
+  background: #3289c7;
+  height: 60px;
+}
+.user-card .banner img {
+  width: 100%;
+  height: auto;
+  background: #FFF;
+  vertical-align: middle;
+}
+.user-card .user-info {
+  display: inline-block;
+  margin-left: 5px;
+}
+.user-card .user-name {
+  display: block;
+  color: #000;
+  font-weight: bold;
+}
+.user-card .user-bio {
+  font-size: 0.8em;
+  color: #555;
+}
+.user-card .avatar {
+  border-radius: 5px;
+  border: solid 2px #FFF;
+  width: 68px;
+  vertical-align: bottom;
+}
+
+.home-billboard h1, .home-billboard p {
+  display: inline-block;
+  padding: 4px 10px;
+  margin: 0;
+  color: #555;
+  vertical-align: bottom;
+  background: rgba(255, 255, 255, 0.6);
+  box-shadow: 5px -5px 0 #777;
+  z-index: 0;
+}
+.home-billboard h1 {
+  padding: 4px 30px 4px 10px;
+  z-index: 1;
+}
+
+.profile-resume .avatar {
+  width: 100%;
+  border-radius: 10px;
+}
+.profile-resume .bio,
+.profile-resume .follow-count,
+.profile-resume .liked-count,
+.profile-resume .follower-count,
+.profile-resume .ping-count {
+  display: block;
+  color: #555;
+  font-size: 0.8em;
+}
+.profile-resume .follow-count,
+.profile-resume .follower-count,
+.profile-resume .liked-count,
+.profile-resume .ping-count {
+  text-align: right;
+}
+.profile-resume .user-name {
+  display: block;
+  color: #000;
+  font-weight: bold;
+}
+
+.source-ping {
+  padding: 15px 10px 10px;
+  border-bottom: solid 1px #DDD;
+  background: #F6F6F6;
+  color: #444;
+  position: relative;
+  font-size: 0.95em;
+}
+
+.media-cover {
+  background: #EEE;
+  border-radius: 3px;
+  font-size: 12px;
+  text-align: center;
+  padding: 50px 0;
+  font-style: italic;
+  cursor: pointer;
+}
+
+.pagination {
+  list-style: none;
+  text-align: center;
+}
+.pagination li {
+  display: inline-block;
+  font-weight: bold;
+}
+.pagination li a {
+  display: inline-block;
+  padding: 10px;
+}
+.pagination li.disabled, .pagination li.disabled a {
+  color: #AAA;
+}
+.pagination li.active {
+  border-bottom: solid 1px #777;
+}
+
+.ping-contextual-link {
+  color: #666;
+  margin: 0 8px;
+  line-height: 14px;
+}
+.ping-contextual-link:first-child {
+  margin-left: 0;
+}
+.ping-contextual-link:hover {
+  color: #333;
+}
+.ping-contextual-link.liked {
+  color: #A33;
+}
+.ping-contextual-link span {
+  vertical-align: middle;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+.ping-contextual-link .im {
+  vertical-align: -0.05rem;
+  font-size: 0.7rem;
+  line-height: 0.7rem;
+}
+
+.delete-link {
+  color: #A33;
+}
+
+#new-ping-content {
+  font-size: 1.05em;
+  color: #3b7080;
+  font-family: inherit;
+  padding: 0;
+  min-height: 50px;
+  max-height: 300px;
+}
+#new-ping-content::-moz-placeholder {
+  font-size: 0.8em;
+}
+#new-ping-content:-ms-input-placeholder {
+  font-size: 0.8em;
+}
+#new-ping-content::placeholder {
+  font-size: 0.8em;
+}
+
+.media-preview {
+  overflow: hidden;
+  border-radius: 10px;
+}
+.media-preview img {
+  vertical-align: top;
+  border-bottom: solid 1px #FFF;
+  border-right: solid 1px #FFF;
+}
+
+#page-banner {
+  max-height: 400px;
+  min-height: 100px;
+  overflow: hidden;
+  border-bottom: solid 1px #777;
+  position: relative;
+}
+#page-banner:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.2), transparent 5%, transparent 95%, rgba(0, 0, 0, 0.2));
+}
+#page-banner img {
+  max-width: 100%;
+  width: 2000px;
+  margin: 0 auto;
+  display: block;
+  vertical-align: middle;
+}
+
+.row .span {
+  margin: 0 !important;
+}
+
+.reactions-container {
+  padding: 0.35rem;
+}
+.reactions-container a {
+  display: inline-block;
+  padding: 0.35rem 0.35rem;
+  border-radius: 0.2rem;
+}
+.reactions-container a:hover {
+  background-color: #DDD;
+}
+
+@media all and (min-width: 960px) {
+  .mobile-only {
+    display: none !important;
+  }
+}
+@media all and (max-width: 960px) {
+  .desktop-only {
+    display: none !important;
+  }
+}
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Feb 17, 2017, 3:02:00 PM
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+.main.navigation {
+  background: rgba(255, 255, 255, 0.6);
+  color: #242424;
+  border-bottom: solid 1px #999;
+  box-shadow: 0 1px 0px rgba(0, 0, 0, 0.1);
+}
+.main.navigation .menu-item {
+  background: none;
+  color: #242424;
+  padding: 10px;
+  width: 100%;
+  display: inline-block;
+}
+.main.navigation .menu-item:hover {
+  background: #EEE;
+  color: #333;
+}
+
+.secondary.navigation {
+  list-style-type: none;
+  margin-left: 0;
+  padding-left: 10px;
+}
+.secondary.navigation li {
+  margin-left: 0px;
+  padding-left: 5px;
+}
+.secondary.navigation li.active {
+  margin-left: 0;
+  font-weight: bold;
+}
+.secondary.navigation a {
+  color: #333;
+  text-decoration: none;
+  width: 100%;
+  display: block;
+  padding: 5px 5px 5px 0;
+}
+.secondary.navigation .navigation {
+  font-size: 0.8em;
+  padding-left: 10px;
+}
+
+@media all and (max-width: 960px) {
+  .main.navigation {
+    text-align: right;
+    padding: 0;
+    font-size: 0.8em;
+  }
+  .main.navigation div[class^=row] div[class^=span] {
+    display: inline-block;
+    width: auto;
+    float: none;
+  }
+  .main.navigation div[class^=row] div[class^=span].logo {
+    display: block;
+    text-align: center;
+    font-size: 1.2em;
+  }
+  .main.navigation div[class^=row] div[class^=span].logo img {
+    margin: 0 auto;
+  }
+  .main.navigation div[class^=row] div[class^=span].left {
+    float: left;
+  }
+
+  .secondary.navigation li {
+    display: inline-block;
+    border: none;
+  }
+  .secondary.navigation li.active {
+    border-left: none;
+    border-bottom: solid 3px #BBB;
+  }
+}
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Oct 15, 2017, 12:35:45 PM
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+.notification-avatar {
+  position: relative;
+  margin-right: 3px;
+}
+
+.activity-type {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  background-size: 12px 12px;
+}
+.activity-type.follow {
+  background-image: url(/images/follow.png?d20f4c0de3fe89a73e913ad2487d5897);
+}
+.activity-type.like {
+  background-image: url(/images/like.png?fac4159704d69805ac26036d8b708343);
+}
+
+.styled-select {
+  text-align: left;
+  background: none;
+  border: none;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  display: inline-block;
+  box-sizing: border-box;
+  border: solid 1px #CCC;
+  border-radius: 3px;
+  background: #F8F8F8;
+  background-repeat: no-repeat;
+  background-position: right 3px center;
+  background-size: 15px 15px;
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MUYyOTM3NjU0ODJBMTFFNkJCQ0VBNkJGMjRDOUE2ODgiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MUYyOTM3NjY0ODJBMTFFNkJCQ0VBNkJGMjRDOUE2ODgiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDoxRjI5Mzc2MzQ4MkExMUU2QkJDRUE2QkYyNEM5QTY4OCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDoxRjI5Mzc2NDQ4MkExMUU2QkJDRUE2QkYyNEM5QTY4OCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PiVf3ucAAAFnSURBVHja7Ji9CsIwEMfbwzfSt3DokwhOguDqKnTtKrhKQcEH8AF8AFfBqVOhUCg1gQhV8nXJpTrk4Iba3PnrNXf5a9r3ffLPlkbACBgBkYBlWf4UKMuyj+sJcf6pR+yT+eP7QxXgifl8xMJ1zGcyQFAELJm3IwLumd9kN1SAd+a7keBq5hvVTdAEbmUlD2Da7wHDk60Cw3GwXLcADAkOzK8BAXkBGh9AbgvRZdR2FQVIfAF5dxUBANc2i8AyGe+yihDOeuvYAla6UYC0BtN8gEhcqIYp0nLM+MIAdqJhfMfKFhMAITrPsJfrkIDv2VU7xN3EmZuEBkS/Jp95Co6vaicEha0dXU8kV8BWSDLbtc5nOnhs+LNw6mqTAdoI28pxv5IBmoTtxrHjyQB1gpNEZFAAqoTtmkKmUQDK1AlvngtFYirA4SDGjCCjUf5wH+65+z8CJoSaMRhgRQ0Y/36LgBHQYC8BBgCdj3B0L5oNGwAAAABJRU5ErkJggg==");
+}
+.styled-select select {
+  text-align: inherit;
+  background: none;
+  border: none;
+  width: 100%;
+  width: calc(100% + 20px);
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding: 3px 40px 3px 5px;
+  outline: none;
+}
+.styled-select option {
+  padding: 3px;
+  border: none;
+}
+
+/*
+The MIT License
+
+Copyright 2019 César de la Cal Bretschneider <cesar@magic3w.com>.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+/*
+    Created on : Jul 3, 2019, 9:31:21 AM
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+.spinner {
+  display: inline-block;
+  width: 1rem;
+  height: 0.5rem;
+  text-align: center;
+}
+.spinner:after {
+  content: "";
+  display: inline-block;
+  border-radius: 50%;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-color: #CCC #CCC #CCC transparent;
+  border-width: 4px;
+  border-style: solid;
+  -webkit-animation: spin infinite 2s linear;
+          animation: spin infinite 2s linear;
+}
+
+@-webkit-keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Oct 10, 2017, 11:59:43 AM
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+/*
+The MIT License
+
+Copyright 2018 César de la Cal Bretschneider <cesar@magic3w.com>.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+/*
+    Created on : 21.03.2018, 15:18:50
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+.has-dropdown {
+  position: relative;
+}
+
+.dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: -20px;
+  width: 100%;
+  min-width: 300px;
+  max-width: 100%;
+  margin-top: 20px;
+  background: #FFF;
+  border: solid 1px #DDD;
+  border-radius: 3px;
+  padding: 5px;
+  z-index: 99999999999;
+  padding: 10px;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  text-align: left;
+}
+.dropdown:before, .dropdown:after {
+  content: "";
+  height: 10px;
+  width: 10px;
+  display: block;
+  position: absolute;
+  bottom: 100%;
+}
+.dropdown:before {
+  left: 20px;
+  background-image: linear-gradient(-225deg, transparent 7px, #DDD 7px, #DDD 8px, #FFF 9px);
+}
+.dropdown:after {
+  left: 30px;
+  background-image: linear-gradient(225deg, transparent 7px, #DDD 7px, #DDD 8px, #FFF 9px);
+}
+.dropdown.right-bound {
+  right: -20px;
+  left: auto;
+}
+.dropdown.right-bound:before {
+  left: auto;
+  right: 30px;
+}
+.dropdown.right-bound:after {
+  left: auto;
+  right: 20px;
+}
+.dropdown.unpadded {
+  padding: 0;
+}
+.dropdown .padded {
+  padding: 5px;
+}
+
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Oct 10, 2017, 11:59:49 AM
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Oct 10, 2017, 11:58:05 AM
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+input[type=checkbox].styled {
+  display: none;
+}
+input[type=checkbox].styled + span.toggle {
+  display: inline-block;
+  position: relative;
+  width: 1.5em;
+  height: 0.5em;
+  background-color: #DDD;
+  border-radius: 5px;
+  vertical-align: 0.11em;
+  margin: 0 0.4em;
+  transition: background-color 0.3s linear;
+}
+input[type=checkbox].styled + span.toggle:before {
+  display: block;
+  position: absolute;
+  top: -0.2em;
+  left: 0;
+  height: 0.85em;
+  width: 0.9em;
+  border-radius: 50%;
+  background: #FFF;
+  border: solid 1px #777;
+  content: "";
+  transition: left 0.3s ease;
+}
+input[type=checkbox].styled:checked + span.toggle {
+  background-color: #a1d49d;
+}
+input[type=checkbox].styled:checked + span.toggle:before {
+  left: 50%;
+}
+
+/*
+The MIT License
+
+Copyright 2018 César de la Cal Bretschneider <cesar@magic3w.com>.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+/* 
+    Created on : Jun 6, 2018, 5:21:03 PM
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+form.condensed {
+  margin: 0 auto;
+  /*
+     * Textareas do have specific styles, including smaller text to make them more
+     * useful for users typing in bigger segments of text
+   */
+}
+form.condensed .field {
+  margin: 0;
+}
+form.condensed label {
+  display: none;
+}
+form.condensed input,
+form.condensed textarea {
+  /*
+   * These remove the annoyng styles from the iOS layout that will style
+   * input for you.
+   */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+form.condensed input[type=email],
+form.condensed input[type=password],
+form.condensed input[type=text],
+form.condensed textarea {
+  border: none;
+  border-top: none;
+  border-bottom: none;
+  border-radius: 0;
+  margin: 0;
+  font-size: 17px;
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  /*Make the splitter lines. We don't use border to avoid them invading the border */
+  background-image: linear-gradient(180deg, #DDD 1px, #FFF 1px);
+}
+form.condensed textarea {
+  font-size: 0.9em;
+  height: 8em;
+}
+form.condensed .field:first-child input[type=email],
+form.condensed .field:first-child input[type=text],
+form.condensed .field:first-child input[type=password],
+form.condensed .field:first-child textarea {
+  border-top: solid 1px #999;
+  background-image: linear-gradient(180deg, #ccc 0%, #fff 8%);
+}
+form.condensed input[type=submit] {
+  border: solid 1px #529EBB;
+  border-top: none;
+  font-family: sans-serif;
+  background-color: #25A9F8;
+  color: #FFF;
+  margin: 0;
+  font-size: 20px;
+  width: 100%;
+  padding: 10px;
+  cursor: pointer;
+  box-sizing: border-box;
+  background-image: linear-gradient(0deg, #0571B1 0%, #25A9F8 6%);
+}
+form.condensed input[type=submit]:disabled {
+  color: #b3b3b3;
+  background: #045280 !important;
+  cursor: not-allowed;
+}
+form.condensed .message {
+  position: relative;
+  padding: 10px 10px;
+  font-size: 13px;
+  border-width: 0 1px;
+  border-style: solid;
+}
+form.condensed .message.success {
+  border-color: #3C7619;
+  background: #84D950;
+  color: #3C7619;
+}
+form.condensed .message.success:after {
+  border-color: transparent transparent #84D950 transparent;
+}
+form.condensed .message.info {
+  border-color: #CCC;
+  background: #EEE;
+  color: #555;
+}
+form.condensed .message.info:after {
+  border-color: transparent transparent #EEE transparent;
+}
+form.condensed .message.error {
+  border-color: #590C0E;
+  background: #F2B5B7;
+  color: #490C0E;
+}
+form.condensed .message.error:after {
+  border-color: transparent transparent #F2B5B7 transparent;
+}
+form.condensed .message:after {
+  position: absolute;
+  bottom: 100%;
+  right: 20px;
+  display: block;
+  width: 0;
+  height: 0;
+  content: "";
+  border-style: none solid solid solid;
+  border-color: transparent transparent #CCC transparent;
+  border-width: 7px;
+}
+form.condensed .description {
+  background: #FFF;
+  padding: 10px;
+  color: #333;
+  font-size: 13px;
+}
+form.condensed.standalone {
+  max-width: 350px;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
+}
+form.condensed.standalone input:first-child,
+form.condensed.standalone input:last-child {
+  background-image: none;
+  border-top: none;
+}
+form.condensed.standalone input[type=submit] {
+  transition: background-color 0.5s ease, background-size 0.5s ease;
+  background-size: 0 0;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+}
+form.condensed.standalone input[type=submit]:hover {
+  background-color: #1599E8;
+}
+form.condensed.standalone input[type=submit]:active {
+  background-color: #35B9F8;
+}
+form.condensed.standalone .message {
+  border-left: none;
+  border-right: none;
+}
+
+/*
+The MIT License
+
+Copyright 2019 César de la Cal Bretschneider <cesar@magic3w.com>.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+/*
+    Created on : Apr 2, 2019, 10:23:35 AM
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+/*
+The MIT License
+
+Copyright 2019 César de la Cal Bretschneider <cesar@magic3w.com>.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+/*
+    Created on : Apr 2, 2019, 10:20:48 AM
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+.poll-open-response {
+  display: block;
+  width: 100%;
+  background: #EEEEF7;
+  border-radius: 4px;
+  color: #333;
+  margin-top: 3px;
+  padding: 3px;
+}
+.poll-open-response.selected-response {
+  background: #40aae8;
+  color: #FFF;
+}
+
+/*
+The MIT License
+
+Copyright 2019 César de la Cal Bretschneider <cesar@magic3w.com>.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+/*
+    Created on : Apr 2, 2019, 12:37:36 PM
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+.like-link.like-active {
+  color: #438eba;
+}
+
+#share-dialog {
+  width: 300px;
+  text-align: left;
+  padding: 1rem;
+}
+
+#share-confirm-link {
+  display: block;
+  font-size: 1.4rem;
+}
+
+/*
+The MIT License
+
+Copyright 2020 César de la Cal Bretschneider <cesar@magic3w.com>.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+/*
+    Created on : Mar 10, 2020, 1:52:24 PM
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+.ping-embed {
+  border-radius: 5px;
+  border: solid 1px #EEE;
+}
+.ping-embed img {
+  width: 100%;
+  border-radius: 5px 5px 0 0;
+}
+.ping-embed .ping-embed-caption {
+  padding: 0.15rem 1rem 0.8rem;
+}
+.ping-embed a {
+  font-weight: bold;
+}
+.ping-embed p {
+  margin: 0;
+  color: #999;
+}
+
+/*
+The MIT License
+
+Copyright 2018 César de la Cal Bretschneider <cesar@magic3w.com>.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+/*
+    Created on : 24.10.2018, 16:26:42
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+
+	 The purpose of this software is to provide a series of minimal standard
+	 components that are typical among UIs and that are required almost universally
+	 by web applications. These include resetting, scaffolding, basic form elements,
+	 basic text formatting elements, basic navigation bars and footers.
+
+	 Some of these functions will require appropriate Javascript to be used. 
+	 This requires the use of a _.scss.js file that will provide the required 
+	 functionality. This file will be provided with compatibility for m3.js's
+	 dependency loader.
+
+	 The use of the Javascript component MUST be optional and allow for graceful
+	 fallbacks while the JS is either not loaded, or failed loading.
+*/
+/*
+The MIT License
+
+Copyright 2019 César de la Cal Bretschneider <cesar@magic3w.com>.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+/*
+	Created on : Dec 9, 2019, 4:25:00 PM
+	Updated    : Sep 9, 2020
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+/*
+The MIT License
+
+Copyright 2019 César de la Cal Bretschneider <cesar@magic3w.com>.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+/*
+    Created on : Aug 20, 2019, 5:06:55 PM
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+html {
+  /*
+   * Resets the system to use a known good system font.
+   * See: https://furbo.org/2018/03/28/system-fonts-in-css/
+   */
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  line-height: 1.2;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: #5AA5F7;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/*
+    Created on : 20.04.2018, 16:35:00
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/*
+    Created on : 20.04.2018, 14:51:25
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+.span {
+  display: inline-block;
+  vertical-align: top;
+  min-height: 1px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  padding: 3px 1.0416666667%;
+  width: 100%;
+}
+.span img {
+  max-width: 100%;
+}
+
+div.row {
+  display: block;
+  margin: 0 auto;
+  width: 100%;
+  width: calc(100% - 30px);
+  /*
+     * Fixes an issue that browsers will have rendering the layout. Since the system
+     * does use inline-block, spaces that are parsed from the HTML file (due to tabs
+     * or spaces being present to indent the file) will cause the blocks to separate
+     * just a tiny bit and cause the layout to break.
+   */
+  font-size: 0;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+div.row.fluid {
+  width: 100%;
+  max-width: 100%;
+}
+div.row.ng > .span {
+  padding: 0;
+}
+div.row.ng-lr > .span:first-child {
+  padding-left: 0;
+}
+div.row.ng-lr .span:nth-last-of-type(1) {
+  padding-right: 0;
+}
+
+/*
+This are the functions (mixins) used to generate the basic scaffolding for our
+website. Due to the inverted functionality of the grid we rewrote big parts to 
+make them more usable.
+*/
+/*!
+    Created on : Oct 26, 2013, 7:18:16 PM
+    Author     : cesar
+*/
+._fs1-s1, .row.s10 > .span.s10, .row.s9 > .span.s9, .row.s8 > .span.s8, .row.s7 > .span.s7, .row.s6 > .span.s6, .row.s5 > .span.s5, .row.s4 > .span.s4, .row.s3 > .span.s3, .row.s2 > .span.s2,
+.row.s1 > .span.s1 {
+  width: 100%;
+}
+
+._fs2-s1, .row.s10 > .span.s5, .row.s8 > .span.s4, .row.s6 > .span.s3, .row.s4 > .span.s2,
+.row.s2 > .span.s1 {
+  width: 50%;
+}
+
+._fs3-s1, .row.s9 > .span.s3, .row.s6 > .span.s2,
+.row.s3 > .span.s1 {
+  width: 33.3333333333%;
+}
+
+._fs3-s2, .row.s9 > .span.s6, .row.s6 > .span.s4,
+.row.s3 > .span.s2 {
+  width: 66.6666666667%;
+}
+
+._fs4-s1, .row.s8 > .span.s2,
+.row.s4 > .span.s1 {
+  width: 25%;
+}
+
+._fs4-s3, .row.s8 > .span.s6,
+.row.s4 > .span.s3 {
+  width: 75%;
+}
+
+._fs5-s1, .row.s10 > .span.s2,
+.row.s5 > .span.s1 {
+  width: 20%;
+}
+
+._fs5-s2, .row.s10 > .span.s4,
+.row.s5 > .span.s2 {
+  width: 40%;
+}
+
+._fs5-s3, .row.s10 > .span.s6,
+.row.s5 > .span.s3 {
+  width: 60%;
+}
+
+._fs5-s4, .row.s10 > .span.s8,
+.row.s5 > .span.s4 {
+  width: 80%;
+}
+
+._fs6-s1,
+.row.s6 > .span.s1 {
+  width: 16.6666666667%;
+}
+
+._fs6-s5,
+.row.s6 > .span.s5 {
+  width: 83.3333333333%;
+}
+
+._fs7-s1,
+.row.s7 > .span.s1 {
+  width: 14.2857142857%;
+}
+
+._fs7-s2,
+.row.s7 > .span.s2 {
+  width: 28.5714285714%;
+}
+
+._fs7-s3,
+.row.s7 > .span.s3 {
+  width: 42.8571428571%;
+}
+
+._fs7-s4,
+.row.s7 > .span.s4 {
+  width: 57.1428571429%;
+}
+
+._fs7-s5,
+.row.s7 > .span.s5 {
+  width: 71.4285714286%;
+}
+
+._fs7-s6,
+.row.s7 > .span.s6 {
+  width: 85.7142857143%;
+}
+
+._fs8-s1,
+.row.s8 > .span.s1 {
+  width: 12.5%;
+}
+
+._fs8-s3,
+.row.s8 > .span.s3 {
+  width: 37.5%;
+}
+
+._fs8-s5,
+.row.s8 > .span.s5 {
+  width: 62.5%;
+}
+
+._fs8-s7,
+.row.s8 > .span.s7 {
+  width: 87.5%;
+}
+
+._fs9-s1,
+.row.s9 > .span.s1 {
+  width: 11.1111111111%;
+}
+
+._fs9-s2,
+.row.s9 > .span.s2 {
+  width: 22.2222222222%;
+}
+
+._fs9-s4,
+.row.s9 > .span.s4 {
+  width: 44.4444444444%;
+}
+
+._fs9-s5,
+.row.s9 > .span.s5 {
+  width: 55.5555555556%;
+}
+
+._fs9-s7,
+.row.s9 > .span.s7 {
+  width: 77.7777777778%;
+}
+
+._fs9-s8,
+.row.s9 > .span.s8 {
+  width: 88.8888888889%;
+}
+
+._fs10-s1,
+.row.s10 > .span.s1 {
+  width: 10%;
+}
+
+._fs10-s3,
+.row.s10 > .span.s3 {
+  width: 30%;
+}
+
+._fs10-s7,
+.row.s10 > .span.s7 {
+  width: 70%;
+}
+
+._fs10-s9,
+.row.s10 > .span.s9 {
+  width: 90%;
+}
+
+@media all and (max-width: 960px) and (min-width: 480px) {
+  .desktop-only {
+    display: none !important;
+  }
+
+  .mobile-only {
+    display: none;
+  }
+
+  .not-tablet {
+    display: none;
+  }
+
+  /*
+  This are the functions (mixins) used to generate the basic scaffolding for our
+  website. Due to the inverted functionality of the grid we rewrote big parts to 
+  make them more usable.
+  */
+  /*!
+      Created on : Oct 26, 2013, 7:18:16 PM
+      Author     : cesar
+  */
+  ._fm1-m1, .row.m10 > .span.m10, .row.m9 > .span.m9, .row.m8 > .span.m8, .row.m7 > .span.m7, .row.m6 > .span.m6, .row.m5 > .span.m5, .row.m4 > .span.m4, .row.m3 > .span.m3, .row.m2 > .span.m2,
+.row.m1 > .span.m1 {
+    width: 100%;
+  }
+
+  ._fm2-m1, .row.m10 > .span.m5, .row.m8 > .span.m4, .row.m6 > .span.m3, .row.m4 > .span.m2,
+.row.m2 > .span.m1 {
+    width: 50%;
+  }
+
+  ._fm3-m1, .row.m9 > .span.m3, .row.m6 > .span.m2,
+.row.m3 > .span.m1 {
+    width: 33.3333333333%;
+  }
+
+  ._fm3-m2, .row.m9 > .span.m6, .row.m6 > .span.m4,
+.row.m3 > .span.m2 {
+    width: 66.6666666667%;
+  }
+
+  ._fm4-m1, .row.m8 > .span.m2,
+.row.m4 > .span.m1 {
+    width: 25%;
+  }
+
+  ._fm4-m3, .row.m8 > .span.m6,
+.row.m4 > .span.m3 {
+    width: 75%;
+  }
+
+  ._fm5-m1, .row.m10 > .span.m2,
+.row.m5 > .span.m1 {
+    width: 20%;
+  }
+
+  ._fm5-m2, .row.m10 > .span.m4,
+.row.m5 > .span.m2 {
+    width: 40%;
+  }
+
+  ._fm5-m3, .row.m10 > .span.m6,
+.row.m5 > .span.m3 {
+    width: 60%;
+  }
+
+  ._fm5-m4, .row.m10 > .span.m8,
+.row.m5 > .span.m4 {
+    width: 80%;
+  }
+
+  ._fm6-m1,
+.row.m6 > .span.m1 {
+    width: 16.6666666667%;
+  }
+
+  ._fm6-m5,
+.row.m6 > .span.m5 {
+    width: 83.3333333333%;
+  }
+
+  ._fm7-m1,
+.row.m7 > .span.m1 {
+    width: 14.2857142857%;
+  }
+
+  ._fm7-m2,
+.row.m7 > .span.m2 {
+    width: 28.5714285714%;
+  }
+
+  ._fm7-m3,
+.row.m7 > .span.m3 {
+    width: 42.8571428571%;
+  }
+
+  ._fm7-m4,
+.row.m7 > .span.m4 {
+    width: 57.1428571429%;
+  }
+
+  ._fm7-m5,
+.row.m7 > .span.m5 {
+    width: 71.4285714286%;
+  }
+
+  ._fm7-m6,
+.row.m7 > .span.m6 {
+    width: 85.7142857143%;
+  }
+
+  ._fm8-m1,
+.row.m8 > .span.m1 {
+    width: 12.5%;
+  }
+
+  ._fm8-m3,
+.row.m8 > .span.m3 {
+    width: 37.5%;
+  }
+
+  ._fm8-m5,
+.row.m8 > .span.m5 {
+    width: 62.5%;
+  }
+
+  ._fm8-m7,
+.row.m8 > .span.m7 {
+    width: 87.5%;
+  }
+
+  ._fm9-m1,
+.row.m9 > .span.m1 {
+    width: 11.1111111111%;
+  }
+
+  ._fm9-m2,
+.row.m9 > .span.m2 {
+    width: 22.2222222222%;
+  }
+
+  ._fm9-m4,
+.row.m9 > .span.m4 {
+    width: 44.4444444444%;
+  }
+
+  ._fm9-m5,
+.row.m9 > .span.m5 {
+    width: 55.5555555556%;
+  }
+
+  ._fm9-m7,
+.row.m9 > .span.m7 {
+    width: 77.7777777778%;
+  }
+
+  ._fm9-m8,
+.row.m9 > .span.m8 {
+    width: 88.8888888889%;
+  }
+
+  ._fm10-m1,
+.row.m10 > .span.m1 {
+    width: 10%;
+  }
+
+  ._fm10-m3,
+.row.m10 > .span.m3 {
+    width: 30%;
+  }
+
+  ._fm10-m7,
+.row.m10 > .span.m7 {
+    width: 70%;
+  }
+
+  ._fm10-m9,
+.row.m10 > .span.m9 {
+    width: 90%;
+  }
+}
+@media all and (min-width: 960px) {
+  .mobile-only {
+    display: none;
+  }
+
+  .tablet-only {
+    display: none;
+  }
+
+  .not-desktop {
+    display: none;
+  }
+
+  /*
+  This are the functions (mixins) used to generate the basic scaffolding for our
+  website. Due to the inverted functionality of the grid we rewrote big parts to 
+  make them more usable.
+  */
+  /*!
+      Created on : Oct 26, 2013, 7:18:16 PM
+      Author     : cesar
+  */
+  div.row {
+    width: 100%;
+    max-width: 960px;
+  }
+
+  ._fl1-l1, .row.l10 > .span.l10, .row.l9 > .span.l9, .row.l8 > .span.l8, .row.l7 > .span.l7, .row.l6 > .span.l6, .row.l5 > .span.l5, .row.l4 > .span.l4, .row.l3 > .span.l3, .row.l2 > .span.l2,
+.row.l1 > .span.l1 {
+    width: 100%;
+  }
+
+  ._fl2-l1, .row.l10 > .span.l5, .row.l8 > .span.l4, .row.l6 > .span.l3, .row.l4 > .span.l2,
+.row.l2 > .span.l1 {
+    width: 50%;
+  }
+
+  ._fl3-l1, .row.l9 > .span.l3, .row.l6 > .span.l2,
+.row.l3 > .span.l1 {
+    width: 33.3333333333%;
+  }
+
+  ._fl3-l2, .row.l9 > .span.l6, .row.l6 > .span.l4,
+.row.l3 > .span.l2 {
+    width: 66.6666666667%;
+  }
+
+  ._fl4-l1, .row.l8 > .span.l2,
+.row.l4 > .span.l1 {
+    width: 25%;
+  }
+
+  ._fl4-l3, .row.l8 > .span.l6,
+.row.l4 > .span.l3 {
+    width: 75%;
+  }
+
+  ._fl5-l1, .row.l10 > .span.l2,
+.row.l5 > .span.l1 {
+    width: 20%;
+  }
+
+  ._fl5-l2, .row.l10 > .span.l4,
+.row.l5 > .span.l2 {
+    width: 40%;
+  }
+
+  ._fl5-l3, .row.l10 > .span.l6,
+.row.l5 > .span.l3 {
+    width: 60%;
+  }
+
+  ._fl5-l4, .row.l10 > .span.l8,
+.row.l5 > .span.l4 {
+    width: 80%;
+  }
+
+  ._fl6-l1,
+.row.l6 > .span.l1 {
+    width: 16.6666666667%;
+  }
+
+  ._fl6-l5,
+.row.l6 > .span.l5 {
+    width: 83.3333333333%;
+  }
+
+  ._fl7-l1,
+.row.l7 > .span.l1 {
+    width: 14.2857142857%;
+  }
+
+  ._fl7-l2,
+.row.l7 > .span.l2 {
+    width: 28.5714285714%;
+  }
+
+  ._fl7-l3,
+.row.l7 > .span.l3 {
+    width: 42.8571428571%;
+  }
+
+  ._fl7-l4,
+.row.l7 > .span.l4 {
+    width: 57.1428571429%;
+  }
+
+  ._fl7-l5,
+.row.l7 > .span.l5 {
+    width: 71.4285714286%;
+  }
+
+  ._fl7-l6,
+.row.l7 > .span.l6 {
+    width: 85.7142857143%;
+  }
+
+  ._fl8-l1,
+.row.l8 > .span.l1 {
+    width: 12.5%;
+  }
+
+  ._fl8-l3,
+.row.l8 > .span.l3 {
+    width: 37.5%;
+  }
+
+  ._fl8-l5,
+.row.l8 > .span.l5 {
+    width: 62.5%;
+  }
+
+  ._fl8-l7,
+.row.l8 > .span.l7 {
+    width: 87.5%;
+  }
+
+  ._fl9-l1,
+.row.l9 > .span.l1 {
+    width: 11.1111111111%;
+  }
+
+  ._fl9-l2,
+.row.l9 > .span.l2 {
+    width: 22.2222222222%;
+  }
+
+  ._fl9-l4,
+.row.l9 > .span.l4 {
+    width: 44.4444444444%;
+  }
+
+  ._fl9-l5,
+.row.l9 > .span.l5 {
+    width: 55.5555555556%;
+  }
+
+  ._fl9-l7,
+.row.l9 > .span.l7 {
+    width: 77.7777777778%;
+  }
+
+  ._fl9-l8,
+.row.l9 > .span.l8 {
+    width: 88.8888888889%;
+  }
+
+  ._fl10-l1,
+.row.l10 > .span.l1 {
+    width: 10%;
+  }
+
+  ._fl10-l3,
+.row.l10 > .span.l3 {
+    width: 30%;
+  }
+
+  ._fl10-l7,
+.row.l10 > .span.l7 {
+    width: 70%;
+  }
+
+  ._fl10-l9,
+.row.l10 > .span.l9 {
+    width: 90%;
+  }
+}
+@media all and (max-width: 480px) {
+  .desktop-only {
+    display: none !important;
+  }
+
+  .tablet-only {
+    display: none;
+  }
+
+  .not-mobile {
+    display: none;
+  }
+}
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/*
+    Created on : May 14, 2019, 11:15:57 AM
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+/*
+The MIT License
+
+Copyright 2019 César de la Cal Bretschneider <cesar@magic3w.com>.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+/*
+    Created on : Aug 30, 2019, 4:28:26 PM
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+body {
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+
+.sidebar {
+  overflow: hidden;
+  position: fixed;
+  display: block;
+  height: 100%;
+  left: 0px;
+  top: 0;
+  width: 300px;
+  max-width: 90%;
+  transform: translate(-300px, 0);
+  background: #FFF;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  border-right: 1px solid #DDD;
+}
+.sidebar .menu-title {
+  display: block;
+  color: #999;
+  font-size: 1rem;
+  padding: 0.8rem 1rem 0.5rem;
+}
+.sidebar .menu-entry {
+  font-size: 0.8rem;
+  color: #666;
+  display: block;
+}
+.sidebar .menu-entry:hover {
+  color: #242424;
+  background: #F7F7F7;
+}
+.sidebar .menu-entry.active, .sidebar .menu-entry:active {
+  background-color: #2f97e0;
+  color: #FFF;
+  font-weight: bold;
+}
+.sidebar .menu-entry a {
+  padding: 0.7rem 1rem;
+  display: block;
+  width: 100%;
+}
+.sidebar .menu-entry img {
+  vertical-align: middle;
+  height: 1.2em;
+  margin-right: 0.5rem;
+}
+.sidebar .indented {
+  padding-left: 10px;
+  border-left: solid 1px #DDD;
+}
+.sidebar .navbar {
+  box-shadow: none;
+}
+.sidebar a {
+  color: inherit;
+  text-decoration: none;
+}
+.sidebar a:hover {
+  color: #333;
+}
+.sidebar a:active {
+  color: #FFF;
+}
+
+.sidebar:hover {
+  overflow: auto;
+}
+
+.contains-sidebar {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.1);
+  z-index: 30;
+}
+
+/*
+The MIT License
+
+Copyright 2020 César de la Cal Bretschneider <cesar@magic3w.com>.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+/*
+    Created on : Feb 28, 2020, 5:45:31 PM
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+/*
+ * Define the button radius' for small and large buttons.
+ * 
+ * These radiuses are affected by the size of the button, and it's extremely
+ * difficult to determine the radius of a button programmatically, since they
+ * are not directly correlated.
+ */
+.button, .add-ping input[type=submit] {
+  /*
+   * We default the text color of buttons to white, since most buttons will have
+   * a darker solid background that fills the button.
+   */
+  color: #FFFFFF;
+  /*
+   * Buttons are inline elements, which means that we wish to have them behave accordingly
+   * in the context of inline components.
+   * 
+   * CSS makes it extraordinarily challenging to mix static and inline-block elements, while
+   * maintaining a good vertical alignment. Most of the time the baseline will behave improperly
+   * and the elements will shift.
+   * 
+   * While I understand that this is a challenge that something like CSS just faces, we like 
+   * to handle all our elements that are to be displayed as inline blocks with a static height,
+   * so they become better behaved and are able to align vertically with the rest.
+   */
+  display: inline-block;
+  vertical-align: middle;
+  height: 3.25rem;
+  line-height: 1.625rem;
+  font-size: 1.1607142857rem;
+  /*
+   * Buttons are always clickable elements, and therefore should indicate their clickability to the
+   * user by setting setting the cursor to a clicking hand.
+   */
+  cursor: pointer;
+  background: linear-gradient(90deg, #396afc, #2948ff);
+  border-radius: 4px;
+  border: transparent solid 0.0625rem;
+  padding: 0.75rem 1.1rem;
+  font-weight: bolder;
+  text-decoration: none;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+.button:hover, .add-ping input[type=submit]:hover {
+  text-decoration: none;
+}
+.button.borderless, .add-ping input.borderless[type=submit] {
+  background: none;
+  color: #652CA5;
+  font-weight: bold;
+  border: solid 0.0625rem transparent;
+}
+.button.outline, .add-ping input.outline[type=submit] {
+  background: none;
+  color: #652CA5;
+  border: solid 0.0625rem #652CA5;
+  font-weight: bold;
+  box-shadow: none;
+}
+.button.outline.fill-on-hover:hover, .add-ping input.outline.fill-on-hover[type=submit]:hover, .button.outline .solid, .add-ping input.outline[type=submit] .solid {
+  background: #652CA5;
+  color: #FFF;
+  border: solid 0.0625rem #652CA5;
+}
+.button.outline.button-color-grey-050, .add-ping input.outline.button-color-grey-050[type=submit] {
+  color: #F6F9FA;
+  border: solid 0.0625rem #F6F9FA;
+}
+.button.solid.button-color-grey-050, .add-ping input.solid.button-color-grey-050[type=submit], .button.solid.hover-fill-grey-050:hover, .add-ping input.solid.hover-fill-grey-050[type=submit]:hover, .button.outline.hover-fill-grey-050:hover, .add-ping input.outline.hover-fill-grey-050[type=submit]:hover, .button.borderless.hover-fill-grey-050:hover, .add-ping input.borderless.hover-fill-grey-050[type=submit]:hover {
+  background: #F6F9FA;
+  color: #FFF;
+  border: solid 0.0625rem #F6F9FA;
+}
+.button.borderless.button-color-grey-050, .add-ping input.borderless.button-color-grey-050[type=submit] {
+  color: #F6F9FA;
+}
+.button.outline.button-color-grey-100, .add-ping input.outline.button-color-grey-100[type=submit] {
+  color: #F1F2F3;
+  border: solid 0.0625rem #F1F2F3;
+}
+.button.solid.button-color-grey-100, .add-ping input.solid.button-color-grey-100[type=submit], .button.solid.hover-fill-grey-100:hover, .add-ping input.solid.hover-fill-grey-100[type=submit]:hover, .button.outline.hover-fill-grey-100:hover, .add-ping input.outline.hover-fill-grey-100[type=submit]:hover, .button.borderless.hover-fill-grey-100:hover, .add-ping input.borderless.hover-fill-grey-100[type=submit]:hover {
+  background: #F1F2F3;
+  color: #FFF;
+  border: solid 0.0625rem #F1F2F3;
+}
+.button.borderless.button-color-grey-100, .add-ping input.borderless.button-color-grey-100[type=submit] {
+  color: #F1F2F3;
+}
+.button.outline.button-color-grey-200, .add-ping input.outline.button-color-grey-200[type=submit] {
+  color: #E6E8EA;
+  border: solid 0.0625rem #E6E8EA;
+}
+.button.solid.button-color-grey-200, .add-ping input.solid.button-color-grey-200[type=submit], .button.solid.hover-fill-grey-200:hover, .add-ping input.solid.hover-fill-grey-200[type=submit]:hover, .button.outline.hover-fill-grey-200:hover, .add-ping input.outline.hover-fill-grey-200[type=submit]:hover, .button.borderless.hover-fill-grey-200:hover, .add-ping input.borderless.hover-fill-grey-200[type=submit]:hover {
+  background: #E6E8EA;
+  color: #FFF;
+  border: solid 0.0625rem #E6E8EA;
+}
+.button.borderless.button-color-grey-200, .add-ping input.borderless.button-color-grey-200[type=submit] {
+  color: #E6E8EA;
+}
+.button.outline.button-color-grey-300, .add-ping input.outline.button-color-grey-300[type=submit] {
+  color: #C1C8CD;
+  border: solid 0.0625rem #C1C8CD;
+}
+.button.solid.button-color-grey-300, .add-ping input.solid.button-color-grey-300[type=submit], .button.solid.hover-fill-grey-300:hover, .add-ping input.solid.hover-fill-grey-300[type=submit]:hover, .button.outline.hover-fill-grey-300:hover, .add-ping input.outline.hover-fill-grey-300[type=submit]:hover, .button.borderless.hover-fill-grey-300:hover, .add-ping input.borderless.hover-fill-grey-300[type=submit]:hover {
+  background: #C1C8CD;
+  color: #FFF;
+  border: solid 0.0625rem #C1C8CD;
+}
+.button.borderless.button-color-grey-300, .add-ping input.borderless.button-color-grey-300[type=submit] {
+  color: #C1C8CD;
+}
+.button.outline.button-color-grey-400, .add-ping input.outline.button-color-grey-400[type=submit] {
+  color: #A9B3B9;
+  border: solid 0.0625rem #A9B3B9;
+}
+.button.solid.button-color-grey-400, .add-ping input.solid.button-color-grey-400[type=submit], .button.solid.hover-fill-grey-400:hover, .add-ping input.solid.hover-fill-grey-400[type=submit]:hover, .button.outline.hover-fill-grey-400:hover, .add-ping input.outline.hover-fill-grey-400[type=submit]:hover, .button.borderless.hover-fill-grey-400:hover, .add-ping input.borderless.hover-fill-grey-400[type=submit]:hover {
+  background: #A9B3B9;
+  color: #FFF;
+  border: solid 0.0625rem #A9B3B9;
+}
+.button.borderless.button-color-grey-400, .add-ping input.borderless.button-color-grey-400[type=submit] {
+  color: #A9B3B9;
+}
+.button.outline.button-color-grey-500, .add-ping input.outline.button-color-grey-500[type=submit] {
+  color: #8D99A3;
+  border: solid 0.0625rem #8D99A3;
+}
+.button.solid.button-color-grey-500, .add-ping input.solid.button-color-grey-500[type=submit], .button.solid.hover-fill-grey-500:hover, .add-ping input.solid.hover-fill-grey-500[type=submit]:hover, .button.outline.hover-fill-grey-500:hover, .add-ping input.outline.hover-fill-grey-500[type=submit]:hover, .button.borderless.hover-fill-grey-500:hover, .add-ping input.borderless.hover-fill-grey-500[type=submit]:hover {
+  background: #8D99A3;
+  color: #FFF;
+  border: solid 0.0625rem #8D99A3;
+}
+.button.borderless.button-color-grey-500, .add-ping input.borderless.button-color-grey-500[type=submit] {
+  color: #8D99A3;
+}
+.button.outline.button-color-grey-600, .add-ping input.outline.button-color-grey-600[type=submit] {
+  color: #74838E;
+  border: solid 0.0625rem #74838E;
+}
+.button.solid.button-color-grey-600, .add-ping input.solid.button-color-grey-600[type=submit], .button.solid.hover-fill-grey-600:hover, .add-ping input.solid.hover-fill-grey-600[type=submit]:hover, .button.outline.hover-fill-grey-600:hover, .add-ping input.outline.hover-fill-grey-600[type=submit]:hover, .button.borderless.hover-fill-grey-600:hover, .add-ping input.borderless.hover-fill-grey-600[type=submit]:hover {
+  background: #74838E;
+  color: #FFF;
+  border: solid 0.0625rem #74838E;
+}
+.button.borderless.button-color-grey-600, .add-ping input.borderless.button-color-grey-600[type=submit] {
+  color: #74838E;
+}
+.button.outline.button-color-grey-700, .add-ping input.outline.button-color-grey-700[type=submit] {
+  color: #5F6C75;
+  border: solid 0.0625rem #5F6C75;
+}
+.button.solid.button-color-grey-700, .add-ping input.solid.button-color-grey-700[type=submit], .button.solid.hover-fill-grey-700:hover, .add-ping input.solid.hover-fill-grey-700[type=submit]:hover, .button.outline.hover-fill-grey-700:hover, .add-ping input.outline.hover-fill-grey-700[type=submit]:hover, .button.borderless.hover-fill-grey-700:hover, .add-ping input.borderless.hover-fill-grey-700[type=submit]:hover {
+  background: #5F6C75;
+  color: #FFF;
+  border: solid 0.0625rem #5F6C75;
+}
+.button.borderless.button-color-grey-700, .add-ping input.borderless.button-color-grey-700[type=submit] {
+  color: #5F6C75;
+}
+.button.outline.button-color-grey-800, .add-ping input.outline.button-color-grey-800[type=submit] {
+  color: #464F56;
+  border: solid 0.0625rem #464F56;
+}
+.button.solid.button-color-grey-800, .add-ping input.solid.button-color-grey-800[type=submit], .button.solid.hover-fill-grey-800:hover, .add-ping input.solid.hover-fill-grey-800[type=submit]:hover, .button.outline.hover-fill-grey-800:hover, .add-ping input.outline.hover-fill-grey-800[type=submit]:hover, .button.borderless.hover-fill-grey-800:hover, .add-ping input.borderless.hover-fill-grey-800[type=submit]:hover {
+  background: #464F56;
+  color: #FFF;
+  border: solid 0.0625rem #464F56;
+}
+.button.borderless.button-color-grey-800, .add-ping input.borderless.button-color-grey-800[type=submit] {
+  color: #464F56;
+}
+.button.outline.button-color-grey-900, .add-ping input.outline.button-color-grey-900[type=submit] {
+  color: #31383D;
+  border: solid 0.0625rem #31383D;
+}
+.button.solid.button-color-grey-900, .add-ping input.solid.button-color-grey-900[type=submit], .button.solid.hover-fill-grey-900:hover, .add-ping input.solid.hover-fill-grey-900[type=submit]:hover, .button.outline.hover-fill-grey-900:hover, .add-ping input.outline.hover-fill-grey-900[type=submit]:hover, .button.borderless.hover-fill-grey-900:hover, .add-ping input.borderless.hover-fill-grey-900[type=submit]:hover {
+  background: #31383D;
+  color: #FFF;
+  border: solid 0.0625rem #31383D;
+}
+.button.borderless.button-color-grey-900, .add-ping input.borderless.button-color-grey-900[type=submit] {
+  color: #31383D;
+}
+.button.outline.button-color-orange-100, .add-ping input.outline.button-color-orange-100[type=submit] {
+  color: #FFEEE0;
+  border: solid 0.0625rem #FFEEE0;
+}
+.button.solid.button-color-orange-100, .add-ping input.solid.button-color-orange-100[type=submit], .button.solid.hover-fill-orange-100:hover, .add-ping input.solid.hover-fill-orange-100[type=submit]:hover, .button.outline.hover-fill-orange-100:hover, .add-ping input.outline.hover-fill-orange-100[type=submit]:hover, .button.borderless.hover-fill-orange-100:hover, .add-ping input.borderless.hover-fill-orange-100[type=submit]:hover {
+  background: #FFEEE0;
+  color: #FFF;
+  border: solid 0.0625rem #FFEEE0;
+}
+.button.borderless.button-color-orange-100, .add-ping input.borderless.button-color-orange-100[type=submit] {
+  color: #FFEEE0;
+}
+.button.outline.button-color-orange-200, .add-ping input.outline.button-color-orange-200[type=submit] {
+  color: #FFCFA6;
+  border: solid 0.0625rem #FFCFA6;
+}
+.button.solid.button-color-orange-200, .add-ping input.solid.button-color-orange-200[type=submit], .button.solid.hover-fill-orange-200:hover, .add-ping input.solid.hover-fill-orange-200[type=submit]:hover, .button.outline.hover-fill-orange-200:hover, .add-ping input.outline.hover-fill-orange-200[type=submit]:hover, .button.borderless.hover-fill-orange-200:hover, .add-ping input.borderless.hover-fill-orange-200[type=submit]:hover {
+  background: #FFCFA6;
+  color: #FFF;
+  border: solid 0.0625rem #FFCFA6;
+}
+.button.borderless.button-color-orange-200, .add-ping input.borderless.button-color-orange-200[type=submit] {
+  color: #FFCFA6;
+}
+.button.outline.button-color-orange-300, .add-ping input.outline.button-color-orange-300[type=submit] {
+  color: #FFBC84;
+  border: solid 0.0625rem #FFBC84;
+}
+.button.solid.button-color-orange-300, .add-ping input.solid.button-color-orange-300[type=submit], .button.solid.hover-fill-orange-300:hover, .add-ping input.solid.hover-fill-orange-300[type=submit]:hover, .button.outline.hover-fill-orange-300:hover, .add-ping input.outline.hover-fill-orange-300[type=submit]:hover, .button.borderless.hover-fill-orange-300:hover, .add-ping input.borderless.hover-fill-orange-300[type=submit]:hover {
+  background: #FFBC84;
+  color: #FFF;
+  border: solid 0.0625rem #FFBC84;
+}
+.button.borderless.button-color-orange-300, .add-ping input.borderless.button-color-orange-300[type=submit] {
+  color: #FFBC84;
+}
+.button.outline.button-color-orange-400, .add-ping input.outline.button-color-orange-400[type=submit] {
+  color: #F7A15A;
+  border: solid 0.0625rem #F7A15A;
+}
+.button.solid.button-color-orange-400, .add-ping input.solid.button-color-orange-400[type=submit], .button.solid.hover-fill-orange-400:hover, .add-ping input.solid.hover-fill-orange-400[type=submit]:hover, .button.outline.hover-fill-orange-400:hover, .add-ping input.outline.hover-fill-orange-400[type=submit]:hover, .button.borderless.hover-fill-orange-400:hover, .add-ping input.borderless.hover-fill-orange-400[type=submit]:hover {
+  background: #F7A15A;
+  color: #FFF;
+  border: solid 0.0625rem #F7A15A;
+}
+.button.borderless.button-color-orange-400, .add-ping input.borderless.button-color-orange-400[type=submit] {
+  color: #F7A15A;
+}
+.button.outline.button-color-orange-500, .add-ping input.outline.button-color-orange-500[type=submit] {
+  color: #FF8A29;
+  border: solid 0.0625rem #FF8A29;
+}
+.button.solid.button-color-orange-500, .add-ping input.solid.button-color-orange-500[type=submit], .button.solid.hover-fill-orange-500:hover, .add-ping input.solid.hover-fill-orange-500[type=submit]:hover, .button.outline.hover-fill-orange-500:hover, .add-ping input.outline.hover-fill-orange-500[type=submit]:hover, .button.borderless.hover-fill-orange-500:hover, .add-ping input.borderless.hover-fill-orange-500[type=submit]:hover {
+  background: #FF8A29;
+  color: #FFF;
+  border: solid 0.0625rem #FF8A29;
+}
+.button.borderless.button-color-orange-500, .add-ping input.borderless.button-color-orange-500[type=submit] {
+  color: #FF8A29;
+}
+.button.outline.button-color-orange-600, .add-ping input.outline.button-color-orange-600[type=submit] {
+  color: #FF8117;
+  border: solid 0.0625rem #FF8117;
+}
+.button.solid.button-color-orange-600, .add-ping input.solid.button-color-orange-600[type=submit], .button.solid.hover-fill-orange-600:hover, .add-ping input.solid.hover-fill-orange-600[type=submit]:hover, .button.outline.hover-fill-orange-600:hover, .add-ping input.outline.hover-fill-orange-600[type=submit]:hover, .button.borderless.hover-fill-orange-600:hover, .add-ping input.borderless.hover-fill-orange-600[type=submit]:hover {
+  background: #FF8117;
+  color: #FFF;
+  border: solid 0.0625rem #FF8117;
+}
+.button.borderless.button-color-orange-600, .add-ping input.borderless.button-color-orange-600[type=submit] {
+  color: #FF8117;
+}
+.button.outline.button-color-orange-700, .add-ping input.outline.button-color-orange-700[type=submit] {
+  color: #FF7400;
+  border: solid 0.0625rem #FF7400;
+}
+.button.solid.button-color-orange-700, .add-ping input.solid.button-color-orange-700[type=submit], .button.solid.hover-fill-orange-700:hover, .add-ping input.solid.hover-fill-orange-700[type=submit]:hover, .button.outline.hover-fill-orange-700:hover, .add-ping input.outline.hover-fill-orange-700[type=submit]:hover, .button.borderless.hover-fill-orange-700:hover, .add-ping input.borderless.hover-fill-orange-700[type=submit]:hover {
+  background: #FF7400;
+  color: #FFF;
+  border: solid 0.0625rem #FF7400;
+}
+.button.borderless.button-color-orange-700, .add-ping input.borderless.button-color-orange-700[type=submit] {
+  color: #FF7400;
+}
+.button.outline.button-color-orange-800, .add-ping input.outline.button-color-orange-800[type=submit] {
+  color: #FF5E00;
+  border: solid 0.0625rem #FF5E00;
+}
+.button.solid.button-color-orange-800, .add-ping input.solid.button-color-orange-800[type=submit], .button.solid.hover-fill-orange-800:hover, .add-ping input.solid.hover-fill-orange-800[type=submit]:hover, .button.outline.hover-fill-orange-800:hover, .add-ping input.outline.hover-fill-orange-800[type=submit]:hover, .button.borderless.hover-fill-orange-800:hover, .add-ping input.borderless.hover-fill-orange-800[type=submit]:hover {
+  background: #FF5E00;
+  color: #FFF;
+  border: solid 0.0625rem #FF5E00;
+}
+.button.borderless.button-color-orange-800, .add-ping input.borderless.button-color-orange-800[type=submit] {
+  color: #FF5E00;
+}
+.button.outline.button-color-orange-900, .add-ping input.outline.button-color-orange-900[type=submit] {
+  color: #A13B00;
+  border: solid 0.0625rem #A13B00;
+}
+.button.solid.button-color-orange-900, .add-ping input.solid.button-color-orange-900[type=submit], .button.solid.hover-fill-orange-900:hover, .add-ping input.solid.hover-fill-orange-900[type=submit]:hover, .button.outline.hover-fill-orange-900:hover, .add-ping input.outline.hover-fill-orange-900[type=submit]:hover, .button.borderless.hover-fill-orange-900:hover, .add-ping input.borderless.hover-fill-orange-900[type=submit]:hover {
+  background: #A13B00;
+  color: #FFF;
+  border: solid 0.0625rem #A13B00;
+}
+.button.borderless.button-color-orange-900, .add-ping input.borderless.button-color-orange-900[type=submit] {
+  color: #A13B00;
+}
+.button.outline.button-color-red-100, .add-ping input.outline.button-color-red-100[type=submit] {
+  color: #FFF6F2;
+  border: solid 0.0625rem #FFF6F2;
+}
+.button.solid.button-color-red-100, .add-ping input.solid.button-color-red-100[type=submit], .button.solid.hover-fill-red-100:hover, .add-ping input.solid.hover-fill-red-100[type=submit]:hover, .button.outline.hover-fill-red-100:hover, .add-ping input.outline.hover-fill-red-100[type=submit]:hover, .button.borderless.hover-fill-red-100:hover, .add-ping input.borderless.hover-fill-red-100[type=submit]:hover {
+  background: #FFF6F2;
+  color: #FFF;
+  border: solid 0.0625rem #FFF6F2;
+}
+.button.borderless.button-color-red-100, .add-ping input.borderless.button-color-red-100[type=submit] {
+  color: #FFF6F2;
+}
+.button.outline.button-color-red-200, .add-ping input.outline.button-color-red-200[type=submit] {
+  color: #FFD3C0;
+  border: solid 0.0625rem #FFD3C0;
+}
+.button.solid.button-color-red-200, .add-ping input.solid.button-color-red-200[type=submit], .button.solid.hover-fill-red-200:hover, .add-ping input.solid.hover-fill-red-200[type=submit]:hover, .button.outline.hover-fill-red-200:hover, .add-ping input.outline.hover-fill-red-200[type=submit]:hover, .button.borderless.hover-fill-red-200:hover, .add-ping input.borderless.hover-fill-red-200[type=submit]:hover {
+  background: #FFD3C0;
+  color: #FFF;
+  border: solid 0.0625rem #FFD3C0;
+}
+.button.borderless.button-color-red-200, .add-ping input.borderless.button-color-red-200[type=submit] {
+  color: #FFD3C0;
+}
+.button.outline.button-color-red-300, .add-ping input.outline.button-color-red-300[type=submit] {
+  color: #FF8474;
+  border: solid 0.0625rem #FF8474;
+}
+.button.solid.button-color-red-300, .add-ping input.solid.button-color-red-300[type=submit], .button.solid.hover-fill-red-300:hover, .add-ping input.solid.hover-fill-red-300[type=submit]:hover, .button.outline.hover-fill-red-300:hover, .add-ping input.outline.hover-fill-red-300[type=submit]:hover, .button.borderless.hover-fill-red-300:hover, .add-ping input.borderless.hover-fill-red-300[type=submit]:hover {
+  background: #FF8474;
+  color: #FFF;
+  border: solid 0.0625rem #FF8474;
+}
+.button.borderless.button-color-red-300, .add-ping input.borderless.button-color-red-300[type=submit] {
+  color: #FF8474;
+}
+.button.outline.button-color-red-400, .add-ping input.outline.button-color-red-400[type=submit] {
+  color: #FF7361;
+  border: solid 0.0625rem #FF7361;
+}
+.button.solid.button-color-red-400, .add-ping input.solid.button-color-red-400[type=submit], .button.solid.hover-fill-red-400:hover, .add-ping input.solid.hover-fill-red-400[type=submit]:hover, .button.outline.hover-fill-red-400:hover, .add-ping input.outline.hover-fill-red-400[type=submit]:hover, .button.borderless.hover-fill-red-400:hover, .add-ping input.borderless.hover-fill-red-400[type=submit]:hover {
+  background: #FF7361;
+  color: #FFF;
+  border: solid 0.0625rem #FF7361;
+}
+.button.borderless.button-color-red-400, .add-ping input.borderless.button-color-red-400[type=submit] {
+  color: #FF7361;
+}
+.button.outline.button-color-red-500, .add-ping input.outline.button-color-red-500[type=submit] {
+  color: #FF6057;
+  border: solid 0.0625rem #FF6057;
+}
+.button.solid.button-color-red-500, .add-ping input.solid.button-color-red-500[type=submit], .button.solid.hover-fill-red-500:hover, .add-ping input.solid.hover-fill-red-500[type=submit]:hover, .button.outline.hover-fill-red-500:hover, .add-ping input.outline.hover-fill-red-500[type=submit]:hover, .button.borderless.hover-fill-red-500:hover, .add-ping input.borderless.hover-fill-red-500[type=submit]:hover {
+  background: #FF6057;
+  color: #FFF;
+  border: solid 0.0625rem #FF6057;
+}
+.button.borderless.button-color-red-500, .add-ping input.borderless.button-color-red-500[type=submit] {
+  color: #FF6057;
+}
+.button.outline.button-color-red-600, .add-ping input.outline.button-color-red-600[type=submit] {
+  color: #FF4D4D;
+  border: solid 0.0625rem #FF4D4D;
+}
+.button.solid.button-color-red-600, .add-ping input.solid.button-color-red-600[type=submit], .button.solid.hover-fill-red-600:hover, .add-ping input.solid.hover-fill-red-600[type=submit]:hover, .button.outline.hover-fill-red-600:hover, .add-ping input.outline.hover-fill-red-600[type=submit]:hover, .button.borderless.hover-fill-red-600:hover, .add-ping input.borderless.hover-fill-red-600[type=submit]:hover {
+  background: #FF4D4D;
+  color: #FFF;
+  border: solid 0.0625rem #FF4D4D;
+}
+.button.borderless.button-color-red-600, .add-ping input.borderless.button-color-red-600[type=submit] {
+  color: #FF4D4D;
+}
+.button.outline.button-color-red-700, .add-ping input.outline.button-color-red-700[type=submit] {
+  color: #E93536;
+  border: solid 0.0625rem #E93536;
+}
+.button.solid.button-color-red-700, .add-ping input.solid.button-color-red-700[type=submit], .button.solid.hover-fill-red-700:hover, .add-ping input.solid.hover-fill-red-700[type=submit]:hover, .button.outline.hover-fill-red-700:hover, .add-ping input.outline.hover-fill-red-700[type=submit]:hover, .button.borderless.hover-fill-red-700:hover, .add-ping input.borderless.hover-fill-red-700[type=submit]:hover {
+  background: #E93536;
+  color: #FFF;
+  border: solid 0.0625rem #E93536;
+}
+.button.borderless.button-color-red-700, .add-ping input.borderless.button-color-red-700[type=submit] {
+  color: #E93536;
+}
+.button.outline.button-color-red-800, .add-ping input.outline.button-color-red-800[type=submit] {
+  color: #D82C29;
+  border: solid 0.0625rem #D82C29;
+}
+.button.solid.button-color-red-800, .add-ping input.solid.button-color-red-800[type=submit], .button.solid.hover-fill-red-800:hover, .add-ping input.solid.hover-fill-red-800[type=submit]:hover, .button.outline.hover-fill-red-800:hover, .add-ping input.outline.hover-fill-red-800[type=submit]:hover, .button.borderless.hover-fill-red-800:hover, .add-ping input.borderless.hover-fill-red-800[type=submit]:hover {
+  background: #D82C29;
+  color: #FFF;
+  border: solid 0.0625rem #D82C29;
+}
+.button.borderless.button-color-red-800, .add-ping input.borderless.button-color-red-800[type=submit] {
+  color: #D82C29;
+}
+.button.outline.button-color-red-900, .add-ping input.outline.button-color-red-900[type=submit] {
+  color: #9B0C00;
+  border: solid 0.0625rem #9B0C00;
+}
+.button.solid.button-color-red-900, .add-ping input.solid.button-color-red-900[type=submit], .button.solid.hover-fill-red-900:hover, .add-ping input.solid.hover-fill-red-900[type=submit]:hover, .button.outline.hover-fill-red-900:hover, .add-ping input.outline.hover-fill-red-900[type=submit]:hover, .button.borderless.hover-fill-red-900:hover, .add-ping input.borderless.hover-fill-red-900[type=submit]:hover {
+  background: #9B0C00;
+  color: #FFF;
+  border: solid 0.0625rem #9B0C00;
+}
+.button.borderless.button-color-red-900, .add-ping input.borderless.button-color-red-900[type=submit] {
+  color: #9B0C00;
+}
+.button.outline.button-color-green-100, .add-ping input.outline.button-color-green-100[type=submit] {
+  color: #DFFFE2;
+  border: solid 0.0625rem #DFFFE2;
+}
+.button.solid.button-color-green-100, .add-ping input.solid.button-color-green-100[type=submit], .button.solid.hover-fill-green-100:hover, .add-ping input.solid.hover-fill-green-100[type=submit]:hover, .button.outline.hover-fill-green-100:hover, .add-ping input.outline.hover-fill-green-100[type=submit]:hover, .button.borderless.hover-fill-green-100:hover, .add-ping input.borderless.hover-fill-green-100[type=submit]:hover {
+  background: #DFFFE2;
+  color: #FFF;
+  border: solid 0.0625rem #DFFFE2;
+}
+.button.borderless.button-color-green-100, .add-ping input.borderless.button-color-green-100[type=submit] {
+  color: #DFFFE2;
+}
+.button.outline.button-color-green-200, .add-ping input.outline.button-color-green-200[type=submit] {
+  color: #D1FFD6;
+  border: solid 0.0625rem #D1FFD6;
+}
+.button.solid.button-color-green-200, .add-ping input.solid.button-color-green-200[type=submit], .button.solid.hover-fill-green-200:hover, .add-ping input.solid.hover-fill-green-200[type=submit]:hover, .button.outline.hover-fill-green-200:hover, .add-ping input.outline.hover-fill-green-200[type=submit]:hover, .button.borderless.hover-fill-green-200:hover, .add-ping input.borderless.hover-fill-green-200[type=submit]:hover {
+  background: #D1FFD6;
+  color: #FFF;
+  border: solid 0.0625rem #D1FFD6;
+}
+.button.borderless.button-color-green-200, .add-ping input.borderless.button-color-green-200[type=submit] {
+  color: #D1FFD6;
+}
+.button.outline.button-color-green-300, .add-ping input.outline.button-color-green-300[type=submit] {
+  color: #A9FFC9;
+  border: solid 0.0625rem #A9FFC9;
+}
+.button.solid.button-color-green-300, .add-ping input.solid.button-color-green-300[type=submit], .button.solid.hover-fill-green-300:hover, .add-ping input.solid.hover-fill-green-300[type=submit]:hover, .button.outline.hover-fill-green-300:hover, .add-ping input.outline.hover-fill-green-300[type=submit]:hover, .button.borderless.hover-fill-green-300:hover, .add-ping input.borderless.hover-fill-green-300[type=submit]:hover {
+  background: #A9FFC9;
+  color: #FFF;
+  border: solid 0.0625rem #A9FFC9;
+}
+.button.borderless.button-color-green-300, .add-ping input.borderless.button-color-green-300[type=submit] {
+  color: #A9FFC9;
+}
+.button.outline.button-color-green-400, .add-ping input.outline.button-color-green-400[type=submit] {
+  color: #13ef8f;
+  border: solid 0.0625rem #13ef8f;
+}
+.button.solid.button-color-green-400, .add-ping input.solid.button-color-green-400[type=submit], .button.solid.hover-fill-green-400:hover, .add-ping input.solid.hover-fill-green-400[type=submit]:hover, .button.outline.hover-fill-green-400:hover, .add-ping input.outline.hover-fill-green-400[type=submit]:hover, .button.borderless.hover-fill-green-400:hover, .add-ping input.borderless.hover-fill-green-400[type=submit]:hover {
+  background: #13ef8f;
+  color: #FFF;
+  border: solid 0.0625rem #13ef8f;
+}
+.button.borderless.button-color-green-400, .add-ping input.borderless.button-color-green-400[type=submit] {
+  color: #13ef8f;
+}
+.button.outline.button-color-green-500, .add-ping input.outline.button-color-green-500[type=submit] {
+  color: #00E47F;
+  border: solid 0.0625rem #00E47F;
+}
+.button.solid.button-color-green-500, .add-ping input.solid.button-color-green-500[type=submit], .button.solid.hover-fill-green-500:hover, .add-ping input.solid.hover-fill-green-500[type=submit]:hover, .button.outline.hover-fill-green-500:hover, .add-ping input.outline.hover-fill-green-500[type=submit]:hover, .button.borderless.hover-fill-green-500:hover, .add-ping input.borderless.hover-fill-green-500[type=submit]:hover {
+  background: #00E47F;
+  color: #FFF;
+  border: solid 0.0625rem #00E47F;
+}
+.button.borderless.button-color-green-500, .add-ping input.borderless.button-color-green-500[type=submit] {
+  color: #00E47F;
+}
+.button.outline.button-color-green-600, .add-ping input.outline.button-color-green-600[type=submit] {
+  color: #00CB71;
+  border: solid 0.0625rem #00CB71;
+}
+.button.solid.button-color-green-600, .add-ping input.solid.button-color-green-600[type=submit], .button.solid.hover-fill-green-600:hover, .add-ping input.solid.hover-fill-green-600[type=submit]:hover, .button.outline.hover-fill-green-600:hover, .add-ping input.outline.hover-fill-green-600[type=submit]:hover, .button.borderless.hover-fill-green-600:hover, .add-ping input.borderless.hover-fill-green-600[type=submit]:hover {
+  background: #00CB71;
+  color: #FFF;
+  border: solid 0.0625rem #00CB71;
+}
+.button.borderless.button-color-green-600, .add-ping input.borderless.button-color-green-600[type=submit] {
+  color: #00CB71;
+}
+.button.outline.button-color-green-700, .add-ping input.outline.button-color-green-700[type=submit] {
+  color: #009554;
+  border: solid 0.0625rem #009554;
+}
+.button.solid.button-color-green-700, .add-ping input.solid.button-color-green-700[type=submit], .button.solid.hover-fill-green-700:hover, .add-ping input.solid.hover-fill-green-700[type=submit]:hover, .button.outline.hover-fill-green-700:hover, .add-ping input.outline.hover-fill-green-700[type=submit]:hover, .button.borderless.hover-fill-green-700:hover, .add-ping input.borderless.hover-fill-green-700[type=submit]:hover {
+  background: #009554;
+  color: #FFF;
+  border: solid 0.0625rem #009554;
+}
+.button.borderless.button-color-green-700, .add-ping input.borderless.button-color-green-700[type=submit] {
+  color: #009554;
+}
+.button.outline.button-color-green-800, .add-ping input.outline.button-color-green-800[type=submit] {
+  color: #007743;
+  border: solid 0.0625rem #007743;
+}
+.button.solid.button-color-green-800, .add-ping input.solid.button-color-green-800[type=submit], .button.solid.hover-fill-green-800:hover, .add-ping input.solid.hover-fill-green-800[type=submit]:hover, .button.outline.hover-fill-green-800:hover, .add-ping input.outline.hover-fill-green-800[type=submit]:hover, .button.borderless.hover-fill-green-800:hover, .add-ping input.borderless.hover-fill-green-800[type=submit]:hover {
+  background: #007743;
+  color: #FFF;
+  border: solid 0.0625rem #007743;
+}
+.button.borderless.button-color-green-800, .add-ping input.borderless.button-color-green-800[type=submit] {
+  color: #007743;
+}
+.button.outline.button-color-green-900, .add-ping input.outline.button-color-green-900[type=submit] {
+  color: #034528;
+  border: solid 0.0625rem #034528;
+}
+.button.solid.button-color-green-900, .add-ping input.solid.button-color-green-900[type=submit], .button.solid.hover-fill-green-900:hover, .add-ping input.solid.hover-fill-green-900[type=submit]:hover, .button.outline.hover-fill-green-900:hover, .add-ping input.outline.hover-fill-green-900[type=submit]:hover, .button.borderless.hover-fill-green-900:hover, .add-ping input.borderless.hover-fill-green-900[type=submit]:hover {
+  background: #034528;
+  color: #FFF;
+  border: solid 0.0625rem #034528;
+}
+.button.borderless.button-color-green-900, .add-ping input.borderless.button-color-green-900[type=submit] {
+  color: #034528;
+}
+.button.outline.button-color-blue-100, .add-ping input.outline.button-color-blue-100[type=submit] {
+  color: #ECF5FF;
+  border: solid 0.0625rem #ECF5FF;
+}
+.button.solid.button-color-blue-100, .add-ping input.solid.button-color-blue-100[type=submit], .button.solid.hover-fill-blue-100:hover, .add-ping input.solid.hover-fill-blue-100[type=submit]:hover, .button.outline.hover-fill-blue-100:hover, .add-ping input.outline.hover-fill-blue-100[type=submit]:hover, .button.borderless.hover-fill-blue-100:hover, .add-ping input.borderless.hover-fill-blue-100[type=submit]:hover {
+  background: #ECF5FF;
+  color: #FFF;
+  border: solid 0.0625rem #ECF5FF;
+}
+.button.borderless.button-color-blue-100, .add-ping input.borderless.button-color-blue-100[type=submit] {
+  color: #ECF5FF;
+}
+.button.outline.button-color-blue-200, .add-ping input.outline.button-color-blue-200[type=submit] {
+  color: #DEEEFF;
+  border: solid 0.0625rem #DEEEFF;
+}
+.button.solid.button-color-blue-200, .add-ping input.solid.button-color-blue-200[type=submit], .button.solid.hover-fill-blue-200:hover, .add-ping input.solid.hover-fill-blue-200[type=submit]:hover, .button.outline.hover-fill-blue-200:hover, .add-ping input.outline.hover-fill-blue-200[type=submit]:hover, .button.borderless.hover-fill-blue-200:hover, .add-ping input.borderless.hover-fill-blue-200[type=submit]:hover {
+  background: #DEEEFF;
+  color: #FFF;
+  border: solid 0.0625rem #DEEEFF;
+}
+.button.borderless.button-color-blue-200, .add-ping input.borderless.button-color-blue-200[type=submit] {
+  color: #DEEEFF;
+}
+.button.outline.button-color-blue-300, .add-ping input.outline.button-color-blue-300[type=submit] {
+  color: #A9D3FF;
+  border: solid 0.0625rem #A9D3FF;
+}
+.button.solid.button-color-blue-300, .add-ping input.solid.button-color-blue-300[type=submit], .button.solid.hover-fill-blue-300:hover, .add-ping input.solid.hover-fill-blue-300[type=submit]:hover, .button.outline.hover-fill-blue-300:hover, .add-ping input.outline.hover-fill-blue-300[type=submit]:hover, .button.borderless.hover-fill-blue-300:hover, .add-ping input.borderless.hover-fill-blue-300[type=submit]:hover {
+  background: #A9D3FF;
+  color: #FFF;
+  border: solid 0.0625rem #A9D3FF;
+}
+.button.borderless.button-color-blue-300, .add-ping input.borderless.button-color-blue-300[type=submit] {
+  color: #A9D3FF;
+}
+.button.outline.button-color-blue-400, .add-ping input.outline.button-color-blue-400[type=submit] {
+  color: #8DC1F9;
+  border: solid 0.0625rem #8DC1F9;
+}
+.button.solid.button-color-blue-400, .add-ping input.solid.button-color-blue-400[type=submit], .button.solid.hover-fill-blue-400:hover, .add-ping input.solid.hover-fill-blue-400[type=submit]:hover, .button.outline.hover-fill-blue-400:hover, .add-ping input.outline.hover-fill-blue-400[type=submit]:hover, .button.borderless.hover-fill-blue-400:hover, .add-ping input.borderless.hover-fill-blue-400[type=submit]:hover {
+  background: #8DC1F9;
+  color: #FFF;
+  border: solid 0.0625rem #8DC1F9;
+}
+.button.borderless.button-color-blue-400, .add-ping input.borderless.button-color-blue-400[type=submit] {
+  color: #8DC1F9;
+}
+.button.outline.button-color-blue-500, .add-ping input.outline.button-color-blue-500[type=submit] {
+  color: #68B0FF;
+  border: solid 0.0625rem #68B0FF;
+}
+.button.solid.button-color-blue-500, .add-ping input.solid.button-color-blue-500[type=submit], .button.solid.hover-fill-blue-500:hover, .add-ping input.solid.hover-fill-blue-500[type=submit]:hover, .button.outline.hover-fill-blue-500:hover, .add-ping input.outline.hover-fill-blue-500[type=submit]:hover, .button.borderless.hover-fill-blue-500:hover, .add-ping input.borderless.hover-fill-blue-500[type=submit]:hover {
+  background: #68B0FF;
+  color: #FFF;
+  border: solid 0.0625rem #68B0FF;
+}
+.button.borderless.button-color-blue-500, .add-ping input.borderless.button-color-blue-500[type=submit] {
+  color: #68B0FF;
+}
+.button.outline.button-color-blue-600, .add-ping input.outline.button-color-blue-600[type=submit] {
+  color: #5AA5F7;
+  border: solid 0.0625rem #5AA5F7;
+}
+.button.solid.button-color-blue-600, .add-ping input.solid.button-color-blue-600[type=submit], .button.solid.hover-fill-blue-600:hover, .add-ping input.solid.hover-fill-blue-600[type=submit]:hover, .button.outline.hover-fill-blue-600:hover, .add-ping input.outline.hover-fill-blue-600[type=submit]:hover, .button.borderless.hover-fill-blue-600:hover, .add-ping input.borderless.hover-fill-blue-600[type=submit]:hover {
+  background: #5AA5F7;
+  color: #FFF;
+  border: solid 0.0625rem #5AA5F7;
+}
+.button.borderless.button-color-blue-600, .add-ping input.borderless.button-color-blue-600[type=submit] {
+  color: #5AA5F7;
+}
+.button.outline.button-color-blue-700, .add-ping input.outline.button-color-blue-700[type=submit] {
+  color: #3988DF;
+  border: solid 0.0625rem #3988DF;
+}
+.button.solid.button-color-blue-700, .add-ping input.solid.button-color-blue-700[type=submit], .button.solid.hover-fill-blue-700:hover, .add-ping input.solid.hover-fill-blue-700[type=submit]:hover, .button.outline.hover-fill-blue-700:hover, .add-ping input.outline.hover-fill-blue-700[type=submit]:hover, .button.borderless.hover-fill-blue-700:hover, .add-ping input.borderless.hover-fill-blue-700[type=submit]:hover {
+  background: #3988DF;
+  color: #FFF;
+  border: solid 0.0625rem #3988DF;
+}
+.button.borderless.button-color-blue-700, .add-ping input.borderless.button-color-blue-700[type=submit] {
+  color: #3988DF;
+}
+.button.outline.button-color-blue-800, .add-ping input.outline.button-color-blue-800[type=submit] {
+  color: #1B69BF;
+  border: solid 0.0625rem #1B69BF;
+}
+.button.solid.button-color-blue-800, .add-ping input.solid.button-color-blue-800[type=submit], .button.solid.hover-fill-blue-800:hover, .add-ping input.solid.hover-fill-blue-800[type=submit]:hover, .button.outline.hover-fill-blue-800:hover, .add-ping input.outline.hover-fill-blue-800[type=submit]:hover, .button.borderless.hover-fill-blue-800:hover, .add-ping input.borderless.hover-fill-blue-800[type=submit]:hover {
+  background: #1B69BF;
+  color: #FFF;
+  border: solid 0.0625rem #1B69BF;
+}
+.button.borderless.button-color-blue-800, .add-ping input.borderless.button-color-blue-800[type=submit] {
+  color: #1B69BF;
+}
+.button.outline.button-color-blue-900, .add-ping input.outline.button-color-blue-900[type=submit] {
+  color: #003B7C;
+  border: solid 0.0625rem #003B7C;
+}
+.button.solid.button-color-blue-900, .add-ping input.solid.button-color-blue-900[type=submit], .button.solid.hover-fill-blue-900:hover, .add-ping input.solid.hover-fill-blue-900[type=submit]:hover, .button.outline.hover-fill-blue-900:hover, .add-ping input.outline.hover-fill-blue-900[type=submit]:hover, .button.borderless.hover-fill-blue-900:hover, .add-ping input.borderless.hover-fill-blue-900[type=submit]:hover {
+  background: #003B7C;
+  color: #FFF;
+  border: solid 0.0625rem #003B7C;
+}
+.button.borderless.button-color-blue-900, .add-ping input.borderless.button-color-blue-900[type=submit] {
+  color: #003B7C;
+}
+.button.outline.button-color-purple-100, .add-ping input.outline.button-color-purple-100[type=submit] {
+  color: #F9F3FF;
+  border: solid 0.0625rem #F9F3FF;
+}
+.button.solid.button-color-purple-100, .add-ping input.solid.button-color-purple-100[type=submit], .button.solid.hover-fill-purple-100:hover, .add-ping input.solid.hover-fill-purple-100[type=submit]:hover, .button.outline.hover-fill-purple-100:hover, .add-ping input.outline.hover-fill-purple-100[type=submit]:hover, .button.borderless.hover-fill-purple-100:hover, .add-ping input.borderless.hover-fill-purple-100[type=submit]:hover {
+  background: #F9F3FF;
+  color: #FFF;
+  border: solid 0.0625rem #F9F3FF;
+}
+.button.borderless.button-color-purple-100, .add-ping input.borderless.button-color-purple-100[type=submit] {
+  color: #F9F3FF;
+}
+.button.outline.button-color-purple-200, .add-ping input.outline.button-color-purple-200[type=submit] {
+  color: #EEE8FF;
+  border: solid 0.0625rem #EEE8FF;
+}
+.button.solid.button-color-purple-200, .add-ping input.solid.button-color-purple-200[type=submit], .button.solid.hover-fill-purple-200:hover, .add-ping input.solid.hover-fill-purple-200[type=submit]:hover, .button.outline.hover-fill-purple-200:hover, .add-ping input.outline.hover-fill-purple-200[type=submit]:hover, .button.borderless.hover-fill-purple-200:hover, .add-ping input.borderless.hover-fill-purple-200[type=submit]:hover {
+  background: #EEE8FF;
+  color: #FFF;
+  border: solid 0.0625rem #EEE8FF;
+}
+.button.borderless.button-color-purple-200, .add-ping input.borderless.button-color-purple-200[type=submit] {
+  color: #EEE8FF;
+}
+.button.outline.button-color-purple-300, .add-ping input.outline.button-color-purple-300[type=submit] {
+  color: #396afc;
+  border: solid 0.0625rem #396afc;
+}
+.button.solid.button-color-purple-300, .add-ping input.solid.button-color-purple-300[type=submit], .button.solid.hover-fill-purple-300:hover, .add-ping input.solid.hover-fill-purple-300[type=submit]:hover, .button.outline.hover-fill-purple-300:hover, .add-ping input.outline.hover-fill-purple-300[type=submit]:hover, .button.borderless.hover-fill-purple-300:hover, .add-ping input.borderless.hover-fill-purple-300[type=submit]:hover {
+  background: #396afc;
+  color: #FFF;
+  border: solid 0.0625rem #396afc;
+}
+.button.borderless.button-color-purple-300, .add-ping input.borderless.button-color-purple-300[type=submit] {
+  color: #396afc;
+}
+.button.outline.button-color-purple-400, .add-ping input.outline.button-color-purple-400[type=submit] {
+  color: #A17CFF;
+  border: solid 0.0625rem #A17CFF;
+}
+.button.solid.button-color-purple-400, .add-ping input.solid.button-color-purple-400[type=submit], .button.solid.hover-fill-purple-400:hover, .add-ping input.solid.hover-fill-purple-400[type=submit]:hover, .button.outline.hover-fill-purple-400:hover, .add-ping input.outline.hover-fill-purple-400[type=submit]:hover, .button.borderless.hover-fill-purple-400:hover, .add-ping input.borderless.hover-fill-purple-400[type=submit]:hover {
+  background: #A17CFF;
+  color: #FFF;
+  border: solid 0.0625rem #A17CFF;
+}
+.button.borderless.button-color-purple-400, .add-ping input.borderless.button-color-purple-400[type=submit] {
+  color: #A17CFF;
+}
+.button.outline.button-color-purple-500, .add-ping input.outline.button-color-purple-500[type=submit] {
+  color: #8356F5;
+  border: solid 0.0625rem #8356F5;
+}
+.button.solid.button-color-purple-500, .add-ping input.solid.button-color-purple-500[type=submit], .button.solid.hover-fill-purple-500:hover, .add-ping input.solid.hover-fill-purple-500[type=submit]:hover, .button.outline.hover-fill-purple-500:hover, .add-ping input.outline.hover-fill-purple-500[type=submit]:hover, .button.borderless.hover-fill-purple-500:hover, .add-ping input.borderless.hover-fill-purple-500[type=submit]:hover {
+  background: #8356F5;
+  color: #FFF;
+  border: solid 0.0625rem #8356F5;
+}
+.button.borderless.button-color-purple-500, .add-ping input.borderless.button-color-purple-500[type=submit] {
+  color: #8356F5;
+}
+.button.outline.button-color-purple-600, .add-ping input.outline.button-color-purple-600[type=submit] {
+  color: #742CD5;
+  border: solid 0.0625rem #742CD5;
+}
+.button.solid.button-color-purple-600, .add-ping input.solid.button-color-purple-600[type=submit], .button.solid.hover-fill-purple-600:hover, .add-ping input.solid.hover-fill-purple-600[type=submit]:hover, .button.outline.hover-fill-purple-600:hover, .add-ping input.outline.hover-fill-purple-600[type=submit]:hover, .button.borderless.hover-fill-purple-600:hover, .add-ping input.borderless.hover-fill-purple-600[type=submit]:hover {
+  background: #742CD5;
+  color: #FFF;
+  border: solid 0.0625rem #742CD5;
+}
+.button.borderless.button-color-purple-600, .add-ping input.borderless.button-color-purple-600[type=submit] {
+  color: #742CD5;
+}
+.button.outline.button-color-purple-700, .add-ping input.outline.button-color-purple-700[type=submit] {
+  color: #6F1DC9;
+  border: solid 0.0625rem #6F1DC9;
+}
+.button.solid.button-color-purple-700, .add-ping input.solid.button-color-purple-700[type=submit], .button.solid.hover-fill-purple-700:hover, .add-ping input.solid.hover-fill-purple-700[type=submit]:hover, .button.outline.hover-fill-purple-700:hover, .add-ping input.outline.hover-fill-purple-700[type=submit]:hover, .button.borderless.hover-fill-purple-700:hover, .add-ping input.borderless.hover-fill-purple-700[type=submit]:hover {
+  background: #6F1DC9;
+  color: #FFF;
+  border: solid 0.0625rem #6F1DC9;
+}
+.button.borderless.button-color-purple-700, .add-ping input.borderless.button-color-purple-700[type=submit] {
+  color: #6F1DC9;
+}
+.button.outline.button-color-purple-800, .add-ping input.outline.button-color-purple-800[type=submit] {
+  color: #49009A;
+  border: solid 0.0625rem #49009A;
+}
+.button.solid.button-color-purple-800, .add-ping input.solid.button-color-purple-800[type=submit], .button.solid.hover-fill-purple-800:hover, .add-ping input.solid.hover-fill-purple-800[type=submit]:hover, .button.outline.hover-fill-purple-800:hover, .add-ping input.outline.hover-fill-purple-800[type=submit]:hover, .button.borderless.hover-fill-purple-800:hover, .add-ping input.borderless.hover-fill-purple-800[type=submit]:hover {
+  background: #49009A;
+  color: #FFF;
+  border: solid 0.0625rem #49009A;
+}
+.button.borderless.button-color-purple-800, .add-ping input.borderless.button-color-purple-800[type=submit] {
+  color: #49009A;
+}
+.button.outline.button-color-purple-900, .add-ping input.outline.button-color-purple-900[type=submit] {
+  color: #360073;
+  border: solid 0.0625rem #360073;
+}
+.button.solid.button-color-purple-900, .add-ping input.solid.button-color-purple-900[type=submit], .button.solid.hover-fill-purple-900:hover, .add-ping input.solid.hover-fill-purple-900[type=submit]:hover, .button.outline.hover-fill-purple-900:hover, .add-ping input.outline.hover-fill-purple-900[type=submit]:hover, .button.borderless.hover-fill-purple-900:hover, .add-ping input.borderless.hover-fill-purple-900[type=submit]:hover {
+  background: #360073;
+  color: #FFF;
+  border: solid 0.0625rem #360073;
+}
+.button.borderless.button-color-purple-900, .add-ping input.borderless.button-color-purple-900[type=submit] {
+  color: #360073;
+}
+.button.outline.button-color-white, .add-ping input.outline.button-color-white[type=submit] {
+  color: #FFFFFF;
+  border: solid 0.0625rem #FFFFFF;
+}
+.button.solid.button-color-white, .add-ping input.solid.button-color-white[type=submit], .button.solid.hover-fill-white:hover, .add-ping input.solid.hover-fill-white[type=submit]:hover, .button.outline.hover-fill-white:hover, .add-ping input.outline.hover-fill-white[type=submit]:hover, .button.borderless.hover-fill-white:hover, .add-ping input.borderless.hover-fill-white[type=submit]:hover {
+  background: #FFFFFF;
+  color: #FFF;
+  border: solid 0.0625rem #FFFFFF;
+}
+.button.borderless.button-color-white, .add-ping input.borderless.button-color-white[type=submit] {
+  color: #FFFFFF;
+}
+.button.small, .add-ping input.small[type=submit] {
+  font-size: 0.82rem;
+  padding: 0.5275rem 0.7rem;
+  border-radius: 0.18rem;
+  height: 2rem;
+  line-height: 0.82rem;
+}
+
+.btn-grp {
+  display: inline-flex;
+}
+.btn-grp .button, .btn-grp .add-ping input[type=submit], .add-ping .btn-grp input[type=submit], .btn-grp button {
+  border-radius: 0;
+}
+.btn-grp .button.outline, .btn-grp .add-ping input.outline[type=submit], .add-ping .btn-grp input.outline[type=submit], .btn-grp button.outline {
+  border-left-style: none;
+}
+.btn-grp .button:first-child, .btn-grp .add-ping input[type=submit]:first-child, .add-ping .btn-grp input[type=submit]:first-child, .btn-grp button:first-child {
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+.btn-grp .button:first-child.outline, .btn-grp .add-ping input[type=submit]:first-child.outline, .add-ping .btn-grp input[type=submit]:first-child.outline, .btn-grp button:first-child.outline {
+  border-left-style: solid;
+}
+.btn-grp .button:last-child, .btn-grp .add-ping input[type=submit]:last-child, .add-ping .btn-grp input[type=submit]:last-child, .btn-grp button:last-child {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+.btn-grp .button.small, .btn-grp .add-ping input.small[type=submit], .add-ping .btn-grp input.small[type=submit],
+.btn-grp button.small {
+  border-radius: 0;
+}
+.btn-grp .button.small:first-child, .btn-grp .add-ping input.small[type=submit]:first-child, .add-ping .btn-grp input.small[type=submit]:first-child,
+.btn-grp button.small:first-child {
+  border-top-left-radius: 0.18rem;
+  border-bottom-left-radius: 0.18rem;
+}
+.btn-grp .button.small:last-child, .btn-grp .add-ping input.small[type=submit]:last-child, .add-ping .btn-grp input.small[type=submit]:last-child,
+.btn-grp button.small:last-child {
+  border-top-right-radius: 0.18rem;
+  border-bottom-right-radius: 0.18rem;
+}
+
+button.no-appearance {
+  border: none;
+  background: none;
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/*
+    Created on : Jun 28, 2019, 11:48:02 AM
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+.dialog {
+  padding: 2.5rem 0.5rem 2.5rem 0.5rem;
+  background: #FFF;
+  border-radius: 0.3rem;
+  border: solid 1px #999;
+  max-width: 90%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  max-height: calc(100% - 9rem);
+  display: inline-block;
+  position: relative;
+}
+.dialog .inner {
+  overflow: auto;
+  position: relative;
+  height: 100%;
+}
+.dialog .close {
+  color: #AAA;
+  font-weight: bold;
+  text-align: right;
+  cursor: pointer;
+  position: absolute;
+  top: 0.2rem;
+  right: 0.5rem;
+  font-size: 1.8rem;
+  line-height: 1.8rem;
+}
+.dialog .close:hover {
+  color: #777;
+}
+.dialog.transparent {
+  background: transparent;
+  border: none;
+  margin: 0.5rem auto;
+  max-width: 90%;
+  box-shadow: none;
+}
+.dialog.transparent .close {
+  color: #FFF;
+  text-shadow: 0 0 3px #555;
+}
+
+.dialog-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: 9;
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+body.has-dialog {
+  height: 100%;
+  overflow: hidden;
+}
+
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/*
+    Created on : Jun 28, 2019, 11:48:02 AM
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+.gallery {
+  border-radius: 0.3rem;
+  border: solid 1px #999;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.gallery .close {
+  font-weight: bold;
+  text-align: right;
+  cursor: pointer;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.8rem;
+  line-height: 1.8rem;
+  color: #FFF;
+  text-shadow: 0 0 3px #555;
+}
+.gallery .close:hover {
+  color: #777;
+}
+.gallery .inner {
+  max-height: 90%;
+  max-width: 90%;
+}
+
+.gallery-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 9;
+}
+
+.navbar {
+  width: 100%;
+  white-space: nowrap;
+  overflow: visible;
+  padding: 0 0.4rem;
+  z-index: 5;
+}
+.navbar .left,
+.navbar .right,
+.navbar .center {
+  padding: 20px 0;
+}
+.navbar .right {
+  float: right;
+  text-align: right;
+}
+.navbar .left {
+  float: left;
+  text-align: left;
+}
+.navbar .center {
+  text-align: center;
+  white-space: nowrap;
+}
+.navbar a {
+  text-decoration: none;
+  color: #444;
+  font-weight: bold;
+  display: inline-block;
+  padding: 0 13.3333333333px;
+}
+.navbar .logo {
+  display: inline-block;
+  float: left;
+  border: none;
+}
+.navbar .logo > * {
+  vertical-align: middle;
+}
+.navbar .logo img {
+  height: 10px;
+  width: auto;
+  margin-right: 5px;
+}
+.navbar:after {
+  clear: both;
+  content: "";
+  display: table;
+}
+
+/*
+The MIT License
+
+Copyright 2019 César de la Cal Bretschneider <cesar@magic3w.com>.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+/*
+    Created on : May 22, 2019, 9:47:20 AM
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+.list {
+  display: block;
+}
+.list .list-item {
+  display: block;
+  width: 100%;
+  background: #FFF;
+  text-align: left;
+  font-family: inherit;
+  height: 3.2rem;
+  line-height: 2.2rem;
+  padding: 0.5rem 0.75rem;
+  border: solid 0.0625rem #E6E8EA;
+  border-top-style: none;
+}
+.list .list-item:first-child {
+  border-top-style: solid;
+  border-radius: 0.3rem 0.3rem 0 0;
+}
+.list .list-item:last-child {
+  border-radius: 0 0 0.3rem 0.3rem;
+}
+.list > a.list-item, .list > button.list-item {
+  transition: background-color 0.3s ease;
+}
+.list > a.list-item:hover, .list > button.list-item:hover {
+  background-color: #F6F9FA;
+  text-decoration: none;
+}
+.list > a.list-item.active, .list > button.list-item.active {
+  color: #FFFFFF;
+  background-color: #3988DF;
+  border-color: #1B69BF;
+}
+.list > a.list-item.disabled, .list > button.list-item.disabled {
+  background-color: #F6F9FA;
+  color: #8D99A3;
+}
+.list.borderless .list-item {
+  border-left-style: none;
+  border-right-style: none;
+  border-radius: 0;
+}
+.list.borderless .list-item:first-child {
+  border-top-style: none;
+}
+.list.borderless .list-item:last-child {
+  border-bottom-style: none;
+}
+
+/*
+The MIT License
+
+Copyright 2019 César de la Cal Bretschneider <cesar@magic3w.com>.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+/*
+    Created on : May 22, 2019, 9:47:20 AM
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+.navigation .navigation-item {
+  display: inline-block;
+  padding: 0.8em 1em;
+  font-size: 1em;
+  color: #333333;
+  text-decoration: none;
+  transition: background-color 0.15s ease;
+}
+.navigation .navigation-item:hover {
+  background: #F6F9FA;
+}
+.navigation.tabs {
+  border-bottom: solid 1px #DDD;
+}
+.navigation.tabs .navigation-item {
+  border: solid 1px transparent;
+  margin-bottom: -1px;
+}
+.navigation.tabs .navigation-item.active {
+  font-weight: bold;
+  border-radius: 5px 5px 0 0;
+  border: solid 1px #DDD;
+  border-bottom: solid 1px #FFF;
+}
+.navigation.pills .navigation-item.active {
+  border-radius: 5px;
+  background-color: #2f97e0;
+  color: #FFF;
+}
+.navigation.vertical .navigation-item {
+  display: block;
+  width: 100%;
+}
+
+/*
+The MIT License
+
+Copyright 2019 César de la Cal Bretschneider <cesar@magic3w.com>.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+/*
+    Created on : Nov 4, 2019, 11:43:38 AM
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+/*
+ * Messages are used to present information to the user. This way the application
+ * can show success, error, information and warning messages.
+ */
+.message {
+  border: solid 1px #CCC;
+  border-radius: 3px;
+  background: #FAFAFA;
+  padding: 1rem 2.5rem 1rem 1.5rem;
+  color: #444;
+  position: relative;
+}
+.message.error {
+  border-color: #732c2c;
+  color: #632626;
+  background-color: #f09797;
+}
+.message.warn {
+  border-color: #2f3014;
+  color: #2f3014;
+  background-color: #e3e87d;
+}
+.message.success {
+  border-color: #266326;
+  color: #266326;
+  background-color: #c4f097;
+}
+.message.info {
+  border-color: #264463;
+  color: #264463;
+  background-color: #97c4f0;
+}
+.message .discard-message {
+  position: absolute;
+  display: block;
+  font-weight: bold;
+  opacity: 0.6;
+  top: 0;
+  right: 0;
+  padding: 0 0.6rem 1rem 0.6rem;
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+.message .discard-message:hover {
+  opacity: 1;
+}
+.message .discard-message:before {
+  content: "×";
+}
+
+/*
+The MIT License
+
+Copyright 2019 César de la Cal Bretschneider <cesar@magic3w.com>.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+/*
+    Created on : Jun 17, 2019, 11:49:32 AM
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+/*
+The MIT License
+
+Copyright 2019 César de la Cal Bretschneider <cesar@magic3w.com>.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+/*
+    Created on : Jun 17, 2019, 11:56:04 AM
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+label {
+  display: inline-block;
+}
+
+input, textarea {
+  line-height: inherit;
+  margin: 0;
+}
+
+textarea {
+  resize: vertical;
+}
+
+input[type=text],
+input[type=url],
+input[type=tel],
+input[type=search],
+input[type=number],
+input[type=password],
+input[type=email],
+textarea {
+  border-radius: 3px;
+  border: solid 1px #CCC;
+  box-shadow: 0 0 0 transparent;
+  transition: box-shadow 0.15s ease;
+}
+input[type=text]:focus,
+input[type=url]:focus,
+input[type=tel]:focus,
+input[type=search]:focus,
+input[type=number]:focus,
+input[type=password]:focus,
+input[type=email]:focus,
+textarea:focus {
+  border-color: #279af1;
+  box-shadow: 0px 0px 2px #279af1;
+  outline: none;
+}
+
+select {
+  border-radius: 3px;
+  border: solid 1px #CCC;
+  box-shadow: 0 0 0 transparent;
+  transition: box-shadow 0.15s ease;
+  background: #FFF;
+}
+select:focus {
+  border-color: #279af1;
+  box-shadow: 0px 0px 2px #279af1;
+  outline: none;
+}
+
+fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+legend {
+  font-size: 1.3rem;
+  margin-bottom: 0.3rem;
+}
+
+input[type=submit]:not(.disabled), button:not(.disabled) {
+  cursor: pointer;
+}
+
+/*
+The MIT License
+
+Copyright 2019 César de la Cal Bretschneider <cesar@magic3w.com>.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+/*
+    Created on : Jun 17, 2019, 11:59:07 AM
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+/*
+ * A form control is anything the user can interact with when filling out a form,
+ * this includes inputs, textareas and selects.
+ */
+.frm-ctrl {
+  display: block;
+  width: 100%;
+}
+.frm-ctrl.ctrl-borderless {
+  border: solid 1px #F0F0F0;
+  background-color: #F0F0F0;
+}
+.frm-ctrl.ctrl-borderless:active, .frm-ctrl.ctrl-borderless:focus {
+  border: solid 1px #F0F0F0;
+  box-shadow: none;
+}
+.frm-ctrl.ctrl-android {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: solid 0.2rem #BBB;
+  border-radius: 0;
+  background-color: #F0F0F0;
+}
+.frm-ctrl.ctrl-android:active, .frm-ctrl.ctrl-android:focus {
+  box-shadow: none;
+  border-bottom: solid 0.2rem #1470b3;
+}
+
+.frm-lbl {
+  padding: 0.75rem 0.4rem;
+  color: #444;
+  font-size: 0.9rem;
+}
+
+input:not([type]).frm-ctrl,
+input[type=text].frm-ctrl,
+input[type=url].frm-ctrl,
+input[type=tel].frm-ctrl,
+input[type=search].frm-ctrl,
+input[type=number].frm-ctrl,
+input[type=password].frm-ctrl,
+input[type=email].frm-ctrl,
+textarea.frm-ctrl {
+  border: solid 1px #CCC;
+  height: 2.9rem;
+  padding: 0.6rem 0.75rem;
+}
+input:not([type]).frm-ctrl.ctrl-borderless,
+input[type=text].frm-ctrl.ctrl-borderless,
+input[type=url].frm-ctrl.ctrl-borderless,
+input[type=tel].frm-ctrl.ctrl-borderless,
+input[type=search].frm-ctrl.ctrl-borderless,
+input[type=number].frm-ctrl.ctrl-borderless,
+input[type=password].frm-ctrl.ctrl-borderless,
+input[type=email].frm-ctrl.ctrl-borderless,
+textarea.frm-ctrl.ctrl-borderless {
+  border: solid 1px #F0F0F0;
+  background-color: #F0F0F0;
+}
+input:not([type]).frm-ctrl.ctrl-borderless:active, input:not([type]).frm-ctrl.ctrl-borderless:focus,
+input[type=text].frm-ctrl.ctrl-borderless:active,
+input[type=text].frm-ctrl.ctrl-borderless:focus,
+input[type=url].frm-ctrl.ctrl-borderless:active,
+input[type=url].frm-ctrl.ctrl-borderless:focus,
+input[type=tel].frm-ctrl.ctrl-borderless:active,
+input[type=tel].frm-ctrl.ctrl-borderless:focus,
+input[type=search].frm-ctrl.ctrl-borderless:active,
+input[type=search].frm-ctrl.ctrl-borderless:focus,
+input[type=number].frm-ctrl.ctrl-borderless:active,
+input[type=number].frm-ctrl.ctrl-borderless:focus,
+input[type=password].frm-ctrl.ctrl-borderless:active,
+input[type=password].frm-ctrl.ctrl-borderless:focus,
+input[type=email].frm-ctrl.ctrl-borderless:active,
+input[type=email].frm-ctrl.ctrl-borderless:focus,
+textarea.frm-ctrl.ctrl-borderless:active,
+textarea.frm-ctrl.ctrl-borderless:focus {
+  border: solid 1px #F0F0F0;
+  box-shadow: none;
+}
+input:not([type]).frm-ctrl.ctrl-android,
+input[type=text].frm-ctrl.ctrl-android,
+input[type=url].frm-ctrl.ctrl-android,
+input[type=tel].frm-ctrl.ctrl-android,
+input[type=search].frm-ctrl.ctrl-android,
+input[type=number].frm-ctrl.ctrl-android,
+input[type=password].frm-ctrl.ctrl-android,
+input[type=email].frm-ctrl.ctrl-android,
+textarea.frm-ctrl.ctrl-android {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: solid 0.2rem #BBB;
+  border-radius: 0;
+  background-color: #F0F0F0;
+}
+input:not([type]).frm-ctrl.ctrl-android:active, input:not([type]).frm-ctrl.ctrl-android:focus,
+input[type=text].frm-ctrl.ctrl-android:active,
+input[type=text].frm-ctrl.ctrl-android:focus,
+input[type=url].frm-ctrl.ctrl-android:active,
+input[type=url].frm-ctrl.ctrl-android:focus,
+input[type=tel].frm-ctrl.ctrl-android:active,
+input[type=tel].frm-ctrl.ctrl-android:focus,
+input[type=search].frm-ctrl.ctrl-android:active,
+input[type=search].frm-ctrl.ctrl-android:focus,
+input[type=number].frm-ctrl.ctrl-android:active,
+input[type=number].frm-ctrl.ctrl-android:focus,
+input[type=password].frm-ctrl.ctrl-android:active,
+input[type=password].frm-ctrl.ctrl-android:focus,
+input[type=email].frm-ctrl.ctrl-android:active,
+input[type=email].frm-ctrl.ctrl-android:focus,
+textarea.frm-ctrl.ctrl-android:active,
+textarea.frm-ctrl.ctrl-android:focus {
+  box-shadow: none;
+  border-bottom: solid 0.2rem #1470b3;
+}
+
+/*
+ * Checkbox specific styling
+ */
+input[type=checkbox].frm-ctrl {
+  display: none;
+}
+
+span.frm-ctrl-chk {
+  display: inline-block;
+  width: 1.3rem;
+  height: 1.3rem;
+  border-radius: 0.25rem;
+  border: solid 1px #CCC;
+  background-color: #DDD;
+  position: relative;
+  margin-right: 0.2rem;
+  vertical-align: -0.4rem;
+  transition: background-color 0.3s ease;
+}
+span.frm-ctrl-chk:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 1.3rem;
+  width: 1.3rem;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%228%22%20height%3D%228%22%20viewBox%3D%220%200%208%208%22%3E%3Cpath%20fill%3D%22%23FFF%22%20d%3D%22M6.41%200l-.69.72-2.78%202.78-.81-.78-.72-.72-1.41%201.41.72.72%201.5%201.5.69.72.72-.72%203.5-3.5.72-.72-1.44-1.41z%22%2F%3E%3C%2Fsvg%3E%0A");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 0 0;
+  border-radius: 50%;
+  transition: background-size 0.15s ease;
+}
+
+span.frm-ctrl-chk.toggle {
+  display: inline-block;
+  width: 2rem;
+  height: 1.3rem;
+  border-radius: 0.65rem;
+  background-color: #CCC;
+  position: relative;
+  margin-right: 0.2rem;
+  vertical-align: -0.4rem;
+  transition: background-color 0.3s ease;
+  border: none;
+}
+span.frm-ctrl-chk.toggle:before {
+  content: "";
+  position: absolute;
+  top: 0.15rem;
+  left: 0.15rem;
+  height: 1rem;
+  width: 1rem;
+  background-color: #FFF;
+  border-radius: 50%;
+  transition: left 0.3s ease;
+}
+
+input[type=checkbox].frm-ctrl:checked + span.frm-ctrl-chk {
+  background-color: #56a1d6;
+  border: solid 1px #56a1d6;
+}
+input[type=checkbox].frm-ctrl:checked + span.frm-ctrl-chk:before {
+  background-size: 0.8rem 0.8rem;
+}
+input[type=checkbox].frm-ctrl:checked + span.frm-ctrl-chk.toggle {
+  border: none;
+}
+input[type=checkbox].frm-ctrl:checked + span.frm-ctrl-chk.toggle:before {
+  left: 0.9rem;
+}
+
+/*
+ * Radio specific styling
+ */
+input[type=radio].frm-ctrl {
+  display: none;
+}
+
+span.frm-ctrl-rad {
+  display: inline-block;
+  border: solid 0.05rem #777;
+  width: 1.3rem;
+  height: 1.3rem;
+  border-radius: 0.65rem;
+  background-color: #DDD;
+  position: relative;
+  margin-right: 0.2rem;
+  vertical-align: -0.4rem;
+  transition: background-color 0.3s ease;
+}
+span.frm-ctrl-rad:before {
+  position: absolute;
+  background: #FFF;
+  top: 0.65rem;
+  left: 0.65rem;
+  height: 0rem;
+  width: 0rem;
+  content: "";
+  border-radius: 50%;
+  transition: left 0.3s ease, top 0.3s ease, width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+}
+
+input[type=radio].frm-ctrl:checked + span.frm-ctrl-rad {
+  background-color: #56a1d6;
+}
+input[type=radio].frm-ctrl:checked + span.frm-ctrl-rad:before {
+  top: 0.3rem;
+  left: 0.3rem;
+  height: 0.6rem;
+  width: 0.6rem;
+  background-color: #FFF;
+  color: #FFF;
+  line-height: 0.9rem;
+  font-size: 0.9rem;
+  text-align: center;
+  font-weight: bold;
+}
+
+/*
+ * The outer wrappers for form controls allow the system to style form controls
+ * in a very interactive way that makes the label behave like a placeholder and 
+ * but does not lose the context of the input.
+ */
+.frm-ctrl-outer {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  height: 2.9rem;
+}
+
+/*
+ * When the outer control wraps around an input, select, textarea, or label, the 
+ * application should reset their styles to a state that we can manage.
+ */
+.frm-ctrl-outer label,
+.frm-ctrl-outer input[type=text].frm-ctrl,
+.frm-ctrl-outer input[type=password].frm-ctrl,
+.frm-ctrl-outer textarea.frm-ctrl,
+.frm-ctrl-outer select.frm-ctrl {
+  display: inline-block;
+  height: 3.275rem;
+  font-size: 1.1rem;
+  line-height: 1.54rem;
+  /*
+   * The padding of these inputs needs to be carefully managed, unlike the regular HTML elements
+   * where the text should be centered, these offset the text slightly in order to make it fit 
+   * together with the label in the input.
+   */
+  padding: 0.9rem 0.75rem 0.6rem;
+  outline: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+          appearance: none;
+}
+
+.frm-ctrl-outer input[type=text].frm-ctrl,
+.frm-ctrl-outer input[type=password].frm-ctrl,
+.frm-ctrl-outer select,
+.frm-ctrl-outer textarea {
+  min-width: 10rem;
+  border-radius: 0.3rem;
+  transition: 0.2s ease all;
+}
+.frm-ctrl-outer input[type=text].frm-ctrl.ctrl-android,
+.frm-ctrl-outer input[type=password].frm-ctrl.ctrl-android,
+.frm-ctrl-outer select.ctrl-android,
+.frm-ctrl-outer textarea.ctrl-android {
+  border-radius: 0;
+}
+
+.frm-ctrl-outer label {
+  transform-origin: top left;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: 0.2s ease all;
+  color: #444;
+  background-color: transparent;
+  cursor: text;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  padding: 0.6rem 0rem 0rem 0rem;
+  left: 0.75rem;
+}
+
+.frm-ctrl-outer input[type=text].frm-ctrl:-moz-placeholder-shown + label, .frm-ctrl-outer input[type=password].frm-ctrl:-moz-placeholder-shown + label {
+  transform: scale(1);
+  top: 0.3rem;
+}
+
+.frm-ctrl-outer input[type=text].frm-ctrl:-ms-input-placeholder + label, .frm-ctrl-outer input[type=password].frm-ctrl:-ms-input-placeholder + label {
+  transform: scale(1);
+  top: 0.3rem;
+}
+
+.frm-ctrl-outer input[type=text].frm-ctrl:placeholder-shown + label,
+.frm-ctrl-outer input[type=password].frm-ctrl:placeholder-shown + label {
+  transform: scale(1);
+  top: 0.3rem;
+}
+
+.frm-ctrl-outer input[type=text].frm-ctrl + label,
+.frm-ctrl-outer input[type=password].frm-ctrl + label,
+.frm-ctrl-outer select + label,
+.frm-ctrl-outer input[type=text].frm-ctrl:focus + label,
+.frm-ctrl-outer input[type=password].frm-ctrl:focus + label {
+  transform: scale(0.6);
+  color: #444;
+  height: 2rem;
+  top: 0;
+}
+
+.frm-ctrl-outer input[type=text].frm-ctrl:focus + label,
+.frm-ctrl-outer input[type=password].frm-ctrl:focus + label {
+  color: #1c89d6;
+}
+
+.frm-ctrl-outer input[type=text].frm-ctrl.ctrl-borderless:focus + label,
+.frm-ctrl-outer input[type=password].frm-ctrl.ctrl-borderless:focus + label {
+  color: #222;
+}
+
+.frm-ctrl-outer input[type=text].frm-ctrl.ctrl-android:focus + label,
+.frm-ctrl-outer input[type=password].frm-ctrl.ctrl-android:focus + label {
+  color: #222;
+}
+
+/*
+The MIT License
+
+Copyright 2019 César de la Cal Bretschneider <cesar@magic3w.com>.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+/*
+    Created on : Aug 22, 2019, 4:19:27 PM
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+select.frm-ctrl {
+  padding: 0.75rem 0.4rem;
+  background-repeat: no-repeat;
+  background-position: center right 1.1rem;
+  background-size: 0.8rem 0.8rem;
+  padding-right: 2.4rem;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+}
+
+/*
+The MIT License
+
+Copyright 2019 César de la Cal Bretschneider <cesar@magic3w.com>.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+/*
+    Created on : Aug 22, 2019, 4:33:17 PM
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+.frm-ctrl-grp {
+  transition: 0.2s ease all;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  /*
+   * Form controls directly embedded into the group will be sized using
+   * flex so they occupy the entire width of the group.
+   */
+  /*
+   * Form controls inside outer groups, should take the entire width.
+   * Usually, the outer wrappers will adjust, but in this case we wish the 
+   * children to adjust to the parent.
+   */
+}
+.frm-ctrl-grp > .frm-ctrl-outer, .frm-ctrl-grp > .frm-ctrl {
+  flex-grow: 1;
+}
+.frm-ctrl-grp .frm-ctrl-outer .frm-ctrl {
+  overflow: hidden;
+  width: 100%;
+}
+.frm-ctrl-grp .frm-ctrl-outer .frm-ctrl:focus {
+  outline: none;
+  color: #1470b3;
+  box-shadow: none;
+}
+.frm-ctrl-grp .frm-ctrl-ro {
+  width: 100%;
+  display: inline-block;
+  background: #FFF;
+  border: 1px solid #CCC;
+  height: 3.275rem;
+  font-size: 1rem;
+  line-height: 2.175rem;
+  overflow: hidden;
+  padding: 0.75rem 0.6rem 0.75rem;
+}
+.frm-ctrl-grp .frm-ctrl-ro.ctrl-borderless {
+  border: none;
+  background: #F0F0F0;
+}
+.frm-ctrl-grp .frm-ctrl-ro.ctrl-android {
+  border-radius: 0;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: solid 0.2rem #BBB;
+  background: #F0F0F0;
+}
+.frm-ctrl-grp > .frm-ctrl-outer .frm-ctrl-ro,
+.frm-ctrl-grp > .frm-ctrl-outer .frm-ctrl,
+.frm-ctrl-grp > .frm-ctrl-outer input[type=text].frm-ctrl,
+.frm-ctrl-grp > .frm-ctrl-outer input[type=password].frm-ctrl {
+  border-radius: 0;
+  border-left-style: none;
+  border-right-style: none;
+}
+.frm-ctrl-grp > .frm-ctrl-outer:first-child .frm-ctrl-ro,
+.frm-ctrl-grp > .frm-ctrl-outer:first-child .frm-ctrl,
+.frm-ctrl-grp > .frm-ctrl-outer:first-child input[type=text].frm-ctrl,
+.frm-ctrl-grp > .frm-ctrl-outer:first-child input[type=password].frm-ctrl {
+  border-radius: 0.3rem 0 0 0.3rem;
+  border-left-style: solid;
+}
+.frm-ctrl-grp > .frm-ctrl-outer:first-child .frm-ctrl-ro.ctrl-borderless,
+.frm-ctrl-grp > .frm-ctrl-outer:first-child .frm-ctrl.ctrl-borderless,
+.frm-ctrl-grp > .frm-ctrl-outer:first-child input[type=text].frm-ctrl.ctrl-borderless,
+.frm-ctrl-grp > .frm-ctrl-outer:first-child input[type=password].frm-ctrl.ctrl-borderless {
+  border-style: none;
+}
+.frm-ctrl-grp > .frm-ctrl-outer:first-child .frm-ctrl-ro.ctrl-android,
+.frm-ctrl-grp > .frm-ctrl-outer:first-child .frm-ctrl.ctrl-android,
+.frm-ctrl-grp > .frm-ctrl-outer:first-child input[type=text].frm-ctrl.ctrl-android,
+.frm-ctrl-grp > .frm-ctrl-outer:first-child input[type=password].frm-ctrl.ctrl-android {
+  border-left-style: none;
+  border-right-style: none;
+  border-radius: 0;
+}
+.frm-ctrl-grp > .frm-ctrl-outer:last-child .frm-ctrl-ro,
+.frm-ctrl-grp > .frm-ctrl-outer:last-child .frm-ctrl,
+.frm-ctrl-grp > .frm-ctrl-outer:last-child input[type=text].frm-ctrl,
+.frm-ctrl-grp > .frm-ctrl-outer:last-child input[type=password].frm-ctrl {
+  border-radius: 0 0.3rem 0.3rem 0;
+  border-right-style: solid;
+}
+.frm-ctrl-grp > .frm-ctrl-outer:last-child .frm-ctrl-ro.ctrl-borderless,
+.frm-ctrl-grp > .frm-ctrl-outer:last-child .frm-ctrl.ctrl-borderless,
+.frm-ctrl-grp > .frm-ctrl-outer:last-child input[type=text].frm-ctrl.ctrl-borderless,
+.frm-ctrl-grp > .frm-ctrl-outer:last-child input[type=password].frm-ctrl.ctrl-borderless {
+  border-style: none;
+}
+.frm-ctrl-grp > .frm-ctrl-outer:last-child .frm-ctrl-ro.ctrl-android,
+.frm-ctrl-grp > .frm-ctrl-outer:last-child .frm-ctrl.ctrl-android,
+.frm-ctrl-grp > .frm-ctrl-outer:last-child input[type=text].frm-ctrl.ctrl-android,
+.frm-ctrl-grp > .frm-ctrl-outer:last-child input[type=password].frm-ctrl.ctrl-android {
+  border-left-style: none;
+  border-right-style: none;
+  border-radius: 0;
+}
+.frm-ctrl-grp > .frm-ctrl-outer.fixed-width {
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+.frm-ctrl-grp > .frm-ctrl-outer.narrow {
+  width: 7rem;
+}
+.frm-ctrl-grp > .frm-ctrl-outer.medium {
+  width: 12rem;
+}
+
+/*
+The MIT License
+
+Copyright 2019 César de la Cal Bretschneider <cesar@magic3w.com>.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+/*
+	Classes in this file manage the flow of the content, they provide utility classes
+	like right, left and center for test alignment, etc
+
+    Created on : Nov 20, 2019, 12:03:46 PM
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+.align-left {
+  text-align: left;
+}
+
+.align-right {
+  text-align: right;
+}
+
+.align-center {
+  text-align: center;
+}
+
+/*
+The MIT License
+
+Copyright 2019 César de la Cal Bretschneider <cesar@magic3w.com>.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+/*
+    Created on : Nov 20, 2019, 11:58:35 AM
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+.spacer.minuscule {
+  height: 0.3rem;
+}
+.spacer.smaller {
+  height: 0.7rem;
+}
+.spacer.small {
+  height: 1rem;
+}
+.spacer.medium {
+  height: 2rem;
+}
+.spacer.large {
+  height: 3rem;
+}
+.spacer.huge {
+  height: 4rem;
+}
+
+.horizontal-spacer {
+  display: inline-block;
+  height: 1px;
+  vertical-align: middle;
+}
+.horizontal-spacer.minuscule {
+  width: 0.3rem;
+}
+.horizontal-spacer.smaller {
+  width: 0.7rem;
+}
+.horizontal-spacer.small {
+  width: 1rem;
+}
+.horizontal-spacer.medium {
+  width: 2rem;
+}
+.horizontal-spacer.large {
+  width: 3rem;
+}
+.horizontal-spacer.huge {
+  width: 4rem;
+}
+
+.horizontal-divider {
+  display: block;
+  width: 100%;
+  border-top: solid 1rem/16 #C1C8CD;
+}
+
+.badge {
+  font-size: 0.75em;
+  border: solid 1px #360073;
+  padding: 0.1em 0.3em;
+  border-radius: 0.25em;
+  vertical-align: 0.1em;
+  font-weight: bold;
+  color: #FFF;
+  background: #6F1DC9;
+  box-shadow: -1px -2px 3px rgba(255, 255, 255, 0.2) inset;
+}
+.badge.bg-red {
+  background-color: #E93536;
+  border-color: #9B0C00;
+}
+.badge.bg-green {
+  background-color: #009554;
+  border-color: #034528;
+}
+.badge.bg-blue {
+  background-color: #1B69BF;
+  border-color: #003B7C;
+}
+.badge.bg-orange {
+  background-color: #FF7400;
+  border-color: #A13B00;
+}
+.badge.bg-grey {
+  background-color: #5F6C75;
+  border-color: #31383D;
+}
+.badge.bg-grey-050 {
+  background-color: #F6F9FA;
+  border-color: #b4cdd6;
+}
+.badge.border-grey-050 {
+  border-color: #F6F9FA;
+}
+.badge.bg-grey-100 {
+  background-color: #F1F2F3;
+  border-color: #babfc4;
+}
+.badge.border-grey-100 {
+  border-color: #F1F2F3;
+}
+.badge.bg-grey-200 {
+  background-color: #E6E8EA;
+  border-color: #afb5bb;
+}
+.badge.border-grey-200 {
+  border-color: #E6E8EA;
+}
+.badge.bg-grey-300 {
+  background-color: #C1C8CD;
+  border-color: #89969f;
+}
+.badge.border-grey-300 {
+  border-color: #C1C8CD;
+}
+.badge.bg-grey-400 {
+  background-color: #A9B3B9;
+  border-color: #71818b;
+}
+.badge.border-grey-400 {
+  border-color: #A9B3B9;
+}
+.badge.bg-grey-500 {
+  background-color: #8D99A3;
+  border-color: #5a6670;
+}
+.badge.border-grey-500 {
+  border-color: #8D99A3;
+}
+.badge.bg-grey-600 {
+  background-color: #74838E;
+  border-color: #464f56;
+}
+.badge.border-grey-600 {
+  border-color: #74838E;
+}
+.badge.bg-grey-700 {
+  background-color: #5F6C75;
+  border-color: #31383d;
+}
+.badge.border-grey-700 {
+  border-color: #5F6C75;
+}
+.badge.bg-grey-800 {
+  background-color: #464F56;
+  border-color: #181b1e;
+}
+.badge.border-grey-800 {
+  border-color: #464F56;
+}
+.badge.bg-grey-900 {
+  background-color: #31383D;
+  border-color: #040404;
+}
+.badge.border-grey-900 {
+  border-color: #31383D;
+}
+.badge.bg-orange-100 {
+  background-color: #FFEEE0;
+  border-color: #ffb67a;
+}
+.badge.border-orange-100 {
+  border-color: #FFEEE0;
+}
+.badge.bg-orange-200 {
+  background-color: #FFCFA6;
+  border-color: #ff9840;
+}
+.badge.border-orange-200 {
+  border-color: #FFCFA6;
+}
+.badge.bg-orange-300 {
+  background-color: #FFBC84;
+  border-color: #ff841e;
+}
+.badge.border-orange-300 {
+  border-color: #FFBC84;
+}
+.badge.bg-orange-400 {
+  background-color: #F7A15A;
+  border-color: #e06b0b;
+}
+.badge.border-orange-400 {
+  border-color: #F7A15A;
+}
+.badge.bg-orange-500 {
+  background-color: #FF8A29;
+  border-color: #c25800;
+}
+.badge.border-orange-500 {
+  border-color: #FF8A29;
+}
+.badge.bg-orange-600 {
+  background-color: #FF8117;
+  border-color: #b05000;
+}
+.badge.border-orange-600 {
+  border-color: #FF8117;
+}
+.badge.bg-orange-700 {
+  background-color: #FF7400;
+  border-color: #994600;
+}
+.badge.border-orange-700 {
+  border-color: #FF7400;
+}
+.badge.bg-orange-800 {
+  background-color: #FF5E00;
+  border-color: #993800;
+}
+.badge.border-orange-800 {
+  border-color: #FF5E00;
+}
+.badge.bg-orange-900 {
+  background-color: #A13B00;
+  border-color: #3b1600;
+}
+.badge.border-orange-900 {
+  border-color: #A13B00;
+}
+.badge.bg-red-100 {
+  background-color: #FFF6F2;
+  border-color: #ffaf8c;
+}
+.badge.border-red-100 {
+  border-color: #FFF6F2;
+}
+.badge.bg-red-200 {
+  background-color: #FFD3C0;
+  border-color: #ff8c5a;
+}
+.badge.border-red-200 {
+  border-color: #FFD3C0;
+}
+.badge.bg-red-300 {
+  background-color: #FF8474;
+  border-color: #ff2a0e;
+}
+.badge.border-red-300 {
+  border-color: #FF8474;
+}
+.badge.bg-red-400 {
+  background-color: #FF7361;
+  border-color: #fa1c00;
+}
+.badge.border-red-400 {
+  border-color: #FF7361;
+}
+.badge.bg-red-500 {
+  background-color: #FF6057;
+  border-color: #f00d00;
+}
+.badge.border-red-500 {
+  border-color: #FF6057;
+}
+.badge.bg-red-600 {
+  background-color: #FF4D4D;
+  border-color: #e60000;
+}
+.badge.border-red-600 {
+  border-color: #FF4D4D;
+}
+.badge.bg-red-700 {
+  background-color: #E93536;
+  border-color: #a61213;
+}
+.badge.border-red-700 {
+  border-color: #E93536;
+}
+.badge.bg-red-800 {
+  background-color: #D82C29;
+  border-color: #831a18;
+}
+.badge.border-red-800 {
+  border-color: #D82C29;
+}
+.badge.bg-red-900 {
+  background-color: #9B0C00;
+  border-color: #350400;
+}
+.badge.border-red-900 {
+  border-color: #9B0C00;
+}
+.badge.bg-green-100 {
+  background-color: #DFFFE2;
+  border-color: #79ff86;
+}
+.badge.border-green-100 {
+  border-color: #DFFFE2;
+}
+.badge.bg-green-200 {
+  background-color: #D1FFD6;
+  border-color: #6bff7b;
+}
+.badge.border-green-200 {
+  border-color: #D1FFD6;
+}
+.badge.bg-green-300 {
+  background-color: #A9FFC9;
+  border-color: #43ff89;
+}
+.badge.border-green-300 {
+  border-color: #A9FFC9;
+}
+.badge.bg-green-400 {
+  background-color: #13ef8f;
+  border-color: #0a9257;
+}
+.badge.border-green-400 {
+  border-color: #13ef8f;
+}
+.badge.bg-green-500 {
+  background-color: #00E47F;
+  border-color: #007e46;
+}
+.badge.border-green-500 {
+  border-color: #00E47F;
+}
+.badge.bg-green-600 {
+  background-color: #00CB71;
+  border-color: #006538;
+}
+.badge.border-green-600 {
+  border-color: #00CB71;
+}
+.badge.bg-green-700 {
+  background-color: #009554;
+  border-color: #002f1a;
+}
+.badge.border-green-700 {
+  border-color: #009554;
+}
+.badge.bg-green-800 {
+  background-color: #007743;
+  border-color: #00110a;
+}
+.badge.border-green-800 {
+  border-color: #007743;
+}
+.badge.bg-green-900 {
+  background-color: #034528;
+  border-color: black;
+}
+.badge.border-green-900 {
+  border-color: #034528;
+}
+.badge.bg-blue-100 {
+  background-color: #ECF5FF;
+  border-color: #86bfff;
+}
+.badge.border-blue-100 {
+  border-color: #ECF5FF;
+}
+.badge.bg-blue-200 {
+  background-color: #DEEEFF;
+  border-color: #78b9ff;
+}
+.badge.border-blue-200 {
+  border-color: #DEEEFF;
+}
+.badge.bg-blue-300 {
+  background-color: #A9D3FF;
+  border-color: #439fff;
+}
+.badge.border-blue-300 {
+  border-color: #A9D3FF;
+}
+.badge.bg-blue-400 {
+  background-color: #8DC1F9;
+  border-color: #2c8cf4;
+}
+.badge.border-blue-400 {
+  border-color: #8DC1F9;
+}
+.badge.bg-blue-500 {
+  background-color: #68B0FF;
+  border-color: #027bff;
+}
+.badge.border-blue-500 {
+  border-color: #68B0FF;
+}
+.badge.bg-blue-600 {
+  background-color: #5AA5F7;
+  border-color: #0b71e0;
+}
+.badge.border-blue-600 {
+  border-color: #5AA5F7;
+}
+.badge.bg-blue-700 {
+  background-color: #3988DF;
+  border-color: #195699;
+}
+.badge.border-blue-700 {
+  border-color: #3988DF;
+}
+.badge.bg-blue-800 {
+  background-color: #1B69BF;
+  border-color: #0e3866;
+}
+.badge.border-blue-800 {
+  border-color: #1B69BF;
+}
+.badge.bg-blue-900 {
+  background-color: #003B7C;
+  border-color: #000a16;
+}
+.badge.border-blue-900 {
+  border-color: #003B7C;
+}
+.badge.bg-purple-100 {
+  background-color: #F9F3FF;
+  border-color: #c68dff;
+}
+.badge.border-purple-100 {
+  border-color: #F9F3FF;
+}
+.badge.bg-purple-200 {
+  background-color: #EEE8FF;
+  border-color: #a382ff;
+}
+.badge.border-purple-200 {
+  border-color: #EEE8FF;
+}
+.badge.bg-purple-300 {
+  background-color: #396afc;
+  border-color: #0336cc;
+}
+.badge.border-purple-300 {
+  border-color: #396afc;
+}
+.badge.bg-purple-400 {
+  background-color: #A17CFF;
+  border-color: #5816ff;
+}
+.badge.border-purple-400 {
+  border-color: #A17CFF;
+}
+.badge.bg-purple-500 {
+  background-color: #8356F5;
+  border-color: #460dd8;
+}
+.badge.border-purple-500 {
+  border-color: #8356F5;
+}
+.badge.bg-purple-600 {
+  background-color: #742CD5;
+  border-color: #461a81;
+}
+.badge.border-purple-600 {
+  border-color: #742CD5;
+}
+.badge.bg-purple-700 {
+  background-color: #6F1DC9;
+  border-color: #3e1070;
+}
+.badge.border-purple-700 {
+  border-color: #6F1DC9;
+}
+.badge.bg-purple-800 {
+  background-color: #49009A;
+  border-color: #190034;
+}
+.badge.border-purple-800 {
+  border-color: #49009A;
+}
+.badge.bg-purple-900 {
+  background-color: #360073;
+  border-color: #06000d;
+}
+.badge.border-purple-900 {
+  border-color: #360073;
+}
+.badge.bg-white {
+  background-color: #FFFFFF;
+  border-color: #cccccc;
+}
+.badge.border-white {
+  border-color: #FFFFFF;
+}
+
+/*
+The MIT License
+
+Copyright 2019 César de la Cal Bretschneider <cesar@magic3w.com>.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+/*
+    Created on : Aug 30, 2019, 4:28:26 PM
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+/*
+ * I am a bit dissatisfied with the fact that the burgers do have a different
+ * sizing to all the other elements (and the lack of consistency within _SCSS overall)
+ * but in this case it should be fine, since the elements will, most likely, never
+ * mingle with the burgers.
+ */
+/*
+ * A burger describes a component that is usually placed on the left top hand corner
+ * of the screen to provide a cue for the user to understand that clicking or tapping
+ * on this element will extend a menu that provides overall application options.
+ */
+.burger {
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
+  cursor: pointer;
+  width: 1.6rem;
+  height: 2rem;
+  padding: 0px;
+  background-image: linear-gradient(180deg, #FFF 0.25rem, transparent 0.25rem, transparent 0.5rem, #FFF 0.5rem, #FFF 0.75rem, transparent 0.75rem, transparent 1rem, #FFF 1rem);
+  background-size: 1.5rem 1.25rem;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+.burger.hidden {
+  display: none;
+}
+.burger.dark {
+  background-image: linear-gradient(180deg, #777 0.25rem, transparent 0.25rem, transparent 0.5rem, #777 0.5rem, #777 0.75rem, transparent 0.75rem, transparent 1rem, #777 1rem);
+}
+.burger.dark:after, .burger.dark:before {
+  background: #242424;
+}
+.burger.narrow {
+  background-size: 3px 17px;
+  width: 20px;
+}
+
+.box {
+  border: solid 1px #C1C8CD;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+.box.padded {
+  padding: 0.8rem 0.8rem;
+}
+.box .padded {
+  padding: 0.8rem 0.8rem;
+}
+.box.box-soft {
+  border-radius: 0.3rem;
+}
+.box.box-very-soft {
+  border-radius: 0.6rem;
+}
+.box.box-drop-shadow, .box.box-drop-shadow-on-hover:hover {
+  box-shadow: 0 0 0.3rem #E6E8EA, 0 0 0.6rem #F1F2F3;
+}
+
+.caret {
+  display: inline-block;
+  width: 1em;
+  height: 1.2em;
+  vertical-align: -0.15em;
+  color: inherit;
+  text-align: center;
+}
+.caret::after {
+  border-width: 0.35em;
+  border-style: solid solid none solid;
+  border-color: currentColor transparent transparent transparent;
+  content: "";
+  display: inline-block;
+  height: 0;
+  width: 0;
+  vertical-align: 0.35em;
+}
+.caret.caret-point-up::after {
+  border-style: none solid solid solid;
+  border-color: transparent transparent currentColor transparent;
+}
+.caret.caret-point-left::after {
+  vertical-align: 0.2em;
+  border-style: solid solid solid none;
+  border-color: transparent currentColor transparent transparent;
+}
+.caret.caret-point-right::after {
+  vertical-align: 0.2em;
+  border-style: solid none solid solid;
+  border-color: transparent transparent transparent currentColor;
+}
+
+/*
+The MIT License
+
+Copyright 2019 César de la Cal Bretschneider <cesar@magic3w.com>.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+/*
+    Created on : Dec 9, 2019, 4:28:07 PM
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+.text\:grey-050 {
+  color: #F6F9FA;
+}
+
+.text\:grey-100 {
+  color: #F1F2F3;
+}
+
+.text\:grey-200 {
+  color: #E6E8EA;
+}
+
+.text\:grey-300 {
+  color: #C1C8CD;
+}
+
+.text\:grey-400 {
+  color: #A9B3B9;
+}
+
+.text\:grey-500 {
+  color: #8D99A3;
+}
+
+.text\:grey-600 {
+  color: #74838E;
+}
+
+.text\:grey-700 {
+  color: #5F6C75;
+}
+
+.text\:grey-800 {
+  color: #464F56;
+}
+
+.text\:grey-900 {
+  color: #31383D;
+}
+
+.text\:orange-100 {
+  color: #FFEEE0;
+}
+
+.text\:orange-200 {
+  color: #FFCFA6;
+}
+
+.text\:orange-300 {
+  color: #FFBC84;
+}
+
+.text\:orange-400 {
+  color: #F7A15A;
+}
+
+.text\:orange-500 {
+  color: #FF8A29;
+}
+
+.text\:orange-600 {
+  color: #FF8117;
+}
+
+.text\:orange-700 {
+  color: #FF7400;
+}
+
+.text\:orange-800 {
+  color: #FF5E00;
+}
+
+.text\:orange-900 {
+  color: #A13B00;
+}
+
+.text\:red-100 {
+  color: #FFF6F2;
+}
+
+.text\:red-200 {
+  color: #FFD3C0;
+}
+
+.text\:red-300 {
+  color: #FF8474;
+}
+
+.text\:red-400 {
+  color: #FF7361;
+}
+
+.text\:red-500 {
+  color: #FF6057;
+}
+
+.text\:red-600 {
+  color: #FF4D4D;
+}
+
+.text\:red-700 {
+  color: #E93536;
+}
+
+.text\:red-800 {
+  color: #D82C29;
+}
+
+.text\:red-900 {
+  color: #9B0C00;
+}
+
+.text\:green-100 {
+  color: #DFFFE2;
+}
+
+.text\:green-200 {
+  color: #D1FFD6;
+}
+
+.text\:green-300 {
+  color: #A9FFC9;
+}
+
+.text\:green-400 {
+  color: #13ef8f;
+}
+
+.text\:green-500 {
+  color: #00E47F;
+}
+
+.text\:green-600 {
+  color: #00CB71;
+}
+
+.text\:green-700 {
+  color: #009554;
+}
+
+.text\:green-800 {
+  color: #007743;
+}
+
+.text\:green-900 {
+  color: #034528;
+}
+
+.text\:blue-100 {
+  color: #ECF5FF;
+}
+
+.text\:blue-200 {
+  color: #DEEEFF;
+}
+
+.text\:blue-300 {
+  color: #A9D3FF;
+}
+
+.text\:blue-400 {
+  color: #8DC1F9;
+}
+
+.text\:blue-500 {
+  color: #68B0FF;
+}
+
+.text\:blue-600 {
+  color: #5AA5F7;
+}
+
+.text\:blue-700 {
+  color: #3988DF;
+}
+
+.text\:blue-800 {
+  color: #1B69BF;
+}
+
+.text\:blue-900 {
+  color: #003B7C;
+}
+
+.text\:purple-100 {
+  color: #F9F3FF;
+}
+
+.text\:purple-200 {
+  color: #EEE8FF;
+}
+
+.text\:purple-300 {
+  color: #396afc;
+}
+
+.text\:purple-400 {
+  color: #A17CFF;
+}
+
+.text\:purple-500 {
+  color: #8356F5;
+}
+
+.text\:purple-600 {
+  color: #742CD5;
+}
+
+.text\:purple-700 {
+  color: #6F1DC9;
+}
+
+.text\:purple-800 {
+  color: #49009A;
+}
+
+.text\:purple-900 {
+  color: #360073;
+}
+
+.text\:white {
+  color: #FFFFFF;
+}
+
+/*
+ * While this may be a potentially controversial setting when we design interfaces that
+ * are focused on long text output, specially for carefully crafted and designed experiences,
+ * we'd rather use explicit spacer elements that we can control rather than default behavior
+ * for text output.
+ */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  font-size: 2.4em;
+}
+
+h2 {
+  font-size: 2em;
+}
+
+h3 {
+  font-size: 1.7em;
+}
+
+h4 {
+  font-size: 1.5em;
+}
+
+h5 {
+  font-size: 1.5em;
+  color: #464F56;
+}
+
+h6 {
+  font-size: 1.5em;
+  color: #5F6C75;
+}
+
+p {
+  line-height: 1.3;
+}
+
+p.font-large {
+  font-size: 1.1em;
+}
+
+p.font-xlarge {
+  font-size: 1.2em;
+}
+
+p.font-small {
+  font-size: 0.9em;
+}
+
+p.font-xsmall {
+  font-size: 0.8em;
+}
+
+.text-bold {
+  font-weight: bold;
+}
+
+small {
+  font-size: 0.8rem;
+}
+
+.no-decoration {
+  text-decoration: none;
+}
+
+/*
+ * It's a safe default to assume that images that are within a column of a
+ * grid are taking in the entire width of the parent.
+ */
+.span > img,
+.span > picture,
+.span > svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+img.inline,
+svg.inline,
+picture.inline {
+  height: 1.2em;
+  vertical-align: -0.2em;
+  width: auto;
+  display: inline-block;
+}
+img.inline.cap-height,
+svg.inline.cap-height,
+picture.inline.cap-height {
+  height: 1em;
+  vertical-align: -0.2em;
+}
+
+svg.img-round,
+picture.img-round,
+img.img-round {
+  border-radius: 50%;
+}
+
+img.img-soft-corners,
+svg.img-soft-corners,
+picture.img-soft-corners {
+  border-radius: 0.4rem;
+}
+
+img.img-soft-corners-bottom {
+  border-bottom-left-radius: 0.4rem;
+  border-bottom-right-radius: 0.4rem;
+}
+
+img.img-soft-corners-top {
+  border-top-left-radius: 0.4rem;
+  border-top-right-radius: 0.4rem;
+}
+
+img.img-soft-corner-top-left {
+  border-top-left-radius: 0.4rem;
+}
+
+img.img-soft-corner-top-right {
+  border-top-right-radius: 0.4rem;
+}
+
+img.img-soft-corner-bottom-left {
+  border-bottom-left-radius: 0.4rem;
+}
+
+img.img-soft-corner-bottom-right {
+  border-bottom-right-radius: 0.4rem;
+}
