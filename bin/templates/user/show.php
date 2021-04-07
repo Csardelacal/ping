@@ -11,7 +11,7 @@
 
 	<div class="row l5" id="feed">
 		<!--Sidebar (secondary navigation) -->
-		<div class="span l1">
+		<div class="span l1" style="position: sticky; top: 0">
 			<div class="profile-resume desktop-only">
 				<div class="spacer" style="height: 10px"></div>
 				<a href="<?= url('user', $user->getUsername()) ?>"><img class="avatar" src="<?= $user->getAvatar(256) ?>"></a>
@@ -231,9 +231,3 @@ depend(['ping/editor'], function (editor) {
 depend(['ping/feedback'], function (baseurl) { baseurl('<?= spitfire()->baseUrl() ?>', '<?= (isset($_GET['token']) ? $this->sso->makeToken($_GET['token']) : \spitfire\io\session\Session::getInstance()->getUser())->getId() ?>'); });
 </script>
 <?php endif; ?>
-
-<script type="text/javascript">
-depend(['m3/ui/sticky'], function (sticky) {
-	sticky.stick(document.querySelector('.profile-resume'), document.querySelector('#feed'));
-}); 
-</script>

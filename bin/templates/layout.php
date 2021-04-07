@@ -96,7 +96,7 @@
 		
 		<div class="auto-extend">
 			
-			<div class="content" data-sticky-context>
+			<div class="content">
 				<?= $this->content() ?>
 			</div>
 		</div>
@@ -150,23 +150,9 @@
 		}());
 		</script>
 		
-		<script type="text/javascript">
-			depend(['sticky'], function (sticky) {
-				
-				/*
-				 * Create elements for all the elements defined via HTML
-				 */
-				var els = document.querySelectorAll('*[data-sticky]');
-
-				for (var i = 0; i < els.length; i++) {
-					sticky.stick(els[i], sticky.context(els[i]), els[i].getAttribute('data-sticky'));
-				}
-			});
-		</script>
-		
 		<div style="display: none">
-			<img style="max-width: 100%; vertical-align: top; margin: 0 auto; display: block; box-shadow: 0 0 10px #444;" id="preview-img" src="about:blank">
-			<video style="max-width: 100%; vertical-align: top; margin: 0 auto; display: block;" loop autoplay id="preview-vid" src="about:blank"></video>
+			<img style="max-width: 100%; margin: 0 auto; display: block; box-shadow: 0 0 10px #444;" id="preview-img" src="about:blank">
+			<video style="max-width: 100%; margin: 0 auto; display: block;" loop autoplay id="preview-vid" src="about:blank"></video>
 		</div>
 		<script type="text/javascript">
 			depend(['_scss/gallery', 'm3/core/delegate'], function (Gallery, delegate) {
