@@ -80,5 +80,3 @@
 		<?= $pagination ?>
 	</div>
 </div>
-
-<script type="text/javascript" src="<?= \spitfire\core\http\URL::asset('js/banner.js') ?>"></script>

@@ -99,7 +99,6 @@
 	</div>
 </div>
 
-<script type="text/javascript" src="<?= \spitfire\core\http\URL::asset('js/banner.js') ?>"></script>
 <script type="text/javascript" src="<?= \spitfire\core\http\URL::asset('js/follow_button.js') ?>"></script>
 <script type="text/javascript">
 (function () {
