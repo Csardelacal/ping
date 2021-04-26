@@ -326,7 +326,7 @@ depend(['m3/core/delegate', 'm3/core/request'], function (delegate, request) {
 					var token = payload.token;
 					
 					if (!confirm('Delete this ping?')) { throw 'User aborted the deletion'; }
-					return request(target.href + token + '.json');
+					return fetch(target.href + token + '.json');
 				})
 				.then(JSON.parse)
 				.then(function (e) { if (e.status === 'OK') { window.location = '/feed'; } })

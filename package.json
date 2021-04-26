@@ -19,7 +19,8 @@
   "license": "MIT",
   "devDependencies": {
     "laravel-mix": "^6.0.6",
-    "postcss": "^8.2.2"
+    "postcss": "^8.2.2",
+    "ping-sdk-js": "^0.0.1-alpha1"
   },
   "dependencies": {
     "lysine": "0.1.0-dev4"
