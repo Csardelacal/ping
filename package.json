@@ -21,13 +21,15 @@
     "laravel-mix": "^6.0.6",
     "ping-sdk-js": "^0.0.1-alpha1",
     "postcss": "^8.2.2",
-    "resolve-url-loader": "^3.1.0",
+    "resolve-url-loader": "^4.0.0",
     "sass": "^1.32.8",
-    "sass-loader": "^11.0.1"
+    "sass-loader": "^12.1.0"
   },
   "dependencies": {
+    "delegate": "^3.2.0",
     "lysine": "0.1.0-dev4",
     "m3w-_scss": "^0.0.1-alpha1",
+    "m3w-dialog": "*",
     "spinner-material": "^1.0.0"
   }
 }
