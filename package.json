@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "lysine": "0.1.0-dev4",
-    "m3w-_scss": "^0.0.1-alpha1"
+    "m3w-_scss": "^0.0.1-alpha1",
+    "spinner-material": "^1.0.0"
   }
 }
