@@ -62,4 +62,7 @@ depend(['m3/core/lysine'], function (lysine) {
 
 	//Attach the listener
 	document.addEventListener('scroll', listener, false);
+	
 });
+
+
