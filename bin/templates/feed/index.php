@@ -111,37 +111,3 @@ window.baseurl = '<?= spitfire()->baseUrl() ?>';
 </script>
 
 <script type="text/javascript" src="/ping/public/js/feed/index.js"></script>
-<script>
-
-depend(['m3/core/request', 'm3/core/array/iterate', 'm3/core/lysine'], function (request, iterate, lysine) {
-
-	request('<?= url('people', 'whoToFollow')->setExtension('json') ?>')
-
-			  .then(function (response) {
-				  var json = JSON.parse(response).payload;
-
-				  iterate(json, function (e) {
-					  var view = new lysine.view('whotofollow');
-					  view.setData(e);
-				  });
-			  })
-			  .catch(function () {
-				  console.log('Error loading suggestions');
-			  });
-});
-</script>
-
-<script type="text/javascript">
-depend(['ping/feedback'], function (baseurl) { baseurl('<?= spitfire()->baseUrl() ?>', '<?= (isset($_GET['token']) ? $this->sso->makeToken($_GET['token']) : \spitfire\io\session\Session::getInstance()->getUser())->getId() ?>'); });
-</script>
-
-<script type="text/javascript">
-depend(['ping/editor'], function (editor) {
-	console.log('editor.loaded');
-	editor(<?= json_encode([
-		'endpoint' => (string)url(), 
-		'placeholder' => 'Message to broadcast...', 
-		'user' => ['avatar' => $me->getAvatar() ]
-	]) ?>);
-});
-</script>
