@@ -214,7 +214,12 @@
 			<div class="spacer" style="height: 30px"></div>
 			
 			<div id="replies">
-				<?= current_context()->view->element('ping/ping.lysine.html')->render() ?>
+				
+			</div>
+			
+			
+			<div id="loading-spinner" style="text-align: center; padding: 1.5rem; color: #777;">
+				<spinner-material></spinner-material> Loading more...
 			</div>
 		</div>
 
