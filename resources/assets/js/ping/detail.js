@@ -3,33 +3,18 @@ import Lysine from "lysine";
 import delegate from "delegate";
 
 /**
- * @todo Replace the height functions with a intersection observer
- * @todo Replace tokens and PHP prints
+ * 
+ * @todo Replace these declarations with proper settings, most sensibly we would be using vuex
+ * to load the data.
  */
+let url = document.querySelector('meta[name="ping.endpoint"]').content;
+let token = document.querySelector('meta[name="ping.token"]').content;
+let pingid = document.querySelector('meta[name="ping.id"]').content;
 
-var sdk = new SDK('<?= url() ?>', '<?= $token ?>');
+var sdk = new SDK(url, token);
 var nextPage = undefined;
 
-var height = function () {
-	var body = document.body,
-				html = document.documentElement;
-
-	return Math.max(body.scrollHeight, body.offsetHeight,
-				html.clientHeight, html.scrollHeight, html.offsetHeight);
-};
-
-//This function listens to the scrolls
-var listener = function () {
-	var html = document.documentElement,
-				scroll = Math.max(html.scrollTop, window.scrollY);
-
-	if (nextPage && height() - scroll < html.clientHeight + 700) {
-		nextPage();
-		nextPage = null;
-	}
-};
-
-sdk.ping().replies(<?= $notification->_id ?>, function (pingList) {
+sdk.ping().replies(pingid, function (pingList) {
 	
 	for (var i = 0; i < pingList._pings.length; i++) {
 
@@ -59,7 +44,33 @@ sdk.ping().replies(<?= $notification->_id ?>, function (pingList) {
 	}
 });
 
-document.addEventListener('scroll', listener, false);
+let observer = new IntersectionObserver(function (entries, observer) {
+	entries.forEach(entry => {
+		
+		/**
+		 * If the loader is not yet close to the screen, we will obviously
+		 * not do anyhting to fetch more content.
+		 */
+		if (!entry.isIntersecting) { return; }
+		
+		/**
+		 * If more data is available, then load it.
+		 */
+		if (nextPage) {
+			nextPage();
+			nextPage = null;
+		}
+	});
+}, {
+	root: null, //Intersect with the viewport
+	rootMargin: '700px',
+});
+
+/**
+ * Listen whether the 'loading more pings' element is on screen. If this is the case, we should
+ * jump to continue loading more pings (if they're available).
+ */
+observer.observe(document.getElementById('loading-spinner'));
 
 
 /**

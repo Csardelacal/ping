@@ -10,7 +10,7 @@
 # and should only be built to the public folder.
 #
 # Therefore, all the files in public should be generated.
-public/   -diff
+public/**   -diff
 
 # Custom for Visual Studio
 *.php    diff=php

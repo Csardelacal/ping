@@ -2,6 +2,6 @@
     "/js/feed/index.js": "/js/feed/index.js",
     "/js/app.js": "/js/app.js",
     "/js/activity/index.js": "/js/activity/index.js",
-    "/js/index.js": "/js/index.js",
+    "/assets/js/ping/detail.js": "/assets/js/ping/detail.js",
     "/css/app.css": "/css/app.css"
 }

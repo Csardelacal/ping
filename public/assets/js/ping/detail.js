@@ -1,6 +1,137 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./node_modules/delegate/src/closest.js":
+/*!**********************************************!*\
+  !*** ./node_modules/delegate/src/closest.js ***!
+  \**********************************************/
+/***/ ((module) => {
+
+var DOCUMENT_NODE_TYPE = 9;
+
+/**
+ * A polyfill for Element.matches()
+ */
+if (typeof Element !== 'undefined' && !Element.prototype.matches) {
+    var proto = Element.prototype;
+
+    proto.matches = proto.matchesSelector ||
+                    proto.mozMatchesSelector ||
+                    proto.msMatchesSelector ||
+                    proto.oMatchesSelector ||
+                    proto.webkitMatchesSelector;
+}
+
+/**
+ * Finds the closest parent that matches a selector.
+ *
+ * @param {Element} element
+ * @param {String} selector
+ * @return {Function}
+ */
+function closest (element, selector) {
+    while (element && element.nodeType !== DOCUMENT_NODE_TYPE) {
+        if (typeof element.matches === 'function' &&
+            element.matches(selector)) {
+          return element;
+        }
+        element = element.parentNode;
+    }
+}
+
+module.exports = closest;
+
+
+/***/ }),
+
+/***/ "./node_modules/delegate/src/delegate.js":
+/*!***********************************************!*\
+  !*** ./node_modules/delegate/src/delegate.js ***!
+  \***********************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var closest = __webpack_require__(/*! ./closest */ "./node_modules/delegate/src/closest.js");
+
+/**
+ * Delegates event to a selector.
+ *
+ * @param {Element} element
+ * @param {String} selector
+ * @param {String} type
+ * @param {Function} callback
+ * @param {Boolean} useCapture
+ * @return {Object}
+ */
+function _delegate(element, selector, type, callback, useCapture) {
+    var listenerFn = listener.apply(this, arguments);
+
+    element.addEventListener(type, listenerFn, useCapture);
+
+    return {
+        destroy: function() {
+            element.removeEventListener(type, listenerFn, useCapture);
+        }
+    }
+}
+
+/**
+ * Delegates event to a selector.
+ *
+ * @param {Element|String|Array} [elements]
+ * @param {String} selector
+ * @param {String} type
+ * @param {Function} callback
+ * @param {Boolean} useCapture
+ * @return {Object}
+ */
+function delegate(elements, selector, type, callback, useCapture) {
+    // Handle the regular Element usage
+    if (typeof elements.addEventListener === 'function') {
+        return _delegate.apply(null, arguments);
+    }
+
+    // Handle Element-less usage, it defaults to global delegation
+    if (typeof type === 'function') {
+        // Use `document` as the first parameter, then apply arguments
+        // This is a short way to .unshift `arguments` without running into deoptimizations
+        return _delegate.bind(null, document).apply(null, arguments);
+    }
+
+    // Handle Selector-based usage
+    if (typeof elements === 'string') {
+        elements = document.querySelectorAll(elements);
+    }
+
+    // Handle Array-like based usage
+    return Array.prototype.map.call(elements, function (element) {
+        return _delegate(element, selector, type, callback, useCapture);
+    });
+}
+
+/**
+ * Finds closest match and invokes callback.
+ *
+ * @param {Element} element
+ * @param {String} selector
+ * @param {String} type
+ * @param {Function} callback
+ * @return {Function}
+ */
+function listener(element, selector, type, callback) {
+    return function(e) {
+        e.delegateTarget = closest(e.target, selector);
+
+        if (e.delegateTarget) {
+            callback.call(element, e);
+        }
+    }
+}
+
+module.exports = delegate;
+
+
+/***/ }),
+
 /***/ "./node_modules/lysine/dist/lysine.js":
 /*!********************************************!*\
   !*** ./node_modules/lysine/dist/lysine.js ***!
@@ -703,19 +834,30 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
 "use strict";
-/*!***********************************************!*\
-  !*** ./resources/assets/js/activity/index.js ***!
-  \***********************************************/
+/*!********************************************!*\
+  !*** ./resources/assets/js/ping/detail.js ***!
+  \********************************************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var lysine_dist_lysine_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lysine/dist/lysine.js */ "./node_modules/lysine/dist/lysine.js");
-/* harmony import */ var lysine_dist_lysine_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lysine_dist_lysine_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var ping_sdk_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ping-sdk-js */ "./node_modules/ping-sdk-js/dist/sdk.module.js");
-/* harmony import */ var ping_sdk_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(ping_sdk_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var ping_sdk_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ping-sdk-js */ "./node_modules/ping-sdk-js/dist/sdk.module.js");
+/* harmony import */ var ping_sdk_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(ping_sdk_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var lysine__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! lysine */ "./node_modules/lysine/dist/lysine.js");
+/* harmony import */ var lysine__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(lysine__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var delegate__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! delegate */ "./node_modules/delegate/src/delegate.js");
+/* harmony import */ var delegate__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(delegate__WEBPACK_IMPORTED_MODULE_2__);
 
 
-var nextPage = null;
-var baseurl = window.baseurl;
-var ping = new (ping_sdk_js__WEBPACK_IMPORTED_MODULE_1___default())(baseurl, '');
+
+alert('Js');
+/**
+ * @todo Replace the height functions with a intersection observer
+ * @todo Replace tokens and PHP prints
+ */
+
+var url = document.querySelector('meta[name="ping.endpoint"]').content;
+var token = document.querySelector('meta[name="ping.token"]').content;
+var pingid = document.querySelector('meta[name="ping.id"]').content;
+var sdk = new (ping_sdk_js__WEBPACK_IMPORTED_MODULE_0___default())(url, token);
+var nextPage = undefined;
 
 var height = function height() {
   var body = document.body,
@@ -728,36 +870,93 @@ var listener = function listener() {
   var html = document.documentElement,
       scroll = Math.max(html.scrollTop, window.scrollY);
 
-  if (height() - scroll < html.clientHeight + 700) {
-    nextPage && nextPage();
+  if (nextPage && height() - scroll < html.clientHeight + 700) {
+    nextPage();
     nextPage = null;
   }
 };
 
-console.log(ping.activity());
-ping.activity().read(function (pingList) {
+sdk.ping().replies(pingid, function (pingList) {
   for (var i = 0; i < pingList._pings.length; i++) {
-    var view = new (lysine_dist_lysine_js__WEBPACK_IMPORTED_MODULE_0___default().view)('ping');
-    var data = pingList._pings[i];
+    var view = new (lysine__WEBPACK_IMPORTED_MODULE_1___default().view)('ping');
+    var current = pingList._pings[i].payload;
     /*
-     * This block should be possible to have refactored out of the feed,
-     * making it less pointless code that adapts stuff around.
-     */
+    	* This block should be possible to have refactored out of the feed,
+    	* making it less pointless code that adapts stuff around.
+    	*/
 
     view.setData({
-      userName: data.user.username,
-      avatar: data.user.avatar,
-      userURL: data.user.id ? baseurl + '@' + data.user.username : '#',
-      notificationURL: data.url || '#',
-      notificationContent: data.content,
-      timeRelative: data.timeRelative
+      id: current.id,
+      userName: current.user.username,
+      avatar: current.user.avatar,
+      userURL: current.user.url,
+      notificationURL: current.url || '#',
+      notificationContent: current.content,
+      media: current.media,
+      poll: current.poll,
+      timeRelative: current.timeRelative,
+      feedback: current.feedback,
+      replyCount: current.replies.count || 'Reply',
+      shareCount: current.shares || 'Share',
+      irt: current.irt ? [current.irt] : []
     });
   }
+});
+var once = true;
+var observer = new IntersectionObserver(function (entries, observer) {
+  entries.forEach(function (entry) {
+    console.log(entry);
 
-  nextPage = pingList._next;
-}, undefined); //Attach the listener
+    if (!entry.isIntersecting || !once) {
+      return;
+    }
 
-document.addEventListener('scroll', listener, false);
+    once = false;
+    var div = document.createElement('div');
+    div.style.height = '2000px';
+    entry.target.parentNode.insertBefore(div, entry.target);
+  });
+}, {
+  root: null,
+  //Intersect with the viewport
+  rootMargin: '700px'
+});
+/**
+ * Listen whether the 'loading more pings' element is on screen. If this is the case, we should
+ * jump to continue loading more pings (if they're available).
+ */
+
+observer.observe(document.getElementById('loading-spinner'));
+/**
+ * This section enables the deletion of pings.
+ * @todo Move this to the ping component in vue when it's available.
+ */
+
+var tokenurl = window.baseurl + "/xsrf/token.json";
+delegate__WEBPACK_IMPORTED_MODULE_2___default()('click', '.delegate-link', function (e) {
+  var target = this;
+  fetch(tokenurl).then(function (response) {
+    return response.json();
+  }).then(function (payload) {
+    var token = payload.token;
+
+    if (!confirm('Delete this ping?')) {
+      throw 'User aborted the deletion';
+    }
+
+    return fetch(target.href + token + '.json');
+  }).then(function (response) {
+    return response.json();
+  }).then(function (e) {
+    if (e.status === 'OK') {
+      window.location = '/feed';
+    }
+  })["catch"](function (e) {
+    console.error(e);
+  });
+  e.stopPropagation();
+  e.preventDefault();
+});
 })();
 
 /******/ })()

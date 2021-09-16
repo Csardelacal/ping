@@ -8,6 +8,8 @@
 		<link type="text/css" rel="stylesheet" href="<?= \spitfire\core\http\URL::asset('css/app.css') ?>">
 		<meta name="_scss" content="<?= \spitfire\SpitFire::baseUrl() ?>/assets/scss/_/js/">
 		<meta name="ping.endpoint" content="<?= rtrim(\spitfire\SpitFire::baseUrl(), '/') ?>/">
+		<meta name="ping.token" content="none">
+		<meta name="ping.id" content="none">
 		
 		
 		<?php if ($authUser) : ?>
