@@ -12,11 +12,24 @@
 	"scripts": {
 		"test" : [
 			"./vendor/bin/phpstan analyse bin/ --level 5"
+		],
+		"sniff" : [
+			"cp ./vendor/magic3w/php-coding-standard/.phpcs.xml ./.phpcs.xml",
+			"./vendor/bin/phpcs --encoding=utf-8 -n -p $(git diff --diff-filter=d --cached --name-only | grep -E '\\.php$')"
 		]
 	},
     "minimum-stability": "dev",
 	"prefer-stable": true,
     "require-dev": {
-        "phpstan/phpstan": "^0.12.82"
-    }
+        "phpstan/phpstan": "^0.12.82",
+        "magic3w/php-coding-standard": "^1.0"
+    },
+
+	"repositories":
+	[
+			{
+				"type": "vcs",
+				"url": "https://github.com/Csardelacal/PHP_Codesniffer"
+			}
+	]
 }
