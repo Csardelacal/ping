@@ -4,9 +4,44 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "395347a371124ceeb366943dfca259d0",
+    "content-hash": "0215bf4e62a3b92d6f56b594d4374251",
     "packages": [],
     "packages-dev": [
+        {
+            "name": "magic3w/php-coding-standard",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Magic3W/php-coding-standard.git",
+                "reference": "a8c4094a1c7ec365e4d4d2cbcac8a6157631c54a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Magic3W/php-coding-standard/zipball/a8c4094a1c7ec365e4d4d2cbcac8a6157631c54a",
+                "reference": "a8c4094a1c7ec365e4d4d2cbcac8a6157631c54a",
+                "shasum": ""
+            },
+            "require": {
+                "squizlabs/php_codesniffer": "dev-dev/scope-indent-blank-lines"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "César de la Cal Bretschneider",
+                    "email": "cesar@magic3w.com"
+                }
+            ],
+            "description": "Magic3W Coding standard for PHP projects.",
+            "support": {
+                "issues": "https://github.com/Magic3W/php-coding-standard/issues",
+                "source": "https://github.com/Magic3W/php-coding-standard/tree/1.0.0"
+            },
+            "time": "2022-02-01T12:46:42+00:00"
+        },
         {
             "name": "phpstan/phpstan",
             "version": "0.12.82",
@@ -66,6 +101,61 @@
                 }
             ],
             "time": "2021-03-19T06:08:17+00:00"
+        },
+        {
+            "name": "squizlabs/php_codesniffer",
+            "version": "dev-dev/scope-indent-blank-lines",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Csardelacal/PHP_CodeSniffer.git",
+                "reference": "7a0de8d171488991cda6ac936f4cf6ee3e8bac7b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Csardelacal/PHP_CodeSniffer/zipball/7a0de8d171488991cda6ac936f4cf6ee3e8bac7b",
+                "reference": "7a0de8d171488991cda6ac936f4cf6ee3e8bac7b",
+                "shasum": ""
+            },
+            "require": {
+                "ext-simplexml": "*",
+                "ext-tokenizer": "*",
+                "ext-xmlwriter": "*",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.0 || ^5.0 || ^6.0 || ^7.0"
+            },
+            "bin": [
+                "bin/phpcs",
+                "bin/phpcbf"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.x-dev"
+                }
+            },
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Greg Sherwood",
+                    "role": "lead"
+                }
+            ],
+            "description": "PHP_CodeSniffer tokenizes PHP, JavaScript and CSS files and detects violations of a defined set of coding standards.",
+            "homepage": "https://github.com/squizlabs/PHP_CodeSniffer",
+            "keywords": [
+                "phpcs",
+                "standards"
+            ],
+            "support": {
+                "issues": "https://github.com/squizlabs/PHP_CodeSniffer/issues",
+                "wiki": "https://github.com/squizlabs/PHP_CodeSniffer/wiki",
+                "source": "https://github.com/squizlabs/PHP_CodeSniffer"
+            },
+            "time": "2022-01-20T00:58:22+00:00"
         }
     ],
     "aliases": [],
@@ -75,5 +165,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.2.0"
 }
