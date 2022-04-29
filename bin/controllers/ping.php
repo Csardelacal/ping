@@ -134,7 +134,7 @@ class PingController extends AppController
 			$notification->store();
 
 			#Attach the media
-			foreach (array_filter($media) as $file) {
+			foreach (array_filter($media?: []) as $file) {
 				list($id, $secret) = explode(':', $file);
 				$record = db()->table('media\media')->get('_id', $id)->where('secret', $secret)->first(true);
 				$record->ping = $notification;
@@ -142,7 +142,7 @@ class PingController extends AppController
 			}
 
 			#Create poll options
-			foreach (array_filter($poll) as $option) {
+			foreach (array_filter($poll?: []) as $option) {
 				$record = db()->table('poll\option')->newRecord();
 				$record->ping = $notification;
 				$record->text = $option;

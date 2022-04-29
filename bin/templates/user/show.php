@@ -24,9 +24,8 @@
 				
 				<span class="follower-count"><a href="<?= url('people', 'following', $user->getUsername()) ?>"><strong><?= db()->table('follow')->get('prey', $user)->count() ?></strong> followers</a></span>
 				<span class="follow-count"><a href="<?= url('people', 'follows', $user->getUsername()) ?>"><strong><?= db()->table('follow')->get('follower', $user)->count() ?></strong> follows</a></span>
+				<span class="liked-count"><a href="<?= url('feedback', 'liked', $user->getUsername()) ?>"><strong><?= db()->table('feedback')->get('author', $author)->count() ?></strong> liked</a></span>
 				<span class="ping-count"><strong><?= db()->table('ping')->get('src', $user)->addRestriction('target__id', null, 'IS')->count() ?></strong> posts</span>
-				
-				<!-- Add link to the different feedback the user gave on the platform -->
 			</div>
 			
 			<div class="material unpadded user-card mobile-only">
@@ -109,4 +108,4 @@
 
 <script type="text/javascript" src="<?= \spitfire\core\http\URL::asset('js/lysine.js') ?>"></script>
 
-<script type="text/javascript" src="<?= asset('js/user/show.js') ?>"></script>
+<script type="text/javascript" src="<?= \spitfire\SpitFire::baseUrl() ?>/assets/js/user/show.js"></script>

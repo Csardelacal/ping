@@ -30,13 +30,6 @@ class FeedBackController extends AppController
 {
 	
 	public function push(PingModel$ping) {
-		$reaction = \ping\Reaction::all()->filter(function (\ping\Reaction$e) {
-			return $e->getIdentifier() === $_GET['reaction'];
-		})->rewind();
-		
-		if (!$reaction) {
-			throw new PublicException('Reaction unavailable', 400);
-		}
 		
 		if (!$this->user) {
 			throw new PublicException('Not allowed', 403);
@@ -55,7 +48,17 @@ class FeedBackController extends AppController
 		$record->author   = $author;
 		$record->target   = $ping->src;
 		$record->appId    = $this->authapp? ($this->authapp instanceof \auth\AppAuthentication? $this->authapp->getSrc()->getId() : strval($this->authapp)) : null;
-		$record->reaction = $reaction->getIdentifier();
+		
+		switch($_GET['reaction']?? null) {
+			case 'dislike': 
+				$record->reaction = -1;
+				break;
+			
+			case 'like': 
+			default: 
+				$record->reaction = 1;
+				break;
+		}
 		
 		$this->core->feedback->push->do(function ($feedback) {
 			$feedback->store();
@@ -76,36 +79,25 @@ class FeedBackController extends AppController
 			throw new PublicException('Not allowed', 403);
 		}
 		
-		$feedback = db()->table('feedback')->get('ping', $ping)->where('author', $author)->where('removed', null)->first();
-		$feedback->removed = time();
-		$feedback->store();
+		db()->table('feedback')->get('ping', $ping)->where('author', $author)->first()->delete();
 	}
 	
 	public function retrieve(PingModel$ping) {
 		
 		$mc = new \spitfire\cache\MemcachedAdapter;
-		$mc->setTimeout(60);
-		
+		$mc->setTimeout(1800);
 		
 		$overall = $mc->get('ping_like_details_' . $ping->_id, function () use ($ping) {
-			$reactions = ping\Reaction::all();
-			$_ret = [
-				'count' => []
+			return [
+				'like'    => db()->table('feedback')->get('ping', $ping)->where('reaction',  1)->where('removed', null)->count(),
+				'dislike' => db()->table('feedback')->get('ping', $ping)->where('reaction', -1)->where('removed', null)->count(),
+				'sample'  => db()->table('feedback')->get('ping', $ping)->where('reaction',  1)->where('removed', null)->range(0, 10)->each(function ($e) { return [
+					'author' => $e->author->_id, 
+					'user' => $e->author->user? $e->author->user->_id : null, 
+					'avatar' => $e->author->getAvatar(), 
+					'username' => $e->author->getUsername(), 
+				];})->toArray()
 			];
-			
-			foreach ($reactions as $reaction) {
-				$_ret['count'][$reaction->getIdentifier()] = db()->table('feedback')->get('ping', $ping)->where('reaction',  $reaction->getIdentifier())->where('removed', null)->count();
-			}
-			
-			$_ret['sample'] = db()->table('feedback')->get('ping', $ping)->where('removed', null)->range(0, 10)->each(function ($e) { return [
-				'author' => $e->author->_id,
-				'reaction' => $e->reaction,
-				'user' => $e->author->user? $e->author->user->_id : null, 
-				'avatar' => $e->author->getAvatar(), 
-				'username' => $e->author->getUsername(), 
-			];})->toArray();
-			
-			return $_ret;
 		});
 		
 		$this->view->set('overall', $overall);
@@ -116,9 +108,31 @@ class FeedBackController extends AppController
 		}
 	}
 	
-	public function available() {
-		$reactions = ping\Reaction::all();
-		$this->view->set('reactions', $reactions);
+	public function liked($username = null) {
+		if (!$username) {
+			$author = AuthorModel::get(db()->table('user')->get('_id', $this->user->id)->first(true));
+		}
+		else {
+			$author = AuthorModel::find('@' . $username);
+		}
+		
+		$query = db()
+			->table('feedback')
+			->get('author', $author)
+			->where('reaction', 1)
+			->where('removed', null)
+			->setOrder('created', 'DESC');
+		
+		if (isset($_GET['until'])) {
+			$query->where('_id', '<', $_GET['until']);
+		}
+		
+		$feedback = $query->range(0, 20);
+		
+		$this->view->set('notifications', $feedback->extract('ping'));
+		$this->view->set('until', $feedback->last()->_id);
+		$this->view->set('author', $author);
+		$this->view->set('user', $author);
+		$this->view->set('me', AuthorModel::get(db()->table('user')->get('_id', $this->user->id)->first(true)));
 	}
-	
 }

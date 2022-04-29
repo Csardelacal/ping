@@ -112,59 +112,23 @@
 
 								</div>
 							</div>
-							
-							<?php foreach ($ping->embed as $embed): ?>
-							<?php if ($embed->title === null) { continue; } ?>
-							<div class="spacer" style="height: 20px;"></div>
-							
-							<div class="ping-embed" onclick="window.location = '<?= $embed->short ?>'">
-								<?php if ($embed->image): ?>
-								<img src="<?= $embed->image? : 'about:blank' ?>" style="width: 100%">
-								<?php else :?>
-								<div class="spacer" style="height: .5rem;"></div>
-								<?php endif; ?>
-								<div class="ping-embed-caption">
-									<a href="<?= $embed->short ?>"><?= __($embed->title) ?></a>
-									<p><?= __($embed->description) ?></p>
-								</div>
-							</div>
-							<?php endforeach; ?>
+
 							<div class="spacer" style="height: 20px;"></div>
 
 							<div class="row l3 fluid">
 								<div class="span l2">
-									<div class="reactions-container" data-ping="<?= $notification->_id ?>">
-										<?php $reactions = \ping\Reaction::all() ?>
-										<?php foreach ($reactions as $reaction): ?>
-
-											<?php if (!$authUser): ?>
-												<?= $reaction->getEmoji() ?>
-												<span><?= strval(db()->table('feedback')->get('ping', $notification)->where('reaction', $reaction->getIdentifier())->where('removed', null)->count()) ?></span>
-											<?php elseif (db()->table('feedback')->get('ping', $notification)->where('reaction', $reaction->getIdentifier())->where('author', AuthorModel::get(db()->table('user')->get('authId', $authUser->id)->first()))->first()): ?>
-												<a href="<?= url('feedback', 'revoke', $notification->_id) ?>" class="ping-contextual-link for-likes liked" data-ping="<?= $notification->_id ?>">
-													<?= $reaction->getEmoji() ?>
-													<span><?= strval(db()->table('feedback')->get('ping', $notification)->where('reaction', $reaction->getIdentifier())->where('removed', null)->count()) ?></span>
-												</a>
-											<?php elseif (db()->table('feedback')->get('ping', $notification)->where('reaction', $reaction->getIdentifier())->first()): ?>
-												<a href="<?= url('feedback', 'push', $notification->_id) ?>" class="ping-contextual-link for-likes" data-ping="<?= $notification->_id ?>">
-													<?= $reaction->getEmoji() ?>
-													<span><?= strval(db()->table('feedback')->get('ping', $notification)->where('reaction', $reaction->getIdentifier())->where('removed', null)->count())?></span>
-												</a>
-											<?php else: ?>
-												<!-- The reaction was omitted due to not having any reactions of this type -->
-												<noscript>
-													<a href="<?= url('feedback', 'push', $notification->_id, ['reaction' => $reaction->getIdentifier(), 'returnto' => strval(spitfire\core\http\URL::current())]) ?>" class="ping-contextual-link for-likes" data-ping="<?= $ping->_id ?>">
-														<?= $reaction->getEmoji() ?>
-														<span><?= strval(db()->table('feedback')->get('ping', $ping)->where('reaction', $reaction->getIdentifier())->where('removed', null)->count())?></span>
-													</a>
-												</noscript>
-											<?php endif; ?>
-										<?php endforeach ?>
-										<span class="add-reaction">
-											<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-										</span>
-									</div>
-									
+									<?php if (!$authUser): ?>
+									<?php elseif (db()->table('feedback')->get('ping', $notification)->where('author', AuthorModel::get(db()->table('user')->get('authId', $authUser->id)->first()))->first()): ?>
+										<a href="<?= url('feedback', 'revoke', $notification->_id) ?>" class="ping-contextual-link for-likes liked" data-ping="<?= $notification->_id ?>">
+											<i class="im im-heart"></i>
+											<span><?= strval(db()->table('feedback')->get('ping', $notification)->where('reaction', 1)->where('removed', null)->count()) ?></span>
+										</a>
+									<?php else: ?>
+										<a href="<?= url('feedback', 'push', $notification->_id) ?>" class="ping-contextual-link for-likes" data-ping="<?= $notification->_id ?>">
+											<i class="im im-heart"></i>
+											<span><?= strval(db()->table('feedback')->get('ping', $notification)->where('reaction', 1)->where('removed', null)->count())?></span>
+										</a>
+									<?php endif; ?>
 									<a href="<?= url('ping', 'detail', $notification->_id) ?>#replies" class="ping-contextual-link for-replies">
 										<i class="im im-speech-bubble"></i>
 										<span><?= strval(db()->table('ping')->get('irt__id', $notification->_id)->count()) ?></span>
@@ -214,12 +178,7 @@
 			<div class="spacer" style="height: 30px"></div>
 			
 			<div id="replies">
-				
-			</div>
-			
-			
-			<div id="loading-spinner" style="text-align: center; padding: 1.5rem; color: #777;">
-				<spinner-material></spinner-material> Loading more...
+				<?= current_context()->view->element('ping/ping.lysine.html')->render() ?>
 			</div>
 		</div>
 
@@ -230,6 +189,7 @@
 	</div>
 </div>
 
+<script type="text/javascript" src="<?= \spitfire\core\http\URL::asset('js/banner.js') ?>"></script>
 <script type="text/javascript" src="<?= \spitfire\core\http\URL::asset('js/follow_button.js') ?>"></script>
 <script type="text/javascript">
 (function () {
@@ -238,5 +198,85 @@
 }());
 </script>
 
+<?php if (isset($me)): ?>
+<script type="text/javascript">
+depend(['ping/editor'], function(editor) {
+	console.log('editor.loaded');
+	editor(<?= json_encode([
+		'endpoint' => (string)url(), 
+		'placeholder' => 'Your reply...', 
+		'irt' => $notification->_id,
+		'user' => [ 'avatar' => $me->getAvatar() ]
+	]) ?>);
+});
+</script>
+<?php endif; ?>
 
-<script type="text/javascript" src="<?= asset('js/ping/detail.js') ?>"></script>
+<?php $token = null; ?>
+<?php if(isset($_GET['token'])) { $token = $this->sso->makeToken($_GET['token'])->getId(); } ?>
+<?php if(\spitfire\io\session\Session::getInstance()->getUser()) { $token = \spitfire\io\session\Session::getInstance()->getUser()->getId(); } ?>
+
+<script type="text/javascript">
+depend(['ping/ping', 'm3/core/lysine'], function(SDK, Lysine) {
+	var sdk = new SDK('<?= url() ?>', '<?= $token ?>');
+	var nextPage = undefined;
+	
+	var height = function () {
+		var body = document.body,
+				  html = document.documentElement;
+
+		return Math.max(body.scrollHeight, body.offsetHeight,
+				  html.clientHeight, html.scrollHeight, html.offsetHeight);
+	};
+
+	//This function listens to the scrolls
+	var listener = function () {
+		var html = document.documentElement,
+				  scroll = Math.max(html.scrollTop, window.scrollY);
+
+		if (nextPage && height() - scroll < html.clientHeight + 700) {
+			nextPage();
+			nextPage = null;
+		}
+	};
+	
+	sdk.ping().replies(<?= $notification->_id ?>, function (pingList) {
+		
+		for (var i = 0; i < pingList._pings.length; i++) {
+
+			var view = new Lysine.view('ping');
+			var current = pingList._pings[i].payload;
+
+			/*
+			 * This block should be possible to have refactored out of the feed,
+			 * making it less pointless code that adapts stuff around.
+			 */
+			view.setData({
+				id: current.id,
+				userName: current.user.username,
+				avatar: current.user.avatar,
+				userURL: current.user.url,
+				notificationURL: current.url || '#',
+				notificationContent: current.content,
+				media: current.media,
+				poll: current.poll,
+				timeRelative: current.timeRelative,
+				feedback : current.feedback,
+				replyCount: current.replies.count || 'Reply',
+				shareCount: current.shares || 'Share',
+				irt: current.irt ? [current.irt] : []
+			});
+
+		}
+	});
+	
+	document.addEventListener('scroll', listener, false);
+});
+</script>
+
+<script type="text/javascript">
+depend(['ping/feedback'], function (baseurl) { 
+	baseurl(
+		'<?= spitfire()->baseUrl() ?>', 
+		'<?= $token? $token : null ?>'); });
+</script>

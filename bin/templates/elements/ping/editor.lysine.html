@@ -1,0 +1,82 @@
+
+<!-- This should not have any ID, since ID are expected to be unique-->
+<template data-lysine-view="ping-editor">
+	<div>
+		<form method="POST" data-lysine-action="{{endpoint}}ping/push"  data-lysine-data-action-api="{{endpoint}}ping/push.json" enctype="multipart/form-data" class="ping-editor">
+			<input type="hidden" name="target" data-lysine-value="{{target}}" data-condition="null(target) == false">
+			<input type="hidden" name="irt" data-lysine-value="{{irt}}" data-condition="null(irt) == false">
+
+			<div class="padded add-ping">
+				<div class="row l10">
+					<div class="span l1 desktop-only" style="text-align: center">
+						<img data-lysine-src="{{user.avatar}}" style="width: 100%; border: solid 1px #777; border-radius: 3px;">
+					</div>
+					<div class="span l9">
+						<textarea name="content" class="new-ping-content" data-lysine-placeholder="{{placeholder}}"></textarea>
+
+						<div class="spacer" style="height: 10px"></div>
+
+						<div class="row l5 m4 s4 fluid">
+							
+							<template  data-lysine-view data-for="media">
+								<div class="span l1 m1 s1" >
+									<div style="text-align: center; height: 100%; border: solid 1px #DDD; border-radius: 3px; overflow: hidden; position: relative">
+										<img style="vertical-align: middle" data-lysine-src="{{source}}" class="upload-preview">
+										<input type="hidden" name="media[]" value="" data-for="id">
+										<a class="remove-media" href="#" style="color: #FFF; font-weight: bold; font-size: 1.8em; position: absolute; top: -5px; right: 5px; text-shadow: 0 0 8px rgba(0, 0, 0, .7); line-height: 1em; ">&times;</a>
+									</div>
+								</div>
+							</template>
+						</div>
+					</div>
+				</div>
+
+
+				<div class="spacer" style="height: 10px"></div>
+
+				<div class="row l10 poll-dialog" style="display: none">
+					<div class="span l1"></div>
+					<div class="span l9">
+						<template data-lysine-view data-for="poll">
+							<div>
+								<div class="row l5 m4 s4 fluid">
+									<div class="span l4 m3 s3">
+										<input type="text" name="poll[]" data-for="value" placeholder="Option..." style="width: 100%; border: none; border-bottom: solid 1px #ccc; padding: 3px;">
+									</div>
+									<div class="span l1 m1 s1">
+										<a href="#remove-poll" data-lysine-data-id="{{id}}" class="poll-create-remove">Remove</a>
+									</div>
+								</div>
+							</div>
+						</template>
+
+						<div class="row l5 m4 s4 fluid">
+							<div class="span l4 m3 s3">
+								<a href="#add-poll" class="poll-create-add">Add option</a>
+							</div>
+						</div>
+					</div>
+
+					<div class="spacer" style="height: 10px"></div>
+				</div>
+
+				<div>
+					<div class="row l10"><!--
+						--><div class="span l1">
+							<!--Just a spacer-->
+						</div><!--
+						--><div class="span l4">
+							<input type="file" class="ping_media" style="display: none">
+							<img data-lysine-src="{{endpoint}}assets/img/camera.png" class="ping_media_selector" style="vertical-align: middle; height: 24px; opacity: .5; margin: 0 5px;">
+							<img data-lysine-src="{{endpoint}}assets/img/poll.png" class="ping_poll" style="vertical-align: middle; height: 24px; opacity: .3; margin: 0 5px;">
+						</div><!--
+						--><div class="span l5" style="text-align: right">
+							<span class="new-ping-character-count">500</span>
+							<input type="submit" value="Ping!" class="send-ping">
+						</div><!--
+						--></div>
+				</div>
+			</div>
+		</form>
+	</div>
+</template>

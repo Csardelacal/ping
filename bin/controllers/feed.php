@@ -23,7 +23,7 @@ class FeedController extends AppController
 		 * across servers in a process called federation.
 		 */
 		$dbuser  = db()->table('user')->get('_id', $this->user->id)->fetch()? : UserModel::makeFromSSO($this->sso->getUser($this->user->id));
-		$me      = AuthorModel::find($dbuser->_id);
+		$me      = AuthorModel::find($dbuser->_id)?: AuthorModel::get($dbuser);
 		
 		/*
 		 * Find all the authors and sources the user has subscribed to. These will

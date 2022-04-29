@@ -1,12 +1,7 @@
 <?php
 
-use auth\SSOCache;
 use cron\FlipFlop;
 use cron\TimerFlipFlop;
-use media\Compressor;
-use ping\embed\NotYetAvailableException;
-use ping\embed\PssmsShortener;
-use spitfire\core\Environment;
 use spitfire\mvc\Director;
 
 /* 
@@ -82,7 +77,7 @@ class CronDirector extends Director
 	
 	public function media() {
 		#Create a user
-		$this->sso   = new SSOCache(Environment::get('SSO'));
+		$this->sso   = new \auth\SSOCache(spitfire\core\Environment::get('SSO'));
 		
 		console()->success('Initiating cron...')->ln();
 		$started   = time();
@@ -136,12 +131,12 @@ class CronDirector extends Director
 			$attached = $ping->attached->toArray();
 			
 			if (empty($attached) && $ping->media) {
-				$file = storage()->dir(Environment::get('uploads.directory'))->make(uniqid() . str_replace(['?', '%'], '', pathinfo($ping->media, PATHINFO_BASENAME)));
+				$file = storage()->dir(spitfire\core\Environment::get('uploads.directory'))->make(uniqid() . str_replace(['?', '%'], '', pathinfo($ping->media, PATHINFO_BASENAME)));
 				
 				try {
 					$file->write(storage()->get($ping->media)->read());
 				} 
-				catch (Exception $ex) {
+				catch (\Exception $ex) {
 					$body = file_get_contents($ping->media);
 					if (!strstr($http_response_header[0], '200')) { 
 						$ping->processed = true;
@@ -165,7 +160,7 @@ class CronDirector extends Director
 			foreach ($attached as $media) {
 				$micro = microtime(true);
 				
-				$compressor = new Compressor($media);
+				$compressor = new media\Compressor($media);
 				$compressor->process();
 				
 				console()->success('Processed media, took ' . (microtime(true) - $micro) . ' seconds')->ln();
@@ -180,59 +175,6 @@ class CronDirector extends Director
 		
 		console()->success('Cron ended, was running for ' . (time() - $started) . ' seconds')->ln();		
 		return 0;
-	}
-	
-	public function url() {
-		
-		#Set up the link shortener
-		$shortener = new PssmsShortener(Environment::get('shortener.url'));
-		
-		#First, loop over elements that have a URL assigned, but it's not yet in the embed table
-		$pings = db()->table('ping')->get('url', null, '!=')->range(0, 500);
-		
-		foreach ($pings as $ping) {
-			$embed = db()->table('embed')->newRecord();
-			$embed->ping = $ping;
-			$embed->url = $ping->url;
-			$embed->store();
-			
-			$ping->url = null;
-			$ping->store();
-			
-			console()->success('Migrated ping to embed')->ln();
-			sleep(1);
-		}
-		
-		#Now, loop over the embeds with no short URL and shorten it
-		if ($shortener) {
-			$longs = db()->table('embed')->get('short', null)->range(0, 500);
-			
-			foreach ($longs as $long) {
-				$long->short = $shortener->shorten($long->url);
-				$long->store();
-
-				console()->success('Shortened ' . $long->url . ' to ' . $long->short)->ln();
-				sleep(1);
-			}
-		}
-		
-		#Finally, fetch the fetch data for all of the shortened URLs
-		if ($shortener) {
-			$unfetched = db()->table('embed')->get('title', null)->range(0, 300);
-			
-			foreach ($unfetched as $pending) {
-				try {
-					$meta = $shortener->read($pending->short);
-					$pending->title = substr($meta->getTitle()?: 'Untitled', 0, 64);
-					$pending->description = substr($meta->getDescription()?: 'No description available', 0, 255);
-					$pending->image = substr($meta->getImage()?: null, 0, 255);
-					$pending->store();
-				} 
-				catch (NotYetAvailableException$ex) {
-					console()->error('Tried to fetch metadata about URL that has not yet become available')->ln();
-				}
-			}
-		}
 	}
 	
 }

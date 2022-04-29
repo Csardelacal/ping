@@ -6,8 +6,11 @@
 	<div class="span l2">
 
 		<div class="material unpadded">
-			<div class="editor"></div>
-			<noscript>(Javascript is required to add a ping)</noscript>
+			<?= current_context()->view->element('ping/editor.lysine.html')->render() ?>
+			
+			<noscript>
+			<?= current_context()->view->element('ping/editor.php')->set('authUser', $authUser)->render() ?>
+			</noscript>
 		</div>
 
 		<?php if (db()->table('ping')->get('src__id', AuthorModel::find($authUser->id)->_id)->where('processed', 0)->first()): ?>
@@ -70,6 +73,7 @@
 		<div class="spacer" style="height: 30px;"></div>
 
 		
+		<?= current_context()->view->element('ping/ping.lysine.html')->set('ping', $notification)->render() ?>
 	</div>
 
 	<!-- Contextual menu-->
@@ -105,9 +109,99 @@
 	</div>
 </div>
 
-<script>
-window.token = '<?= (isset($_GET['token']) ? $this->sso->makeToken($_GET['token']) : \spitfire\io\session\Session::getInstance()->getUser())->getId() ?>';
-window.baseurl = '<?= spitfire()->baseUrl() ?>';
+<script type="text/javascript">
+	depend(['m3/core/lysine', 'ping/ping'], function (lysine, Ping) {
+		
+		var nextPage = null;
+		var token = '<?= (isset($_GET['token']) ? $this->sso->makeToken($_GET['token']) : \spitfire\io\session\Session::getInstance()->getUser())->getId() ?>';
+		var ping = new Ping('<?= spitfire()->baseUrl() ?>', token);
+		
+		var height = function () {
+			var body = document.body,
+					  html = document.documentElement;
+
+			return Math.max(body.scrollHeight, body.offsetHeight,
+					  html.clientHeight, html.scrollHeight, html.offsetHeight);
+		};
+		
+		//This function listens to the scrolls
+		var listener = function () {
+			var html = document.documentElement,
+					  scroll = Math.max(html.scrollTop, window.scrollY);
+
+			if (height() - scroll < html.clientHeight + 700) {
+				nextPage();
+				nextPage = null;
+			}
+		};
+		
+		ping.feed().read(function(pingList) {
+			
+			for (var i = 0; i < pingList._pings.length; i++) {
+				
+				var view = new lysine.view('ping');
+				var current = pingList._pings[i].payload;
+				
+				/*
+				 * This block should be possible to have refactored out of the feed,
+				 * making it less pointless code that adapts stuff around.
+				 */
+				view.setData({
+					id: current.id,
+					userName: current.user.username,
+					avatar: current.user.avatar,
+					userURL: current.user.url,
+					notificationURL: current.url || '#',
+					notificationContent: current.content,
+					media: current.media,
+					share: current.share,
+					poll: current.poll,
+					timeRelative: current.timeRelative,
+					feedback : current.feedback,
+					replyCount: current.replies || 'Reply',
+					shareCount: current.shares || 'Share',
+					irt: current.irt ? [current.irt] : []
+				});
+				
+			}
+			
+			nextPage = pingList._next;
+		}, <?= isset($notification) && $notification? $notification->_id : 0 ?>);
+
+		//Attach the listener
+		document.addEventListener('scroll', listener, false);
+	});
+
+
+	depend(['m3/core/request', 'm3/core/array/iterate', 'm3/core/lysine'], function (request, iterate, lysine) {
+
+		request('<?= url('people', 'whoToFollow')->setExtension('json') ?>')
+
+				  .then(function (response) {
+					  var json = JSON.parse(response).payload;
+
+					  iterate(json, function (e) {
+						  var view = new lysine.view('whotofollow');
+						  view.setData(e);
+					  });
+				  })
+				  .catch(function () {
+					  console.log('Error loading suggestions');
+				  });
+	});
 </script>
 
-<script type="text/javascript" src="/ping/public/js/feed/index.js"></script>
+<script type="text/javascript">
+depend(['ping/feedback'], function (baseurl) { baseurl('<?= spitfire()->baseUrl() ?>', '<?= (isset($_GET['token']) ? $this->sso->makeToken($_GET['token']) : \spitfire\io\session\Session::getInstance()->getUser())->getId() ?>'); });
+</script>
+
+<script type="text/javascript">
+depend(['ping/editor'], function (editor) {
+	console.log('editor.loaded');
+	editor(<?= json_encode([
+		'endpoint' => (string)url(), 
+		'placeholder' => 'Message to broadcast...', 
+		'user' => ['avatar' => $me->getAvatar() ]
+	]) ?>);
+});
+</script>

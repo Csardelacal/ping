@@ -149,10 +149,6 @@ class SSO
 		return $this->appId;
 	}
 	
-	public function getSecret() {
-		return $this->appSecret;
-	}
-	
 	public function makeSignature($target = null, $contexts = []) {
 		$signature = new Signature(Hash::ALGO_DEFAULT, $this->appId, $this->appSecret, $target, $contexts);
 		return $signature;

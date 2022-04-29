@@ -32,7 +32,7 @@ class UserController extends AppController
 			$feed->addRestriction('_id', $_GET['until'], '<');
 		}
 		
-		$pings = $feed->range(0, 2);
+		$pings = $feed->range(0, 10);
 		
 		if ($this->user) {
 			

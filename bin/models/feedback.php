@@ -42,7 +42,7 @@ class FeedbackModel extends Model
 		$schema->ping     = new Reference(PingModel::class);
 		$schema->guid     = new StringField(250);
 		$schema->appId    = new StringField(50);
-		$schema->reaction = new StringField(10);
+		$schema->reaction = new IntegerField();
 		$schema->created  = new IntegerField(true);
 		$schema->removed  = new IntegerField(true);
 		

@@ -109,13 +109,6 @@ class ActivityController extends AppController
 			$notification->url     = $url;
 			$notification->type    = $type;
 			
-			/*
-			 * Only JSON requests can explicitly set the silent variable to false,
-			 * the HTML requests will have to ommit the flag if they wis to set it
-			 * to false.
-			 */
-			$notification->silent  = isset($_POST['silent'])? $_POST['silent'] !== false : false;
-			
 			$this->core->activity->push->do(function ($notification) {
 				$notification->store();
 			}, $notification);
