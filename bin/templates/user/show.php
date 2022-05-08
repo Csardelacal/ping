@@ -108,4 +108,7 @@
 
 <script type="text/javascript" src="<?= \spitfire\core\http\URL::asset('js/lysine.js') ?>"></script>
 
+<script type="text/javascript">
+       document.querySelector('meta[name="ping.id"]').content = <?= json_encode(isset($notification) && $notification? $notification->_id : null) ?>;
+</script>
 <script type="text/javascript" src="<?= \spitfire\SpitFire::baseUrl() ?>/assets/js/user/show.js"></script>

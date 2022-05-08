@@ -1,9 +1,16 @@
 version: "3.3"
 services:
+  jsbuild:
+    build:
+      context: .
+      dockerfile: Dockerfile.npm
+    restart: 'no'
+    volumes:
+      - '.:/code'
   web:
     build: .
     ports:
-      - "8090:80"
+      - "8087:80"
     volumes:
       - /var/www/html/bin/usr
       - .:/var/www/html/
@@ -21,3 +28,5 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: www
       MYSQL_PASSWORD: test
+    ports:
+      - "3387:3306"

@@ -1,7 +1,7 @@
 import Lysine from "lysine";
 
 var xhr = null;
-var current = <?= json_encode(isset($notification) && $notification? $notification->_id : null) ?>;
+var current = document.querySelector('meta[name="ping.id"]').content;
 var notifications = [];
 
 var request = function (callback) {
@@ -12,7 +12,7 @@ var request = function (callback) {
 	}
 	
 	xhr = new XMLHttpRequest();
-	xhr.open('GET', '<?= url('user', 'show', $user->getUsername())->setExtension('json') ?>?until=' + current);
+	xhr.open('GET', document.location + '.json?until=' + current);
 	
 	document.getElementById('loading-spinner').style.display = 'block';
 	
