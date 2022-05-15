@@ -45,7 +45,8 @@ class MediaModel extends Model
 			$this->ping->processed = false;
 			$this->ping->store();
 			trigger_error(sprintf('Found unprocessed media in ping #%s', $this->ping->_id), E_USER_WARNING);
-			throw new PublicException('Media error', 500, $e);
+			return new MissingThumbModel();
+			//throw new PublicException('Media error', 500, $e);
 		}
 		
 	}

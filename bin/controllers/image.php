@@ -1,8 +1,6 @@
 <?php
 
 use spitfire\exceptions\PublicException;
-use spitfire\io\Image;
-use spitfire\io\image\PNGQuant;
 
 /* 
  * To change this license header, choose License Headers in Project Properties.
