@@ -3,5 +3,4 @@ FROM node:current-bullseye
 VOLUME /code
 RUN apt update; apt upgrade -y; apt install npm -y;
 
-ENTRYPOINT tail -f /dev/null;
-#ENTRYPOINT cd code; npm install; npm run build;
+ENTRYPOINT cd code; npm install; npm run build;

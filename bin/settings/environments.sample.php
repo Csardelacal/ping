@@ -31,3 +31,5 @@ $e->set('analytics.id', '');
 $e->set('server_name', 'localhost:8087');
 //$e->set('debugging_mode', true);
 $e->set('debug_mode', true);
+
+ini_set("memory_limit","2G");
