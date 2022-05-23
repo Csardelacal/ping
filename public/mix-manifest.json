@@ -1,8 +1,8 @@
 {
-    "/js/feed/index.js": "/js/feed/index.js",
-    "/js/app.js": "/js/app.js",
-    "/js/activity/index.js": "/js/activity/index.js",
-    "/assets/js/ping/detail.js": "/assets/js/ping/detail.js",
-    "/js/user/show.js": "/js/user/show.js",
-    "/css/app.css": "/css/app.css"
+    "/js/feed/index.js": "/js/feed/index.js?id=a50d9c4cadf48842c01f2d1537e09f47",
+    "/js/app.js": "/js/app.js?id=1d3e538bc00a2983ad23a2aefba65235",
+    "/js/activity/index.js": "/js/activity/index.js?id=0e99de48899c9ec881c62836e49295ab",
+    "/assets/js/ping/detail.js": "/assets/js/ping/detail.js?id=22d991e8fcc480c678059e3384a7347c",
+    "/js/user/show.js": "/js/user/show.js?id=7258a7998a9fe24505659f1ba2fecea1",
+    "/css/app.css": "/css/app.css?id=3ec73807c07fc099a67984cda2dfe5b8"
 }

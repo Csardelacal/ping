@@ -58,7 +58,7 @@ depend(['m3/core/lysine'], function (lysine) {
 		}
 		
 		nextPage = pingList._next;
-	});
+	}, window.oldestLoaded);
 
 	//Attach the listener
 	document.addEventListener('scroll', listener, false);

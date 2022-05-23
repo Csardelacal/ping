@@ -62,7 +62,7 @@ depend(['m3/core/lysine'], function (lysine) {
     }
 
     nextPage = pingList._next;
-  }); //Attach the listener
+  }, window.oldestLoaded); //Attach the listener
 
   document.addEventListener('scroll', listener, false);
 });
