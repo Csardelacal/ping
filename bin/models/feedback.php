@@ -55,7 +55,8 @@ class FeedbackModel extends Model
 	{
 		
 		if (!$this->guid) {
-			$this->guid = 'f' . strtolower(substr(str_replace(['+', '/', '='], '', base64_encode(random_bytes(200))), 0, 100));
+			$random = base64_encode(random_bytes(200));
+			$this->guid = 'f' . strtolower(substr(str_replace(['+', '/', '='], '', $random), 0, 100));
 		}
 		
 		if (!$this->created) {

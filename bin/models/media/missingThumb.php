@@ -1,7 +1,5 @@
 <?php namespace media;
 
-use spitfire\Model;
-use spitfire\storage\database\Schema;
 use spitfire\storage\database\Table;
 
 class MissingThumbModel extends ThumbModel
@@ -17,7 +15,9 @@ class MissingThumbModel extends ThumbModel
 	public function getEmbed()
 	{
 		// TODO: temporary styling until overhaul with vue and tailwind
-		return '<div style="font-weight: bold; font-style: italic; text-align: center; border: 1px solid black; padding: 5px; font-size: 0.9em; margin: 5px;">Media Error</div>';
+		$style = 'font-weight: bold; font-style: italic; text-align: center;';
+		$style.= 'border: 1px solid black; padding: 5px; font-size: 0.9em; margin: 5px';
+		return '<div style="${style}">Media Error</div>';
 	}
 	
 	public function getMediaEmbed()

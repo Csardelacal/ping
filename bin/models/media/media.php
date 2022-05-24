@@ -41,10 +41,13 @@ class MediaModel extends Model
 	{
 		
 		try {
-			return $this->getTable()->getDb()->table('media\thumb')->get('media__id', $this->_id)->where('aspect', $size)->first(true);
+			return $this->getTable()->getDb()->table('media\thumb')
+				->get('media__id', $this->_id)->where('aspect', $size)
+				->first(true);
 		}
 		catch (Exception$e) {
 			$this->ping->processed = false;
+			$this->ping->deleted = time();
 			$this->ping->store();
 			trigger_error(sprintf('Found unprocessed media in ping #%s', $this->ping->_id), E_USER_WARNING);
 			return new MissingThumbModel();

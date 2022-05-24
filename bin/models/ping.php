@@ -1,5 +1,7 @@
 <?php
 
+use spitfire\storage\objectStorage\EmbedInterface;
+
 class PingModel extends spitfire\Model
 {
 	
@@ -43,7 +45,8 @@ class PingModel extends spitfire\Model
 			$this->created = time();
 		}
 		if (!$this->guid) {
-			$this->guid = 'p' . strtolower(substr(str_replace(['+', '/', '='], '', base64_encode(random_bytes(100))), 0, 100));
+			$random = base64_encode(random_bytes(100));
+			$this->guid = 'p' . strtolower(substr(str_replace(['+', '/', '='], '', $random), 0, 100));
 		}
 	}
 	
@@ -54,7 +57,12 @@ class PingModel extends spitfire\Model
 	 */
 	public function getMediaURI()
 	{
-		return in_array(parse_url($this->media, PHP_URL_SCHEME), ['file', 'app'])? strval(url('image', 'preview', $this->_id)->absolute()) : $this->media;
+		if (in_array(parse_url($this->media, PHP_URL_SCHEME), ['file', 'app'])) {
+			return strval(url('image', 'preview', $this->_id)->absolute());
+		}
+		else {
+			return $this->media;
+		}
 	}
 	
 	/**
@@ -71,7 +79,7 @@ class PingModel extends spitfire\Model
 			}
 			
 			$file = storage($this->media);
-			$uri  = $file instanceof \spitfire\storage\objectStorage\EmbedInterface? $file->publicURI() : $this->getMediaURI();
+			$uri  = $file instanceof EmbedInterface? $file->publicURI() : $this->getMediaURI();
 			
 			
 			switch ($file->mime()) {
@@ -85,7 +93,13 @@ class PingModel extends spitfire\Model
 		catch (Exception $ex) {
 			return sprintf('<img src="%s"  style="width: 100%%">', $this->getMediaURI());
 		}
-		return in_array(parse_url($this->media, PHP_URL_SCHEME), ['file', 'app'])? strval(url('image', 'preview', $this->_id)->absolute()) : $this->media;
+		
+		if (in_array(parse_url($this->media, PHP_URL_SCHEME), ['file', 'app'])) {
+			return strval(url('image', 'preview', $this->_id)->absolute());
+		}
+		else {
+			return $this->media;
+		}
 	}
 	
 	public function original()

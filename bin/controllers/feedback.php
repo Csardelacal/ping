@@ -1,5 +1,6 @@
 <?php
 
+use auth\AppAuthentication;
 use spitfire\exceptions\PublicException;
 
 /*
@@ -36,8 +37,18 @@ class FeedBackController extends AppController
 			throw new PublicException('Not allowed', 403);
 		}
 		
-		$author = AuthorModel::get(db()->table('user')->get('authId', $this->user->id)->first()? : UserModel::makeFromSSO($this->sso->getUser($this->user->id)));
-		$exists = db()->table('feedback')->get('author', $author)->where('ping', $ping)->where('removed', null)->first();
+		$dbuser = db()->table('user')->get('authId', $this->user->id)->first();
+		
+		if (!$dbuser) {
+			$dbuser = UserModel::makeFromSSO($this->sso->getUser($this->user->id));
+		}
+		
+		$author = AuthorModel::get($dbuser);
+		$exists = db()->table('feedback')
+			->get('author', $author)
+			->where('ping', $ping)
+			->where('removed', null)
+			->first();
 		
 		if ($exists) {
 			$exists->removed = time();
@@ -48,7 +59,7 @@ class FeedBackController extends AppController
 		$record->ping     = $ping;
 		$record->author   = $author;
 		$record->target   = $ping->src;
-		$record->appId    = $this->authapp? ($this->authapp instanceof \auth\AppAuthentication? $this->authapp->getSrc()->getId() : strval($this->authapp)) : null;
+		$record->appId    = $this->authapp? strval($this->authapp) : null;
 		
 		switch ($_GET['reaction']?? null) {
 			case 'dislike':
@@ -75,7 +86,13 @@ class FeedBackController extends AppController
 			throw new PublicException('Not allowed', 403);
 		}
 		
-		$author = AuthorModel::get(db()->table('user')->get('authId', $this->user->id)->first()? : UserModel::makeFromSSO($this->sso->getUser($this->user->id)));
+		$dbuser = db()->table('user')->get('authId', $this->user->id)->first();
+		
+		if (!$dbuser) {
+			$dbuser = UserModel::makeFromSSO($this->sso->getUser($this->user->id));
+		}
+		
+		$author = AuthorModel::get($dbuser);
 		
 		if (!db()->table('feedback')->get('author', $author)->where('ping', $ping)->where('removed', null)->first()) {
 			throw new PublicException('Not allowed', 403);
@@ -90,26 +107,49 @@ class FeedBackController extends AppController
 		$mc = new \spitfire\cache\MemcachedAdapter;
 		$mc->setTimeout(1800);
 		
-		$overall = $mc->get('ping_like_details_' . $ping->_id, function () use ($ping) {
+		$reactionCount = function (PingModel $ping, int $id) {
+			return db()
+				->table('feedback')
+				->get('ping', $ping)
+				->where('reaction', $id)
+				->where('removed', null)
+				->count();
+		};
+		
+		$overall = $mc->get('ping_like_details_' . $ping->_id, function () use ($ping, $reactionCount) {
 			return [
-				'like'    => db()->table('feedback')->get('ping', $ping)->where('reaction', 1)->where('removed', null)->count(),
-				'dislike' => db()->table('feedback')->get('ping', $ping)->where('reaction', -1)->where('removed', null)->count(),
-				'sample'  => db()->table('feedback')->get('ping', $ping)->where('reaction', 1)->where('removed', null)->range(0, 10)->each(function ($e) {
-					return [
-					'author' => $e->author->_id,
-					'user' => $e->author->user? $e->author->user->_id : null,
-					'avatar' => $e->author->getAvatar(),
-					'username' => $e->author->getUsername(),
-					];
-				})->toArray()
+				'like'    => $reactionCount(1),
+				'dislike' => $reactionCount(-1),
+				'sample'  => db()->table('feedback')->get('ping', $ping)
+					->where('reaction', 1)
+					->where('removed', null)
+					->range(0, 10)
+					->each(function ($e) {
+						return [
+							'author' => $e->author->_id,
+							'user' => $e->author->user? $e->author->user->_id : null,
+							'avatar' => $e->author->getAvatar(),
+							'username' => $e->author->getUsername(),
+						];
+					})->toArray()
 			];
 		});
 		
 		$this->view->set('overall', $overall);
 		
 		if ($this->user) {
-			$author = AuthorModel::get(db()->table('user')->get('authId', $this->user->id)->first()? : UserModel::makeFromSSO($this->sso->getUser($this->user->id)));
-			$this->view->set('mine', db()->table('feedback')->get('ping', $ping)->where('author', $author)->where('removed', null)->first()->reaction);
+			$dbuser = db()->table('user')->get('authId', $this->user->id)->first();
+			
+			if (!$dbuser) {
+				$dbuser = UserModel::makeFromSSO($this->sso->getUser($this->user->id));
+			}
+			
+			$author = AuthorModel::get($dbuser);
+			$this->view->set(
+				'mine',
+				db()->table('feedback')->get('ping', $ping)
+					->where('author', $author)->where('removed', null)->first()->reaction
+			);
 		}
 	}
 	

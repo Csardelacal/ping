@@ -28,9 +28,16 @@ class ActivityController extends AppController
 		}
 		
 		if (isset($_GET['until'])) {
-			$notifications = db()->table('notification')->get('target__id', $this->user->id)->addRestriction('_id', $_GET['until'], '<')->setOrder('_id', 'DESC')->range(0, 20);
+			$notifications = db()->table('notification')
+				->get('target__id', $this->user->id)
+				->addRestriction('_id', $_GET['until'], '<')
+				->setOrder('_id', 'DESC')
+				->range(0, 20);
 		} else {
-			$notifications = db()->table('notification')->get('target__id', $this->user->id)->setOrder('_id', 'DESC')->range(0, 20);
+			$notifications = db()->table('notification')
+				->get('target__id', $this->user->id)
+				->setOrder('_id', 'DESC')
+				->range(0, 20);
 		}
 		
 		$user = db()->table('user')->get('_id', $this->user->id)->fetch();
@@ -67,7 +74,13 @@ class ActivityController extends AppController
 		#There needs to be a src user. That means that somebody is originating the
 		#notification. There has to be one, and no more than one.
 		try {
-			$src = AuthorModel::get(db()->table('user')->get('_id', $srcid)->fetch()? : UserModel::makeFromSSO($this->sso->getUser($srcid)));
+			$dbuser = db()->table('user')->get('authId', $srcid)->first();
+			
+			if (!$dbuser) {
+				$dbuser = UserModel::makeFromSSO($this->sso->getUser($srcid));
+			}
+			
+			$src = AuthorModel::get($dbuser);
 		}
 		catch (\Exception$e) {
 			trigger_error(sprintf('User with id %s was not found', $srcid), E_USER_NOTICE);
@@ -96,7 +109,13 @@ class ActivityController extends AppController
 			
 			#If there is no user specified we do skip them
 			try {
-				return db()->table('user')->get('_id', $tgtid)->fetch()? : UserModel::makeFromSSO($this->sso->getUser($tgtid));
+				$dbuserTarget = db()->table('user')->get('authId', $tgtid)->first();
+				
+				if (!$dbuserTarget) {
+					$dbuserTarget = UserModel::makeFromSSO($this->sso->getUser($tgtid));
+				}
+				
+				return $dbuserTarget;
 			}
 			catch (\Exception$e) {
 				return null;

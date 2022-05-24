@@ -38,7 +38,12 @@ class UserController extends AppController
 		$pings = $feed->range(0, 10);
 		
 		if ($this->user) {
-			$dbuser  = db()->table('user')->get('_id', $this->user->id)->fetch()? : UserModel::makeFromSSO($this->sso->getUser($this->user->id));
+			$dbuser  = db()->table('user')->get('_id', $this->user->id)->fetch();
+			
+			if (!$dbuser) {
+				$dbuser = UserModel::makeFromSSO($this->sso->getUser($this->user->id));
+			}
+			
 			$me      = AuthorModel::find($dbuser->_id);
 			
 			$mine = db()->table('ping')->get('src__id', $me->_id)

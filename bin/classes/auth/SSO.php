@@ -15,7 +15,10 @@ class SSO
 	{
 		$reflection = URLReflection::fromURL($credentials);
 		
-		$this->endpoint  = rtrim($reflection->getProtocol() . '://' . $reflection->getServer() . ':' . $reflection->getPort() . $reflection->getPath(), '/');
+		$proto = $reflection->getProtocol();
+		$hostn = $reflection->getServer();
+		
+		$this->endpoint  = rtrim($proto . '://' . $hostn . ':' . $reflection->getPort() . $reflection->getPath(), '/');
 		$this->appId     = $reflection->getUser();
 		$this->appSecret = $reflection->getPassword();
 		
@@ -74,13 +77,20 @@ class SSO
 			throw new Exception('Valid user id needed');
 		}
 		
+		if ($token && $token->isAuthenticated()) {
+			$query = array('token' => $token->getTokenInfo()->token, 'signature' => (string)$this->makeSignature());
+		}
+		else {
+			$query = array('signature' => (string)$this->makeSignature());
+		}
+		
 		/*
 		 * Assemble the request we need to retrieve the data. Please note that if
 		 * there is no token we pass no parameters.
 		 */
 		$request = new Request(
 			$this->endpoint . '/user/detail/' . $username . '.json',
-			$token && $token->isAuthenticated()? array('token' => $token->getTokenInfo()->token, 'signature' => (string)$this->makeSignature()) : array('signature' => (string)$this->makeSignature())
+			$query
 		);
 		
 		/*
@@ -90,7 +100,16 @@ class SSO
 		$resp = $request->send();
 		$data = json_decode($resp)->payload;
 		
-		return new User($data->id, $data->username, $data->aliases, $data->groups, $data->verified, $data->registered_unix, $data->attributes, $data->avatar);
+		return new User(
+			$data->id,
+			$data->username,
+			$data->aliases,
+			$data->groups,
+			$data->verified,
+			$data->registered_unix,
+			$data->attributes,
+			$data->avatar
+		);
 	}
 	
 	/**
@@ -108,7 +127,12 @@ class SSO
 		
 		$request = new Request(
 			$this->endpoint . '/auth/app.json',
-			array_filter(array('token' => $token, 'signature' => (string)$this->makeSignature(), 'remote' => $signature, 'context' => $context))
+			array_filter([
+				'token' => $token,
+				'signature' => (string)$this->makeSignature(),
+				'remote' => $signature,
+				'context' => $context
+			])
 		);
 		
 		$response = $request->send();

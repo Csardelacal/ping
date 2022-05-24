@@ -3,6 +3,7 @@
 use auth\AppAuthentication;
 use cron\FlipFlop;
 use spitfire\exceptions\PublicException;
+use spitfire\io\media\FFMPEGManipulator;
 use spitfire\io\XSSToken;
 
 /**
@@ -69,7 +70,11 @@ class PingController extends AppController
 		
 		#There needs to be a src user. That means that somebody is originating the
 		#notification. There has to be one, and no more than one.
-		$src = AuthorModel::get(db()->table('user')->get('_id', $srcid)->first()? : UserModel::makeFromSSO($this->sso->getUser($srcid)));
+		$src = AuthorModel::get(db()->table('user')->get('_id', $srcid)->first());
+		
+		if (!$src) {
+			$src = UserModel::makeFromSSO($this->sso->getUser($srcid));
+		}
 		
 		/*
 		 * Check whether the source defined a target for this ping. If the target
@@ -116,10 +121,16 @@ class PingController extends AppController
 			$local = $media->store();
 			$media = media()->load($local);
 			
+			/**
+			 * We need to determine what kind of content the user uploaded. If the user has a video
+			 * file without audio we treat it as image.
+			 */
+			$type = $media instanceof FFMPEGManipulator && $media->hasAudio()? 'video' : 'image';
+			
 			$record = db()->table('media\media')->newRecord();
 			$record->file = $local->uri();
 			$record->source = null;
-			$record->type   = $media instanceof \spitfire\io\media\FFMPEGManipulator && $media->hasAudio()? 'video' : 'image';
+			$record->type   = $type;
 			$record->secret = base64_encode(random_bytes(50));
 			$record->store();
 			
@@ -384,8 +395,8 @@ class PingController extends AppController
 		 * me and the ones directed at me.
 		 */
 		if ($ping->target) {
-			$g->where('target', AuthorModel::get(db()->table('user')->get('authId', $this->user? $this->user->id : null)->first()));
-			$g->where('src', AuthorModel::get(db()->table('user')->get('authId', $this->user->id)->first()));
+			$g->where('target', AuthorModel::find($this->user->id));
+			$g->where('src', AuthorModel::find($this->user->id));
 		}
 		/*
 		 * Otherwise we include the ones that were not sent to a specifid user.
@@ -421,7 +432,10 @@ class PingController extends AppController
 	 */
 	public function share($pingid)
 	{
-		$original = db()->table('ping')->get(is_numeric($pingid)? '_id' : 'guid', $pingid)->where('deleted', null)->first(true);
+		$original = db()->table('ping')
+			->get(is_numeric($pingid)? '_id' : 'guid', $pingid)
+			->where('deleted', null)
+			->first(true);
 		
 		if (!$this->user) {
 			throw new PublicException('Log in required', 403);

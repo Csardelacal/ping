@@ -23,8 +23,13 @@ class FeedController extends AppController
 		 * entity that creates posts and can be followed. Authors can be normalized
 		 * across servers in a process called federation.
 		 */
-		$dbuser  = db()->table('user')->get('_id', $this->user->id)->fetch()? : UserModel::makeFromSSO($this->sso->getUser($this->user->id));
-		$me      = AuthorModel::find($dbuser->_id)?: AuthorModel::get($dbuser);
+		$dbuser = db()->table('user')->get('authId', $this->user->id)->first();
+		
+		if (!$dbuser) {
+			$dbuser = UserModel::makeFromSSO($this->sso->getUser($this->user->id));
+		}
+		
+		$me = AuthorModel::find($dbuser);
 		
 		/*
 		 * Find all the authors and sources the user has subscribed to. These will
@@ -85,14 +90,15 @@ class FeedController extends AppController
 		$dbuser->store();
 		
 		$this->view->set('me', $me);
-		$this->view->set('notifications', $notifications->add($mine->range(0, 100)->toArray())->add($atme->range(0, 100)->toArray())->sort(function ($a, $b) {
-			return $a->created < $b->created? 1 : -1;
-		}));
-		
-		if (isset($_GET['debug'])) {
-			print_r(spitfire()->getMessages());
-			die();
-		}
+		$this->view->set(
+			'notifications',
+			$notifications
+				->add($mine->range(0, 100)->toArray())
+				->add($atme->range(0, 100)->toArray())
+				->sort(function ($a, $b) {
+					return $a->created < $b->created? 1 : -1;
+				})
+		);
 	}
 	
 	/**

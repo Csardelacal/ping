@@ -2,6 +2,7 @@
 
 use cron\FlipFlop;
 use cron\TimerFlipFlop;
+use spitfire\core\Environment;
 use spitfire\mvc\Director;
 
 /*
@@ -132,7 +133,9 @@ class CronDirector extends Director
 			$attached = $ping->attached->toArray();
 			
 			if (empty($attached) && $ping->media) {
-				$file = storage()->dir(spitfire\core\Environment::get('uploads.directory'))->make(uniqid() . str_replace(['?', '%'], '', pathinfo($ping->media, PATHINFO_BASENAME)));
+				$dir = Environment::get('uploads.directory');
+				$filename = uniqid() . str_replace(['?', '%'], '', pathinfo($ping->media, PATHINFO_BASENAME));
+				$file = storage()->dir($dir)->make($filename);
 				
 				try {
 					$file->write(storage()->get($ping->media)->read());

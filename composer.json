@@ -15,11 +15,11 @@
 		],
 		"sniff" : [
 			"#cp ./vendor/magic3w/php-coding-standard/.phpcs.xml ./.phpcs.xml",
-			"./vendor/bin/phpcs -s --encoding=utf-8 -n -p $(git diff --diff-filter=d --cached --name-only master | grep -E '\\.php$')"
+			"./vendor/bin/phpcs -s --encoding=utf-8 -p $(git diff master --diff-filter=d --cached --name-only | grep -E '\\.php$')"
 		],
 		"style" : [
 			"#cp ./vendor/magic3w/php-coding-standard/.phpcs.xml ./.phpcs.xml",
-			"./vendor/bin/phpcbf --encoding=utf-8 -n -p $(git diff --diff-filter=d --cached --name-only master | grep -E '\\.php$')"
+			"./vendor/bin/phpcbf --encoding=utf-8 -n -p $(git diff master --diff-filter=d --cached --name-only | grep -E '\\.php$')"
 		]
 	},
     "minimum-stability": "dev",
