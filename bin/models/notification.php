@@ -13,7 +13,8 @@ class NotificationModel extends spitfire\Model
 	const TYPE_MENTION = 7;
 	const TYPE_MESSAGE = 8;
 	
-	public function definitions(\spitfire\storage\database\Schema $schema) {
+	public function definitions(\spitfire\storage\database\Schema $schema)
+	{
 		$schema->src     = new Reference('author'); # User originating the action
 		$schema->target  = new Reference('user'); # If a notification is not a broadcast
 		$schema->content = new StringField(255);  # A ping can contain up to 255 characters
@@ -24,11 +25,15 @@ class NotificationModel extends spitfire\Model
 		$schema->type->setNullable(false);
 	}
 	
-	public function onbeforesave() {
-		if (!$this->created) { $this->created = time(); }
+	public function onbeforesave()
+	{
+		if (!$this->created) {
+			$this->created = time();
+		}
 	}
 	
-	public static function getTypesAvailable() {
+	public static function getTypesAvailable()
+	{
 		return [
 			'other'   => self::TYPE_OTHER,
 			'follow'  => self::TYPE_FOLLOW,
@@ -41,5 +46,4 @@ class NotificationModel extends spitfire\Model
 			'message' => self::TYPE_MESSAGE
 		];
 	}
-
 }

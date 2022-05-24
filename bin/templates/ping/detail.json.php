@@ -2,20 +2,22 @@
 
 $n = $ping;
 $user  = $sso->getUser($n->src->user->_id);
-	
+
 $poll = db()->table('poll\option')->get('ping', $n->original())->all()->each(function ($e) use ($authUser) {
 	$m = new spitfire\cache\MemcachedAdapter();
-
+	
 	return [
 		'id' => $e->_id,
 		'body' => $e->text,
 		'url'  => strval(url('poll', 'vote', $e->_id)->absolute()),
-		'responses' => $m->get('responses_' . $e->_id, function () use ($e) { return db()->table('poll\reply')->get('option', $e)->count(); }),
+		'responses' => $m->get('responses_' . $e->_id, function () use ($e) {
+			return db()->table('poll\reply')->get('option', $e)->count();
+		}),
 		'selected'  => $authUser? !!db()->table('poll\reply')->get('option', $e)->where('author', AuthorModel::get(db()->table('user')->get('_id', $authUser->id)->first()))->first() : false
 	];
 });
 
-$payload = Array(
+$payload = array(
 	'id'           => $n->_id,
 	'url'          => $n->url,
 	'media'        => $n->attachmentsPreview(),
@@ -24,8 +26,8 @@ $payload = Array(
 	'timeRelative' => Time::relative($n->created),
 	'poll'         => $poll->toArray(),
 	'feedback'     => [
-		'mine'      => !!db()->table('feedback')->get('ping', $n)->where('author',  $me)->where('reaction',  1)->first(),
-		'like'      => db()->table('feedback')->get('ping', $n)->where('reaction',  1)->count(),
+		'mine'      => !!db()->table('feedback')->get('ping', $n)->where('author', $me)->where('reaction', 1)->first(),
+		'like'      => db()->table('feedback')->get('ping', $n)->where('reaction', 1)->count(),
 		'dislike'   => db()->table('feedback')->get('ping', $n)->where('reaction', -1)->count(),
 	],
 	'shares'       => $n->shared->getQuery()->count(),
@@ -43,7 +45,7 @@ $payload = Array(
 				'replies'      => [
 					'count'  => $n->replies->getQuery()->count()
 				],
-				'user'         => Array(
+				'user'         => array(
 					'id'        => $n->src->user->authId,
 					'url'       => strval(url('user', $sso->getUser($n->src->user->authId)->getUsername())->absolute()),
 					'username'  => $user->getUsername(),
@@ -52,7 +54,7 @@ $payload = Array(
 			];
 		})->toArray()
 	],
-	'user'         => Array(
+	'user'         => array(
 		'id'        => $n->src->user->authId,
 		'url'       => strval(url('user', $sso->getUser($n->src->user->authId)->getUsername())->absolute()),
 		'username'  => $user->getUsername(),
@@ -60,7 +62,7 @@ $payload = Array(
 	)
 );
 
-echo json_encode(Array(
+echo json_encode(array(
 	 'payload' => $payload,
 	 'until'   => isset($n)? $n->_id : 0,
 	 'messages' => spitfire()->getMessages()

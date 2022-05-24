@@ -13,7 +13,7 @@
 			</noscript>
 		</div>
 
-		<?php if (db()->table('ping')->get('src__id', AuthorModel::find($authUser->id)->_id)->where('processed', 0)->first()): ?>
+		<?php if (db()->table('ping')->get('src__id', AuthorModel::find($authUser->id)->_id)->where('processed', 0)->first()) : ?>
 			<div class="spacer" style="height: 10px"></div>
 
 			<div class="material" style="color: #0571B1">
@@ -28,14 +28,13 @@
 
 		<div class="spacer" style="height: 10px"></div>
 
-		<?php foreach ($notifications as $notification): ?>
-			
+		<?php foreach ($notifications as $notification) : ?>
 			<?= current_context()->view->element('ping/ping')->set('ping', $notification)->render() ?>
 			<div class="spacer" style="height: 10px"></div>
 
 		<?php endforeach; ?>
 
-		<?php if (empty($notifications)): ?>
+		<?php if (empty($notifications)) : ?>
 			<div style="padding: 50px; text-align: center; color: #777; font-size: .8em; font-style: italic; text-align: center">
 				Nothing here yet. Follow or interact with users to build your feed!
 			</div>
@@ -84,10 +83,11 @@
 				<div class="banner">
 					<?php try { ?>
 						<?php $banner = $user->getAttribute('banner')->getPreviewURL(320, 120) ?>
-						<?php if (!$banner) { throw new Exception();	} ?>
+						<?php if (!$banner) {
+							throw new Exception();
+						} ?>
 						<img src="<?= $banner ?>" width="275" height="64">
 					<?php } catch (Exception$e) {
-
 					} ?>
 				</div>
 				<div class="padded" style="margin-top: -35px;">
@@ -147,8 +147,8 @@ depend(['ping/feedback'], function (baseurl) { baseurl('<?= spitfire()->baseUrl(
 depend(['ping/editor'], function (editor) {
 	console.log('editor.loaded');
 	editor(<?= json_encode([
-		'endpoint' => (string)url(), 
-		'placeholder' => 'Message to broadcast...', 
+		'endpoint' => (string)url(),
+		'placeholder' => 'Message to broadcast...',
 		'user' => ['avatar' => $me->getAvatar() ]
 	]) ?>);
 });

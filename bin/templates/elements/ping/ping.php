@@ -3,7 +3,7 @@
 <?php $user  = $ping->src->user ? $sso->getUser($ping->src->user->authId) : null; ?>
 <div class="material unpadded">
 
-	<?php if ($ping->irt): ?>
+	<?php if ($ping->irt) : ?>
 		<div class="source-ping" onclick="window.location = '<?= url('ping', 'detail', $ping->irt->_id) ?>'">
 			<div class="row l10 fluid">
 				<div class="span l1 desktop-only" style="text-align: center;">
@@ -11,11 +11,11 @@
 				</div>
 				<div class="span l9">
 					<a href="<?= url('user', 'show', $sso->getUser($ping->irt->src->user->authId)->getUsername()) ?>"  style="color: #000; font-weight: bold; font-size: .8em;">
-						<?= $sso->getUser($ping->irt->src->user->authId)->getUsername() ?>
+		<?= $sso->getUser($ping->irt->src->user->authId)->getUsername() ?>
 					</a>
 
 					<p style="margin: 0;">
-						<?= Mention::idToMentions($ping->irt->content) ?>
+		<?= Mention::idToMentions($ping->irt->content) ?>
 					</p>
 				</div>
 			</div>
@@ -37,7 +37,7 @@
 						<img src="<?= $user->getAvatar(64) ?>" class="not-desktop" style="width: 32px; border-radius: 50%; vertical-align: middle">
 						<a href="<?= url('user', 'show', $user->getUsername()) ?>" style="color: #000; font-weight: bold; font-size: .8em;"><?= $user->getUsername() ?></a>
 						
-						<?php if ($share): ?>
+						<?php if ($share) : ?>
 						<a href="<?= url('user', 'show', $share->getUsername()) ?>" style="color: #555; font-size: .8em;">
 							shared by <?= $share->getUsername() ?> 
 						</a>
@@ -57,16 +57,16 @@
 
 						<?php $poll = db()->table('poll\option')->get('ping__id', $ping->_id)->all() ?>
 						<?php $resp = $authUser? db()->table('poll\reply')->get('ping__id', $ping->_id)->where('author__id', AuthorModel::find($authUser->id)->_id)->first() : null ?>
-						<?php if ($poll->count() > 0): ?>
+						<?php if ($poll->count() > 0) : ?>
 							<div data-poll="<?= $ping->_id ?>">
 								<div class="spacer" style="height: 10px"></div>
-								<?php foreach ($poll as $option): ?>
+							<?php foreach ($poll as $option) : ?>
 									<a href="<?= url('poll', 'vote', $option->_id) ?>" 
 										data-option="<?= $option->_id ?>" 
 										class="poll-open-response <?= $resp && $resp->option->_id == $option->_id ? 'selected-response' : '' ?>"> 
-											<?= __($option->text ?: "Untitled") ?>
+								<?= __($option->text ?: "Untitled") ?>
 									</a>
-								<?php endforeach; ?>
+							<?php endforeach; ?>
 							</div>
 						<?php endif; ?>
 
@@ -82,13 +82,13 @@
 
 				<div class="row l3 fluid">
 					<div class="span l2">
-						<?php if (!$authUser): ?>
-						<?php elseif (db()->table('feedback')->get('ping', $ping)->where('author', AuthorModel::get(db()->table('user')->get('authId', $authUser->id)->first()))->first()): ?>
+						<?php if (!$authUser) : ?>
+						<?php elseif (db()->table('feedback')->get('ping', $ping)->where('author', AuthorModel::get(db()->table('user')->get('authId', $authUser->id)->first()))->first()) : ?>
 							<a href="<?= url('feedback', 'revoke', $ping->_id) ?>" class="ping-contextual-link for-likes liked" data-ping="<?= $ping->_id ?>">
 								<i class="im im-heart"></i>
 								<span><?= strval(db()->table('feedback')->get('ping', $ping)->where('reaction', 1)->where('removed', null)->count()) ?></span>
 							</a>
-						<?php else: ?>
+						<?php else : ?>
 							<a href="<?= url('feedback', 'push', $ping->_id) ?>" class="ping-contextual-link for-likes" data-ping="<?= $ping->_id ?>">
 								<i class="im im-heart"></i>
 								<span><?= strval(db()->table('feedback')->get('ping', $ping)->where('reaction', 1)->where('removed', null)->count())?></span>
@@ -109,7 +109,7 @@
 					</div>
 					<div class="span l1" style="text-align: right">
 						<p style="margin: 0;">
-							<?php if ($ping->url): ?>
+							<?php if ($ping->url) : ?>
 							<a href="<?= $ping->url ?>" class="ping-contextual-link">
 								<span>Open</span>
 								<i class="im im-external-link"></i>

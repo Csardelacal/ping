@@ -2,9 +2,10 @@
 
 class FeedController extends AppController
 {
-
-	public function index() {
-
+	
+	public function index()
+	{
+		
 		/*
 		 * The feed only works with a logged in user. This is due to the fact that
 		 * there is no point in having a public feed that displays contents
@@ -12,12 +13,12 @@ class FeedController extends AppController
 		if (!$this->user) {
 			return $this->response->setBody('Redirecting...')->getHeaders()->redirect(url('account', 'login'));
 		}
-
+		
 		/*
 		 * Select the current user from the database, we need this user since we'll
-		 * be displaying all their content mixed with the content addressed to them 
+		 * be displaying all their content mixed with the content addressed to them
 		 * and the content they have subscribed to.
-		 * 
+		 *
 		 * The variable $me represents the current user's author. The author is the
 		 * entity that creates posts and can be followed. Authors can be normalized
 		 * across servers in a process called federation.
@@ -39,7 +40,7 @@ class FeedController extends AppController
 		/*$authors   = db()->table('author')->getAll()->where('followers', $follows)->all()->each(function($e) {
 			return $e->_id;
 		})->toArray();
-		
+
 		$authors[] = $me->_id;*/
 		
 		/*
@@ -47,7 +48,7 @@ class FeedController extends AppController
 		 * * Pings I sent
 		 * * Pings that were addressed at me
 		 * * Pings from people I subscribed to
-		 * 
+		 *
 		 * All the pings shown must be processed and not deleted.
 		 */
 		$query = db()->table('ping')->getAll()
@@ -56,12 +57,12 @@ class FeedController extends AppController
 				->where('processed', true)
 				->where('deleted', null)
 				->setOrder('created', 'DESC');
-
+		
 		$mine = db()->table('ping')->get('src__id', $me->_id)
 				->where('processed', true)
 				->where('deleted', null)
 				->setOrder('created', 'DESC');
-
+		
 		$atme = db()->table('ping')->get('target__id', $me->_id)
 				->where('processed', true)
 				->where('deleted', null)
@@ -72,7 +73,7 @@ class FeedController extends AppController
 			$mine->where('_id', '<', $_GET['until']);
 			$atme->where('_id', '<', $_GET['until']);
 		}
-
+		
 		$notifications = $query->range(0, 3);
 		$mine->where('created', '>', $notifications->last()->created);
 		$atme->where('created', '>', $notifications->last()->created);
@@ -82,9 +83,11 @@ class FeedController extends AppController
 		#Set the notifications that were unseen as seen
 		$dbuser->lastSeen = time();
 		$dbuser->store();
-
+		
 		$this->view->set('me', $me);
-		$this->view->set('notifications', $notifications->add($mine->range(0, 100)->toArray())->add($atme->range(0, 100)->toArray())->sort(function ($a, $b) { return $a->created < $b->created? 1 : -1; }));
+		$this->view->set('notifications', $notifications->add($mine->range(0, 100)->toArray())->add($atme->range(0, 100)->toArray())->sort(function ($a, $b) {
+			return $a->created < $b->created? 1 : -1;
+		}));
 		
 		if (isset($_GET['debug'])) {
 			print_r(spitfire()->getMessages());
@@ -97,7 +100,8 @@ class FeedController extends AppController
 	 * those directed at ourselves. This is intended to accelerate the response time
 	 * of the counter which gets invoked far more often than the feed itself.
 	 */
-	public function counter() {
+	public function counter()
+	{
 		/*
 		 * Start memcached. In case a user is hammering the server with requests,
 		 * it will be able to answer the requests really quickly without getting
@@ -111,7 +115,7 @@ class FeedController extends AppController
 		 */
 		$dbuser = db()->table('user')->get('authId', $this->user? $this->user->id : 0)->fetch();
 		$me     = AuthorModel::get($dbuser);
-
+		
 		/*
 		 * If the user is not registered, then we simply display no notifications
 		 * for them.
@@ -123,7 +127,7 @@ class FeedController extends AppController
 		}
 		
 		/*
-		 * Extract the user's following list. This will be used to assemble the 
+		 * Extract the user's following list. This will be used to assemble the
 		 * query that counts the open notifications.
 		 */
 		$follows = db()->table('follow')->get('follower__id', $me->_id);
@@ -132,14 +136,14 @@ class FeedController extends AppController
 		})->toArray()? : null;*/
 		
 		/*
-		 * Create the query to find all the posts from authors that we subscribed 
+		 * Create the query to find all the posts from authors that we subscribed
 		 * to that occurred since we last checked our feed.
 		 */
 		$query = db()->table('ping')->getAll()
 				->where('src', db()->table('author')->get('followers', $follows))
 				->where('target', null)
 				->where('created', '>', max($dbuser->lastSeen, time() - 168 * 3600));
-
+		
 		/*
 		 * Find all the activity we haven't collected since we last checked it. Please
 		 * note that the last seen flag for the activity is separate, this is bound
@@ -148,11 +152,14 @@ class FeedController extends AppController
 		 */
 		$activity = db()->table('notification')->getAll()
 				->addRestriction('target__id', $dbuser->_id)
-				->addRestriction('created', max($dbuser->lastSeenActivity, time() - 720 * 3600) , '>');
+				->addRestriction('created', max($dbuser->lastSeenActivity, time() - 720 * 3600), '>');
 		
 		
-		$this->view->set('count', (int)$memcached->get('ping.notifications.' . $dbuser->_id, function () use($query) { return $query->count(); }));
-		$this->view->set('activity', (int)$memcached->get('ping.activity.' . $dbuser->_id, function () use($activity) { return $activity->count(); }));
+		$this->view->set('count', (int)$memcached->get('ping.notifications.' . $dbuser->_id, function () use ($query) {
+			return $query->count();
+		}));
+		$this->view->set('activity', (int)$memcached->get('ping.activity.' . $dbuser->_id, function () use ($activity) {
+			return $activity->count();
+		}));
 	}
-
 }

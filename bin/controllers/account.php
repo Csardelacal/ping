@@ -2,7 +2,7 @@
 
 use spitfire\io\session\Session;
 
-/* 
+/*
  * The MIT License
  *
  * Copyright 2019 César de la Cal Bretschneider <cesar@magic3w.com>.
@@ -30,7 +30,8 @@ class AccountController extends AppController
 {
 	
 	
-	public function login() {
+	public function login()
+	{
 		
 		#If the user is already logged in we do not re-login him.
 		if ($this->user) {
@@ -47,7 +48,8 @@ class AccountController extends AppController
 			->getHeaders()->redirect($token->getRedirect((string)url('account', 'login')->absolute()));
 	}
 	
-	public function authorize($token) {
+	public function authorize($token)
+	{
 		$t = $this->sso->makeToken($token);
 		Session::getInstance()->lock($t);
 		
@@ -55,7 +57,8 @@ class AccountController extends AppController
 				  ->getHeaders()->redirect(url('feed'));
 	}
 	
-	public function logout() {
+	public function logout()
+	{
 		
 		#If there is a session for this user, we destroy it
 		Session::getInstance()->destroy();

@@ -1,7 +1,7 @@
 
 <div class="profile <?= $me && $me->_id === $user->_id? 'mine' : '' ?>">
 
-	<?php if ($user->getBanner()): ?>
+	<?php if ($user->getBanner()) : ?>
 	<div id="page-banner">
 		<img src="<?= $user->getBanner() ?>">
 	</div>
@@ -28,7 +28,7 @@
 			
 			<div class="material unpadded user-card mobile-only">
 				<div class="banner" style="height: 47px">
-					<?php if ($user->getBanner()): ?>
+					<?php if ($user->getBanner()) : ?>
 					<img src="<?= $user->getBanner() ?>" width="275" height="64">
 					<?php endif; ?>
 				</div>
@@ -57,12 +57,16 @@
 				<?php $parent = $ping->irt; ?>
 				<?php $count  = 0; ?>
 				<?php $notifications = []; ?>
-				<?php while ($parent && $count < 10) { array_unshift($notifications, $parent); $parent = $parent->irt; $count++; } ?>
+				<?php while ($parent && $count < 10) {
+					array_unshift($notifications, $parent);
+					$parent = $parent->irt;
+					$count++;
+				} ?>
 				<?php $notifications[] = $ping; ?>
 				
 				
-				<?php foreach ($notifications as $notification): ?>
-				<?php $u = $notification->src; ?>
+				<?php foreach ($notifications as $notification) : ?>
+					<?php $u = $notification->src; ?>
 				<div class="padded">
 					<div class="row l10 fluid">
 						<div class="span l1 desktop-only" style="text-align: center">
@@ -73,42 +77,42 @@
 								<div class="span l3">
 									<img class="mobile-only" src="<?= $u->getAvatar() ?>" style="width: 16px; border: solid 1px #777; border-radius: 3px; vertical-align: middle">
 									<a href="<?= url('user', $u->getUsername()) ?>" style="color: #000; font-weight: bold; font-size: .8em;"><?= $u->getUsername() ?></a>
-									<?php if ($notification->share): ?>
+					<?php if ($notification->share) : ?>
 									<a href="<?= url('ping', 'detail', $notification->share->_id) ?>" style="font-size: .8em; color: #777;"> from <?= $sso->getUser($notification->share->src->_id)->getUsername() ?></a>
-									<?php endif; ?>
+					<?php endif; ?>
 								</div>
 								<div class="span l1 desktop-only" style="text-align: right; font-size: .8em; color: #777;">
-									<?= Time::relative($notification->created) ?>
+					<?= Time::relative($notification->created) ?>
 								</div>
 							</div>
 
 							<div class="row l1 fluid" style="margin-top: 5px">
 								<div class="span l1">
 									<p style="margin: 0;">
-										<?= Mention::idToMentions($notification->content) ?>
+					<?= Mention::idToMentions($notification->content) ?>
 									</p>
 
 									<div class="spacer" style="height: 10px"></div>
 									
-									<?php $poll = db()->table('poll\option')->get('ping__id', $notification->original()->_id)->all() ?>
-									<?php $resp = $authUser? db()->table('poll\reply')->get('ping__id', $notification->original()->_id)->where('author__id', AuthorModel::find($authUser->id)->_id)->first() : null ?>
-									<?php if ($poll->count() > 0): ?>
+					<?php $poll = db()->table('poll\option')->get('ping__id', $notification->original()->_id)->all() ?>
+					<?php $resp = $authUser? db()->table('poll\reply')->get('ping__id', $notification->original()->_id)->where('author__id', AuthorModel::find($authUser->id)->_id)->first() : null ?>
+					<?php if ($poll->count() > 0) : ?>
 										<div data-poll="<?= $notification->_id ?>">
 											<div class="spacer" style="height: 10px"></div>
-											<?php foreach ($poll as $option): ?>
+						<?php foreach ($poll as $option) : ?>
 												<a href="<?= url('poll', 'vote', $option->_id) ?>" 
 													data-option="<?= $option->_id ?>" 
 													class="poll-open-response <?= $resp && $resp->option->_id == $option->_id ? 'selected-response' : '' ?>"> 
-														<?= __($option->text ?: "Untitled") ?>
+							<?= __($option->text ?: "Untitled") ?>
 												</a>
-											<?php endforeach; ?>
+						<?php endforeach; ?>
 										</div>
 									
 										<div class="spacer" style="height: 30px"></div>
-									<?php endif; ?>
+					<?php endif; ?>
 
-									<?php $media = $notification->original()->attached; ?>
-									<?= current_context()->view->element('media/preview')->set('media', collect($media->toArray()))->render() ?>
+					<?php $media = $notification->original()->attached; ?>
+					<?= current_context()->view->element('media/preview')->set('media', collect($media->toArray()))->render() ?>
 
 								</div>
 							</div>
@@ -117,18 +121,18 @@
 
 							<div class="row l3 fluid">
 								<div class="span l2">
-									<?php if (!$authUser): ?>
-									<?php elseif (db()->table('feedback')->get('ping', $notification)->where('author', AuthorModel::get(db()->table('user')->get('authId', $authUser->id)->first()))->first()): ?>
+					<?php if (!$authUser) : ?>
+					<?php elseif (db()->table('feedback')->get('ping', $notification)->where('author', AuthorModel::get(db()->table('user')->get('authId', $authUser->id)->first()))->first()) : ?>
 										<a href="<?= url('feedback', 'revoke', $notification->_id) ?>" class="ping-contextual-link for-likes liked" data-ping="<?= $notification->_id ?>">
 											<i class="im im-heart"></i>
 											<span><?= strval(db()->table('feedback')->get('ping', $notification)->where('reaction', 1)->where('removed', null)->count()) ?></span>
 										</a>
-									<?php else: ?>
+					<?php else : ?>
 										<a href="<?= url('feedback', 'push', $notification->_id) ?>" class="ping-contextual-link for-likes" data-ping="<?= $notification->_id ?>">
 											<i class="im im-heart"></i>
 											<span><?= strval(db()->table('feedback')->get('ping', $notification)->where('reaction', 1)->where('removed', null)->count())?></span>
 										</a>
-									<?php endif; ?>
+					<?php endif; ?>
 									<a href="<?= url('ping', 'detail', $notification->_id) ?>#replies" class="ping-contextual-link for-replies">
 										<i class="im im-speech-bubble"></i>
 										<span><?= strval(db()->table('ping')->get('irt__id', $notification->_id)->count()) ?></span>
@@ -141,21 +145,21 @@
 										<i class="im im-x-mark-circle"></i>
 										<span>Delete</span>
 									</a>
-									<?php if ($notification->irt): ?>
+					<?php if ($notification->irt) : ?>
 									<a href="<?= url('ping', 'disavow', $notification->_id); ?>" data-visibility="<?= $notification->irt->src->getUsername() ?>" class="ping-contextual-link delete-link">
 										<i class="im im-x-mark-circle"></i>
 										<span>Disavow</span>
 									</a>
-									<?php endif; ?>
+					<?php endif; ?>
 								</div>
 								<div class="span l1" style="text-align: right">
 									<p style="margin: 0;">
-										<?php if ($notification->url): ?>
+					<?php if ($notification->url) : ?>
 										<a href="<?= $notification->url ?>" class="ping-contextual-link">
 											<span>Open</span>
 											<i class="im im-external-link"></i>
 										</a>
-										<?php endif; ?>
+					<?php endif; ?>
 									</p>
 								</div>
 							</div>
@@ -166,12 +170,12 @@
 				<div class="separator"></div>
 				<?php endforeach; ?>
 				
-				<?php if (!$authUser): ?>
+				<?php if (!$authUser) : ?>
 				<p style="color: #777; font-size: .8em; text-align: center; padding: 15px 20px">
 					<a href="<?= url('account', 'login', ['returnto' => (string)spitfire\core\http\URL::current()]) ?>">Log in</a> to reply to <?= $user->getUsername() ?>...
 				</p>
-				<?php else: ?>
-				<?= current_context()->view->element('ping/editor.lysine.html')->render() ?>
+				<?php else : ?>
+					<?= current_context()->view->element('ping/editor.lysine.html')->render() ?>
 				<?php endif; ?>
 			</div>
 			
@@ -198,13 +202,13 @@
 }());
 </script>
 
-<?php if (isset($me)): ?>
+<?php if (isset($me)) : ?>
 <script type="text/javascript">
 depend(['ping/editor'], function(editor) {
 	console.log('editor.loaded');
 	editor(<?= json_encode([
-		'endpoint' => (string)url(), 
-		'placeholder' => 'Your reply...', 
+		'endpoint' => (string)url(),
+		'placeholder' => 'Your reply...',
 		'irt' => $notification->_id,
 		'user' => [ 'avatar' => $me->getAvatar() ]
 	]) ?>);
@@ -213,8 +217,12 @@ depend(['ping/editor'], function(editor) {
 <?php endif; ?>
 
 <?php $token = null; ?>
-<?php if(isset($_GET['token'])) { $token = $this->sso->makeToken($_GET['token'])->getId(); } ?>
-<?php if(\spitfire\io\session\Session::getInstance()->getUser()) { $token = \spitfire\io\session\Session::getInstance()->getUser()->getId(); } ?>
+<?php if (isset($_GET['token'])) {
+	$token = $this->sso->makeToken($_GET['token'])->getId();
+} ?>
+<?php if (\spitfire\io\session\Session::getInstance()->getUser()) {
+	$token = \spitfire\io\session\Session::getInstance()->getUser()->getId();
+} ?>
 
 <script type="text/javascript">
 depend(['ping/ping', 'm3/core/lysine'], function(SDK, Lysine) {

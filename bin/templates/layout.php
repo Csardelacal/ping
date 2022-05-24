@@ -47,7 +47,7 @@
 				<span class="toggle-button dark"></span>
 			</div>
 			<div class="right">
-				<?php if(isset($authUser) && $authUser): ?>
+				<?php if (isset($authUser) && $authUser) : ?>
 					<div class="has-dropdown" style="display: inline-block">
 						<a href="<?= url('user', $authUser->username) ?>" class="app-switcher" data-toggle="app-drawer">
 							<img src="<?= $authUser->avatar ?>" width="32" height="32" style="border-radius: 50%; vertical-align: middle" >
@@ -62,7 +62,7 @@
 							</div>
 						</div>
 					</div>
-				<?php else: ?>
+				<?php else : ?>
 					<a class="menu-item" href="<?= url('account', 'login') ?>">Login</a>
 				<?php endif; ?>
 			</div>
@@ -92,12 +92,12 @@
 					</div>
 				</div>
 
-				<?php if(isset($authUser) && $authUser): ?>
+				<?php if (isset($authUser) && $authUser) : ?>
 				<div class="menu-title"> Account</div>
 				<div class="menu-entry"><a href="<?= url() ?>"                  >Feed</a></div>
 				<div class="menu-entry"><a href="<?= url('activity')         ?>">Activity <span class="notification-indicator" data-ping-activity data-ping-amt="0">?</span></a></div>
 				<div class="menu-entry"><a href="<?= url('settings')         ?>">Settings</a></div>
-				<?php else: ?>
+				<?php else : ?>
 				<div class="menu-title"> Account</div>
 				<div class="menu-entry"><a href="<?= url('account', 'login') ?>"   >Login</a></div>
 				<?php endif; ?>

@@ -2,7 +2,7 @@
 
 use spitfire\exceptions\PublicException;
 
-/* 
+/*
  * The MIT License
  *
  * Copyright 2019 César de la Cal Bretschneider <cesar@magic3w.com>.
@@ -29,7 +29,8 @@ use spitfire\exceptions\PublicException;
 class FeedBackController extends AppController
 {
 	
-	public function push(PingModel$ping) {
+	public function push(PingModel$ping)
+	{
 		
 		if (!$this->user) {
 			throw new PublicException('Not allowed', 403);
@@ -49,13 +50,13 @@ class FeedBackController extends AppController
 		$record->target   = $ping->src;
 		$record->appId    = $this->authapp? ($this->authapp instanceof \auth\AppAuthentication? $this->authapp->getSrc()->getId() : strval($this->authapp)) : null;
 		
-		switch($_GET['reaction']?? null) {
-			case 'dislike': 
+		switch ($_GET['reaction']?? null) {
+			case 'dislike':
 				$record->reaction = -1;
 				break;
 			
-			case 'like': 
-			default: 
+			case 'like':
+			default:
 				$record->reaction = 1;
 				break;
 		}
@@ -67,7 +68,8 @@ class FeedBackController extends AppController
 		$this->view->set('feedback', $record);
 	}
 	
-	public function revoke(PingModel$ping) {
+	public function revoke(PingModel$ping)
+	{
 		
 		if (!$this->user) {
 			throw new PublicException('Not allowed', 403);
@@ -82,21 +84,24 @@ class FeedBackController extends AppController
 		db()->table('feedback')->get('ping', $ping)->where('author', $author)->first()->delete();
 	}
 	
-	public function retrieve(PingModel$ping) {
+	public function retrieve(PingModel$ping)
+	{
 		
 		$mc = new \spitfire\cache\MemcachedAdapter;
 		$mc->setTimeout(1800);
 		
 		$overall = $mc->get('ping_like_details_' . $ping->_id, function () use ($ping) {
 			return [
-				'like'    => db()->table('feedback')->get('ping', $ping)->where('reaction',  1)->where('removed', null)->count(),
+				'like'    => db()->table('feedback')->get('ping', $ping)->where('reaction', 1)->where('removed', null)->count(),
 				'dislike' => db()->table('feedback')->get('ping', $ping)->where('reaction', -1)->where('removed', null)->count(),
-				'sample'  => db()->table('feedback')->get('ping', $ping)->where('reaction',  1)->where('removed', null)->range(0, 10)->each(function ($e) { return [
-					'author' => $e->author->_id, 
-					'user' => $e->author->user? $e->author->user->_id : null, 
-					'avatar' => $e->author->getAvatar(), 
-					'username' => $e->author->getUsername(), 
-				];})->toArray()
+				'sample'  => db()->table('feedback')->get('ping', $ping)->where('reaction', 1)->where('removed', null)->range(0, 10)->each(function ($e) {
+					return [
+					'author' => $e->author->_id,
+					'user' => $e->author->user? $e->author->user->_id : null,
+					'avatar' => $e->author->getAvatar(),
+					'username' => $e->author->getUsername(),
+					];
+				})->toArray()
 			];
 		});
 		
@@ -104,11 +109,12 @@ class FeedBackController extends AppController
 		
 		if ($this->user) {
 			$author = AuthorModel::get(db()->table('user')->get('authId', $this->user->id)->first()? : UserModel::makeFromSSO($this->sso->getUser($this->user->id)));
-			$this->view->set('mine', db()->table('feedback')->get('ping', $ping)->where('author', $author)->where('removed', null)->first()->reaction );
+			$this->view->set('mine', db()->table('feedback')->get('ping', $ping)->where('author', $author)->where('removed', null)->first()->reaction);
 		}
 	}
 	
-	public function liked($username = null) {
+	public function liked($username = null)
+	{
 		if (!$username) {
 			$author = AuthorModel::get(db()->table('user')->get('_id', $this->user->id)->first(true));
 		}

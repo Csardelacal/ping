@@ -1,7 +1,7 @@
 
 <div class="profile <?= $authUser && $authUser->id === $user->user->_id? 'mine' : '' ?>">
 
-	<?php if ($user->getBanner()): ?>
+	<?php if ($user->getBanner()) : ?>
 	<div id="page-banner">
 		<img src="<?= $user->getBanner() ?>">
 	</div>
@@ -30,7 +30,7 @@
 			
 			<div class="material unpadded user-card mobile-only">
 				<div class="banner" style="height: 47px">
-					<?php if ($user->getBanner()): ?>
+					<?php if ($user->getBanner()) : ?>
 					<img src="<?= $user->getBanner() ?>" width="275" height="64">
 					<?php endif; ?>
 				</div>
@@ -53,9 +53,8 @@
 				<a class="button follow" href="<?= url('account', 'login') ?>" data-ping-follow="<?= $user->_id ?>">Login to follow</a>
 			</div>
 			
-			<?php foreach($notifications as $notification): ?>
-			
-			<?= current_context()->view->element('ping/ping')->set('ping', $notification)->render() ?>
+			<?php foreach ($notifications as $notification) : ?>
+				<?= current_context()->view->element('ping/ping')->set('ping', $notification)->render() ?>
 			<div class="spacer" style="height: 10px"></div>
 
 			<?php endforeach; ?>
@@ -178,7 +177,7 @@ depend(['m3/core/lysine'], function(Lysine) {
 	//This function listens to the scrolls
 	var listener = function () {
 		var html   = document.documentElement,
-		    scroll = Math.max(html.scrollTop, window.scrollY);
+			scroll = Math.max(html.scrollTop, window.scrollY);
 		
 		if (height() - scroll < html.clientHeight + 700) { request(listener); }
 	};
@@ -189,7 +188,7 @@ depend(['m3/core/lysine'], function(Lysine) {
 });
 </script>
 
-<?php if ($authUser && $user->_id !== $authUser->id): ?>
+<?php if ($authUser && $user->_id !== $authUser->id) : ?>
 <script type="text/javascript">
 depend(['ping/feedback'], function (baseurl) { baseurl('<?= spitfire()->baseUrl() ?>', '<?= (isset($_GET['token']) ? $this->sso->makeToken($_GET['token']) : \spitfire\io\session\Session::getInstance()->getUser())->getId() ?>'); });
 </script>

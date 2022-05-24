@@ -4,7 +4,7 @@ use cron\FlipFlop;
 use cron\TimerFlipFlop;
 use spitfire\mvc\Director;
 
-/* 
+/*
  * The MIT License
  *
  * Copyright 2018 César de la Cal Bretschneider <cesar@magic3w.com>.
@@ -32,7 +32,8 @@ class CronDirector extends Director
 {
 	
 	
-	public function email() {
+	public function email()
+	{
 		
 		console()->success('Initiating cron...')->ln();
 		$started   = time();
@@ -42,25 +43,26 @@ class CronDirector extends Director
 		$file = spitfire()->getCWD() . '/bin/usr/.cron.lock';
 		$fh = fopen($file, file_exists($file)? 'r' : 'w+');
 		
-		if (!flock($fh, LOCK_EX)) { 
+		if (!flock($fh, LOCK_EX)) {
 			console()->error('Could not acquire lock')->ln();
-			return 1; 
+			return 1;
 		}
 		
 		console()->success('Acquired lock!')->ln();
 		
-		while(null !== $old  = db()->table('email\digestqueue')->get('created', time() - 86400, '<')->fetch()) {
-			
+		while (null !== $old  = db()->table('email\digestqueue')->get('created', time() - 86400, '<')->fetch()) {
 			$user = $old->notification->target;
 			
 			$emailsender = new EmailSender($this->sso);
 			$emailsender->sendDigest($this->sso->getUser($user->authId));
-
+			
 			#Delete the digest queue
 			$q  = db()->table('email\digestqueue')->get('user', $user);
-
+			
 			$res = $q->fetchAll();
-			foreach ($res as $record) { $record->delete(); }
+			foreach ($res as $record) {
+				$record->delete();
+			}
 			
 			if (time() > $started + 1200) {
 				break;
@@ -72,10 +74,10 @@ class CronDirector extends Director
 		flock($fh, LOCK_UN);
 		
 		return 0;
-		
 	}
 	
-	public function media() {
+	public function media()
+	{
 		#Create a user
 		$this->sso   = new \auth\SSOCache(spitfire\core\Environment::get('SSO'));
 		
@@ -92,7 +94,7 @@ class CronDirector extends Director
 		 */
 		try {
 			$sem = new FlipFlop($file);
-		} 
+		}
 		catch (Exception $ex) {
 			$sem = new TimerFlipFlop($file);
 		}
@@ -103,9 +105,8 @@ class CronDirector extends Director
 				->group()->where('locked', false)->where('locked', null)->endGroup()
 				->first();
 		};
-				
-		while(
-			(flock($fh, LOCK_EX) && null !== ($ping = $next())) ||
+		
+		while ((flock($fh, LOCK_EX) && null !== ($ping = $next())) ||
 			$sem->wait()
 		) {
 			/*
@@ -126,7 +127,7 @@ class CronDirector extends Director
 			$ping->store();
 			
 			flock($fh, LOCK_UN);
-
+			
 			
 			$attached = $ping->attached->toArray();
 			
@@ -135,10 +136,10 @@ class CronDirector extends Director
 				
 				try {
 					$file->write(storage()->get($ping->media)->read());
-				} 
+				}
 				catch (\Exception $ex) {
 					$body = file_get_contents($ping->media);
-					if (!strstr($http_response_header[0], '200')) { 
+					if (!strstr($http_response_header[0], '200')) {
 						$ping->processed = true;
 						$ping->store();
 						continue;
@@ -173,8 +174,7 @@ class CronDirector extends Director
 			$ping->store();
 		}
 		
-		console()->success('Cron ended, was running for ' . (time() - $started) . ' seconds')->ln();		
+		console()->success('Cron ended, was running for ' . (time() - $started) . ' seconds')->ln();
 		return 0;
 	}
-	
 }

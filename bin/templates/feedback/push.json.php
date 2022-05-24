@@ -3,7 +3,7 @@
 current_context()->response->getHeaders()->set('Access-Control-Allow-Origin', '*');
 current_context()->response->getHeaders()->set('Access-Control-Allow-Headers', 'Content-type');
 
-/* 
+/*
  * The MIT License
  *
  * Copyright 2019 César de la Cal Bretschneider <cesar@magic3w.com>.

@@ -7,10 +7,10 @@ based editor has issues starting up.
 It should, therefore, be stripped of any Javascript.
 -->
 <form method="POST" action="<?= url('ping', 'push') ?>" enctype="multipart/form-data" class="ping-editor">
-	<?php if (isset($target) && $target): ?>
+	<?php if (isset($target) && $target) : ?>
 		<input type="hidden" name="target" value="<?= $target ?>">
 	<?php endif; ?>
-	<?php if (isset($irt) && $irt): ?>
+	<?php if (isset($irt) && $irt) : ?>
 		<input type="hidden" name="irt" value="<?= $irt ?>">
 	<?php endif; ?>
 

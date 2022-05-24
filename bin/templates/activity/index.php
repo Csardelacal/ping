@@ -7,8 +7,12 @@
 	<div class="span l2">
 			
 		
-		<?php foreach($notifications as $notification): ?>
-		<?php try { $user = $notification->src? $sso->getUser($notification->src->user->_id) : null; } catch (\Exception$e) { $user = null; } ?>
+		<?php foreach ($notifications as $notification) : ?>
+			<?php try {
+				$user = $notification->src? $sso->getUser($notification->src->user->_id) : null;
+			} catch (\Exception$e) {
+				$user = null;
+			} ?>
 		<div class="material">
 			<div class="row l10 fluid">
 				<div class="span l1" style="text-align: center">
@@ -25,20 +29,24 @@
 					</div>
 
 					<div>
-						<?php if ($notification->url): ?><a href="<?= $notification->url ?>" style="color: #000;  padding: .2rem 0"><?php endif; ?>
-						<?= Mention::idToMentions($notification->content) ?>
-						<?php if ($notification->url): ?></a><?php endif; ?>
+			<?php if ($notification->url) :
+				?><a href="<?= $notification->url ?>" style="color: #000;  padding: .2rem 0"><?php
+			endif; ?>
+			<?= Mention::idToMentions($notification->content) ?>
+			<?php if ($notification->url) :
+				?></a><?php
+			endif; ?>
 					</div>
 				</div>
 				<div class="span l2 desktop-only" style="color: #666; font-size: .8rem; text-align: right">
-					<?= Time::relative($notification->created) ?>
+			<?= Time::relative($notification->created) ?>
 				</div>
 			</div>
 		</div>
 
 		<div class="spacer" style="height: 10px"></div>
 		<?php endforeach; ?>
-		<?php if ($notifications->isEmpty()): ?>
+		<?php if ($notifications->isEmpty()) : ?>
 		<div style="padding: 50px; text-align: center; color: #777; font-size: .8rem; font-style: italic; text-align: center">
 			Nothing here yet. Follow or interact with users to build your feed!
 		</div>
@@ -81,10 +89,14 @@
 			<?php $user = $sso->getUser($authUser->id); ?>
 			<a href="<?= url('user', $user->getUsername()) ?>">
 				<div class="banner">
-					<?php try { $banner = $user->getAttribute('banner')->getPreviewURL(320, 120) ?>
-					<?php if (!$banner) { throw new Exception(); } ?>
+					<?php try {
+						$banner = $user->getAttribute('banner')->getPreviewURL(320, 120) ?>
+						<?php if (!$banner) {
+							throw new Exception();
+						} ?>
 					<img src="<?= $banner ?>" width="275" height="64">
-					<?php } catch (Exception$e) { } ?>
+					<?php } catch (Exception$e) {
+					} ?>
 				</div>
 				<div class="padded" style="margin-top: -35px;">
 					<img class="avatar" src="<?= $user->getAvatar(128) ?>">

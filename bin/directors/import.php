@@ -5,7 +5,8 @@ use spitfire\mvc\Director;
 class ImportDirector extends Director
 {
 	
-	public function all() {
+	public function all()
+	{
 		$importers = [
 			new \ping\import\CommentsImporter('./bin/data/results.json')
 		];
@@ -19,5 +20,4 @@ class ImportDirector extends Director
 			console()->success(sprintf('Imported %s records', $rows))->ln();
 		}
 	}
-	
 }

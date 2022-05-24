@@ -3,7 +3,7 @@
 use spitfire\exceptions\FileNotFoundException;
 use settings\NotificationModel as NotificationSetting;
 
-/* 
+/*
  * The MIT License
  *
  * Copyright 2019 César de la Cal Bretschneider <cesar@magic3w.com>.
@@ -49,7 +49,7 @@ $core->activity->push->after()->do(function ($parameter) {
 	}
 	elseif ($target->notify($type, NotificationSetting::NOTIFY_DIGEST)) {
 		/*
-		 * The user chose to receive digests of their notifications. Defer the sending 
+		 * The user chose to receive digests of their notifications. Defer the sending
 		 * of the email to a later point in time.
 		 */
 		$r = db()->table('email\digestqueue')->newRecord();
