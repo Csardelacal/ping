@@ -41,34 +41,35 @@ abstract class AppController extends Controller
 	 */
 	protected $token;
 	
-	protected $shortener;
+	protected $secondaryNav;
 	
-	public function _onload() {
+	public function _onload()
+	{
 		$session     = Session::getInstance();
 		
 		#Create a brief cache for the sessions.
 		$cache       = new MemcachedAdapter();
 		$cache->setTimeout(120);
 		
-		#Set up the link shortener
-		$this->shortener = new \ping\embed\PssmsShortener('shortener.url');
-		
 		#Create a user
 		$this->sso     = new SSOCache(Environment::get('SSO'));
 		$this->token   = isset($_GET['token'])? $this->sso->makeToken($_GET['token']) : $session->getUser();
 		
 		#Check if hook is enabled and start it
-		$this->hook    = Environment::get('hook.url') ? new \hook\Hook(Environment::get('hook.url'), $this->sso->makeSignature(Environment::get('hook.id'))) : null;
+		$this->hook    = Environment::get('hook.url') ?
+		new \hook\Hook(Environment::get('hook.url'), $this->sso->makeSignature(Environment::get('hook.id'))) :
+		null;
 		
 		#Fetch the user from the cache if necessary
-		$this->user  = $this->token && $this->token instanceof Token? $cache->get('ping_token_' . $this->token->getId(), function () { 
-			return $this->token->isAuthenticated()? $this->token->getTokenInfo()->user : null; 
+		$this->user  = $this->token && $this->token instanceof Token?
+		$cache->get('ping_token_' . $this->token->getId(), function () {
+			return $this->token->isAuthenticated()? $this->token->getTokenInfo()->user : null;
 		}) : null;
 		
-		$this->authapp = isset($_GET['signature'])? $this->sso->authApp($_GET['signature']) : 
-			($this->user? $cache->get('ping_token_app_' . $this->token->getId(), function () { 
-				return $this->token->getTokenInfo()->app->id; 
-			}) : null);
+		$this->authapp = isset($_GET['signature'])? $this->sso->authApp($_GET['signature']) :
+		($this->user? $cache->get('ping_token_app_' . $this->token->getId(), function () {
+			return $this->token->getTokenInfo()->app->id;
+		}) : null);
 		
 		#Maintain the user in the view. This way we can draw an interface for them
 		$this->view->set('authUser', $this->user);
@@ -79,5 +80,4 @@ abstract class AppController extends Controller
 		
 		_t(new Locale());
 	}
-	
 }

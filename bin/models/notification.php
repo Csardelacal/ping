@@ -13,7 +13,8 @@ class NotificationModel extends spitfire\Model
 	const TYPE_MENTION = 7;
 	const TYPE_MESSAGE = 8;
 	
-	public function definitions(\spitfire\storage\database\Schema $schema) {
+	public function definitions(\spitfire\storage\database\Schema $schema)
+	{
 		$schema->src     = new Reference('author'); # User originating the action
 		$schema->target  = new Reference('user'); # If a notification is not a broadcast
 		$schema->content = new StringField(255);  # A ping can contain up to 255 characters
@@ -21,29 +22,18 @@ class NotificationModel extends spitfire\Model
 		$schema->created = new IntegerField(true);
 		$schema->type    = new IntegerField(true);
 		
-		/*
-		 * Silent notifications allow an application to notify a user without sending
-		 * any email or push notification through other channels. This is usually done
-		 * because the application sending the notification wishes to further customize
-		 * the email or push notification.
-		 * 
-		 * For example, in a ticketing system that wishes to notify a user that a 
-		 * response was sent will usually include the message in the email and allow
-		 * the user to respond to the mail.
-		 * 
-		 * To do so, it needs to set ping to not send an email to prevent the emails
-		 * from being duplicated.
-		 */
-		$schema->silent  = new BooleanField();
-		
 		$schema->type->setNullable(false);
 	}
 	
-	public function onbeforesave() {
-		if (!$this->created) { $this->created = time(); }
+	public function onbeforesave()
+	{
+		if (!$this->created) {
+			$this->created = time();
+		}
 	}
 	
-	public static function getTypesAvailable() {
+	public static function getTypesAvailable()
+	{
 		return [
 			'other'   => self::TYPE_OTHER,
 			'follow'  => self::TYPE_FOLLOW,
@@ -56,5 +46,4 @@ class NotificationModel extends spitfire\Model
 			'message' => self::TYPE_MESSAGE
 		];
 	}
-
 }

@@ -1,9 +1,4 @@
-<?php 
-	if (isset($deleted) && $deleted) {
-		current_context()->response->setBody('OK')->getHeaders()->redirect(url('feed'));
-		return;
-	}
-?>
+
 
 <div class="spacer" style="height: 30px"></div>
 

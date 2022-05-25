@@ -1,15 +1,11 @@
 <?php
 
-use auth\SSOCache;
 use cron\FlipFlop;
 use cron\TimerFlipFlop;
-use media\Compressor;
-use ping\embed\NotYetAvailableException;
-use ping\embed\PssmsShortener;
 use spitfire\core\Environment;
 use spitfire\mvc\Director;
 
-/* 
+/*
  * The MIT License
  *
  * Copyright 2018 César de la Cal Bretschneider <cesar@magic3w.com>.
@@ -37,7 +33,8 @@ class CronDirector extends Director
 {
 	
 	
-	public function email() {
+	public function email()
+	{
 		
 		console()->success('Initiating cron...')->ln();
 		$started   = time();
@@ -47,25 +44,26 @@ class CronDirector extends Director
 		$file = spitfire()->getCWD() . '/bin/usr/.cron.lock';
 		$fh = fopen($file, file_exists($file)? 'r' : 'w+');
 		
-		if (!flock($fh, LOCK_EX)) { 
+		if (!flock($fh, LOCK_EX)) {
 			console()->error('Could not acquire lock')->ln();
-			return 1; 
+			return 1;
 		}
 		
 		console()->success('Acquired lock!')->ln();
 		
-		while(null !== $old  = db()->table('email\digestqueue')->get('created', time() - 86400, '<')->fetch()) {
-			
+		while (null !== $old  = db()->table('email\digestqueue')->get('created', time() - 86400, '<')->fetch()) {
 			$user = $old->notification->target;
 			
 			$emailsender = new EmailSender($this->sso);
 			$emailsender->sendDigest($this->sso->getUser($user->authId));
-
+			
 			#Delete the digest queue
 			$q  = db()->table('email\digestqueue')->get('user', $user);
-
+			
 			$res = $q->fetchAll();
-			foreach ($res as $record) { $record->delete(); }
+			foreach ($res as $record) {
+				$record->delete();
+			}
 			
 			if (time() > $started + 1200) {
 				break;
@@ -77,12 +75,12 @@ class CronDirector extends Director
 		flock($fh, LOCK_UN);
 		
 		return 0;
-		
 	}
 	
-	public function media() {
+	public function media()
+	{
 		#Create a user
-		$this->sso   = new SSOCache(Environment::get('SSO'));
+		$this->sso   = new \auth\SSOCache(spitfire\core\Environment::get('SSO'));
 		
 		console()->success('Initiating cron...')->ln();
 		$started   = time();
@@ -97,7 +95,7 @@ class CronDirector extends Director
 		 */
 		try {
 			$sem = new FlipFlop($file);
-		} 
+		}
 		catch (Exception $ex) {
 			$sem = new TimerFlipFlop($file);
 		}
@@ -108,9 +106,8 @@ class CronDirector extends Director
 				->group()->where('locked', false)->where('locked', null)->endGroup()
 				->first();
 		};
-				
-		while(
-			(flock($fh, LOCK_EX) && null !== ($ping = $next())) ||
+		
+		while ((flock($fh, LOCK_EX) && null !== ($ping = $next())) ||
 			$sem->wait()
 		) {
 			/*
@@ -131,19 +128,21 @@ class CronDirector extends Director
 			$ping->store();
 			
 			flock($fh, LOCK_UN);
-
+			
 			
 			$attached = $ping->attached->toArray();
 			
 			if (empty($attached) && $ping->media) {
-				$file = storage()->dir(Environment::get('uploads.directory'))->make(uniqid() . str_replace(['?', '%'], '', pathinfo($ping->media, PATHINFO_BASENAME)));
+				$dir = Environment::get('uploads.directory');
+				$filename = uniqid() . str_replace(['?', '%'], '', pathinfo($ping->media, PATHINFO_BASENAME));
+				$file = storage()->dir($dir)->make($filename);
 				
 				try {
 					$file->write(storage()->get($ping->media)->read());
-				} 
-				catch (Exception $ex) {
+				}
+				catch (\Exception $ex) {
 					$body = file_get_contents($ping->media);
-					if (!strstr($http_response_header[0], '200')) { 
+					if (!strstr($http_response_header[0], '200')) {
 						$ping->processed = true;
 						$ping->store();
 						continue;
@@ -165,7 +164,7 @@ class CronDirector extends Director
 			foreach ($attached as $media) {
 				$micro = microtime(true);
 				
-				$compressor = new Compressor($media);
+				$compressor = new media\Compressor($media);
 				$compressor->process();
 				
 				console()->success('Processed media, took ' . (microtime(true) - $micro) . ' seconds')->ln();
@@ -178,61 +177,7 @@ class CronDirector extends Director
 			$ping->store();
 		}
 		
-		console()->success('Cron ended, was running for ' . (time() - $started) . ' seconds')->ln();		
+		console()->success('Cron ended, was running for ' . (time() - $started) . ' seconds')->ln();
 		return 0;
 	}
-	
-	public function url() {
-		
-		#Set up the link shortener
-		$shortener = new PssmsShortener(Environment::get('shortener.url'));
-		
-		#First, loop over elements that have a URL assigned, but it's not yet in the embed table
-		$pings = db()->table('ping')->get('url', null, '!=')->range(0, 500);
-		
-		foreach ($pings as $ping) {
-			$embed = db()->table('embed')->newRecord();
-			$embed->ping = $ping;
-			$embed->url = $ping->url;
-			$embed->store();
-			
-			$ping->url = null;
-			$ping->store();
-			
-			console()->success('Migrated ping to embed')->ln();
-			sleep(1);
-		}
-		
-		#Now, loop over the embeds with no short URL and shorten it
-		if ($shortener) {
-			$longs = db()->table('embed')->get('short', null)->range(0, 500);
-			
-			foreach ($longs as $long) {
-				$long->short = $shortener->shorten($long->url);
-				$long->store();
-
-				console()->success('Shortened ' . $long->url . ' to ' . $long->short)->ln();
-				sleep(1);
-			}
-		}
-		
-		#Finally, fetch the fetch data for all of the shortened URLs
-		if ($shortener) {
-			$unfetched = db()->table('embed')->get('title', null)->range(0, 300);
-			
-			foreach ($unfetched as $pending) {
-				try {
-					$meta = $shortener->read($pending->short);
-					$pending->title = substr($meta->getTitle()?: 'Untitled', 0, 64);
-					$pending->description = substr($meta->getDescription()?: 'No description available', 0, 255);
-					$pending->image = substr($meta->getImage()?: null, 0, 255);
-					$pending->store();
-				} 
-				catch (NotYetAvailableException$ex) {
-					console()->error('Tried to fetch metadata about URL that has not yet become available')->ln();
-				}
-			}
-		}
-	}
-	
 }

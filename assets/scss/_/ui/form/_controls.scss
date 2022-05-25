@@ -1,0 +1,154 @@
+/*
+The MIT License
+
+Copyright 2019 César de la Cal Bretschneider <cesar@magic3w.com>.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+/*
+    Created on : Jun 17, 2019, 11:59:07 AM
+    Author     : César de la Cal Bretschneider <cesar@magic3w.com>
+*/
+
+.frm-ctrl {
+	display: block;
+	width: 100%;
+	
+	&.right {
+		text-align: right;
+	}
+}
+
+.frm-group {
+	margin-bottom: 1rem;
+}
+
+.frm-inline {
+	display: flex;
+	flex-flow: row wrap;
+	
+	.frm-ctrl {
+		display: inline-block;
+		width: auto;
+	}
+}
+
+.frm-lbl {
+	padding: .75rem .4rem;
+	color: #444;
+	font-size: .9rem;
+}
+
+input[type="text"].frm-ctrl,
+textarea.frm-ctrl {
+	padding: .75rem .5rem;
+}
+
+
+/*
+ * Checkbox specific styling
+ */
+input[type="checkbox"].frm-ctrl {
+	display: none;
+}
+
+span.frm-ctrl-chk {
+	display: inline-block;
+	width: 2rem;
+	height: 1.3rem;
+	border-radius: .65rem;
+	background-color: #CCC;
+	position: relative;
+	margin-right: .2rem;
+	vertical-align: -.4rem;
+	transition:  background-color .3s ease;
+	
+	&:before {
+		position: absolute;
+		top: .15rem;
+		left: .15rem;
+		height: 1rem;
+		width: 1rem;
+		background: #FFF;
+		content: '';
+		border-radius: 50%;
+		transition: left .3s ease;
+	}
+}
+
+
+input[type="checkbox"].frm-ctrl:checked + span.frm-ctrl-chk{ 
+	background-color: #56a1d6;
+	
+	&:before {
+		left: .9rem;
+	}
+}
+
+
+
+/*
+ * Radio specific styling
+ */
+input[type="radio"].frm-ctrl {
+	display: none;
+}
+
+span.frm-ctrl-rad {
+	display: inline-block;
+	border: solid .05rem #777;
+	width: 1.3rem;
+	height: 1.3rem;
+	border-radius: .65rem;
+	background-color: #DDD;
+	position: relative;
+	margin-right: .2rem;
+	vertical-align: -.4rem;
+	transition:  background-color .3s ease;
+	
+	&:before {
+		position: absolute;
+		background: #FFF;
+		top: .65rem;
+		left: .65rem;
+		height: .0rem;
+		width: .0rem;
+		content: '';
+		border-radius: 50%;
+		transition: left .3s ease, top .3s ease, width .3s ease, height .3s ease, opacity .3s ease;
+	}
+}
+
+
+input[type="radio"].frm-ctrl:checked + span.frm-ctrl-rad{ 
+	background-color: #56a1d6;
+	
+	&:before {
+		top: .3rem;
+		left: .3rem;
+		height: .6rem;
+		width: .6rem;
+		background-color: #FFF;
+		color: #FFF;
+		line-height: .9rem;
+		font-size: .9rem;
+		text-align: center;
+		font-weight: bold;
+	}
+}

@@ -5,10 +5,10 @@ use spitfire\mvc\Director;
 class ImportDirector extends Director
 {
 	
-	public function all() {
+	public function all()
+	{
 		$importers = [
-			new \ping\import\CommentsImporter('./bin/data/results.json'),
-			//new \ping\import\FeedbackImporter('./bin/data/like.csv')
+			new \ping\import\CommentsImporter('./bin/data/results.json')
 		];
 		
 		foreach ($importers as $importer) {
@@ -20,5 +20,4 @@ class ImportDirector extends Director
 			console()->success(sprintf('Imported %s records', $rows))->ln();
 		}
 	}
-	
 }

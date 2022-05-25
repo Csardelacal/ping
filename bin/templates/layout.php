@@ -5,12 +5,31 @@
 		<title><?= isset(${'page.title'}) && ${'page.title'}? ${'page.title'} : 'Ping - Notifications' ?></title>
 		<link href="https://fonts.googleapis.com/css?family=Nunito+Sans" rel="stylesheet"> 
 		<link href="https://cdn.iconmonstr.com/1.3.0/css/iconmonstr-iconic-font.min.css" rel="stylesheet"> 
-		<link type="text/css" rel="stylesheet" href="<?= \spitfire\core\http\URL::asset('css/app.css') ?>">
+		<link type="text/css" rel="stylesheet" href="<?= \spitfire\SpitFire::baseUrl() ?>/public/css/app.css">
 		<meta name="_scss" content="<?= \spitfire\SpitFire::baseUrl() ?>/assets/scss/_/js/">
 		<meta name="ping.endpoint" content="<?= rtrim(\spitfire\SpitFire::baseUrl(), '/') ?>/">
 		<meta name="ping.token" content="none">
 		<meta name="ping.id" content="none">
 		
+		<script src="<?= spitfire\core\http\URL::asset('js/m3/depend.js') ?>" type="text/javascript"></script>
+		<script src="<?= spitfire\core\http\URL::asset('js/m3/depend/router.js') ?>" type="text/javascript"></script>
+		
+		<script type="text/javascript">
+		(function () {
+			depend(['m3/depend/router'], function(router) {
+				var _SCSS = document.querySelector('meta[name="_scss"]').getAttribute('content') || '/assets/scss/_/js/';
+				var ping  = document.querySelector('meta[name="ping.endpoint"]').getAttribute('content') || '/';
+				
+				router.all().to(function(e) { return ping + 'assets/js/' + e + '.js'; });
+				router.equals('_scss').to( function() { return ping + 'assets/scss/_/js/_.scss.js'; });
+				
+
+				router.startsWith('_scss/').to(function(str) {
+					return _SCSS + str.substring(6) + '.js';
+				});
+			});
+		}());
+		</script>
 		
 		<?php if ($authUser) : ?>
 		<style type="text/css">
@@ -21,28 +40,6 @@
 		
 	</head>
 	<body>
-		<script>
-		/*
-		 * This little script prevents an annoying flickering effect when the layout
-		 * is being composited. Basically, since we layout part of the page with JS,
-		 * when the browser gets to the JS part it will discard everything it rendered
-		 * to this point and reflow.
-		 * 
-		 * Since the reflow MUST happen in order to render the layout, we can tell 
-		 * the browser to not render the layout at all. This will prevent the layout
-		 * from shift around before the user had the opportunity to click on it.
-		 * 
-		 * If, for some reason the layout was unable to start up within 500ms, we 
-		 * let the browser render the page. Risking that the browser may need to 
-		 * reflow once the layout is ready
-		 */
-		(function() {
-			return;
-			document.body.style.display = 'none';
-			document.addEventListener('DOMContentLoaded', function () { document.body.style.display = null; }, false);
-			setTimeout(function () { document.body.style.display = null; }, 500);
-		}());
-		</script>
 		
 		<!--Top most navigation-->
 		<div class="navbar">
@@ -50,7 +47,7 @@
 				<span class="toggle-button dark"></span>
 			</div>
 			<div class="right">
-				<?php if(isset($authUser) && $authUser): ?>
+				<?php if (isset($authUser) && $authUser) : ?>
 					<div class="has-dropdown" style="display: inline-block">
 						<a href="<?= url('user', $authUser->username) ?>" class="app-switcher" data-toggle="app-drawer">
 							<img src="<?= $authUser->avatar ?>" width="32" height="32" style="border-radius: 50%; vertical-align: middle" >
@@ -65,7 +62,7 @@
 							</div>
 						</div>
 					</div>
-				<?php else: ?>
+				<?php else : ?>
 					<a class="menu-item" href="<?= url('account', 'login') ?>">Login</a>
 				<?php endif; ?>
 			</div>
@@ -95,12 +92,12 @@
 					</div>
 				</div>
 
-				<?php if(isset($authUser) && $authUser): ?>
+				<?php if (isset($authUser) && $authUser) : ?>
 				<div class="menu-title"> Account</div>
 				<div class="menu-entry"><a href="<?= url() ?>"                  >Feed</a></div>
 				<div class="menu-entry"><a href="<?= url('activity')         ?>">Activity <span class="notification-indicator" data-ping-activity data-ping-amt="0">?</span></a></div>
 				<div class="menu-entry"><a href="<?= url('settings')         ?>">Settings</a></div>
-				<?php else: ?>
+				<?php else : ?>
 				<div class="menu-title"> Account</div>
 				<div class="menu-entry"><a href="<?= url('account', 'login') ?>"   >Login</a></div>
 				<?php endif; ?>
@@ -121,11 +118,56 @@
 			ae.style.minHeight = Math.max(ae.clientHeight + (wh - dh), 0) + 'px';
 		});
 		</script>
+		<script type="text/javascript">
+		(function () {
+			depend(['ui/dropdown'], function (dropdown) {
+				dropdown('.app-switcher');
+			});
+			
+			depend(['_scss'], function() {
+				console.log('Loaded _scss');
+			});
+		}());
+		</script>
+		
+		<script type="text/javascript">
+			depend(['sticky'], function (sticky) {
+				
+				/*
+				 * Create elements for all the elements defined via HTML
+				 */
+				var els = document.querySelectorAll('*[data-sticky]');
+
+				for (var i = 0; i < els.length; i++) {
+					sticky.stick(els[i], sticky.context(els[i]), els[i].getAttribute('data-sticky'));
+				}
+			});
+		</script>
 		
 		<div style="display: none">
 			<img style="max-width: 100%; margin: 0 auto; display: block; box-shadow: 0 0 10px #444;" id="preview-img" src="about:blank">
 			<video style="max-width: 100%; margin: 0 auto; display: block;" loop autoplay id="preview-vid" src="about:blank"></video>
 		</div>
+		<script type="text/javascript">
+			depend(['_scss/gallery', 'm3/core/delegate'], function (Gallery, delegate) {
+				
+				console.info('Gallery loaded');
+				var gallery = new Gallery();
+				
+				delegate('click', function (e) {
+					console.log(e);
+					return e.hasAttribute('data-large');
+				}, function (e) {
+					console.log('here');
+					if (this.tagName === 'VIDEO') {
+						gallery.show(this.getAttribute('data-large'), 'video');
+					}
+					else {
+						gallery.show(this.getAttribute('data-large'), 'image');
+					}
+				});
+			});
+		</script>
 		
 		
 		<div style="display: none">
@@ -138,10 +180,60 @@
 				</div>
 			</div>
 		</div>
+		<script type="text/javascript">
+			depend(['_scss/dialog', 'm3/core/delegate', 'm3/core/request'], function (Dialog, delegate, request) {
+				
+				var dialog = new Dialog(document.getElementById('share-dialog'))
+				
+				delegate('click', function (e) {
+					console.log(e);
+					return e.classList.contains('for-shares');
+				}, function (e) {
+					document.getElementById('share-confirm-link').href = this.href;
+					dialog.show();
+					e.preventDefault();
+				});
+				
+				document.getElementById('share-confirm-link').addEventListener('click', function (e) {
+					document.getElementById('share-processing').style.display = 'block';
+					document.getElementById('share-confirm-link').style.display = 'none';
+					
+					
+					request(this.href).then(function () { 
+						dialog.hide(); 
+						document.getElementById('share-processing').style.display = 'none';
+						document.getElementById('share-confirm-link').style.display = 'block';
+					})
+					e.preventDefault();
+				});
+			});
+			
+			/*
+			 * Load the applications into the sidebar
+			 */
+			depend(['m3/core/request'], function (Request) {
+				var request = new Request('<?= $sso->getEndpoint() ?>/appdrawer.json');
+				request
+					.then(JSON.parse)
+					.then(function (e) {
+						e.forEach(function (i) {
+							console.log(i)
+							var entry = document.createElement('div');
+							var link  = entry.appendChild(document.createElement('a'));
+							var icon  = link.appendChild(document.createElement('img'));
+							entry.className = 'menu-entry';
+							
+							link.href = i.url;
+							link.appendChild(document.createTextNode(i.name));
+							
+							icon.src = i.icon.m;
+							document.getElementById('appdrawer').appendChild(entry);
+						});
+					})
+					.catch(console.log);
+			});
+		</script>
 		
-		<script type="text/javascript" src="<?= url() ?>/public/js/app.js"></script>
 		<script type="text/javascript" src="<?= url('feed', 'counter')->setExtension('js')->setParam('nonce', 60 * (int)(time() / 60)) ?>"></script>
-		
-		<script src="https://cdn.jsdelivr.net/npm/m3w-dropdown@latest" type="text/javascript"></script>
 	</body>
 </html>

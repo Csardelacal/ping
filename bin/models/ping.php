@@ -1,9 +1,12 @@
 <?php
 
+use spitfire\storage\objectStorage\EmbedInterface;
+
 class PingModel extends spitfire\Model
 {
 	
-	public function definitions(\spitfire\storage\database\Schema $schema) {
+	public function definitions(\spitfire\storage\database\Schema $schema)
+	{
 		$schema->guid    = new StringField(150);
 		$schema->authapp = new StringField(50);
 		$schema->src     = new Reference('author'); # User originating the action
@@ -34,56 +37,78 @@ class PingModel extends spitfire\Model
 		
 		$schema->replies = new ChildrenField('ping', 'irt');
 		$schema->shared  = new ChildrenField('ping', 'share');
-		$schema->embed   = new ChildrenField('embed', 'ping');
 	}
 	
-	public function onbeforesave() {
-		if (!$this->created) { $this->created = time(); }
-		if (!$this->guid   ) { $this->guid = 'p' . strtolower(substr(str_replace(['+', '/', '='], '', base64_encode(random_bytes(100))), 0, 100)); }
+	public function onbeforesave()
+	{
+		if (!$this->created) {
+			$this->created = time();
+		}
+		if (!$this->guid) {
+			$random = base64_encode(random_bytes(100));
+			$this->guid = 'p' . strtolower(substr(str_replace(['+', '/', '='], '', $random), 0, 100));
+		}
 	}
 	
 	/**
-	 * 
+	 *
 	 * @return type
 	 * @deprecated since version 20181008
 	 */
-	public function getMediaURI() {
-		return in_array(parse_url($this->media, PHP_URL_SCHEME), ['file', 'app'])? strval(url('image', 'preview', $this->_id)->absolute()) : $this->media; 
+	public function getMediaURI()
+	{
+		if (in_array(parse_url($this->media, PHP_URL_SCHEME), ['file', 'app'])) {
+			return strval(url('image', 'preview', $this->_id)->absolute());
+		}
+		else {
+			return $this->media;
+		}
 	}
 	
 	/**
-	 * 
+	 *
 	 * @return type
 	 * @throws spitfire\exceptions\PrivateException
 	 * @deprecated since version 20181008
 	 */
-	public function getMediaEmbed() {
+	public function getMediaEmbed()
+	{
 		try {
-			if (empty($this->media)) { throw new spitfire\exceptions\PrivateException(); }
+			if (empty($this->media)) {
+				throw new spitfire\exceptions\PrivateException();
+			}
 			
 			$file = storage($this->media);
-			$uri  = $file instanceof \spitfire\storage\objectStorage\EmbedInterface? $file->publicURI() : $this->getMediaURI();
-
-
-			switch($file->mime()) {
+			$uri  = $file instanceof EmbedInterface? $file->publicURI() : $this->getMediaURI();
+			
+			
+			switch ($file->mime()) {
 				case 'video/mp4':
 				case 'image/gif':
 					return sprintf('<video muted autoPlay loop src="%s" style="width: 100%%"></video>', $uri);
 				default:
 					return sprintf('<img src="%s"  style="width: 100%%">', $uri);
 			}
-		} 
+		}
 		catch (Exception $ex) {
 			return sprintf('<img src="%s"  style="width: 100%%">', $this->getMediaURI());
 		}
-		return in_array(parse_url($this->media, PHP_URL_SCHEME), ['file', 'app'])? strval(url('image', 'preview', $this->_id)->absolute()) : $this->media; 
+		
+		if (in_array(parse_url($this->media, PHP_URL_SCHEME), ['file', 'app'])) {
+			return strval(url('image', 'preview', $this->_id)->absolute());
+		}
+		else {
+			return $this->media;
+		}
 	}
 	
-	public function original() {
+	public function original()
+	{
 		return $this->share? $this->share->original() : $this;
 	}
 	
-	public function attachmentsPreview() {
+	public function attachmentsPreview()
+	{
 		$ret = [];
 		$cnt = 0;
 		
@@ -101,5 +126,4 @@ class PingModel extends spitfire\Model
 		
 		return $ret;
 	}
-
 }
