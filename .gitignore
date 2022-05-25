@@ -11,3 +11,4 @@ bin/settings/environments.php
 *.sublime-workspace
 
 /vendor/
+/logs/*.log

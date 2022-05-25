@@ -847,10 +847,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-alert('Js');
 /**
- * @todo Replace the height functions with a intersection observer
- * @todo Replace tokens and PHP prints
+ * 
+ * @todo Replace these declarations with proper settings, most sensibly we would be using vuex
+ * to load the data.
  */
 
 var url = document.querySelector('meta[name="ping.endpoint"]').content;
@@ -858,24 +858,6 @@ var token = document.querySelector('meta[name="ping.token"]').content;
 var pingid = document.querySelector('meta[name="ping.id"]').content;
 var sdk = new (ping_sdk_js__WEBPACK_IMPORTED_MODULE_0___default())(url, token);
 var nextPage = undefined;
-
-var height = function height() {
-  var body = document.body,
-      html = document.documentElement;
-  return Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
-}; //This function listens to the scrolls
-
-
-var listener = function listener() {
-  var html = document.documentElement,
-      scroll = Math.max(html.scrollTop, window.scrollY);
-
-  if (nextPage && height() - scroll < html.clientHeight + 700) {
-    nextPage();
-    nextPage = null;
-  }
-};
-
 sdk.ping().replies(pingid, function (pingList) {
   for (var i = 0; i < pingList._pings.length; i++) {
     var view = new (lysine__WEBPACK_IMPORTED_MODULE_1___default().view)('ping');
@@ -902,19 +884,24 @@ sdk.ping().replies(pingid, function (pingList) {
     });
   }
 });
-var once = true;
 var observer = new IntersectionObserver(function (entries, observer) {
   entries.forEach(function (entry) {
-    console.log(entry);
-
-    if (!entry.isIntersecting || !once) {
+    /**
+     * If the loader is not yet close to the screen, we will obviously
+     * not do anyhting to fetch more content.
+     */
+    if (!entry.isIntersecting) {
       return;
     }
+    /**
+     * If more data is available, then load it.
+     */
 
-    once = false;
-    var div = document.createElement('div');
-    div.style.height = '2000px';
-    entry.target.parentNode.insertBefore(div, entry.target);
+
+    if (nextPage) {
+      nextPage();
+      nextPage = null;
+    }
   });
 }, {
   root: null,

@@ -2,7 +2,7 @@
 
 use spitfire\io\session\Session;
 
-/* 
+/*
  * The MIT License
  *
  * Copyright 2019 César de la Cal Bretschneider <cesar@magic3w.com>.
@@ -30,58 +30,26 @@ class AccountController extends AppController
 {
 	
 	
-	public function login() {
+	public function login()
+	{
 		
-		$session = $this->session;
-		
-		if (isset($_GET['returnto']) && is_string($_GET['returnto']) && 
-				Strings::startsWith($_GET['returnto'], '/') && !Strings::startsWith($_GET['returnto'], '//')) {
-			$returnto = $_GET['returnto'];
-		}
-		else {
-			$returnto = url('account');
+		#If the user is already logged in we do not re-login him.
+		if ($this->user) {
+			return $this->response->setBody('Redirecting...')
+					  ->getHeaders()->redirect(url('feed'));
 		}
 		
-		if (isset($_GET['code'])) {
-			
-			if ($_GET['state'] !== $session->get('state')) {
-				throw new PublicException('OAuth error: State did not match', 403);
-			}
-			
-			$request = request('http://localhost/Auth/token/create.json');
-			$request->post('code', $_GET['code']);
-			$request->post('type', 'code');
-			$request->post('client', $this->sso->getAppId());
-			$request->post('secret', $this->sso->getSecret());
-			$request->post('verifier', $session->get('verifier'));
-			$response = $request->send()->expect(200)->json();
-			
-			$token = $this->sso->makeToken($response->tokens->access->token);
-			$session->lock($token);
-			
-			$this->response->setBody('Redirect')->getHeaders()->redirect(url());
-			return;
-		}
+		#Create and keep the token that we'll need to maintain for the app to work
+		$token = $this->sso->createToken();
+		Session::getInstance()->lock($token);
 		
-		$state = base64_encode(random_bytes(10));
-		$verifier = base64_encode(random_bytes(20));
-		
-		$session->set('state', $state);
-		$session->set('verifier', $verifier);
-		
-		$url = sprintf('http://localhost/Auth/auth/oauth/?%s', http_build_query([
-			'response_type' => 'code',
-			'client' => $this->sso->getAppId(),
-			'state'  => $state,
-			'redirect' => strval(url('account', 'login')->absolute()),
-			'challenge' => sprintf('%s:%s', 'sha256', hash('sha256', $verifier))
-		]));
-		
-		header('location: ' . $url);
-		die();
+		#Send the user to the login server
+		$this->response->setBody('Redirecting...')
+			->getHeaders()->redirect($token->getRedirect((string)url('account', 'login')->absolute()));
 	}
 	
-	public function authorize($token) {
+	public function authorize($token)
+	{
 		$t = $this->sso->makeToken($token);
 		Session::getInstance()->lock($t);
 		
@@ -89,7 +57,8 @@ class AccountController extends AppController
 				  ->getHeaders()->redirect(url('feed'));
 	}
 	
-	public function logout() {
+	public function logout()
+	{
 		
 		#If there is a session for this user, we destroy it
 		Session::getInstance()->destroy();

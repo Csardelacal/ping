@@ -1,9 +1,9 @@
-<?php 
+<?php
 
 use spitfire\Model;
 use spitfire\storage\database\Schema;
 
-/* 
+/*
  * The MIT License
  *
  * Copyright 2019 César de la Cal Bretschneider <cesar@magic3w.com>.
@@ -32,34 +32,35 @@ class FeedbackModel extends Model
 	
 	
 	/**
-	 * 
+	 *
 	 * @param Schema $schema
 	 * @return Schema
 	 */
-	public function definitions(Schema $schema) {
+	public function definitions(Schema $schema)
+	{
 		$schema->author   = new Reference(AuthorModel::class);
 		$schema->target   = new Reference(AuthorModel::class);
 		$schema->ping     = new Reference(PingModel::class);
 		$schema->guid     = new StringField(250);
 		$schema->appId    = new StringField(50);
-		$schema->reaction = new StringField(10);
+		$schema->reaction = new IntegerField();
 		$schema->created  = new IntegerField(true);
 		$schema->removed  = new IntegerField(true);
 		
 		$schema->index($schema->author, $schema->created);
 		$schema->index($schema->target, $schema->created);
-		
 	}
 	
-	public function onbeforesave() {
+	public function onbeforesave()
+	{
 		
 		if (!$this->guid) {
-			$this->guid = 'f' . strtolower(substr(str_replace(['+', '/', '='], '', base64_encode(random_bytes(200))), 0, 100));
+			$random = base64_encode(random_bytes(200));
+			$this->guid = 'f' . strtolower(substr(str_replace(['+', '/', '='], '', $random), 0, 100));
 		}
 		
 		if (!$this->created) {
 			$this->created = time();
 		}
 	}
-
 }

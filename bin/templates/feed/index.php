@@ -6,11 +6,14 @@
 	<div class="span l2">
 
 		<div class="material unpadded">
-			<div class="editor"></div>
-			<noscript>(Javascript is required to add a ping)</noscript>
+			<?= current_context()->view->element('ping/editor.lysine.html')->render() ?>
+			
+			<noscript>
+			<?= current_context()->view->element('ping/editor.php')->set('authUser', $authUser)->render() ?>
+			</noscript>
 		</div>
 
-		<?php if (db()->table('ping')->get('src__id', AuthorModel::find($authUser->id)->_id)->where('processed', 0)->first()): ?>
+		<?php if (db()->table('ping')->get('src__id', AuthorModel::find($authUser->id)->_id)->where('processed', 0)->first()) : ?>
 			<div class="spacer" style="height: 10px"></div>
 
 			<div class="material" style="color: #0571B1">
@@ -25,14 +28,13 @@
 
 		<div class="spacer" style="height: 10px"></div>
 
-		<?php foreach ($notifications as $notification): ?>
-			
+		<?php foreach ($notifications as $notification) : ?>
 			<?= current_context()->view->element('ping/ping')->set('ping', $notification)->render() ?>
 			<div class="spacer" style="height: 10px"></div>
 
 		<?php endforeach; ?>
 
-		<?php if (empty($notifications)): ?>
+		<?php if (empty($notifications)) : ?>
 			<div style="padding: 50px; text-align: center; color: #777; font-size: .8em; font-style: italic; text-align: center">
 				Nothing here yet. Follow or interact with users to build your feed!
 			</div>
@@ -70,6 +72,7 @@
 		<div class="spacer" style="height: 30px;"></div>
 
 		
+		<?= current_context()->view->element('ping/ping.lysine.html')->set('ping', $notification)->render() ?>
 	</div>
 
 	<!-- Contextual menu-->
@@ -80,10 +83,11 @@
 				<div class="banner">
 					<?php try { ?>
 						<?php $banner = $user->getAttribute('banner')->getPreviewURL(320, 120) ?>
-						<?php if (!$banner) { throw new Exception();	} ?>
+						<?php if (!$banner) {
+							throw new Exception();
+						} ?>
 						<img src="<?= $banner ?>" width="275" height="64">
 					<?php } catch (Exception$e) {
-
 					} ?>
 				</div>
 				<div class="padded" style="margin-top: -35px;">
@@ -105,9 +109,47 @@
 	</div>
 </div>
 
-<script>
-window.token = '<?= (isset($_GET['token']) ? $this->sso->makeToken($_GET['token']) : \spitfire\io\session\Session::getInstance()->getUser())->getId() ?>';
-window.baseurl = '<?= spitfire()->baseUrl() ?>';
+<script type="text/javascript">
+	window.token = '<?= (isset($_GET['token']) ? $this->sso->makeToken($_GET['token']) : \spitfire\io\session\Session::getInstance()->getUser())->getId() ?>';
+	window.baseurl = '<?= spitfire()->baseUrl() ?>';
+	window.oldestLoaded = <?= isset($notification) && $notification? $notification->_id : 0 ?>;
+</script>
+<script type="text/javascript" src="<?= spitfire()->baseUrl() ?>/public/assets/js/feed/index.js"></script>
+<script type="text/javascript">
+	
+	depend(['m3/core/lysine', 'ping/ping'], function (lysine, Ping) {
+	});
+
+
+	depend(['m3/core/request', 'm3/core/array/iterate', 'm3/core/lysine'], function (request, iterate, lysine) {
+
+		request('<?= url('people', 'whoToFollow')->setExtension('json') ?>')
+
+				  .then(function (response) {
+					  var json = JSON.parse(response).payload;
+
+					  iterate(json, function (e) {
+						  var view = new lysine.view('whotofollow');
+						  view.setData(e);
+					  });
+				  })
+				  .catch(function () {
+					  console.log('Error loading suggestions');
+				  });
+	});
 </script>
 
-<script type="text/javascript" src="/ping/public/js/feed/index.js"></script>
+<script type="text/javascript">
+depend(['ping/feedback'], function (baseurl) { baseurl('<?= spitfire()->baseUrl() ?>', '<?= (isset($_GET['token']) ? $this->sso->makeToken($_GET['token']) : \spitfire\io\session\Session::getInstance()->getUser())->getId() ?>'); });
+</script>
+
+<script type="text/javascript">
+depend(['ping/editor'], function (editor) {
+	console.log('editor.loaded');
+	editor(<?= json_encode([
+		'endpoint' => (string)url(),
+		'placeholder' => 'Message to broadcast...',
+		'user' => ['avatar' => $me->getAvatar() ]
+	]) ?>);
+});
+</script>

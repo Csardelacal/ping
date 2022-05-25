@@ -1,9 +1,18 @@
 #Disable GPC
-php_flag magic_quotes_gpc Off
+#php_flag magic_quotes_gpc Off
 
 #Enable mod rewrite to send requests to Spitfire
 <IfModule mod_rewrite.c>
 	RewriteEngine on
+	
+	# This is a temporary measure intended to make sure that paths generated
+	# by mix are correct. We're migrating to a structure where the code is outside
+	# the public webroot, which means that the public root dir is /public.
+	#
+	# Since this not the case yet, we need to make sure that the routes mix assumes are
+	# public are indeed served from the public dir.
+	RewriteCond %{REQUEST_URI} ^/(css|images|js)/(.*)$
+	RewriteRule (.*) public/$1 [L]
 	
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteRule .* index.php/$0 [L]
