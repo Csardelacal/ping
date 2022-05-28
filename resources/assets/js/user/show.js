@@ -1,8 +1,10 @@
-import Lysine from "lysine";
+import {View as Lysine} from "lysine/src/lysine";
 
 var xhr = null;
 var current = document.querySelector('meta[name="ping.id"]').content;
 var notifications = [];
+
+window._l = Lysine;
 
 var request = function (callback) {
 	if (xhr !== null)  { return; }
@@ -27,7 +29,7 @@ var request = function (callback) {
 			}
 			
 			for (var i= 0; i < data.payload.length; i++) { 
-				var view =  new Lysine.view('ping');
+				var view =  new Lysine('ping');
 				notifications.push(view);
 				
 				view.setData({
