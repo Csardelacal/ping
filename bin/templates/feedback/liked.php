@@ -88,7 +88,7 @@
 }());
 </script>
 
-<script type="text/javascript" src="<?= \spitfire\core\http\URL::asset('js/lysine.js') ?>"></script>
+<script type="text/javascript" src="<?= \spitfire\core\http\URL::asset('js/m3/core/lysine.js') ?>"></script>
 
 <script type="text/javascript">
 depend(['m3/core/lysine'], function(Lysine) {

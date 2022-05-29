@@ -103,9 +103,27 @@
 }());
 </script>
 
-<script type="text/javascript" src="<?= \spitfire\core\http\URL::asset('js/lysine.js') ?>"></script>
+<script type="text/javascript" src="<?= \spitfire\core\http\URL::asset('js/m3/core/lysine.js') ?>"></script>
 
 <script type="text/javascript">
 	   document.querySelector('meta[name="ping.id"]').content = <?= json_encode(isset($notification) && $notification? $notification->_id : null) ?>;
 </script>
-<script type="text/javascript" src="<?= \spitfire\SpitFire::baseUrl() ?>/assets/js/user/show.js"></script>
+<script type="text/javascript" src="<?= \spitfire\SpitFire::baseUrl() ?>/public/js/user/show.js"></script>
+
+<?php if ($authUser && $user->_id !== $authUser->id): ?>
+<script type="text/javascript">
+depend(['ping/editor'], function (editor) {
+	console.log('Editor initialized');
+	editor(<?= json_encode([
+		'endpoint' => (string)url(), 
+		'placeholder' => 'Message to broadcast...', 
+		'user' => ['avatar' => $me->getAvatar() ],
+		'target' => ':' . $author->guid
+	]) ?>);
+}); 
+</script>
+
+<script type="text/javascript">
+depend(['ping/feedback'], function (baseurl) { baseurl('<?= spitfire()->baseUrl() ?>', '<?= (isset($_GET['token']) ? $this->sso->makeToken($_GET['token']) : \spitfire\io\session\Session::getInstance()->getUser())->getId() ?>'); });
+</script>
+<?php endif; ?>
