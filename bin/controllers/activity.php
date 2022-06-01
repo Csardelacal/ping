@@ -74,7 +74,7 @@ class ActivityController extends AppController
 		#There needs to be a src user. That means that somebody is originating the
 		#notification. There has to be one, and no more than one.
 		try {
-			$dbuser = db()->table('user')->get('authId', $srcid)->first();
+			$dbuser = db()->table('user')->get('_id', $srcid)->first();
 			
 			if (!$dbuser) {
 				$dbuser = UserModel::makeFromSSO($this->sso->getUser($srcid));
