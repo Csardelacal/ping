@@ -102,7 +102,7 @@ abstract class AppController extends Controller
 
 			foreach ($groups as $group) {
 				if ($group->id == '1') {
-					return true; 
+					return true;
 				}
 			}
 			return false;
