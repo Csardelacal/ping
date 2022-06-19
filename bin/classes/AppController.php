@@ -100,8 +100,8 @@ abstract class AppController extends Controller
 			$sso = new \auth\SSO(\spitfire\core\Environment::get('sso'));
 			$groups = $sso->getUser($this->user->id)->getGroups();
 
-			foreach ($groups as $group) { 
-				if ($group->id == '1') { return true; } 
+			foreach ($groups as $group) {
+				if ($group->id == '1') { return true; }
 			}
 			return false;
 		});

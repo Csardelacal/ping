@@ -14,7 +14,7 @@ class User
 	private $attributes;
 	private $avatar;
 	
-	public function __construct($id, $username, $aliases, $groups, $verified, $registered, $attributes, $avatar) 
+	public function __construct($id, $username, $aliases, $groups, $verified, $registered, $attributes, $avatar)
 	{
 		$this->id = $id;
 		$this->username = $username;
@@ -26,31 +26,39 @@ class User
 		$this->avatar = $avatar;
 	}
 	
-	public function getId() 
+	public function getId()
 	{
 		return $this->id;
 	}
 	
-	public function getUsername() 
+	public function getUsername()
 	{
 		return $this->username;
 	}
 	
-	public function getAvatar($size) 
+	public function getAvatar($size)
 	{
 		return $this->avatar->{$size};
 	}
 	
-	public function getGroups() 
+	public function getGroups()
 	{
 		return $this->groups;
 	}
 		
-	public function getAttribute($name) 
+	public function getAttribute($name)
 	{
-		if (!isset($this->attributes->{$name})) { throw new Exception("Attribute {$name} is not readable"); }
-		if (!isset($this->attributes->{$name}->value)) { throw new Exception("Attribute {$name} is not set"); }
-		if (!is_object($this->attributes->{$name}->value)) { return $this->attributes->{$name}; }
+		if (!isset($this->attributes->{$name})) { 
+			throw new Exception("Attribute {$name} is not readable"); 
+		}
+		
+		if (!isset($this->attributes->{$name}->value)) { 
+			throw new Exception("Attribute {$name} is not set"); 
+		}
+		
+		if (!is_object($this->attributes->{$name}->value)) { 
+			return $this->attributes->{$name}; 
+		}
 		
 		$data = $this->attributes->{$name};
 		
