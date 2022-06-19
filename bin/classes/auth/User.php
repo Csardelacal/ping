@@ -37,15 +37,16 @@ class User
 		return $this->avatar->{$size};
 	}
 	
+	public function getGroups() {
+		return $this->groups;
+	}
+		
 	public function getAttribute($name) {
-		if (!isset($this->attributes->{$name})) { throw new Exception("Attribute {$name} is not set"); }
-		if (!is_object($this->attributes->{$name})) { return $this->attributes->{$name}->value; }
+		if (!isset($this->attributes->{$name})) { throw new Exception("Attribute {$name} is not readable"); }
+		if (!isset($this->attributes->{$name}->value)) { throw new Exception("Attribute {$name} is not set"); }
+		if (!is_object($this->attributes->{$name}->value)) { return $this->attributes->{$name}; }
 		
 		$data = $this->attributes->{$name};
-		
-		if ($data->value === null) {
-			throw new Exception("Attribute {$name} is not set");
-		}
 		
 		switch($data->type) {
 			case 'file': return $data->value === null? null : new File($data->value->preview, $data->value->download);

@@ -183,7 +183,6 @@ class PingController extends AppController
 	 *
 	 * @param int $id
 	 * @param string $confirm
-	 * @return type
 	 * @throws PublicException
 	 */
 	public function delete($id, $confirm = null)
@@ -217,6 +216,13 @@ class PingController extends AppController
 		}
 		
 		/*
+		 * TODO: Removed Pings should be able to be deleted, but still stay visible for staff!
+		 */
+		if ($notification->removed > 0) {
+			throw new PublicException('Deleting removed Pings currently is not available. Coming soon.', 500);
+		}
+		
+		/*
 		 * Confirm the user actually wishes to delete the ping in question. To do
 		 * so, the application will generate a random hash that the user will have
 		 * to send back properly.
@@ -236,12 +242,135 @@ class PingController extends AppController
 			}, $notification);
 			
 			$this->view->set('deleted', true);
+
+			return $this->response->setBody('Redirecting...')
+				->getHeaders()->redirect(url('feed'));
 		}
 		
 		$this->view->set('id', $id);
 		$this->view->set('salt', $salt);
 	}
-	
+
+	/**
+	 * Remove a ping. This method will not actually remove it  from the database,
+	 * instead, it will flag it, so it is displayed as removed. This is a staff action.
+	 *
+	 * @param int $id
+	 * @param string $confirm
+	 * @throws PublicException
+	 */
+	public function remove($id, $confirm = null)
+	{
+		/*
+		 * Only staff are allowed to remove Pings.
+		 */
+		if (!$this->user || !$this->isModerator()) {
+			throw new PublicException('Login required', 403);
+		}
+		
+		/*
+		 * Find the ping in question and generate a random hash that the user will
+		 * have to return to confirm they know what they're doing.
+		 */
+		$ping = db()->table('ping')->get('_id', $id)->fetch();
+
+		if (!$ping) {
+			throw new PublicException('No notification found', 404);
+		}
+		
+		$salt = new XSSToken();
+
+		/*
+		 * Confirm the user actually wishes to delete the ping in question. To do
+		 * so, the application will generate a random hash that the user will have
+		 * to send back properly.
+		 *
+		 * This way we ensure that the user is not deleting a ping via XSRF.
+		 *
+		 * If an application is deleting a ping, we need to reasses the issue. Applications
+		 * do not fall for XSS attacks the same way users do. This means, that if the
+		 * application provided a token, it knows the user's credentials and can
+		 * perform the deletion without worry.
+		 */
+		if (isset($_GET['token']) || ($confirm && $salt->verify($confirm))) {
+			$ping->removed = time();
+			$ping->staff   = $this->user->id;
+			if (isset($_POST['note']))
+				$ping->note   = substr($_POST['note'], 0, 999);
+			
+			$ping->note = empty($ping->note) ? null : $ping->note;
+
+			$this->core->feed->remove->do(function ($ping) {
+				$ping->store();
+			}, $ping);
+
+			$this->view->set('removed', true);
+			
+			return $this->response->setBody('Redirecting...')
+				->getHeaders()->redirect(url('feed'));
+		}
+
+		$this->view->set('id', $id);
+		$this->view->set('salt', $salt);
+	}
+
+	/**
+	 * Revert a removed Ping to be public again. This is a staff action.
+	 *
+	 * @param int $id
+	 * @param string $confirm
+	 * @throws PublicException
+	 */
+	public function unremove($id, $confirm = null)
+	{
+		/*
+		 * Only staff are allowed to remove Pings.
+		 */
+		if (!$this->user || !$this->isModerator()) {
+			throw new PublicException('Login required', 403);
+		}
+
+		/*
+		 * Find the ping in question and generate a random hash that the user will
+		 * have to return to confirm they know what they're doing.
+		 */
+		$ping = db()->table('ping')->get('_id', $id)->fetch();
+
+		if (!$ping) {
+			throw new PublicException('No notification found', 404);
+		}
+
+		$salt = new XSSToken();
+
+		/*
+		 * Confirm the user actually wishes to delete the ping in question. To do
+		 * so, the application will generate a random hash that the user will have
+		 * to send back properly.
+		 *
+		 * This way we ensure that the user is not deleting a ping via XSRF.
+		 *
+		 * If an application is deleting a ping, we need to reasses the issue. Applications
+		 * do not fall for XSS attacks the same way users do. This means, that if the
+		 * application provided a token, it knows the user's credentials and can
+		 * perform the deletion without worry.
+		 */
+		if (isset($_GET['token']) || ($confirm && $salt->verify($confirm))) {
+			$ping->removed = null;
+			$ping->staff   = $this->user->id;
+
+			$this->core->feed->unremove->do(function ($ping) {
+				$ping->store();
+			}, $ping);
+
+			$this->view->set('unremoved', true);
+
+			return $this->response->setBody('Redirecting...')
+				->getHeaders()->redirect(url('feed'));
+		}
+
+		$this->view->set('id', $id);
+		$this->view->set('salt', $salt);
+	}
 	
 	public function disavow($id, $confirm = null)
 	{

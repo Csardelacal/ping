@@ -48,7 +48,7 @@ abstract class AppController extends Controller
 		$session     = Session::getInstance();
 		
 		#Create a brief cache for the sessions.
-		$cache       = new MemcachedAdapter();
+		$cache       = \spitfire\cache\MemcachedAdapter::getInstance();
 		$cache->setTimeout(120);
 		
 		#Create a user
@@ -73,11 +73,33 @@ abstract class AppController extends Controller
 		
 		#Maintain the user in the view. This way we can draw an interface for them
 		$this->view->set('authUser', $this->user);
+		$this->view->set('isModerator', $this->isModerator());
 		$this->view->set('sso', $this->sso);
 		
 		#Create the core, so the application can reliably and consistently handle events
 		$this->core = Ping::instance();
 		
 		_t(new Locale());
+	}
+
+	/** 
+	 * Function to determine if a user is a member of the admin group
+	 * Code taken from YCH and adapted for Ping
+	 * 
+	 * @return bool|null
+	 */
+	public function isModerator(){
+		if (!isset($this->user) || $this->user === null)
+			return false;
+
+		$mc = \spitfire\cache\MemcachedAdapter::getInstance();
+
+		return $mc->get('ping_isMod_' . $this->user->id, function () {
+			$sso = new \auth\SSO(\spitfire\core\Environment::get('sso'));
+			$groups = $sso->getUser($this->user->id)->getGroups();
+
+			foreach ($groups as $group) { if ($group->id == '1') { return true; } }
+			return false;
+		});
 	}
 }

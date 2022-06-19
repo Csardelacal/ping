@@ -34,10 +34,13 @@ foreach ($notifications as $n) {
 	$payload[] = Array(
 		'id'           => $n->_id,
 		'url'          => $n->url,
-		'media'        => $n->attachmentsPreview(),
-		'content'      => Mention::idToMentions($n->content),
+		'media'        => $isModerator || empty($n->removed) ? $n->attachmentsPreview() : '',
+		'content'      => $isModerator || empty($n->removed) ? Mention::idToMentions($n->content) : '',
 		'timestamp'    => $n->created,
 		'timeRelative' => Time::relative($n->created),
+		'removed'      => $n->removed,
+		'staff'        => $isModerator ? $sso->getUser($n->staff)->getUsername() : '',
+		'note'         => $isModerator ? $n->note??'No reason given' : '',
 		'poll'         => $poll->toArray(),
 		'feedback'     => [
 			'like'      => db()->table('feedback')->get('ping', $n)->where('reaction',  1)->count(),
@@ -46,15 +49,18 @@ foreach ($notifications as $n) {
 		'shares'       => $n->shared->getQuery()->count(),
 		'replies'      => [
 			'count'  => $n->replies->getQuery()->count(),
-			'sample' => $n->replies->getQuery()->setOrder('created', 'DESC')->range(0, 5)->each(function ($n) use ($sso) {
+			'sample' => $n->replies->getQuery()->setOrder('created', 'DESC')->range(0, 5)->each(function ($n) use ($sso, $isModerator) {
 				$user  = $sso->getUser($n->src->user->authId);
 				return [
 					'id'           => $n->_id,
 					'url'          => $n->url,
-					'media'        => $n->attachmentsPreview(),
-					'content'      => Mention::idToMentions($n->content),
+					'media'        => $isModerator || empty($n->removed) ? $n->attachmentsPreview() : '',
+					'content'      => $isModerator || empty($n->removed) ? Mention::idToMentions($n->content) : '',
 					'timestamp'    => $n->created,
 					'timeRelative' => Time::relative($n->created),
+					'removed'      => $n->removed,
+					'staff'        => $isModerator ? $sso->getUser($n->staff)->getUsername() : '',
+					'note'         => $isModerator ? $n->note??'No reason given' : '',
 					'replies'      => [
 						'count'  => $n->replies->getQuery()->count()
 					],
