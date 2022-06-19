@@ -82,15 +82,17 @@ abstract class AppController extends Controller
 		_t(new Locale());
 	}
 
-	/** 
+	/**
 	 * Function to determine if a user is a member of the admin group
 	 * Code taken from YCH and adapted for Ping
-	 * 
+	 *
 	 * @return bool|null
 	 */
-	public function isModerator(){
-		if (!isset($this->user) || $this->user === null)
+	public function isModerator()
+	{
+		if (!isset($this->user) || $this->user === null) {
 			return false;
+		}
 
 		$mc = \spitfire\cache\MemcachedAdapter::getInstance();
 
@@ -98,7 +100,9 @@ abstract class AppController extends Controller
 			$sso = new \auth\SSO(\spitfire\core\Environment::get('sso'));
 			$groups = $sso->getUser($this->user->id)->getGroups();
 
-			foreach ($groups as $group) { if ($group->id == '1') { return true; } }
+			foreach ($groups as $group) { 
+				if ($group->id == '1') { return true; } 
+			}
 			return false;
 		});
 	}

@@ -295,8 +295,9 @@ class PingController extends AppController
 		if (isset($_GET['token']) || ($confirm && $salt->verify($confirm))) {
 			$ping->removed = time();
 			$ping->staff   = $this->user->id;
-			if (isset($_POST['note']))
-				$ping->note   = substr($_POST['note'], 0, 999);
+			if (isset($_POST['note'])) {
+				$ping->note = substr($_POST['note'], 0, 999);
+			}
 			
 			$ping->note = empty($ping->note) ? null : $ping->note;
 
