@@ -101,7 +101,9 @@ abstract class AppController extends Controller
 			$groups = $sso->getUser($this->user->id)->getGroups();
 
 			foreach ($groups as $group) {
-				if ($group->id == '1') { return true; }
+				if ($group->id == '1') {
+					return true; 
+				}
 			}
 			return false;
 		});

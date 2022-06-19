@@ -48,16 +48,16 @@ class User
 		
 	public function getAttribute($name)
 	{
-		if (!isset($this->attributes->{$name})) { 
-			throw new Exception("Attribute {$name} is not readable"); 
+		if (!isset($this->attributes->{$name})) {
+			throw new Exception("Attribute {$name} is not readable");
 		}
 		
-		if (!isset($this->attributes->{$name}->value)) { 
-			throw new Exception("Attribute {$name} is not set"); 
+		if (!isset($this->attributes->{$name}->value)) {
+			throw new Exception("Attribute {$name} is not set");
 		}
 		
-		if (!is_object($this->attributes->{$name}->value)) { 
-			return $this->attributes->{$name}; 
+		if (!is_object($this->attributes->{$name}->value)) {
+			return $this->attributes->{$name};
 		}
 		
 		$data = $this->attributes->{$name};
