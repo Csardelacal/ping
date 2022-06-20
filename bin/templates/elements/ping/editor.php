@@ -33,6 +33,8 @@ It should, therefore, be stripped of any Javascript.
 					<input type="file" name="media" class="ping_media">
 				</div><!--
 				--><div class="span l5" style="text-align: right">
+					<input type="checkbox" name="explicit" value="true" id="explicit">
+					<label for="explicit">mark explicit</label>
 					<input type="submit" value="Ping!" class="send-ping">
 				</div><!--
 				--></div>
