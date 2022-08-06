@@ -114,7 +114,7 @@
 	window.baseurl = '<?= spitfire()->baseUrl() ?>';
 	window.oldestLoaded = <?= isset($notification) && $notification? $notification->_id : 0 ?>;
 </script>
-<script type="text/javascript" src="<?= spitfire()->baseUrl() ?>/public/assets/js/feed/index.js"></script>
+<script type="text/javascript" src="<?= spitfire()->baseUrl() ?>/public/js/feed/index.js"></script>
 <script type="text/javascript">
 	
 	depend(['m3/core/lysine', 'ping/ping'], function (lysine, Ping) {

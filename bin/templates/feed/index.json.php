@@ -60,6 +60,8 @@ foreach ($notifications as $n) {
 		'timestamp'    => $n->created,
 		'timeRelative' => Time::relative($n->created),
 		'irt'          => $irt,
+		'removed'      => $n->removed,
+		'staff'        => $isModerator && $n->staff? $sso->getUser($n->staff)->getUsername() : '',
 		'replies'      => $n->replies->getQuery()->count(),
 		'shares'       => $n->shared->getQuery()->count(),
 		'feedback'     => [
