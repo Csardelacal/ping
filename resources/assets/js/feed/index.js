@@ -42,6 +42,8 @@ depend(['m3/core/lysine'], function (lysine) {
 				id: current.id,
 				userName: current.user.username,
 				avatar: current.user.avatar,
+				removed: current.removed,
+				staff: current.staff,
 				userURL: current.user.url,
 				notificationURL: current.url || '#',
 				notificationContent: current.content,

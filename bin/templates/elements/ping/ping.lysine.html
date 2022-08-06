@@ -46,9 +46,9 @@
 
 						<div class="row l1 ng-lr" style="margin-top: 5px">
 							<div class="span l1">
-								<span data-condition="value(removed) != 0">
+								<span data-condition="null(removed) == false">
 									<?php if (!$isModerator) : ?>
-									<div data-condition="removed != 0" style="font-weight: bold; font-style: italic; text-align: center; 
+									<div data-condition="null(removed) != false" style="font-weight: bold; font-style: italic; text-align: center; 
 									border: 1px solid black; padding: 5px; font-size: 0.9em; margin: 5px"
 									>This Ping was removed by staff</div>
 									<?php else :?>
@@ -61,7 +61,7 @@
 	
 									<?php endif ?>
 								</span>
-								<span <?php if (!$isModerator) : ?>data-condition="value(removed) == 0"<?php endif ?>>
+								<span <?php if (!$isModerator) : ?>data-condition="null(removed) == true"<?php endif ?>>
 								
 									<p style="margin: 0; color: #000;" data-for="notificationContent"></p>
 						

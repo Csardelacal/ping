@@ -39,7 +39,7 @@ foreach ($notifications as $n) {
 		'timestamp'    => $n->created,
 		'timeRelative' => Time::relative($n->created),
 		'removed'      => $n->removed,
-		'staff'        => $isModerator ? $sso->getUser($n->staff)->getUsername() : '',
+		'staff'        => $n->staff && $isModerator ? $sso->getUser($n->staff)->getUsername() : '',
 		'poll'         => $poll->toArray(),
 		'feedback'     => [
 			'like'      => db()->table('feedback')->get('ping', $n)->where('reaction',  1)->count(),
@@ -58,7 +58,7 @@ foreach ($notifications as $n) {
 					'timestamp'    => $n->created,
 					'timeRelative' => Time::relative($n->created),
 					'removed'      => $n->removed,
-					'staff'        => $isModerator ? $sso->getUser($n->staff)->getUsername() : '',
+					'staff'        => $isModerator && $n->staff ? $sso->getUser($n->staff)->getUsername() : '',
 					'replies'      => [
 						'count'  => $n->replies->getQuery()->count()
 					],
