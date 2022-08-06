@@ -283,6 +283,7 @@ p {
 	color: #666;
 	margin: 0 8px;
 	line-height: 14px;
+	white-space: nowrap; // prevent icons and text from being separated on short lines
 	
 	&:first-child {
 		margin-left: 0;

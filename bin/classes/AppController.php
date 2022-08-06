@@ -3,6 +3,7 @@
 use auth\SSO;
 use auth\SSOCache;
 use auth\Token;
+use hook\Hook;
 use ping\core\Ping;
 use ping\Locale;
 use spitfire\cache\MemcachedAdapter;
@@ -48,7 +49,7 @@ abstract class AppController extends Controller
 		$session     = Session::getInstance();
 		
 		#Create a brief cache for the sessions.
-		$cache       = new MemcachedAdapter();
+		$cache       = MemcachedAdapter::getInstance();
 		$cache->setTimeout(120);
 		
 		#Create a user
@@ -57,7 +58,7 @@ abstract class AppController extends Controller
 		
 		#Check if hook is enabled and start it
 		$this->hook    = Environment::get('hook.url') ?
-		new \hook\Hook(Environment::get('hook.url'), $this->sso->makeSignature(Environment::get('hook.id'))) :
+		new Hook(Environment::get('hook.url'), $this->sso->makeSignature(Environment::get('hook.id'))) :
 		null;
 		
 		#Fetch the user from the cache if necessary
@@ -73,11 +74,39 @@ abstract class AppController extends Controller
 		
 		#Maintain the user in the view. This way we can draw an interface for them
 		$this->view->set('authUser', $this->user);
+		$this->view->set('isModerator', $this->isModerator());
 		$this->view->set('sso', $this->sso);
 		
 		#Create the core, so the application can reliably and consistently handle events
 		$this->core = Ping::instance();
 		
 		_t(new Locale());
+	}
+
+	/**
+	 * Function to determine if a user is a member of the admin group
+	 * Code taken from YCH and adapted for Ping
+	 *
+	 * @return bool|null
+	 */
+	protected function isModerator()
+	{
+		if (!isset($this->user) || $this->user === null) {
+			return false;
+		}
+
+		$mc = MemcachedAdapter::getInstance();
+
+		return $mc->get('ping_isMod_' . $this->user->id, function () {
+			$sso = new SSO(Environment::get('sso'));
+			$groups = $sso->getUser($this->user->id)->getGroups();
+
+			foreach ($groups as $group) {
+				if ($group->id == Environment::get('admin_group_id')) {
+					return true;
+				}
+			}
+			return false;
+		});
 	}
 }
