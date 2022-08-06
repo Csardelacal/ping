@@ -89,7 +89,7 @@ abstract class AppController extends Controller
 	 *
 	 * @return bool|null
 	 */
-	public function isModerator()
+	protected function isModerator()
 	{
 		if (!isset($this->user) || $this->user === null) {
 			return false;
