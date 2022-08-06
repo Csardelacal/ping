@@ -31,7 +31,6 @@ foreach ($notifications as $n) {
 		'timeRelative' => Time::relative($n->created),
 		'removed'      => $n->removed,
 		'staff'        => $isModerator ? $sso->getUser($n->staff)->getUsername() : '',
-		'note'         => $isModerator ? $n->note??'No reason given' : '',
 		'poll'         => $poll->toArray(),
 		'feedback'     => [
 			'mine'      => !!db()->table('feedback')->get('ping', $n)->where('author',  $me)->where('reaction',  1)->first(),
@@ -52,7 +51,6 @@ foreach ($notifications as $n) {
 					'timeRelative' => Time::relative($n->created),
 					'removed'      => $n->removed,
 					'staff'        => $isModerator ? $sso->getUser($n->staff)->getUsername() : '',
-					'note'         => $isModerator ? $n->note??'No reason given' : '',
 					'replies'      => [
 						'count'  => $n->replies->getQuery()->count()
 					],

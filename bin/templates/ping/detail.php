@@ -99,7 +99,6 @@
 												<div class="span l2">This Ping is removed</div>
 												<div class="span l4" style="text-align: right">Removed by <?= $sso->getUser($notification->staff)->getUsername() ?> <span title="<?= gmdate('c', $notification->removed)?>"><?= Time::relative($notification->removed) ?></span></div>
 											</div>
-											<div class="material" style="margin-top: 10px; color: #777"><?= $notification->note??'No reason given.'?></div>
 										</div>
 
 									<?php endif ?>
@@ -301,8 +300,7 @@ depend(['ping/ping', 'm3/core/lysine'], function(SDK, Lysine) {
 				shareCount: current.shares || 'Share',
 				irt: current.irt ? [current.irt] : [],
 				removed: current.removed || '0',
-				staff: current.staff || '',
-				note: current.note || ''
+				staff: current.staff || ''
 			});
 
 		}

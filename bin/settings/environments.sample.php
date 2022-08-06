@@ -15,6 +15,7 @@ $e->set('db_table_prefix', 'test_');
 // oAuth
 $e->set('sso', 'http://758701252:DI3ttiLEpFTNCMRpmL61V8jRz6twLQwLXAXcROwFFZP6N8@host.docker.internal:8085');
 
+$e->set('admin_group_id', 1);
 
 //$e->set('db_table_prefix', 'test_');
 //$e->set('db_user', 'root');

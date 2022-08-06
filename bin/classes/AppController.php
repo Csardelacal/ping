@@ -3,6 +3,7 @@
 use auth\SSO;
 use auth\SSOCache;
 use auth\Token;
+use hook\Hook;
 use ping\core\Ping;
 use ping\Locale;
 use spitfire\cache\MemcachedAdapter;
@@ -48,7 +49,7 @@ abstract class AppController extends Controller
 		$session     = Session::getInstance();
 		
 		#Create a brief cache for the sessions.
-		$cache       = \spitfire\cache\MemcachedAdapter::getInstance();
+		$cache       = MemcachedAdapter::getInstance();
 		$cache->setTimeout(120);
 		
 		#Create a user
@@ -57,7 +58,7 @@ abstract class AppController extends Controller
 		
 		#Check if hook is enabled and start it
 		$this->hook    = Environment::get('hook.url') ?
-		new \hook\Hook(Environment::get('hook.url'), $this->sso->makeSignature(Environment::get('hook.id'))) :
+		new Hook(Environment::get('hook.url'), $this->sso->makeSignature(Environment::get('hook.id'))) :
 		null;
 		
 		#Fetch the user from the cache if necessary
@@ -94,14 +95,14 @@ abstract class AppController extends Controller
 			return false;
 		}
 
-		$mc = \spitfire\cache\MemcachedAdapter::getInstance();
+		$mc = MemcachedAdapter::getInstance();
 
 		return $mc->get('ping_isMod_' . $this->user->id, function () {
-			$sso = new \auth\SSO(\spitfire\core\Environment::get('sso'));
+			$sso = new SSO(Environment::get('sso'));
 			$groups = $sso->getUser($this->user->id)->getGroups();
 
 			foreach ($groups as $group) {
-				if ($group->id == '1') {
+				if ($group->id == Environment::get('admin_group_id')) {
 					return true;
 				}
 			}

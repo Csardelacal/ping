@@ -19,7 +19,6 @@ class PingModel extends spitfire\Model
 		$schema->created = new IntegerField(true);
 		$schema->removed = new IntegerField(true);# Null if it was not deleted, timestamp of deletion
 		$schema->staff   = new IntegerField(true);# Null if no staff action taken, user ID of last staff to modify
-		$schema->note    = new StringField(999);  # Note for staff action; only visible to staff
 		$schema->irt     = new Reference('ping');
 		$schema->share   = new Reference('ping');
 		

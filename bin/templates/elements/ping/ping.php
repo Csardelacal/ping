@@ -68,7 +68,6 @@
 									<div class="span l2">This Ping is removed</div>
 									<div class="span l4" style="text-align: right">Removed by <?= $sso->getUser($ping->staff)->getUsername() ?> <span title="<?= gmdate('c', $ping->removed)?>"><?= Time::relative($ping->removed) ?></span></div>
 								</div>
-								<div class="material" style="margin-top: 10px; color: #777"><?= $ping->note??'No reason given.'?></div>
 							</div>
 							
 							<?php endif ?>

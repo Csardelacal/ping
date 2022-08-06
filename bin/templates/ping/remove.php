@@ -13,12 +13,8 @@
 				feel free to navigate away from this page.
 			</p>
 			<p>
-				After removal the content will only be visible to staff.
-			</p>
-			<p>
-				<textarea name="note" style="width: 100%; height: 50px;" maxlength="999"
-						  placeholder="Reason visible to other staff members only (optional)"
-				></textarea>
+				After removal the content will only be visible to staff. Embedded media
+				may still be accessible through direct links.
 			</p>
 
 			<p style="text-align: right">
