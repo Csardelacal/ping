@@ -14,9 +14,15 @@
 		<?= $sso->getUser($ping->irt->src->user->authId)->getUsername() ?>
 					</a>
 
+					<?php if ($ping->irt->removed > 0) : ?>
+						<div style="font-weight: bold; font-style: italic; text-align: center; 
+								border: 1px solid black; padding: 5px; font-size: 0.9em; margin: 5px"
+						>This Ping was removed by staff</div>
+					<?php else :?>
 					<p style="margin: 0;">
 		<?= Mention::idToMentions($ping->irt->content) ?>
 					</p>
+					<?php endif ?>
 				</div>
 			</div>
 		</div>
@@ -33,7 +39,6 @@
 			<div class="span l9">
 				<div class="row l4 ng-lr">
 					<div class="span l3">
-						
 						<img src="<?= $user->getAvatar(64) ?>" class="not-desktop" style="width: 32px; border-radius: 50%; vertical-align: middle">
 						<a href="<?= url('user', 'show', $user->getUsername()) ?>" style="color: #000; font-weight: bold; font-size: .8em;"><?= $user->getUsername() ?></a>
 						
@@ -43,7 +48,8 @@
 						</a>
 						<?php endif; ?>
 					</div>
-					<div class="span l1 desktop-only" style="text-align: right; font-size: .8rem; color: #777;">
+					<div class="span l1 desktop-only" style="text-align: right; font-size: .8rem; color: #777;"
+					title="<?=gmdate('c', $ping->created)?>">
 						<?= Time::relative($ping->created) ?>
 					</div>
 				</div>
@@ -51,30 +57,44 @@
 
 				<div class="row l1 ng-lr fluid" style="margin-top: 5px">
 					<div class="span l1">
-						<p style="margin: 0;">
-							<?= Mention::idToMentions($ping->content) ?>
-						</p>
-
-						<?php $poll = db()->table('poll\option')->get('ping__id', $ping->_id)->all() ?>
-						<?php $resp = $authUser? db()->table('poll\reply')->get('ping__id', $ping->_id)->where('author__id', AuthorModel::find($authUser->id)->_id)->first() : null ?>
-						<?php if ($poll->count() > 0) : ?>
-							<div data-poll="<?= $ping->_id ?>">
-								<div class="spacer" style="height: 10px"></div>
-							<?php foreach ($poll as $option) : ?>
-									<a href="<?= url('poll', 'vote', $option->_id) ?>" 
-										data-option="<?= $option->_id ?>" 
-										class="poll-open-response <?= $resp && $resp->option->_id == $option->_id ? 'selected-response' : '' ?>"> 
-								<?= __($option->text ?: "Untitled") ?>
-									</a>
-							<?php endforeach; ?>
+						<?php if ($ping->removed > 0 && !$isModerator) : ?>
+							<div style="font-weight: bold; font-style: italic; text-align: center; 
+								border: 1px solid black; padding: 5px; font-size: 0.9em; margin: 5px"
+							>This Ping was removed by staff</div>
+						<?php else :?>
+							<?php if ($ping->removed > 0 && $isModerator) : ?>
+							<div class="material" style="margin-bottom: 15px;">
+								<div class="row l6">
+									<div class="span l2">This Ping is removed</div>
+									<div class="span l4" style="text-align: right">Removed by <?= $sso->getUser($ping->staff)->getUsername() ?> <span title="<?= gmdate('c', $ping->removed)?>"><?= Time::relative($ping->removed) ?></span></div>
+								</div>
 							</div>
-						<?php endif; ?>
-
-						<div class="spacer" style="height: 10px"></div>
-
-						<?php $media = $ping->attached; ?>
-						<?= current_context()->view->element('media/preview')->set('media', collect($media->toArray()))->render() ?>
-
+							
+							<?php endif ?>
+							<p style="margin: 0;">
+								<?= Mention::idToMentions($ping->content) ?>
+							</p>
+	
+							<?php $poll = db()->table('poll\option')->get('ping__id', $ping->_id)->all() ?>
+							<?php $resp = $authUser? db()->table('poll\reply')->get('ping__id', $ping->_id)->where('author__id', AuthorModel::find($authUser->id)->_id)->first() : null ?>
+							<?php if ($poll->count() > 0) : ?>
+								<div data-poll="<?= $ping->_id ?>">
+									<div class="spacer" style="height: 10px"></div>
+								<?php foreach ($poll as $option) : ?>
+										<a href="<?= url('poll', 'vote', $option->_id) ?>" 
+											data-option="<?= $option->_id ?>" 
+											class="poll-open-response <?= $resp && $resp->option->_id == $option->_id ? 'selected-response' : '' ?>"> 
+									<?= __($option->text ?: "Untitled") ?>
+										</a>
+								<?php endforeach; ?>
+								</div>
+							<?php endif; ?>
+	
+							<div class="spacer" style="height: 10px"></div>
+	
+							<?php $media = $ping->attached; ?>
+							<?= current_context()->view->element('media/preview')->set('media', collect($media->toArray()))->render() ?>
+						<?php endif ?>
 					</div>
 				</div>
 
@@ -106,6 +126,18 @@
 							<i class="im im-x-mark-circle"></i>
 							<span>Delete</span>
 						</a>
+						<?php if ($isModerator): ?>
+							<?php if ($ping->removed > 0) : ?>
+								<a href="<?= url('ping', 'unremove', $ping->_id); ?>" class="ping-contextual-link">
+									<i class="im im-reset"></i>
+									<span>Restore</span>
+								</a>
+							<?php else : ?>
+							<a href="<?= url('ping', 'remove', $ping->_id); ?>" class="ping-contextual-link delete-link">
+								<i class="im im-trash-can"></i>
+								<span>Remove</span>
+							</a>
+						<?php endif; endif; ?>
 					</div>
 					<div class="span l1" style="text-align: right">
 						<p style="margin: 0;">

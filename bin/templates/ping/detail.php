@@ -88,6 +88,20 @@
 
 							<div class="row l1 fluid" style="margin-top: 5px">
 								<div class="span l1">
+									<?php if ($notification->removed > 0 && !$isModerator) : ?>
+										<div style="font-weight: bold; font-style: italic; text-align: center; 
+								border: 1px solid black; padding: 5px; font-size: 0.9em; margin: 5px"
+										>This Ping was removed by staff</div>
+									<?php else :?>
+									<?php if ($notification->removed > 0 && $isModerator) : ?>
+										<div class="material" style="margin-bottom: 15px;">
+											<div class="row l6">
+												<div class="span l2">This Ping is removed</div>
+												<div class="span l4" style="text-align: right">Removed by <?= $sso->getUser($notification->staff)->getUsername() ?> <span title="<?= gmdate('c', $notification->removed)?>"><?= Time::relative($notification->removed) ?></span></div>
+											</div>
+										</div>
+
+									<?php endif ?>
 									<p style="margin: 0;">
 					<?= Mention::idToMentions($notification->content) ?>
 									</p>
@@ -113,7 +127,7 @@
 
 					<?php $media = $notification->original()->attached; ?>
 					<?= current_context()->view->element('media/preview')->set('media', collect($media->toArray()))->render() ?>
-
+									<?php endif ?>
 								</div>
 							</div>
 
@@ -151,6 +165,18 @@
 										<span>Disavow</span>
 									</a>
 					<?php endif; ?>
+									<?php if ($isModerator): ?>
+										<?php if ($notification->removed > 0) : ?>
+											<a href="<?= url('ping', 'unremove', $notification->_id); ?>" class="ping-contextual-link">
+												<i class="im im-reset"></i>
+												<span>Restore</span>
+											</a>
+										<?php else : ?>
+											<a href="<?= url('ping', 'remove', $notification->_id); ?>" class="ping-contextual-link delete-link">
+												<i class="im im-trash-can"></i>
+												<span>Remove</span>
+											</a>
+										<?php endif; endif; ?>
 								</div>
 								<div class="span l1" style="text-align: right">
 									<p style="margin: 0;">
@@ -272,7 +298,9 @@ depend(['ping/ping', 'm3/core/lysine'], function(SDK, Lysine) {
 				feedback : current.feedback,
 				replyCount: current.replies.count || 'Reply',
 				shareCount: current.shares || 'Share',
-				irt: current.irt ? [current.irt] : []
+				irt: current.irt ? [current.irt] : [],
+				removed: current.removed || '0',
+				staff: current.staff || ''
 			});
 
 		}

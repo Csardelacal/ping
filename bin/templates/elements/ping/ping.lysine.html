@@ -46,26 +46,43 @@
 
 						<div class="row l1 ng-lr" style="margin-top: 5px">
 							<div class="span l1">
-								<p style="margin: 0; color: #000;" data-for="notificationContent"></p>
-
-
-								<div data-condition="count(poll) !== 0" data-poll="{{id}}">
-									<div class="spacer" style="height: 10px"></div>
-									<template data-for="poll" data-lysine-view>
-										<div>
-											<a data-lysine-href="<?= url('poll', 'vote') ?>{{id}}" 
-												data-lysine-data-option="{{id}}" 
-												data-lysine-class="poll-open-response {{selected?selected-response:}}"
-												data-for="body"> 
-
-											</a>
+								<span data-condition="value(removed) != 0">
+									<?php if (!$isModerator) : ?>
+									<div data-condition="removed != 0" style="font-weight: bold; font-style: italic; text-align: center; 
+									border: 1px solid black; padding: 5px; font-size: 0.9em; margin: 5px"
+									>This Ping was removed by staff</div>
+									<?php else :?>
+									<div class="material" style="margin-bottom: 15px;">
+										<div class="row l6">
+											<div class="span l2">This Ping is removed</div>
+											<div class="span l4" style="text-align: right">Removed by <span data-for="staff"></span></div>
 										</div>
-									</template>
-								</div>
-
-								<div class="spacer" style="height: 20px"></div>
-
-								<div class="media-preview" data-condition="count(media) != 0">
+									</div>
+	
+									<?php endif ?>
+								</span>
+								<span <?php if (!$isModerator) : ?>data-condition="value(removed) == 0"<?php endif ?>>
+								
+									<p style="margin: 0; color: #000;" data-for="notificationContent"></p>
+						
+	
+									<div data-condition="count(poll) !== 0" data-poll="{{id}}">
+										<div class="spacer" style="height: 10px"></div>
+										<template data-for="poll" data-lysine-view>
+											<div>
+												<a data-lysine-href="<?= url('poll', 'vote') ?>{{id}}" 
+													data-lysine-data-option="{{id}}" 
+													data-lysine-class="poll-open-response {{selected?selected-response:}}"
+													data-for="body"> 
+	
+												</a>
+											</div>
+										</template>
+									</div>
+	
+									<div class="spacer" style="height: 20px"></div>
+	
+									<div class="media-preview" data-condition="count(media) != 0">
 									<!--Single images-->
 									<div class="row l1" data-condition="count(media) == 1">
 										<div class="span l1 ng" data-for="media.0.embed"></div>
@@ -98,7 +115,7 @@
 										</div>
 									</div>
 								</div>
-
+								</span>
 							</div>
 						</div>
 
@@ -123,6 +140,16 @@
 									<i class="im im-x-mark-circle"></i>
 									<span>Delete</span>
 								</a>
+								<?php if ($isModerator): ?>
+								<a data-lysine-href="<?= url('ping', 'unremove'); ?>{{id}}" data-condition="value(removed) != 0" data-lysine-data-visibility="{{userName}}" class="ping-contextual-link">
+									<i class="im im-reset"></i>
+									<span>Restore</span>
+								</a>
+								<a data-lysine-href="<?= url('ping', 'remove'); ?>{{id}}" data-condition="value(removed) == 0" class="ping-contextual-link delete-link">
+									<i class="im im-trash-can"></i>
+									<span>Remove</span>
+								</a>
+								<?php endif; ?>
 							</div>
 							<div class="span l1" style="text-align: right">
 								<a data-lysine-href="{{notificationURL}}" class="ping-contextual-link">
