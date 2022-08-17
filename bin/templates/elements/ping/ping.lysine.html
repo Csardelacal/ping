@@ -46,9 +46,9 @@
 
 						<div class="row l1 ng-lr" style="margin-top: 5px">
 							<div class="span l1">
-								<span data-condition="null(removed) != false">
+								<span data-condition="null(removed) == false">
 									<?php if (!$isModerator) : ?>
-									<div data-condition="null(removed) != false" style="font-weight: bold; font-style: italic; text-align: center; 
+									<div data-condition="null(removed) == false" style="font-weight: bold; font-style: italic; text-align: center; 
 									border: 1px solid black; padding: 5px; font-size: 0.9em; margin: 5px"
 									>This Ping was removed by staff</div>
 									<?php else :?>
