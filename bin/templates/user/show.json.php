@@ -44,10 +44,10 @@ foreach ($notifications as $n) {
 	$payload[] = array(
 		'id'           => $n->_id,
 		'url'          => $n->url,
-		'media'        => $n->attachmentsPreview(),
+		'media'        => $isModerator || empty($n->removed) ? $n->attachmentsPreview() : '',
+		'content'      => $isModerator || empty($n->removed) ? Mention::idToMentions($n->content) : '',
 		'mediaCount'   => $n->attached->getQuery()->count(),
 		'explicit'     => !!$n->explicit,
-		'content'      => Mention::idToMentions($n->content),
 		'timestamp'    => $n->created,
 		'timeRelative' => Time::relative($n->created),
 		'irt'          => $irt,

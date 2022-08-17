@@ -36,6 +36,8 @@ var request = function (callback) {
 					id                 : data.payload[i].id,
 					userName           : data.payload[i].user.username,
 					avatar             : data.payload[i].user.avatar,
+					removed			   : data.payload[i].removed,
+					staff			   : data.payload[i].staff,
 					userURL            : data.payload[i].user.url,
 					embed              : data.payload[i].embed,
 					notificationURL    : data.payload[i].url || '#',

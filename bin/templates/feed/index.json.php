@@ -55,8 +55,8 @@ foreach ($notifications as $n) {
 	$payload[] = array(
 		'id'           => $n->_id,
 		'url'          => $n->url,
-		'media'        => $n->original()->attachmentsPreview(),
-		'content'      => Mention::idToMentions($n->content),
+		'media'        => $isModerator || empty($n->removed) ? $n->original()->attachmentsPreview() : '',
+		'content'      => $isModerator || empty($n->removed) ? Mention::idToMentions($n->content) : '',
 		'timestamp'    => $n->created,
 		'timeRelative' => Time::relative($n->created),
 		'irt'          => $irt,
