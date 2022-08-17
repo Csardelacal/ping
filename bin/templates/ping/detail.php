@@ -299,8 +299,8 @@ depend(['ping/ping', 'm3/core/lysine'], function(SDK, Lysine) {
 				replyCount: current.replies.count || 'Reply',
 				shareCount: current.shares || 'Share',
 				irt: current.irt ? [current.irt] : [],
-				removed: current.removed || '0',
-				staff: current.staff || ''
+				removed: current.removed,
+				staff: current.staff
 			});
 
 		}
