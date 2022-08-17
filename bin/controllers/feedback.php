@@ -118,8 +118,8 @@ class FeedBackController extends AppController
 		
 		$overall = $mc->get('ping_like_details_' . $ping->_id, function () use ($ping, $reactionCount) {
 			return [
-				'like'    => $reactionCount(1),
-				'dislike' => $reactionCount(-1),
+				'like'    => $reactionCount($ping, 1),
+				'dislike' => $reactionCount($ping, -1),
 				'sample'  => db()->table('feedback')->get('ping', $ping)
 					->where('reaction', 1)
 					->where('removed', null)

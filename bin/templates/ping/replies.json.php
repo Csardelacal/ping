@@ -30,7 +30,7 @@ foreach ($notifications as $n) {
 		'timestamp'    => $n->created,
 		'timeRelative' => Time::relative($n->created),
 		'removed'      => $n->removed,
-		'staff'        => $isModerator ? $sso->getUser($n->staff)->getUsername() : '',
+		'staff'        => $isModerator && $n->staff? $sso->getUser($n->staff)->getUsername() : '',
 		'poll'         => $poll->toArray(),
 		'feedback'     => [
 			'mine'      => !!db()->table('feedback')->get('ping', $n)->where('author',  $me)->where('reaction',  1)->first(),
