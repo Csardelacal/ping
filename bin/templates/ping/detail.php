@@ -149,7 +149,7 @@
 					<?php endif; ?>
 									<a href="<?= url('ping', 'detail', $notification->_id) ?>#replies" class="ping-contextual-link for-replies">
 										<i class="im im-speech-bubble"></i>
-										<span><?= strval(db()->table('ping')->get('irt__id', $notification->_id)->count()) ?></span>
+										<span><?= strval(db()->table('ping')->get('irt__id', $notification->_id)->where('deleted', null)->count()) ?></span>
 									</a>
 									<a href="<?= url('ping', 'share', $notification->_id); ?>" class="ping-contextual-link for-shares">
 										<i class="im im-sync"></i>
