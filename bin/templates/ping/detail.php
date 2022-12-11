@@ -138,42 +138,42 @@
 					<?php if (!$authUser) : ?>
 					<?php elseif (db()->table('feedback')->get('ping', $notification)->where('author', AuthorModel::get(db()->table('user')->get('authId', $authUser->id)->first()))->first()) : ?>
 										<a href="<?= url('feedback', 'revoke', $notification->_id) ?>" class="ping-contextual-link for-likes liked" data-ping="<?= $notification->_id ?>">
-											<i class="im im-heart"></i>
+											<i class="fa-solid fa-heart"></i>
 											<span><?= strval(db()->table('feedback')->get('ping', $notification)->where('reaction', 1)->where('removed', null)->count()) ?></span>
 										</a>
 					<?php else : ?>
 										<a href="<?= url('feedback', 'push', $notification->_id) ?>" class="ping-contextual-link for-likes" data-ping="<?= $notification->_id ?>">
-											<i class="im im-heart"></i>
+											<i class="fa-solid fa-heart"></i>
 											<span><?= strval(db()->table('feedback')->get('ping', $notification)->where('reaction', 1)->where('removed', null)->count())?></span>
 										</a>
 					<?php endif; ?>
 									<a href="<?= url('ping', 'detail', $notification->_id) ?>#replies" class="ping-contextual-link for-replies">
-										<i class="im im-speech-bubble"></i>
+										<i class="fa-solid fa-comment"></i>
 										<span><?= strval(db()->table('ping')->get('irt__id', $notification->_id)->where('deleted', null)->count()) ?></span>
 									</a>
 									<a href="<?= url('ping', 'share', $notification->_id); ?>" class="ping-contextual-link for-shares">
-										<i class="im im-sync"></i>
+										<i class="fa-solid fa-retweet"></i>
 										<span><?= $notification->original()->shared->getQuery()->count() ?></span>
 									</a>
 									<a href="<?= url('ping', 'delete', $notification->_id); ?>" data-visibility="<?= $u->getUsername() ?>" class="ping-contextual-link delete-link">
-										<i class="im im-x-mark-circle"></i>
+										<i class="fa-solid fa-trash-can"></i>
 										<span>Delete</span>
 									</a>
 					<?php if ($notification->irt) : ?>
 									<a href="<?= url('ping', 'disavow', $notification->_id); ?>" data-visibility="<?= $notification->irt->src->getUsername() ?>" class="ping-contextual-link delete-link">
-										<i class="im im-x-mark-circle"></i>
+										<i class="fa-solid fa-trash-can"></i>
 										<span>Disavow</span>
 									</a>
 					<?php endif; ?>
 									<?php if ($isModerator): ?>
 										<?php if ($notification->removed > 0) : ?>
 											<a href="<?= url('ping', 'unremove', $notification->_id); ?>" class="ping-contextual-link">
-												<i class="im im-reset"></i>
+												<i class="fa-solid fa-trash-arrow-up"></i>
 												<span>Restore</span>
 											</a>
 										<?php else : ?>
 											<a href="<?= url('ping', 'remove', $notification->_id); ?>" class="ping-contextual-link delete-link">
-												<i class="im im-trash-can"></i>
+												<i class="fa-solid fa-trash-can"></i>
 												<span>Remove</span>
 											</a>
 										<?php endif; endif; ?>
@@ -183,7 +183,7 @@
 					<?php if ($notification->url) : ?>
 										<a href="<?= $notification->url ?>" class="ping-contextual-link">
 											<span>Open</span>
-											<i class="im im-external-link"></i>
+											<i class="fa-solid fa-arrow-up-right-from-square"></i>
 										</a>
 					<?php endif; ?>
 									</p>

@@ -34,7 +34,7 @@ class ThumbModel extends Model
 			$file = storage($this->file);
 			$post = $this->poster? storage()->get($this->poster) : null;
 
-			$uri  = $file instanceof \spitfire\storage\objectStorage\EmbedInterface? $file->publicURI() : url('image', 'preview', $this->_id);
+			$uri  = $file instanceof \spitfire\storage\objectStorage\EmbedInterface? $file->publicURI() : url('image', 'preview', $this->_id)->absolute();
 			$mime = $file instanceof \spitfire\storage\objectStorage\NodeInterface? $file->mime() : 'image/png';
 			
 			return serialize([$uri, $mime, $post]);
@@ -94,7 +94,7 @@ class ThumbModel extends Model
 			$file = storage($this->file);
 			$post = $this->poster? storage()->get($this->poster) : null;
 
-			$uri  = $file instanceof \spitfire\storage\objectStorage\EmbedInterface? $file->publicURI() : url('image', 'preview', $this->_id);
+			$uri  = $file instanceof \spitfire\storage\objectStorage\EmbedInterface? $file->publicURI() : url('image', 'preview', $this->_id)->absolute();
 			$mime = $file instanceof \spitfire\storage\objectStorage\NodeInterface? $file->mime() : 'image/png';
 			
 			return serialize([$uri, $mime, $post]);

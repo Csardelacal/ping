@@ -125,28 +125,28 @@
 						<div class="row l3 fluid">
 							<div class="span l2">
 								<a href="#likelink" data-lysine-class="ping-contextual-link for-likes {{feedback.mine?liked}}" data-lysine-data-ping="{{id}}">
-									<i class="im im-heart"></i>
+									<i class="fa-solid fa-heart"></i>
 									<span  data-for="feedback.like"></span>
 								</a>
 								<a data-lysine-href="<?= url('ping', 'detail') ?>{{id}}#replies" class="ping-contextual-link for-replies">
-									<i class="im im-speech-bubble"></i>
+									<i class="fa-solid fa-comment"></i>
 									<span data-for="replyCount"></span>
 								</a>
 								<a data-lysine-href="<?= url('ping', 'share'); ?>{{id}}" class="ping-contextual-link for-shares">
-									<i class="im im-sync"></i>
+									<i class="fa-solid fa-retweet"></i>
 									<span  data-for="shareCount"></span>
 								</a>
 								<a data-lysine-href="<?= url('ping', 'delete'); ?>{{id}}" data-lysine-data-visibility="{{userName}}" class="ping-contextual-link delete-link">
-									<i class="im im-x-mark-circle"></i>
+									<i class="fa-solid fa-trash-can"></i>
 									<span>Delete</span>
 								</a>
 								<?php if ($isModerator): ?>
 								<a data-lysine-href="<?= url('ping', 'unremove'); ?>{{id}}" data-condition="value(removed) != 0" data-lysine-data-visibility="{{userName}}" class="ping-contextual-link">
-									<i class="im im-reset"></i>
+									<i class="fa-solid fa-trash-arrow-up"></i>
 									<span>Restore</span>
 								</a>
 								<a data-lysine-href="<?= url('ping', 'remove'); ?>{{id}}" data-condition="value(removed) == 0" class="ping-contextual-link delete-link">
-									<i class="im im-trash-can"></i>
+									<i class="fa-solid fa-trash-can"></i>
 									<span>Remove</span>
 								</a>
 								<?php endif; ?>
@@ -154,7 +154,7 @@
 							<div class="span l1" style="text-align: right">
 								<a data-lysine-href="{{notificationURL}}" class="ping-contextual-link">
 									<span>Open</span>
-									<i class="im im-external-link"></i>
+									<i class="fa-solid fa-arrow-up-right-from-square"></i>
 								</a>
 							</div>
 						</div>

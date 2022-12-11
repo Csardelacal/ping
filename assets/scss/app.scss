@@ -12,6 +12,17 @@ and open the template in the editor.
 @import '_vars';
 $disbled-darken-amount: 30;
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/**
+ * @todo Font awesome was never intended to come in here.
+ */
+@import "~@fortawesome/fontawesome-free/scss/fontawesome";
+@import "~@fortawesome/fontawesome-free/scss/regular";
+@import "~@fortawesome/fontawesome-free/scss/solid";
+
 html, body{
 	margin: 0;
 	padding: 0;
@@ -41,6 +52,14 @@ p {
 	&.small {
 		font-size: .8rem;
 	}
+}
+
+/**
+ * @todo This is an absurd override of the tailwind settings. But otherwise
+ * importing tailwind would be a breaking change for the existing CSS.
+ */
+img {
+	display: inline;
 }
 
 *[disabled] {
