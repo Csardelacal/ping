@@ -105,36 +105,36 @@
 						<?php if (!$authUser) : ?>
 						<?php elseif (db()->table('feedback')->get('ping', $ping)->where('author', AuthorModel::get(db()->table('user')->get('authId', $authUser->id)->first()))->first()) : ?>
 							<a href="<?= url('feedback', 'revoke', $ping->_id) ?>" class="ping-contextual-link for-likes liked" data-ping="<?= $ping->_id ?>">
-								<i class="im im-heart"></i>
+								<i class="fa-solid fa-heart"></i>
 								<span><?= strval(db()->table('feedback')->get('ping', $ping)->where('reaction', 1)->where('removed', null)->count()) ?></span>
 							</a>
 						<?php else : ?>
 							<a href="<?= url('feedback', 'push', $ping->_id) ?>" class="ping-contextual-link for-likes" data-ping="<?= $ping->_id ?>">
-								<i class="im im-heart"></i>
+								<i class="fa-solid fa-heart"></i>
 								<span><?= strval(db()->table('feedback')->get('ping', $ping)->where('reaction', 1)->where('removed', null)->count())?></span>
 							</a>
 						<?php endif; ?>
 						<a href="<?= url('ping', 'detail', $ping->_id) ?>#replies" class="ping-contextual-link for-replies">
-							<i class="im im-speech-bubble"></i>
+							<i class="fa-solid fa-comment"></i>
 							<span><?= strval(db()->table('ping')->get('irt__id', $ping->_id)->count()) ?></span>
 						</a>
 						<a href="<?= url('ping', 'share', $ping->_id); ?>" class="ping-contextual-link for-shares">
-							<i class="im im-sync"></i>
+							<i class="fa-solid fa-retweet"></i>
 							<span><?= $ping->shared->getQuery()->count() ?: 'Share' ?></span>
 						</a>
 						<a href="<?= url('ping', 'delete', $ping->_id); ?>" data-visibility="<?= $share? $share->getUsername() : $user->getUsername() ?>" class="ping-contextual-link delete-link">
-							<i class="im im-x-mark-circle"></i>
+							<i class="fa-solid fa-trash-can"></i>
 							<span>Delete</span>
 						</a>
 						<?php if ($isModerator): ?>
 							<?php if ($ping->removed > 0) : ?>
 								<a href="<?= url('ping', 'unremove', $ping->_id); ?>" class="ping-contextual-link">
-									<i class="im im-reset"></i>
+									<i class="fa-solid fa-trash-arrow-up"></i>
 									<span>Restore</span>
 								</a>
 							<?php else : ?>
 							<a href="<?= url('ping', 'remove', $ping->_id); ?>" class="ping-contextual-link delete-link">
-								<i class="im im-trash-can"></i>
+								<i class="fa-solid fa-trash-can"></i>
 								<span>Remove</span>
 							</a>
 						<?php endif; endif; ?>
@@ -144,7 +144,7 @@
 							<?php if ($ping->url) : ?>
 							<a href="<?= $ping->url ?>" class="ping-contextual-link">
 								<span>Open</span>
-								<i class="im im-external-link"></i>
+								<i class="fa-solid fa-arrow-up-right-from-square"></i>
 							</a>
 							<?php endif; ?>
 						</p>
