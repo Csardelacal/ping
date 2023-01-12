@@ -19,6 +19,18 @@ services:
       - mysql
     extra_hosts:
       - "host.docker.internal:host-gateway"
+  cron:
+    build: .
+    entrypoint: "php console cron media"
+    restart: unless-stopped
+    volumes:
+      - /var/www/html/bin/usr
+      - .:/var/www/html/
+    links:
+      - memcached
+      - mysql
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
   memcached:
     image: memcached:latest
   mysql:
