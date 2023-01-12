@@ -1,5 +1,7 @@
 <?php
 
+use spitfire\cache\MemcachedAdapter;
+
 $payload = array();
 
 foreach ($notifications as $n) {
@@ -75,7 +77,21 @@ foreach ($notifications as $n) {
 	);
 }
 
+$mc = MemcachedAdapter::getInstance();
+$stats = $mc->get(sprintf('ping_author_stats_%d', $author->_id), function () use ($author) {
+	return [
+		'followers' => db()->table('follow')->get('prey', $author->user)->count(),
+		'follows'   => db()->table('follow')->get('follower', $author->user)->count(),
+		'liked'     => db()->table('feedback')->get('author', $author)->count(),
+		'posts'     => db()->table('ping')->get('src', $author->user)->where('target__id', null)->count()
+	];
+});
+
+current_context()->response->getHeaders()->contentType('json');
 echo json_encode(array(
-	 'payload' => $payload,
-	 'until'   => isset($n)? $n->_id : 0
+	'@deprecated' => 'These values will be removed in future revisions: payload',
+	'payload' => $payload,
+	'pings'   => $payload,
+	'stats'   => $stats,
+	'until'   => isset($n)? $n->_id : 0,
 ));
