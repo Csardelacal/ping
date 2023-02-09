@@ -3,8 +3,8 @@ module.exports = {
   content: [
     './bin/templates/**/*.php',
     './bin/error_pages/**/*.php',
-    './assets/src/components/**/*.vue',
-    './assets/src/pages/**/*.vue',
+    './resources/assets/components/**/*.vue',
+    './resources/assets/pages/**/*.vue',
   ],
   theme: {
     extend: {},

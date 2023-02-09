@@ -15,7 +15,29 @@ mix
         'node_modules/@fortawesome/fontawesome-free/webfonts',
         'public/webfonts'
     )
-	//.vue(3)
+	/**
+	 * This enables typescript support in vue. Which should allow me to build way
+	 * more robust components and modules in the future.
+	 */
+	.webpackConfig({
+		module: {
+			rules: [
+				{
+					test: /\.tsx?$/,
+					loader: "ts-loader",
+					exclude: /node_modules/,
+					options: { 
+						appendTsSuffixTo: [/\.vue$/],
+						/**
+						 * @see https://stackoverflow.com/questions/71569535/npm-run-watch-crashes-after-any-change-in-vue-or-js-files-compiletemplate-now-r
+						 */
+						transpileOnly:true
+					},
+				}
+			]
+		}
+	})
+	.vue()
 	.tailwind()
 	.version()
 	.setPublicPath('./public');

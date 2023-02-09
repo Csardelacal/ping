@@ -30,6 +30,16 @@
 		}());
 		</script>
 		
+		<script type="application/json" id="config">
+			{
+				"user": {
+					"id" : <?= $authUser? $authUser->id : null ?>,
+					"name" : <?= json_encode($authUser? $authUser->username : null) ?>,
+					"avatar": <?= json_encode($authUser->avatar) ?>
+				}
+			}
+		</script>
+		
 		<?php if ($authUser) : ?>
 		<style type="text/css">
 			*[data-visibility] { display: none; }
@@ -41,37 +51,33 @@
 	<body>
 		
 		<!--Top most navigation-->
-		<div class="navbar">
-			<div class="left">
-				<span class="toggle-button dark"></span>
-			</div>
-			<div class="right">
+		<nav class="h-16 z-10 fixed w-full py-2 px-2 md:px-8">
+		<div 
+			class="h-16 flex flex-nowrap justify-between items-center p-2 pr-0 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-900 shadow-md rounded-lg mx-auto transition-all"
+			:class="{'-translate-y-16' : hidden}"
+			@mouseover="hidden=false"
+			>
+			<span class="toggle-button dark"></span>
+			<a href="<?= url() ?>" class="flex items-center md:justify-start justify-center ml-4">
+				<img src="<?= spitfire\core\http\URL::asset('img/logo.png') ?>" class="h-8">
+				<span class="p-2 hidden md:inline">Ping</span>
+			</a>
+			
+			<div class="grow justify-end overflow-x-auto overflow-y-hidden whitespace-nowrap text-right">
+				
 				<?php if (isset($authUser) && $authUser) : ?>
-					<div class="has-dropdown" style="display: inline-block">
-						<a href="<?= url('user', $authUser->username) ?>" class="app-switcher" data-toggle="app-drawer">
-							<img src="<?= $authUser->avatar ?>" width="32" height="32" style="border-radius: 50%; vertical-align: middle" >
-						</a>
-						<div class="dropdown right-bound unpadded" data-dropdown="app-drawer">
-							<div class="app-drawer" id="app-drawer">
-								<div class="navigation vertical">
-									<a class="navigation-item" href="<?= url('settings')         ?>">Settings</a>
-									<a class="navigation-item" href="<?= url('user', 'show', $authUser->username) ?>">My profile</a>
-									<a class="navigation-item" href="<?= url('account', 'logout') ?>">Logout</a>
-								</div>
-							</div>
-						</div>
-					</div>
+					<a class="py-2 px-3 hidden md:inline-block" href="<?= url() ?>"><strong>Feed</strong></a>
+					<a class="py-2 px-3 hidden md:inline-block" href="<?= url('activity') ?>">Activity <span class="notification-indicator" data-ping-activity data-ping-amt="0">?</span></a>
+					<User-Menu></User-Menu>
 				<?php else : ?>
-					<a class="menu-item" href="<?= url('account', 'login') ?>">Login</a>
+					<a class="py-2 px-3 inline-block" href="<?= url('account', 'login') ?>">Login</a>
 				<?php endif; ?>
-			</div>
-			<div class="center">
-				<a href="<?= url() ?>">
-					<img src="<?= spitfire\core\http\URL::asset('img/logo.png') ?>" height="32px">
-					<span class="desktop-only" style="vertical-align: .4rem">Ping</span>
-				</a>
+				<div class="inline-block w-3 h-full"></div>
 			</div>
 		</div>
+		</nav>
+		
+		<div class="h-20"></div>
 		
 		<div class="auto-extend">
 			
@@ -233,6 +239,7 @@
 			});
 		</script>
 		
+		<script type="text/javascript" src="<?= spitfire()->baseUrl() ?>/public/js/app.js"></script>
 		<script type="text/javascript" src="<?= url('feed', 'counter')->setExtension('js')->setParam('nonce', 60 * (int)(time() / 60)) ?>"></script>
 	</body>
 </html>
