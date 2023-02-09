@@ -23,36 +23,6 @@ $disbled-darken-amount: 30;
 @import "~@fortawesome/fontawesome-free/scss/regular";
 @import "~@fortawesome/fontawesome-free/scss/solid";
 
-html, body{
-	margin: 0;
-	padding: 0;
-	background: #FAFAFA;
-	font-family: 'Nunito Sans', sans-serif;
-}
-
-* {
-	box-sizing: border-box;
-	-moz-box-sizing: border-box;
-}
-
-a {
-	color: $LinkColor;
-	text-decoration: none;
-}
-
-p {
-	&.secondary {
-		color: #777;
-		
-		&.very {
-			color: #999;
-		}
-	}
-	
-	&.small {
-		font-size: .8rem;
-	}
-}
 
 /**
  * @todo This is an absurd override of the tailwind settings. But otherwise
