@@ -132,7 +132,7 @@ class Get implements Iterator, ArrayAccess
 	 * 
 	 * @return mixed
 	 */
-	public function current() {
+	public function current() : mixed {
 		return current($this->data);
 	}
 	
@@ -142,7 +142,7 @@ class Get implements Iterator, ArrayAccess
 	 * 
 	 * @return int|string
 	 */
-	public function key() {
+	public function key() : mixed {
 		return key($this->data);
 	}
 	
@@ -152,8 +152,8 @@ class Get implements Iterator, ArrayAccess
 	 * 
 	 * @return mixed
 	 */
-	public function next() {
-		return next($this->data);
+	public function next() : void {
+		next($this->data);
 	}
 	
 	/**
@@ -164,7 +164,7 @@ class Get implements Iterator, ArrayAccess
 	 * @param string $offset
 	 * @return mixed
 	 */
-	public function offsetExists($offset) {
+	public function offsetExists($offset) : bool {
 		return array_key_exists($offset, $this->data);
 	}
 	
@@ -175,7 +175,7 @@ class Get implements Iterator, ArrayAccess
 	 * @param string $offset
 	 * @return mixed
 	 */
-	public function offsetGet($offset) {
+	public function offsetGet($offset) : mixed {
 		#If the key is found include into the array of used data.
 		#This allows Spitfire to generate canonicals for you adequately.
 		if (isset($this->data[$offset]) && !in_array($offset, $this->used)) {	
@@ -192,7 +192,7 @@ class Get implements Iterator, ArrayAccess
 	 * @param string $offset
 	 * @param mixed $value
 	 */
-	public function offsetSet($offset, $value) {
+	public function offsetSet($offset, $value) : void {
 		if (is_array($value)) { $value = new Get($value); }
 		$this->data[$offset] = $value;
 	}
@@ -203,8 +203,8 @@ class Get implements Iterator, ArrayAccess
 	 * 
 	 * @param string $offset
 	 */
-	public function offsetUnset($offset) {
-		if (array_key_exists($this->data[$offset])) {
+	public function offsetUnset($offset) : void {
+		if (array_key_exists($offset, $this->data)) {
 			unset($this->data[$offset]);
 		}
 	}
@@ -213,7 +213,7 @@ class Get implements Iterator, ArrayAccess
 	 * Rewinds the array and does not return anything. Just required by the iterator,
 	 * so here it is.
 	 */
-	public function rewind() {
+	public function rewind() :void {
 		reset($this->data);
 	}
 	
@@ -224,7 +224,7 @@ class Get implements Iterator, ArrayAccess
 	 * 
 	 * @return boolean
 	 */
-	public function valid() {
+	public function valid() : bool {
 		return key($this->data) !== null;
 	}
 	
