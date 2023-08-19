@@ -440,18 +440,16 @@ class PingController extends AppController
 		 * Retrieve the ping from the database.
 		 */
 		$ping = db()->table('ping')->get(is_numeric($pingid)? '_id' : 'guid', $pingid)->fetch();
+		$me = $this->user? AuthorModel::find($this->user->id) : null;
 		
 		/*
 		 * If the ping was deleted, then the user is obviously not allowed to see
 		 * the contents any more. The ping will be deleted sooner or later by the
 		 * garbage collector.
 		 */
-		if (!$ping || $ping->deleted || !$ping->processed || !$ping->user) {
+		if (!$ping || $ping->deleted || !$ping->processed) {
 			throw new PublicException('Ping does not exist', 404);
 		}
-		
-		$me = AuthorModel::find($this->user->id);
-		
 		if ($ping->target && $ping->src->_id !== $me->_id && $ping->target->_id !== $me->_id) {
 			throw new PublicException('Ping does not exist', 404);
 		}
