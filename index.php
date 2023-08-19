@@ -8,7 +8,7 @@
  * terminal / log file instead of to the user.
  * 
  * @package Spitfire
- * @author César de la Cal <cesar@magic3w.com>
+ * @author C�sar de la Cal <cesar@magic3w.com>
  * @copyright 2012 Magic3W - All rights reserved
  */
 
@@ -20,7 +20,7 @@ define ('BASEDIR',                rtrim(dirname(__FILE__),'\/'));
 define ('APP_DIRECTORY',         'bin/apps/');
 define ('CONFIG_DIRECTORY',      'bin/settings/');
 define ('CONTROLLERS_DIRECTORY', 'bin/controllers/');
-define ('ASSET_DIRECTORY',       BASEDIR . '/assets/');
+define ('ASSET_DIRECTORY',       'assets/');
 define ('TEMPLATES_DIRECTORY',   'bin/templates/');
 define ('SESSION_SAVE_PATH',     'bin/usr/sessions/');
 
@@ -37,7 +37,9 @@ ini_set("display_errors" , 0);
 
 /* Include Spitfire core.
  */
-include 'spitfire/bootstrap.php';
+include __DIR__ . '/vendor/autoload.php';
+include __DIR__ . '/spitfire/bootstrap.php';
+include __DIR__ . '/bin/settings/services.php';
 
 ini_set('memory_limit', '128M');/**/
 

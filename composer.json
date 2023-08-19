@@ -24,6 +24,9 @@
 	},
     "minimum-stability": "dev",
 	"prefer-stable": true,
+    "require": {
+        "commishes/figure-sdk": "^0.1.4"
+    },
     "require-dev": {
         "phpstan/phpstan": "^0.12.82",
         "magic3w/php-coding-standard": "^1.0"

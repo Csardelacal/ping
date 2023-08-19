@@ -26,6 +26,7 @@ ini_set("display_errors" , 1);
 
 /* Include Spitfire core.
  */
+include rtrim(__DIR__, '\/') . '/vendor/autoload.php';
 include rtrim(__DIR__, '\/') . '/spitfire/bootstrap.php';
 
 ini_set('memory_limit', '4G');/**/

@@ -1,10 +1,13 @@
 <?php namespace media;
 
+use BooleanField;
 use EnumField;
 use Exception;
+use figure\FigureEmbed;
 use FileField;
+use FloatField;
+use IntegerField;
 use Reference;
-use spitfire\exceptions\PublicException;
 use spitfire\Model;
 use spitfire\storage\database\Schema;
 use StringField;
@@ -30,6 +33,17 @@ class MediaModel extends Model
 		
 		$schema->secret = new StringField(100);
 		
+		/**
+		 * Figure related information
+		 */
+		$schema->figure = new IntegerField(true);
+		$schema->animated = new BooleanField();
+		$schema->ratio = new FloatField(true);
+		$schema->lqip = new StringField(1024);
+		$schema->contentType = new StringField(64);
+		$schema->animated = new BooleanField();
+		$schema->created  = new IntegerField(true);
+		
 		/*
 		 * This field allows the system to keep track of where external sources
 		 * originated from.
@@ -39,6 +53,10 @@ class MediaModel extends Model
 	
 	public function preview($size = 'm')
 	{
+		
+		if ($this->figure) {
+			return new FigureEmbed($this, $size);
+		}
 		
 		try {
 			return $this->getTable()->getDb()->table('media\thumb')
