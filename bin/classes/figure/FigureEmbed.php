@@ -70,18 +70,16 @@ class FigureEmbed
 		$uri = $this->getURI('s');
 		$medium = $this->getURI('m');
 		
-		switch($this->media->animated) {
-			case 'video/mp4':
-			case 'video/quicktime':
-			case 'image/gif':
-				return sprintf(
-					'<video muted playsinline preload="none" loop src="%s" data-large="%s" poster="%s" style="width: 100%%" onmouseover="this.play()" onmouseout="this.pause()"></video>',
-					$uri,
-					$medium,
-					$this->media->lqip
-				);
-			default:
-				return sprintf('<img src="%s" data-large="%s" style="width: 100%%">', $uri, $medium);
+		if($this->media->animated) {
+			return sprintf(
+				'<video muted playsinline preload="none" loop src="%s" data-large="%s" poster="%s" style="width: 100%%" onmouseover="this.play()" onmouseout="this.pause()"></video>',
+				$uri,
+				$medium,
+				$this->media->lqip
+			);
+		}
+		else {
+			return sprintf('<img src="%s" data-large="%s" style="width: 100%%">', $uri, $medium);
 		}
 	}
 	
